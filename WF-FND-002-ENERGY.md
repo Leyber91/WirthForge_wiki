@@ -1,4 +1,3 @@
-
 ---
 id: WF-FND-002
 title: Energy Metaphor — Complete Definition
