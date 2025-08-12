@@ -1,0 +1,31 @@
+phases:
+  - name: foundation
+    order:
+      - WF-FND-001
+      - WF-FND-002
+      - WF-FND-003
+      - WF-FND-004
+      - WF-FND-005
+      - WF-FND-006
+  - name: tech
+    order:
+      - WF-TECH-001
+      - WF-TECH-002
+      - WF-TECH-003
+      - WF-TECH-004
+      - WF-TECH-005
+      - WF-TECH-006
+      - WF-TECH-007
+      - WF-TECH-008
+  - name: ux
+    order:
+      - WF-UX-006
+      - WF-UX-001
+      - WF-UX-002
+      - WF-UX-003
+      - WF-UX-004
+      - WF-UX-005
+  - name: biz
+    order:
+      - WF-BIZ-001
+      - WF-BIZ-002

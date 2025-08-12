@@ -1,0 +1,103 @@
+graph LR
+    subgraph "Dependency Flow Analysis"
+        subgraph "Phase 0: Bootstrap"
+            META[WF-META-001<br/>Master Guide]
+        end
+        
+        subgraph "Phase 1: Foundation (P0)"
+            FND1[WF-FND-001<br/>Vision & Principles]
+            FND2[WF-FND-002<br/>Energy Framework]
+            FND3[WF-FND-003<br/>Architecture Overview]
+            FND4[WF-FND-004<br/>The Decipher]
+            FND6[WF-FND-006<br/>Glossary]
+        end
+        
+        subgraph "Phase 2: Foundation (P1)"
+            FND5[WF-FND-005<br/>Module System]
+        end
+        
+        subgraph "Phase 3: Tech Core (P0)"
+            TECH1[WF-TECH-001<br/>System Architecture]
+            TECH2[WF-TECH-002<br/>Local AI]
+            TECH3[WF-TECH-003<br/>Real-Time Protocol]
+            TECH4[WF-TECH-004<br/>State Management]
+            TECH5[WF-TECH-005<br/>Security]
+        end
+        
+        subgraph "Phase 4: Tech Extended (P1)"
+            TECH6[WF-TECH-006<br/>API Integration]
+            TECH7[WF-TECH-007<br/>Quality & Ops]
+            TECH8[WF-TECH-008<br/>Core Algorithms]
+        end
+        
+        subgraph "Phase 5: UX Foundation (P0)"
+            UX6[WF-UX-006<br/>Energy Visualization]
+            UX1[WF-UX-001<br/>Lightning Strikes]
+        end
+        
+        subgraph "Phase 6: UX Extended (P1)"
+            UX2[WF-UX-002<br/>Parallel Streams]
+            UX3[WF-UX-003<br/>Structured Arch]
+            UX4[WF-UX-004<br/>Adaptive Fields]
+            UX5[WF-UX-005<br/>Resonance Fields]
+        end
+        
+        subgraph "Phase 7: Business (P2)"
+            BIZ1[WF-BIZ-001<br/>Business Model]
+            BIZ2[WF-BIZ-002<br/>Legal & Policy]
+        end
+    end
+    
+    %% Critical Path Dependencies
+    META --> FND1
+    META --> FND6
+    FND1 --> FND2
+    FND2 --> FND3
+    FND3 --> FND4
+    FND4 --> FND5
+    
+    %% Tech Dependencies
+    FND3 --> TECH1
+    FND6 --> TECH1
+    TECH1 --> TECH2
+    TECH1 --> TECH3
+    TECH1 --> TECH4
+    TECH1 --> TECH5
+    TECH5 --> TECH6
+    TECH6 --> TECH7
+    FND4 --> TECH8
+    TECH1 --> TECH8
+    TECH4 --> TECH8
+    
+    %% UX Dependencies
+    FND2 --> UX6
+    TECH3 --> UX6
+    TECH4 --> UX6
+    UX6 --> UX1
+    TECH2 --> UX1
+    FND2 --> UX1
+    UX1 --> UX2
+    UX6 --> UX2
+    TECH8 --> UX2
+    UX2 --> UX3
+    TECH8 --> UX3
+    UX3 --> UX4
+    TECH8 --> UX4
+    UX4 --> UX5
+    TECH8 --> UX5
+    
+    %% Business Dependencies
+    META --> BIZ1
+    FND1 --> BIZ1
+    TECH5 --> BIZ2
+    
+    %% Styling
+    classDef meta fill:#f59e0b,stroke:#d97706,stroke-width:4px,color:#000
+    classDef p0 fill:#dc2626,stroke:#b91c1c,stroke-width:3px,color:#fff
+    classDef p1 fill:#2563eb,stroke:#1d4ed8,stroke-width:2px,color:#fff
+    classDef p2 fill:#64748b,stroke:#475569,stroke-width:2px,color:#fff
+    
+    class META meta
+    class FND1,FND2,FND3,FND4,FND6,TECH1,TECH2,TECH3,TECH4,TECH5,UX6,UX1 p0
+    class FND5,TECH6,TECH7,TECH8,UX2,UX3,UX4,UX5 p1
+    class BIZ1,BIZ2 p2

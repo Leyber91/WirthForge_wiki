@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="595" height="842" xmlns="http://www.w3.org/2000/svg">
+  <!-- A4 Portrait Poster Wireframe for WIRTHFORGE -->
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#1e293b;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0f172a;stop-opacity:1" />
+    </linearGradient>
+    <filter id="energyGlow">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge> 
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="595" height="842" fill="url(#bgGradient)"/>
+  
+  <!-- Safe margins (20mm = ~57px) -->
+  <rect x="57" y="57" width="481" height="728" fill="none" stroke="#334155" stroke-width="1" stroke-dasharray="5,5" opacity="0.3"/>
+  
+  <!-- Header Section (Top Third) -->
+  <rect x="80" y="80" width="435" height="220" fill="none" stroke="#475569" stroke-width="2" rx="10"/>
+  <text x="297" y="100" text-anchor="middle" fill="#64748b" font-family="Arial, sans-serif" font-size="12">HEADER SECTION</text>
+  
+  <!-- WIRTHFORGE Logo Area -->
+  <rect x="100" y="120" width="395" height="50" fill="none" stroke="#f59e0b" stroke-width="2" rx="5"/>
+  <text x="297" y="140" text-anchor="middle" fill="#f59e0b" font-family="Arial, sans-serif" font-size="14" font-weight="bold">WIRTHFORGE LOGO</text>
+  <text x="297" y="155" text-anchor="middle" fill="#cbd5e1" font-family="Arial, sans-serif" font-size="10">Prominent but not overwhelming</text>
+  
+  <!-- Main Headline -->
+  <rect x="100" y="180" width="395" height="35" fill="none" stroke="#ffffff" stroke-width="2" rx="5"/>
+  <text x="297" y="200" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="16" font-weight="bold">"LOCAL AI MADE VISIBLE"</text>
+  <text x="297" y="210" text-anchor="middle" fill="#cbd5e1" font-family="Arial, sans-serif" font-size="8">Primary headline - maximum impact</text>
+  
+  <!-- Hero Energy Visualization -->
+  <rect x="100" y="225" width="395" height="60" fill="none" stroke="#10b981" stroke-width="2" rx="5"/>
+  <text x="297" y="245" text-anchor="middle" fill="#10b981" font-family="Arial, sans-serif" font-size="12">ENERGY FLOW VISUALIZATION</text>
+  <text x="297" y="260" text-anchor="middle" fill="#cbd5e1" font-family="Arial, sans-serif" font-size="9">AI computation as living particles</text>
+  <!-- Energy flow mockup -->
+  <path d="M120 270 Q200 250 280 270 Q360 290 460 270" stroke="#f59e0b" stroke-width="2" fill="none" opacity="0.6"/>
+  <circle cx="140" cy="268" r="3" fill="#f59e0b" filter="url(#energyGlow)"/>
+  <circle cx="220" cy="255" r="2" fill="#3b82f6" filter="url(#energyGlow)"/>
+  <circle cx="320" cy="285" r="2.5" fill="#a855f7" filter="url(#energyGlow)"/>
+  
+  <!-- Middle Section (Three Doors) -->
+  <rect x="80" y="320" width="435" height="200" fill="none" stroke="#475569" stroke-width="2" rx="10"/>
+  <text x="297" y="340" text-anchor="middle" fill="#64748b" font-family="Arial, sans-serif" font-size="12">MIDDLE SECTION</text>
+  
+  <!-- Three Doors Layout -->
+  <rect x="100" y="360" width="120" height="80" fill="none" stroke="#dc2626" stroke-width="2" rx="5"/>
+  <text x="160" y="380" text-anchor="middle" fill="#dc2626" font-family="Arial, sans-serif" font-size="10" font-weight="bold">🔥 FORGE</text>
+  <text x="160" y="395" text-anchor="middle" fill="#cbd5e1" font-family="Arial, sans-serif" font-size="8">Angular shard</text>
+  <text x="160" y="405" text-anchor="middle" fill="#cbd5e1" font-family="Arial, sans-serif" font-size="8">Spark trails</text>
+  
+  <rect x="237" y="360" width="120" height="80" fill="none" stroke="#2563eb" stroke-width="2" rx="5"/>
+  <text x="297" y="380" text-anchor="middle" fill="#2563eb" font-family="Arial, sans-serif" font-size="10" font-weight="bold">💎 SCHOLAR</text>
+  <text x="297" y="395" text-anchor="middle" fill="#cbd5e1" font-family="Arial, sans-serif" font-size="8">Geometric crystal</text>
+  <text x="297" y="405" text-anchor="middle" fill="#cbd5e1" font-family="Arial, sans-serif" font-size="8">Data traces</text>
+  
+  <rect x="375" y="360" width="120" height="80" fill="none" stroke="#7c3aed" stroke-width="2" rx="5"/>
+  <text x="435" y="380" text-anchor="middle" fill="#7c3aed" font-family="Arial, sans-serif" font-size="10" font-weight="bold">🌟 SAGE</text>
+  <text x="435" y="395" text-anchor="middle" fill="#cbd5e1" font-family="Arial, sans-serif" font-size="8">Ethereal orb</text>
+  <text x="435" y="405" text-anchor="middle" fill="#cbd5e1" font-family="Arial, sans-serif" font-size="8">Consciousness mist</text>
+  
+  <!-- Core Innovation Tagline -->
+  <rect x="100" y="450" width="395" height="25" fill="none" stroke="#a855f7" stroke-width="2" rx="5"/>
+  <text x="297" y="467" text-anchor="middle" fill="#a855f7" font-family="Arial, sans-serif" font-size="14" font-weight="bold">"ENERGY AS CONSCIOUSNESS"</text>
+  
+  <!-- Brief Explanation -->
+  <rect x="100" y="485" width="395" height="20" fill="none" stroke="#6b7280" stroke-width="1" rx="3"/>
+  <text x="297" y="498" text-anchor="middle" fill="#cbd5e1" font-family="Arial, sans-serif" font-size="10">"See your AI think, learn, and evolve in real-time"</text>
+  
+  <!-- Bottom Section -->
+  <rect x="80" y="540" width="435" height="180" fill="none" stroke="#475569" stroke-width="2" rx="10"/>
+  <text x="297" y="560" text-anchor="middle" fill="#64748b" font-family="Arial, sans-serif" font-size="12">BOTTOM SECTION</text>
+  
+  <!-- Progressive Levels Teaser -->
+  <rect x="100" y="580" width="395" height="25" fill="none" stroke="#f97316" stroke-width="1" rx="3"/>
+  <text x="297" y="597" text-anchor="middle" fill="#f97316" font-family="Arial, sans-serif" font-size="11">"From Lightning Strikes to Consciousness Emergence"</text>
+  
+  <!-- Local-First Badge -->
+  <rect x="100" y="615" width="190" height="30" fill="none" stroke="#10b981" stroke-width="2" rx="5"/>
+  <text x="195" y="630" text-anchor="middle" fill="#10b981" font-family="Arial, sans-serif" font-size="9" font-weight="bold">NO CLOUD REQUIRED</text>
+  <text x="195" y="640" text-anchor="middle" fill="#cbd5e1" font-family="Arial, sans-serif" font-size="8">Your data stays home</text>
+  
+  <!-- Call to Action -->
+  <rect x="305" y="615" width="190" height="30" fill="none" stroke="#ffffff" stroke-width="2" rx="5"/>
+  <text x="400" y="630" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="9" font-weight="bold">EXPERIENCE THE FUTURE</text>
+  <text x="400" y="640" text-anchor="middle" fill="#cbd5e1" font-family="Arial, sans-serif" font-size="8">of AI interaction</text>
+  
+  <!-- Website/Contact Info -->
+  <rect x="100" y="655" width="395" height="20" fill="none" stroke="#6b7280" stroke-width="1" rx="3"/>
+  <text x="297" y="668" text-anchor="middle" fill="#cbd5e1" font-family="Arial, sans-serif" font-size="10">www.wirthforge.ai • contact@wirthforge.ai</text>
+  
+  <!-- Footer Decorative Elements -->
+  <circle cx="120" cy="700" r="2" fill="#f59e0b" opacity="0.6"/>
+  <circle cx="170" cy="710" r="1.5" fill="#3b82f6" opacity="0.6"/>
+  <circle cx="220" cy="705" r="2.5" fill="#a855f7" opacity="0.6"/>
+  <circle cx="375" cy="700" r="2" fill="#10b981" opacity="0.6"/>
+  <circle cx="425" cy="710" r="1.5" fill="#ef4444" opacity="0.6"/>
+  <circle cx="475" cy="705" r="2.5" fill="#f97316" opacity="0.6"/>
+  
+  <!-- Layout Guidelines -->
+  <text x="297" y="750" text-anchor="middle" fill="#475569" font-family="Arial, sans-serif" font-size="8">A4 Portrait • 300 DPI • CMYK Print Ready</text>
+  <text x="297" y="765" text-anchor="middle" fill="#475569" font-family="Arial, sans-serif" font-size="8">Safe margins: 20mm • Typography: Inter/Arial • WCAG 2.2 AA compliant</text>
+</svg>

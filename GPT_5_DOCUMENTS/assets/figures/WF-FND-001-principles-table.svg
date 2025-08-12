@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="800" height="600" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="headerGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#f59e0b;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#3b82f6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#a855f7;stop-opacity:1" />
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feMerge> 
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="800" height="600" fill="#0f172a"/>
+  
+  <!-- Title -->
+  <text x="400" y="40" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="24" font-weight="bold">
+    WIRTHFORGE Core Principles
+  </text>
+  
+  <!-- Table Header -->
+  <rect x="50" y="70" width="700" height="40" fill="url(#headerGradient)" rx="5"/>
+  <text x="100" y="95" fill="#000000" font-family="Arial, sans-serif" font-size="14" font-weight="bold">Principle</text>
+  <text x="300" y="95" fill="#000000" font-family="Arial, sans-serif" font-size="14" font-weight="bold">Implementation</text>
+  <text x="550" y="95" fill="#000000" font-family="Arial, sans-serif" font-size="14" font-weight="bold">User Benefit</text>
+  
+  <!-- Row 1: Energy Visualization -->
+  <rect x="50" y="110" width="700" height="60" fill="#1e293b" stroke="#334155" stroke-width="1" rx="3"/>
+  <circle cx="80" cy="140" r="8" fill="#f59e0b" filter="url(#glow)"/>
+  <text x="100" y="130" fill="#f59e0b" font-family="Arial, sans-serif" font-size="12" font-weight="bold">Energy as Consciousness</text>
+  <text x="100" y="145" fill="#cbd5e1" font-family="Arial, sans-serif" font-size="10">AI computation visualized as living energy</text>
+  <text x="300" y="130" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">Real-time particle systems</text>
+  <text x="300" y="145" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">60Hz visualization (≤16.67ms)</text>
+  <text x="300" y="160" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">Token generation flows</text>
+  <text x="550" y="130" fill="#10b981" font-family="Arial, sans-serif" font-size="10">Demystifies AI processes</text>
+  <text x="550" y="145" fill="#10b981" font-family="Arial, sans-serif" font-size="10">Engaging interaction</text>
+  <text x="550" y="160" fill="#10b981" font-family="Arial, sans-serif" font-size="10">Intuitive understanding</text>
+  
+  <!-- Row 2: Three Doors -->
+  <rect x="50" y="170" width="700" height="60" fill="#1e293b" stroke="#334155" stroke-width="1" rx="3"/>
+  <circle cx="80" cy="200" r="8" fill="#3b82f6" filter="url(#glow)"/>
+  <text x="100" y="190" fill="#3b82f6" font-family="Arial, sans-serif" font-size="12" font-weight="bold">Three Doors System</text>
+  <text x="100" y="205" fill="#cbd5e1" font-family="Arial, sans-serif" font-size="10">Personalized AI experiences</text>
+  <text x="300" y="190" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">🔥 Forge: Action-oriented</text>
+  <text x="300" y="205" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">💎 Scholar: Knowledge-focused</text>
+  <text x="300" y="220" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">🌟 Sage: Consciousness-seeking</text>
+  <text x="550" y="190" fill="#10b981" font-family="Arial, sans-serif" font-size="10">Tailored interactions</text>
+  <text x="550" y="205" fill="#10b981" font-family="Arial, sans-serif" font-size="10">Optimal AI alignment</text>
+  <text x="550" y="220" fill="#10b981" font-family="Arial, sans-serif" font-size="10">Personal growth paths</text>
+  
+  <!-- Row 3: Progressive Gamification -->
+  <rect x="50" y="230" width="700" height="60" fill="#1e293b" stroke="#334155" stroke-width="1" rx="3"/>
+  <circle cx="80" cy="260" r="8" fill="#a855f7" filter="url(#glow)"/>
+  <text x="100" y="250" fill="#a855f7" font-family="Arial, sans-serif" font-size="12" font-weight="bold">Progressive Gamification</text>
+  <text x="100" y="265" fill="#cbd5e1" font-family="Arial, sans-serif" font-size="10">5-level mastery system</text>
+  <text x="300" y="250" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">Lightning → Resonance Fields</text>
+  <text x="300" y="265" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">1 → 6 concurrent models</text>
+  <text x="300" y="280" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">Emergent intelligence</text>
+  <text x="550" y="250" fill="#10b981" font-family="Arial, sans-serif" font-size="10">Skill development</text>
+  <text x="550" y="265" fill="#10b981" font-family="Arial, sans-serif" font-size="10">Sustained engagement</text>
+  <text x="550" y="280" fill="#10b981" font-family="Arial, sans-serif" font-size="10">AI mastery achievement</text>
+  
+  <!-- Row 4: Local-First Architecture -->
+  <rect x="50" y="290" width="700" height="60" fill="#1e293b" stroke="#334155" stroke-width="1" rx="3"/>
+  <circle cx="80" cy="320" r="8" fill="#10b981" filter="url(#glow)"/>
+  <text x="100" y="310" fill="#10b981" font-family="Arial, sans-serif" font-size="12" font-weight="bold">Local-First Architecture</text>
+  <text x="100" y="325" fill="#cbd5e1" font-family="Arial, sans-serif" font-size="10">Native execution priority</text>
+  <text x="300" y="310" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">Ollama integration</text>
+  <text x="300" y="325" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">4-6 concurrent models</text>
+  <text x="300" y="340" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">Hardware optimization</text>
+  <text x="550" y="310" fill="#10b981" font-family="Arial, sans-serif" font-size="10">Privacy protection</text>
+  <text x="550" y="325" fill="#10b981" font-family="Arial, sans-serif" font-size="10">Offline capability</text>
+  <text x="550" y="340" fill="#10b981" font-family="Arial, sans-serif" font-size="10">Performance control</text>
+  
+  <!-- Row 5: Transparent Monetization -->
+  <rect x="50" y="350" width="700" height="60" fill="#1e293b" stroke="#334155" stroke-width="1" rx="3"/>
+  <circle cx="80" cy="380" r="8" fill="#ef4444" filter="url(#glow)"/>
+  <text x="100" y="370" fill="#ef4444" font-family="Arial, sans-serif" font-size="12" font-weight="bold">Transparent Monetization</text>
+  <text x="100" y="385" fill="#cbd5e1" font-family="Arial, sans-serif" font-size="10">Ethical business model</text>
+  <text x="300" y="370" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">Free: Full access + 3 ads</text>
+  <text x="300" y="385" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">Premium: $9.42/month</text>
+  <text x="300" y="400" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">No usage billing</text>
+  <text x="550" y="370" fill="#10b981" font-family="Arial, sans-serif" font-size="10">Accessible entry</text>
+  <text x="550" y="385" fill="#10b981" font-family="Arial, sans-serif" font-size="10">Predictable costs</text>
+  <text x="550" y="400" fill="#10b981" font-family="Arial, sans-serif" font-size="10">User empowerment</text>
+  
+  <!-- Row 6: Community Learning -->
+  <rect x="50" y="410" width="700" height="60" fill="#1e293b" stroke="#334155" stroke-width="1" rx="3"/>
+  <circle cx="80" cy="440" r="8" fill="#f97316" filter="url(#glow)"/>
+  <text x="100" y="430" fill="#f97316" font-family="Arial, sans-serif" font-size="12" font-weight="bold">Community Learning</text>
+  <text x="100" y="445" fill="#cbd5e1" font-family="Arial, sans-serif" font-size="10">Collaborative growth ecosystem</text>
+  <text x="300" y="430" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">Shared scenarios</text>
+  <text x="300" y="445" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">Knowledge exchange</text>
+  <text x="300" y="460" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">Best practice sharing</text>
+  <text x="550" y="430" fill="#10b981" font-family="Arial, sans-serif" font-size="10">Accelerated learning</text>
+  <text x="550" y="445" fill="#10b981" font-family="Arial, sans-serif" font-size="10">Network effects</text>
+  <text x="550" y="460" fill="#10b981" font-family="Arial, sans-serif" font-size="10">Collective intelligence</text>
+  
+  <!-- Footer -->
+  <text x="400" y="530" text-anchor="middle" fill="#6b7280" font-family="Arial, sans-serif" font-size="10">
+    WIRTHFORGE Foundation Principles • Local AI Made Visible
+  </text>
+  
+  <!-- Energy particles decoration -->
+  <circle cx="100" cy="550" r="2" fill="#f59e0b" opacity="0.6"/>
+  <circle cx="150" cy="560" r="1.5" fill="#3b82f6" opacity="0.6"/>
+  <circle cx="200" cy="555" r="2.5" fill="#a855f7" opacity="0.6"/>
+  <circle cx="600" cy="550" r="2" fill="#10b981" opacity="0.6"/>
+  <circle cx="650" cy="560" r="1.5" fill="#ef4444" opacity="0.6"/>
+  <circle cx="700" cy="555" r="2.5" fill="#f97316" opacity="0.6"/>
+</svg>

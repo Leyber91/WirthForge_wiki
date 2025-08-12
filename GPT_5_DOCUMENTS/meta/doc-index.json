@@ -1,0 +1,32 @@
+{
+  "version": "1.0.0",
+  "docs": [
+    {"id":"WF-META-001","title":"Master Guide (Beacon)","category":"META","priority":"P0","requires":[],"enables":["ALL"]},
+
+    {"id":"WF-FND-001","title":"Vision & Principles","category":"FND","priority":"P0","requires":["WF-META-001"],"enables":["WF-FND-002","WF-BIZ-001"]},
+    {"id":"WF-FND-002","title":"Energy & Consciousness Framework","category":"FND","priority":"P0","requires":["WF-FND-001"],"enables":["WF-TECH-004","WF-UX-001","WF-UX-006"]},
+    {"id":"WF-FND-003","title":"Core Architecture Overview","category":"FND","priority":"P0","requires":["WF-FND-001","WF-FND-002"],"enables":["WF-TECH-001","WF-UX-006"]},
+    {"id":"WF-FND-004","title":"The Decipher (Central Compiler)","category":"FND","priority":"P0","requires":["WF-FND-003"],"enables":["WF-TECH-001","WF-TECH-004","WF-TECH-008","WF-UX-003"]},
+    {"id":"WF-FND-005","title":"Module & Plugin Philosophy","category":"FND","priority":"P1","requires":["WF-FND-004"],"enables":["WF-TECH-006"]},
+    {"id":"WF-FND-006","title":"Glossary (Living)","category":"FND","priority":"P0","requires":["WF-META-001"],"enables":["ALL"]},
+
+    {"id":"WF-TECH-001","title":"System Architecture & Components","category":"TECH","priority":"P0","requires":["WF-FND-003","WF-FND-006"],"enables":["WF-TECH-002","WF-TECH-003","WF-TECH-004","WF-TECH-006"]},
+    {"id":"WF-TECH-002","title":"Local AI Integration (Native Ollama)","category":"TECH","priority":"P0","requires":["WF-TECH-001","WF-FND-001"],"enables":["WF-UX-001"]},
+    {"id":"WF-TECH-003","title":"Real-Time Protocol (WebSockets)","category":"TECH","priority":"P0","requires":["WF-TECH-001","WF-FND-004"],"enables":["WF-TECH-004","WF-UX-006","WF-UX-001"]},
+    {"id":"WF-TECH-004","title":"State Management & Storage (Energy + DB)","category":"TECH","priority":"P0","requires":["WF-TECH-001","WF-TECH-003","WF-FND-002"],"enables":["WF-UX-006","WF-UX-001"]},
+    {"id":"WF-TECH-005","title":"Security & Privacy","category":"TECH","priority":"P0","requires":["WF-TECH-001","WF-FND-001","WF-FND-005"],"enables":["WF-TECH-006","WF-BIZ-002"]},
+    {"id":"WF-TECH-006","title":"API & Integration Points","category":"TECH","priority":"P1","requires":["WF-TECH-001","WF-TECH-005"],"enables":["Future Integrations"]},
+    {"id":"WF-TECH-007","title":"Quality, Ops & Deployment (Combined)","category":"TECH","priority":"P1","requires":["WF-TECH-001","WF-TECH-006"],"enables":["Launch Readiness"]},
+    {"id":"WF-TECH-008","title":"Core Algorithms (Council/Structures/Adaptation/Resonance)","category":"TECH","priority":"P1","requires":["WF-TECH-001","WF-TECH-004","WF-FND-004"],"enables":["WF-UX-002","WF-UX-003","WF-UX-004","WF-UX-005"]},
+
+    {"id":"WF-UX-006","title":"Energy Visualization & UI Specs (Unified)","category":"UX","priority":"P0","requires":["WF-FND-002","WF-TECH-003","WF-TECH-004"],"enables":["WF-UX-001","WF-UX-002","WF-UX-003","WF-UX-004","WF-UX-005"]},
+    {"id":"WF-UX-001","title":"Level 1 - Lightning Strikes","category":"UX","priority":"P0","requires":["WF-UX-006","WF-TECH-002","WF-FND-002"],"enables":["WF-UX-002"]},
+    {"id":"WF-UX-002","title":"Level 2 - Parallel Streams (Council)","category":"UX","priority":"P1","requires":["WF-UX-001","WF-TECH-008","WF-UX-006"],"enables":["WF-UX-003"]},
+    {"id":"WF-UX-003","title":"Level 3 - Structured Architectures","category":"UX","priority":"P1","requires":["WF-UX-002","WF-TECH-008"],"enables":["WF-UX-004"]},
+    {"id":"WF-UX-004","title":"Level 4 - Adaptive Fields","category":"UX","priority":"P1","requires":["WF-UX-003","WF-TECH-008"],"enables":["WF-UX-005"]},
+    {"id":"WF-UX-005","title":"Level 5 - Resonance Fields","category":"UX","priority":"P1","requires":["WF-UX-004","WF-TECH-008"],"enables":[]},
+
+    {"id":"WF-BIZ-001","title":"Business Model & Requirements","category":"BIZ","priority":"P2","requires":["WF-META-001","WF-FND-001"],"enables":["Pricing"]},
+    {"id":"WF-BIZ-002","title":"Legal & Policy Overview","category":"BIZ","priority":"P2","requires":["WF-TECH-005"],"enables":["Launch Readiness"]}
+  ]
+}
