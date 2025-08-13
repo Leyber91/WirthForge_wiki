@@ -1,0 +1,11 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "WF-FND-005 Orchestrator Event",
+  "type": "object",
+  "required": ["frame", "channel", "payload"],
+  "properties": {
+    "frame": {"type": "integer", "minimum": 0},
+    "channel": {"type": "string"},
+    "payload": {"type": "object"}
+  }
+}
