@@ -1,0 +1,16 @@
+sequenceDiagram
+    participant U as User
+    participant L5 as L5 UX
+    participant L4 as L4 Transport
+    participant L3 as L3 Orchestrator
+    participant L2 as L2 Models
+    participant L1 as L1 Identity
+
+    U->>L5: prompt
+    L5->>L4: structured input
+    L4->>L1: deliver event
+    L1->>L2: invoke model
+    L2-->>L3: token stream
+    L3-->>L4: energy events
+    L4-->>L5: render payloads
+    L5-->>U: visual feedback

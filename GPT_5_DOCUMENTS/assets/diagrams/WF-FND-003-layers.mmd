@@ -1,0 +1,10 @@
+graph TD
+    L1["L1\nInput & Identity"] --> L2["L2\nModel Compute"]
+    L2 --> L3["L3\nOrchestration & Energy"]
+    L3 --> L4["L4\nContracts & Transport"]
+    L4 --> L5["L5\nVisualization & UX"]
+    L5 -->|user commands| L4
+    L4 -->|structured events| L3
+    L3 -->|token streams| L2
+    classDef layer fill:#e2e8f0,stroke:#64748b,stroke-width:2px,color:#000
+    class L1,L2,L3,L4,L5 layer
