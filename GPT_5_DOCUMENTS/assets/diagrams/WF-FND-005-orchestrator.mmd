@@ -1,0 +1,5 @@
+flowchart TD
+    D[Decipher Output] --> O[Orchestrator]
+    O -->|Frame Events| UI[UI Layers]
+    O --> Memory
+    O --> Network[Optional Broker]
