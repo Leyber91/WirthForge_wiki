@@ -1,0 +1,7 @@
+sequenceDiagram
+    participant L2 as Layer2 Model
+    participant D as Decipher
+    participant UI as Layer5 UI
+    L2->>D: token stream
+    D->>D: compute EU
+    D->>UI: emit energy event (60Hz)
