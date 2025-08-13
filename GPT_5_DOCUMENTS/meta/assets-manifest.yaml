@@ -49,6 +49,8 @@ docs:
       - schemas/WF-FND-004-emission.json
     code:
       - code/WF-FND-004/reference/decipher-pass-pseudocode.md
+    tests:
+      - tests/WF-FND-004/emission-contract.spec.js
   WF-FND-005:
     diagrams:
       - assets/diagrams/WF-FND-005-sandbox.mmd
