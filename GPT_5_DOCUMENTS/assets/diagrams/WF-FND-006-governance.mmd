@@ -1,0 +1,5 @@
+flowchart TD
+    P[Proposal] --> R[Review]
+    R -->|approved| A[Active]
+    R -->|rejected| X[Rejected]
+    A --> E[Evolution]
