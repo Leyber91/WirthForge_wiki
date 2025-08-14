@@ -1,0 +1,9 @@
+{
+  "processes": {
+    "orchestrator": {"priority": "high", "restart": "always"},
+    "decipher": {"priority": "normal", "restart": "on-failure"},
+    "transport": {"priority": "normal", "restart": "on-failure"},
+    "state": {"priority": "low", "restart": "on-failure"}
+  },
+  "loop_hz": 60
+}

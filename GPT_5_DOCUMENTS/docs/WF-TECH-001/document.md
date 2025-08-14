@@ -90,7 +90,7 @@ Service APIs: `compile(input) -> energy.frame`, `transport.send`, `state.snapsho
 * Text: this document and executive summary
 * Visuals: C4 context, container diagrams
 * Code: process init stub in Rust
-* Data: YAML process manifest
+* Data: JSON process manifest
 * Tests: boot-time smoke spec
 
 ## ✅ Quality Validation Criteria

@@ -58,6 +58,8 @@ JSON schema for `energy.event`:
   "required": ["seq", "type", "payload"]
 }
 ```
+JSON schema for `energy.snapshot` is provided in `schemas/WF-TECH-004-snapshot.json` and captures snapshot id, rolled-up events and total energy.
+
 Integrity check logic:
 ```rust
 fn verify_frame(seq: u64, events: &[Event]) -> bool {
@@ -67,6 +69,7 @@ fn verify_frame(seq: u64, events: &[Event]) -> bool {
 
 ### 4) Integration Points
 Receives protocol messages from WF-TECH-003, exposes snapshot API for OPS-003, feeds UX visuals.
+Replay tooling (`code/WF-TECH-004/replay-tool.md`) consumes snapshots for offline verification and export.
 
 ### 5) Validation & Metrics
 * 10k events persisted < 50 ms.
