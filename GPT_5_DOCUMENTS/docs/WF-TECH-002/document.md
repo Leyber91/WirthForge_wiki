@@ -79,6 +79,7 @@ Hooks into orchestrator for lifecycle, energy state for frame commit, UX-006 vis
 * Sequence diagram
 * JSON schema `energy.token_timing`
 * Python stub `prompt_to_eu`
+* CLI snippet reference
 * Integration test spec for latency and EU accuracy
 
 ## ✅ Quality Validation Criteria

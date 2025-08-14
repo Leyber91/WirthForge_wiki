@@ -66,11 +66,12 @@ Pulls frames from TECH-002, visuals from UX-006, exposes door selection events t
 * Door event logged on completion.
 
 ## 🎨 Required Deliverables
-* User flow diagram
-* Strike timeline diagram
-* Mock frames
-* TTFS KPI spec
-* Accessibility notes
+- [x] Core document (this file)
+- [x] Summary – `docs/WF-UX-001/summary.md`
+- [x] Flow & timeline diagrams – in document
+- [x] Mock frame snippet – in document
+- [x] TTFS KPI test – `tests/WF-UX-001/ttfstrike.spec.js`
+- [x] Accessibility notes
 
 ## ✅ Quality Validation Criteria
 * First strike reproducible with sample prompt

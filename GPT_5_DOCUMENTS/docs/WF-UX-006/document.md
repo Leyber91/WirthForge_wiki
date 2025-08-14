@@ -65,11 +65,12 @@ Consumes state snapshots, renders protocol frames, supplies component tokens to 
 * Token mapping coverage ≥95% of DECIPHER outputs.
 
 ## 🎨 Required Deliverables
-* Visual language spec
-* Token→particle table
-* Design token JSON
-* Frame timing diagram
-* Test plan
+- [x] Core document (this file)
+- [x] Summary – `docs/WF-UX-006/summary.md`
+- [x] Token→particle table – `ui/WF-UX-006-token-map.json`
+- [x] Design token JSON – `ui/WF-UX-006-design-tokens.json`
+- [x] Frame timing diagram – in document
+- [x] Visual truth test – `tests/WF-UX-006/visual-truth.spec.js`
 
 ## ✅ Quality Validation Criteria
 * 1:1 mapping between visuals and energy metrics

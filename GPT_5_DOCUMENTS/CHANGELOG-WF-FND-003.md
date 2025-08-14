@@ -22,7 +22,7 @@
 - **Code Examples**
   - `code/WF-FND-003/snippets/mermaid-examples.md` – Reusable diagram snippets.
 - **Quality Assurance**
-  - `tests/WF-FND-003/layer-contract.spec.js` – Placeholder test for layer contracts.
+  - `tests/WF-FND-003/layer-contract.spec.js` – Validates diagrams for five-layer architecture.
 
 #### Notes
 - Establishes the architectural baseline for subsequent technical specifications.

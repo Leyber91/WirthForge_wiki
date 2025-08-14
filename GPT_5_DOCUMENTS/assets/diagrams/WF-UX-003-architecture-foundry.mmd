@@ -1,0 +1,6 @@
+flowchart TD
+    streams((Streams)) --> foundry[Foundry]
+    foundry --> moduleA[Module A]
+    foundry --> moduleB[Module B]
+    moduleA --> persist[(State)]
+    moduleB --> persist

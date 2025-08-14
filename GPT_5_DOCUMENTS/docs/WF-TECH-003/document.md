@@ -64,7 +64,7 @@ Boundaries with DECIPHER output, UX renderers, and state persistence; brokered c
 ## 🎨 Required Deliverables
 * Protocol lifecycle diagram
 * Message schema `wf.protocol.message`
-* Contract test outline
+* Contract test verifying ≤5 ms overhead
 * Summary text
 
 ## ✅ Quality Validation Criteria

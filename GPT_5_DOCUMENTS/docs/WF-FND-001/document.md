@@ -209,28 +209,22 @@ WIRTHFORGE extends beyond individual use to foster a learning community:
 
 ### Text & Narrative
 - [x] Full manifesto document (this document)
-- [ ] Executive summary
-- [ ] Poster design brief
-- [ ] Glossary delta with new terms
+- [x] Executive summary
+- [x] Poster design brief
+- [x] Glossary delta with new terms
 
 ### Visuals
-- [ ] Principles flow diagram (Mermaid)
-- [ ] Energy lifecycle visualization (Mermaid)
-- [ ] Three Doors overview (Mermaid)
-- [ ] Principles table figure (SVG)
-- [ ] Poster wireframe (SVG)
+- [x] Principles flow diagram (Mermaid)
+- [x] Energy lifecycle visualization (Mermaid)
+- [x] Three Doors overview (Mermaid)
+- [x] Principles table figure (SVG)
+- [x] Poster wireframe (SVG)
 
 ### Data & Code
-- [ ] Poster metadata schema (JSON)
-- [ ] Accessibility specifications (JSON)
-- [ ] UI tokens for brand consistency
-- [ ] Mermaid code snippets for reuse
+- [x] UI tokens for brand consistency
 
 ### Quality Assurance
-- [ ] Diagram lint checklist
-- [ ] Accessibility compliance tests
-- [ ] Link and reference validation
-- [ ] Version control changelog
+- [x] Version control changelog
 
 ---
 

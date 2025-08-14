@@ -1,0 +1,14 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "WF-FND-005 Plugin Capabilities",
+  "type": "object",
+  "required": ["id", "name", "permissions"],
+  "properties": {
+    "id": {"type": "string"},
+    "name": {"type": "string"},
+    "permissions": {
+      "type": "array",
+      "items": {"type": "string", "enum": ["fs:read", "fs:write", "net", "model"]}
+    }
+  }
+}

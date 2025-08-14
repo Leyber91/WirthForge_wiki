@@ -1,0 +1,11 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "reporter_id": {"type": "string"},
+    "content_id": {"type": "string"},
+    "reason": {"type": "string"},
+    "created_at": {"type": "string", "format": "date-time"}
+  },
+  "required": ["reporter_id", "content_id", "reason", "created_at"]
+}
