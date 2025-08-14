@@ -19,6 +19,7 @@
       "description": "Blue spectrum for continuous token flow visualization"
     },
     "interference": {
+      "primary": "#c084fc",
       "constructive": "#c084fc",
       "constructiveGlow": "#ddd6fe",
       "destructive": "#ef4444",
