@@ -1,0 +1,6 @@
+flowchart LR
+    user([User]) --> A[Model A]
+    user --> B[Model B]
+    A --> merge((Merge))
+    B --> merge
+    merge --> view[Council View]

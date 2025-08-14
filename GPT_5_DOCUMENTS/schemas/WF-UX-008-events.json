@@ -1,0 +1,10 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "event": {"enum": ["door_chosen"]},
+    "door": {"enum": ["forge","scholar","sage"]},
+    "timestamp": {"type": "number"}
+  },
+  "required": ["event","door","timestamp"]
+}
