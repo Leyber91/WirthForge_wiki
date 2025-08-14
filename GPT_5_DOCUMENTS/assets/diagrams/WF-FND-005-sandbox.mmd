@@ -1,0 +1,7 @@
+flowchart TD
+    O[Orchestrator] --> S[Plugin Sandbox]
+    S -->|Events| O
+    S -->|Limited FS| FS[(Filesystem)]
+    S -->|Optional Net| N[(Network)]
+    classDef comp fill:#e2e8f0,stroke:#64748b,stroke-width:2px,color:#000
+    class O,S,FS,N comp

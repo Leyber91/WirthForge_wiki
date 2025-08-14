@@ -32,3 +32,33 @@ The system defaults to local execution but allows opt-in satellite models for he
 ## Auditability
 
 Every visual element traces back to a structured event emitted by L3. An audit mode in L5 can reveal raw payloads, enabling reproducibility and scientific transparency.
+
+## Integration Points
+
+- **WF-FND-004 – The Decipher**: Supplies the energy events that feed Layer 3.
+- **WF-FND-005 – The Orchestrator**: Consumes Layer 3 emissions and schedules frame execution.
+- **WF-TECH-004 – State Management**: Persists events and snapshots for audit and replay.
+- **WF-UX-006 – Energy Visualization**: Renders Layer 5 visuals based on event streams.
+
+## Validation & Metrics
+
+- **Frame cadence**: Orchestrated components must honor the 60 Hz timing contract.
+- **Latency budget**: Each layer processes within 16 ms to avoid frame drops.
+- **Integrity**: Every upward event contains the originating layer ID and timestamp.
+- **Extensibility**: Optional remote compute must not exceed 5 ms additional latency.
+
+## 🎨 Required Deliverables
+
+- [x] Core architecture document (this file)
+- [x] Executive summary
+- [x] Layer diagram – `assets/diagrams/WF-FND-003-layers.mmd`
+- [x] Dataflow diagram – `assets/diagrams/WF-FND-003-dataflow.mmd`
+- [x] Layer contract test – `tests/WF-FND-003/layer-contract.spec.js`
+- [x] Version control changelog
+
+## ✅ Quality Criteria
+
+- **Determinism**: Layer boundaries produce reproducible results.
+- **Observability**: Each layer exposes metrics for audit and debugging.
+- **Isolation**: No layer leaks private data across boundaries.
+- **Compliance**: Follows naming and numbering conventions from WF-META-001.
