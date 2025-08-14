@@ -1,0 +1,3 @@
+Generate Document: WF-TECH-001 – System Architecture & Components
+Follow the universal template. Use FND-003 for 5-layer boundaries, FND-006 for glossary discipline. Describe the local-core process graph: main orchestrator, DECIPHER runtime, transport layer, energy state service. Include C4 context/container/component diagrams (Mermaid), a YAML manifest of processes, and a startup integrity checklist. Show integration seams for TECH-002/003/004. Deliver text, diagrams, schemas, code stub for process init, and boot-time test spec.
+Requires: WF-FND-003, WF-FND-006. Enables: WF-TECH-002, WF-TECH-003, WF-TECH-004, WF-TECH-006.

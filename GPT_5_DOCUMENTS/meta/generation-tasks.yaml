@@ -17,6 +17,7 @@ phases:
       - WF-TECH-006
       - WF-TECH-007
       - WF-TECH-008
+      - WF-TECH-009
   - name: ux
     order:
       - WF-UX-006
@@ -25,7 +26,17 @@ phases:
       - WF-UX-003
       - WF-UX-004
       - WF-UX-005
+      - WF-UX-007
+      - WF-UX-008
+      - WF-UX-009
+      - WF-UX-010
+  - name: ops
+    order:
+      - WF-OPS-001
+      - WF-OPS-002
+      - WF-OPS-003
   - name: biz
     order:
       - WF-BIZ-001
       - WF-BIZ-002
+      - WF-BIZ-003
