@@ -1,0 +1,3 @@
+Generate Document: WF-TECH-005 – Local AI Integration & Turbo/Broker
+Follow the universal template. Use FND-001 for local-first stance, FND-002 for EU mapping, FND-005 for council orchestration rules. Describe Ollama “Turbo” (parallel ensembles), broker satellite integration for high-tier users, and switching logic between local and broker models. Include model profile table per hardware tier, diagram of decision path (local vs broker), JSON schema for model profile definitions, and integration test spec ensuring policy compliance and energy-truth alignment.
+Requires: WF-TECH-002, WF-FND-001, WF-FND-002, WF-FND-005. Enables: WF-UX-002, WF-UX-004.

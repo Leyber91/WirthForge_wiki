@@ -183,3 +183,72 @@ docs:
       - schemas/WF-BIZ-002-data-map.json
     figures:
       - assets/figures/WF-BIZ-002-consent-flow.svg
+  WF-TECH-009:
+    diagrams:
+      - assets/diagrams/WF-TECH-009-qa-pipeline.mmd
+    schemas:
+      - schemas/WF-TECH-009-replay-format.json
+    tests:
+      - tests/WF-TECH-009/coverage.spec.md
+  WF-UX-007:
+    diagrams:
+      - assets/diagrams/WF-UX-007-dependency-flow.mmd
+    ui:
+      - ui/WF-UX-007-design-tokens.json
+    code:
+      - code/WF-UX-007/reference/button.md
+    tests:
+      - tests/WF-UX-007/a11y-60fps.spec.md
+  WF-UX-008:
+    diagrams:
+      - assets/diagrams/WF-UX-008-onboarding-flow.mmd
+    schemas:
+      - schemas/WF-UX-008-events.json
+    figures:
+      - assets/figures/WF-UX-008-screens.svg
+    tests:
+      - tests/WF-UX-008/onboarding-flow.spec.md
+  WF-UX-009:
+    diagrams:
+      - assets/diagrams/WF-UX-009-celebration-flow.mmd
+    schemas:
+      - schemas/WF-UX-009-achievements.json
+    figures:
+      - assets/figures/WF-UX-009-badges.svg
+    tests:
+      - tests/WF-UX-009/awards.spec.md
+  WF-UX-010:
+    ui:
+      - ui/WF-UX-010-a11y-presets.json
+    figures:
+      - assets/figures/WF-UX-010-error-states.svg
+    tests:
+      - tests/WF-UX-010/a11y-toggle.spec.md
+  WF-OPS-001:
+    diagrams:
+      - assets/diagrams/WF-OPS-001-release-flow.mmd
+    schemas:
+      - schemas/WF-OPS-001-env-profiles.yaml
+    tests:
+      - tests/WF-OPS-001/rollback.spec.md
+  WF-OPS-002:
+    schemas:
+      - schemas/WF-OPS-002-telemetry-config.json
+    figures:
+      - assets/figures/WF-OPS-002-consent-ui.svg
+    tests:
+      - tests/WF-OPS-002/consent.spec.md
+  WF-OPS-003:
+    diagrams:
+      - assets/diagrams/WF-OPS-003-export-flow.mmd
+    schemas:
+      - schemas/WF-OPS-003-package.json
+    tests:
+      - tests/WF-OPS-003/export-import.spec.md
+  WF-BIZ-003:
+    figures:
+      - assets/figures/WF-BIZ-003-moderation-flow.svg
+    schemas:
+      - schemas/WF-BIZ-003-report.json
+    tests:
+      - tests/WF-BIZ-003/guideline-display.spec.md
