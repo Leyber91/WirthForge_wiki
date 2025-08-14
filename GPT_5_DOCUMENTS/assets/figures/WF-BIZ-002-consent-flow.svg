@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="220" height="80">
+  <rect x="10" y="10" width="60" height="30" fill="#cfc" stroke="#060"/>
+  <text x="15" y="30" font-size="10">Request</text>
+  <rect x="80" y="10" width="60" height="30" fill="#ccf" stroke="#006"/>
+  <text x="85" y="30" font-size="10">Consent</text>
+  <rect x="150" y="10" width="60" height="30" fill="#ffc" stroke="#660"/>
+  <text x="155" y="30" font-size="10">Store</text>
+  <path d="M70 25 L80 25" stroke="#000"/>
+  <path d="M140 25 L150 25" stroke="#000"/>
+</svg>

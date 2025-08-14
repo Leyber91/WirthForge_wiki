@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="220" height="80">
+  <rect x="10" y="10" width="80" height="30" fill="#fcc" stroke="#900"/>
+  <text x="15" y="30" font-size="10">Report</text>
+  <rect x="110" y="10" width="80" height="30" fill="#cff" stroke="#099"/>
+  <text x="115" y="30" font-size="10">Review</text>
+  <path d="M90 25 L110 25" stroke="#000"/>
+</svg>
