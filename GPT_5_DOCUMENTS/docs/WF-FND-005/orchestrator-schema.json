@@ -1,0 +1,100 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://wirthforge.ai/schemas/orchestrator-schema.json",
+  "title": "Orchestrator Configuration Schema",
+  "description": "Defines configuration options for the WIRTHFORGE orchestrator, including levels, council sizes, gating rules and thresholds.",
+  "type": "object",
+  "properties": {
+    "levels": {
+      "type": "object",
+      "description": "Feature gating per level",
+      "properties": {
+        "2": {
+          "type": "object",
+          "properties": {
+            "councilSize": { "type": "integer", "default": 2, "minimum": 2, "maximum": 2 },
+            "enableConsensus": { "type": "boolean", "default": true },
+            "enableDI": { "type": "boolean", "default": true }
+          },
+          "additionalProperties": false
+        },
+        "3": {
+          "type": "object",
+          "properties": {
+            "councilSize": { "type": "integer", "default": 3, "minimum": 3, "maximum": 3 },
+            "enableStructuralMemory": { "type": "boolean", "default": true },
+            "enableAdaptiveSwitching": { "type": "boolean", "default": false }
+          },
+          "additionalProperties": false
+        },
+        "4": {
+          "type": "object",
+          "properties": {
+            "councilSize": { "type": "integer", "default": 4, "minimum": 3, "maximum": 4 },
+            "enableAdaptiveSwitching": { "type": "boolean", "default": true },
+            "enableEmergentDetection": { "type": "boolean", "default": true }
+          },
+          "additionalProperties": false
+        },
+        "5": {
+          "type": "object",
+          "properties": {
+            "councilSize": { "type": "integer", "default": 6, "minimum": 4, "maximum": 6 },
+            "enableResonance": { "type": "boolean", "default": true },
+            "enableEmergentCollective": { "type": "boolean", "default": true }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "paths": {
+      "type": "object",
+      "description": "User path tuning parameters (Forge, Scholar, Sage)",
+      "properties": {
+        "Forge": {
+          "type": "object",
+          "properties": {
+            "velocityWeight": { "type": "number", "default": 0.6 },
+            "certaintyWeight": { "type": "number", "default": 0.2 },
+            "frictionWeight": { "type": "number", "default": 0.2 }
+          }
+        },
+        "Scholar": {
+          "type": "object",
+          "properties": {
+            "velocityWeight": { "type": "number", "default": 0.4 },
+            "certaintyWeight": { "type": "number", "default": 0.4 },
+            "frictionWeight": { "type": "number", "default": 0.2 }
+          }
+        },
+        "Sage": {
+          "type": "object",
+          "properties": {
+            "velocityWeight": { "type": "number", "default": 0.3 },
+            "certaintyWeight": { "type": "number", "default": 0.3 },
+            "frictionWeight": { "type": "number", "default": 0.4 }
+          }
+        }
+      }
+    },
+    "thresholds": {
+      "type": "object",
+      "properties": {
+        "diInterference": { "type": "number", "default": 0.5, "minimum": 0, "maximum": 1 },
+        "energyField": { "type": "number", "default": 0.8, "minimum": 0, "maximum": 1 },
+        "energyResonance": { "type": "number", "default": 0.95, "minimum": 0, "maximum": 1 },
+        "consensusGap": { "type": "number", "default": 0.2, "minimum": 0, "maximum": 1 }
+      }
+    },
+    "modelLimits": {
+      "type": "object",
+      "properties": {
+        "lowTier": { "type": "integer", "default": 2 },
+        "midTier": { "type": "integer", "default": 3 },
+        "highTier": { "type": "integer", "default": 6 }
+      }
+    }
+  },
+  "required": ["levels", "thresholds", "modelLimits"]
+}

@@ -1,0 +1,12 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "EnergyTelemetry",
+  "type": "object",
+  "properties": {
+    "cadence": {"type": "number", "minimum": 0},
+    "certainty": {"type": "number", "minimum": 0},
+    "stall": {"type": "number", "minimum": 0},
+    "energy": {"type": "number", "minimum": 0, "maximum": 1}
+  },
+  "required": ["cadence", "certainty", "stall", "energy"]
+}
