@@ -1,64 +1,107 @@
-# WF-FND-003: Core Architecture Overview
+---
+id: WF-FND-003
+title: Core Architecture Overview
+status: Draft
+owners: [engineering, architecture]
+last_review: 2025-08-15
+audience: [engineering, product, UX]
+depends_on: [WF-FND-001, WF-FND-002]
+enables: [WF-TECH-001, WF-TECH-002, WF-TECH-003, WF-TECH-004, WF-UX-006]
+---
 
-## Document Metadata
-- **Document ID**: WF-FND-003
-- **Title**: Core Architecture Overview
-- **Version**: 1.0.0
-- **Date**: 2025-01-12
-- **Status**: Draft
-- **Dependencies**: WF-FND-001, WF-FND-002
-- **Enables**: WF-TECH-001, WF-UX-006
+# Generate Document: WF‑FND‑003 – Core Architecture Overview
 
-## Executive Summary
+## 🧬 Document DNA
+- **Unique ID:** WF‑FND‑003
+- **Category:** Foundation
+- **Priority:** P0 (Backbone for entire platform)
+- **Development Phase:** 1
+- **Estimated Length:** ~4,000 words
+- **Document Type:** Architectural Specification
 
-WF-FND-003 defines the five-layer architecture that turns raw model computation into a real-time, observable experience. The architecture enforces clear boundaries from user input through transport, orchestration, and final visualization, ensuring local-first control while remaining extensible for optional remote compute. Each layer communicates through structured events at a 60 Hz cadence, enabling precise energy tracking and auditability.
+## 🔗 Dependency Matrix
+- **Required Before This:**
+  - **WF‑FND‑001 – Vision & Principles:** Establishes local-first pillars and visible computation ethos.
+  - **WF‑FND‑002 – Energy Framework:** Defines energy units and event semantics used throughout layers.
+- **Enables After This:**
+  - **WF‑TECH‑001 – System Architecture:** Uses this five-layer blueprint.
+  - **WF‑TECH‑002 – Native Ollama Integration:** Implements Layer 2 contracts.
+  - **WF‑TECH‑003 – WebSocket Protocol:** Derives Layer 4 channels and payloads.
+  - **WF‑TECH‑004 – State Management & Storage:** Persists Layer 3 outputs.
+  - **WF‑UX‑006 – Energy Visualization:** Renders Layer 5 components.
+- **Cross‑References:**
+  - **WF‑FND‑004 – Decipher:** Real-time energy compiler living in Layer 3.
+  - **WF‑FND‑005 – Orchestrator:** Council scheduler that consumes Layer 3 events.
+  - **WF‑FND‑006 – Governance:** Ensures layered changes follow governance process.
 
-## Layer Overview
+## 🌟 Core Objective
+Define WIRTHFORGE’s five-layer runtime architecture that transforms raw model computation into a living, auditable experience. Each layer has strict responsibilities, communicates through structured events at 60 Hz, and preserves local-first control while permitting opt-in satellite compute.
 
-1. **L1 – Input & Identity**: Normalizes user actions and binds them to session context.
-2. **L2 – Model Compute**: Executes local models and streams tokens without blocking.
-3. **L3 – Orchestration & Energy**: Converts token streams into energy events and maintains state.
-4. **L4 – Contracts & Transport**: Carries events and commands over well-defined channels.
-5. **L5 – Visualization & UX**: Renders truth-backed visuals and exposes audit modes.
+## 📚 Knowledge Integration Checklist
+- [x] Layer definitions (L1–L5) including purpose, owned data, and emitted events.
+- [x] Real-time 60 Hz loop with non-blocking queues and backpressure strategy.
+- [x] Local vs satellite compute rules and latency budgets.
+- [x] Audit mode enabling reproducible event traces.
+- [x] Glossary alignment for terms such as “audit_mode” and “satellite_compute”.
 
-## Real‑Time Data Flow
+## 📝 Content Architecture
 
-Events travel upward from computation to visualization and downward from user commands to models. The orchestrator batches updates so the UI can render at ~16 ms intervals, applying backpressure when producers outpace consumers.
+### 1. Opening Hook – “Five Layers of a Living Forge”
+Introduce the architecture as a forge with five anvils. User intent enters Layer 1 as raw ore and emerges at Layer 5 as visible sparks. The harmony between layers makes the system feel alive rather than mechanical.
 
-## Local‑First Extensibility
+### 2. Layer Breakdown
+- **L1 – Input & Identity:** Normalizes gestures, binds session identity, and enforces security policies. Emits `input_event` objects.
+- **L2 – Model Compute:** Executes local models; may dispatch to satellite models when explicitly allowed. Streams `token_event` objects.
+- **L3 – Orchestration & Energy:** Hosts Decipher and state machines, converting token streams into `energy_frame` and `experience_event` messages.
+- **L4 – Contracts & Transport:** Defines WebSocket topics and contract schemas; applies backpressure and retries.
+- **L5 – Visualization & UX:** Renders energy-informed UI and exposes `audit_mode` for inspecting raw events.
 
-The system defaults to local execution but allows opt-in satellite models for heavy tasks. Remote calls must honor the same contracts so higher layers remain agnostic to compute location.
+### 3. Real-Time Data Flow
+Describe how an `input_event` travels upward, is transformed by each layer, and returns downward as control signals. Emphasize the 16.67 ms frame budget and deterministic sequencing.
 
-## Auditability
+### 4. Local-First Extensibility
+Explain optional `satellite_compute` for heavy models. All remote calls must pass through Layer 4 contracts, adding at most 5 ms latency and never bypassing local control.
 
-Every visual element traces back to a structured event emitted by L3. An audit mode in L5 can reveal raw payloads, enabling reproducibility and scientific transparency.
+### 5. Backpressure & Throttling
+Outline queue limits per layer. When producers outpace consumers, layers either drop lowest priority events or request upstream slow-down, guaranteeing sustained 60 Hz output.
 
-## Integration Points
+### 6. Auditability
+`audit_mode` in Layer 5 can replay events with timestamps and originating layer IDs. Logs are stored locally and subject to WF‑FND‑006 governance.
 
-- **WF-FND-004 – The Decipher**: Supplies the energy events that feed Layer 3.
-- **WF-FND-005 – The Orchestrator**: Consumes Layer 3 emissions and schedules frame execution.
-- **WF-TECH-004 – State Management**: Persists events and snapshots for audit and replay.
-- **WF-UX-006 – Energy Visualization**: Renders Layer 5 visuals based on event streams.
+### 7. Future Work
+- Define standardized metrics for cross-layer latency.
+- Explore zero-copy event passing to reduce overhead.
+- Prototype hardware-accelerated queues for high-tier devices.
 
-## Validation & Metrics
+### 8. Integration Points
+- **Decipher & Orchestrator:** plug into Layer 3 event loop.
+- **State Store:** Layer 3 persists energy frames to WF‑TECH‑004.
+- **Transport:** Layer 4 aligns with WF‑TECH‑003 topics.
+- **UX Components:** Layer 5 uses WF‑UX‑006 library.
 
-- **Frame cadence**: Orchestrated components must honor the 60 Hz timing contract.
-- **Latency budget**: Each layer processes within 16 ms to avoid frame drops.
-- **Integrity**: Every upward event contains the originating layer ID and timestamp.
-- **Extensibility**: Optional remote compute must not exceed 5 ms additional latency.
+### 9. Validation & Metrics
+- **Frame Cadence:** 100 sequential frames must stay within 16.67 ms processing.
+- **Integrity:** Every event carries `layerId` and `timestamp`.
+- **Extensibility:** Satellite compute adds ≤5 ms latency.
+- **Isolation:** Lower layers cannot access UI state directly.
 
 ## 🎨 Required Deliverables
+- **Document:** This specification.
+- **Summary:** Executive overview.
+- **Diagrams:** `layers.mmd`, `dataflow.mmd`.
+- **Tests:** `layer-contract.spec.md` validating boundaries and latency.
+- **Poster Brief:** One-page synopsis for stakeholders.
+- **Glossary Delta:** Definitions for new terms.
+- **Changelog:** Versioned history.
 
-- [x] Core architecture document (this file)
-- [x] Executive summary
-- [x] Layer diagram – `assets/diagrams/WF-FND-003-layers.mmd`
-- [x] Dataflow diagram – `assets/diagrams/WF-FND-003-dataflow.mmd`
-- [x] Layer contract test – `tests/WF-FND-003/layer-contract.spec.js`
-- [x] Version control changelog
+## ✅ Quality Validation Criteria
+- Layer responsibilities are mutually exclusive and collectively exhaustive.
+- All inter-layer communication uses defined schemas.
+- Architecture remains operable on low-tier hardware.
+- Audit mode produces reproducible traces.
 
-## ✅ Quality Criteria
+## 🔁 Post-Generation Protocol
+- Update WF‑FND‑006 glossary with new terms.
+- Increment changelog to version 1.0.0.
+- Notify maintainers of dependent TECH and UX documents.
 
-- **Determinism**: Layer boundaries produce reproducible results.
-- **Observability**: Each layer exposes metrics for audit and debugging.
-- **Isolation**: No layer leaks private data across boundaries.
-- **Compliance**: Follows naming and numbering conventions from WF-META-001.
