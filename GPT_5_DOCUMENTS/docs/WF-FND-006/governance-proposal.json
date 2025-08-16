@@ -1,0 +1,83 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://wirthforge.ai/schemas/governance-proposal.json",
+  "title": "WIRTHFORGE Governance Proposal",
+  "description": "Defines the structure of a governance proposal document.",
+  "type": "object",
+  "required": ["id", "title", "author", "type", "problemStatement", "solution", "benefits", "alternatives", "metrics", "dependencies", "risks"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^WF-GOV-[0-9]{3}$",
+      "description": "Unique proposal identifier"
+    },
+    "title": {
+      "type": "string",
+      "description": "Proposal title"
+    },
+    "author": {
+      "type": "string",
+      "description": "Proposer’s name or handle"
+    },
+    "type": {
+      "type": "string",
+      "enum": ["Feature", "Model", "Path", "Algorithm", "Policy"],
+      "description": "Proposal category"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["Draft", "Comment", "Submitted", "Review", "Trial", "Audit", "Voting", "Accepted", "Rejected", "Deferred"],
+      "default": "Draft"
+    },
+    "problemStatement": {
+      "type": "string",
+      "description": "Clear description of the problem the proposal addresses"
+    },
+    "solution": {
+      "type": "string",
+      "description": "Detailed description of the proposed solution"
+    },
+    "benefits": {
+      "type": "string",
+      "description": "Expected benefits and improvements"
+    },
+    "alternatives": {
+      "type": "string",
+      "description": "Considered alternatives and reasons for dismissal"
+    },
+    "metrics": {
+      "type": "object",
+      "description": "Metrics to collect during trial (e.g. latency, energy accuracy, fairness)",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "dependencies": {
+      "type": "array",
+      "description": "List of documents or components that must be completed before this proposal",
+      "items": {
+        "type": "string"
+      }
+    },
+    "risks": {
+      "type": "string",
+      "description": "Known risks and mitigations"
+    },
+    "created": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Proposal creation date"
+    },
+    "updated": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Last update"
+    },
+    "attachments": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

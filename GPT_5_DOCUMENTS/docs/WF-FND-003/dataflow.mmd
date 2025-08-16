@@ -1,0 +1,15 @@
+sequenceDiagram
+    participant User
+    participant L1 as Layer1
+    participant L2 as Layer2
+    participant L3 as Layer3
+    participant L4 as Layer4
+    participant L5 as Layer5
+
+    User->>L1: input_event
+    L1->>L2: normalized prompt
+    L2->>L3: token_event stream
+    L3->>L4: energy_frame / experience_event
+    L4->>L5: render_command
+    L5-->>User: visual feedback
+    L5-->>L3: user action

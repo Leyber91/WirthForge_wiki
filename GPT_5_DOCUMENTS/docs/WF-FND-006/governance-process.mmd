@@ -1,0 +1,15 @@
+flowchart LR
+    A[Draft Proposal] --> B[Community Comment]
+    B --> C[Formal Submission]
+    C --> D[Council Review]
+    D --> E[Sandbox Trial]
+    E --> F[Audit & Metrics Collection]
+    F --> G[Council Vote]
+    G --> H{Decision}
+    H -->|Accept| I[Release & Versioning]
+    H -->|Reject| J[Return to Proposer]
+    H -->|Revise| K[Revise & Resubmit]
+    H -->|Postpone| L[Deferred Review]
+
+    classDef stage fill:#f0fdf4,stroke:#34d399,stroke-width:2px,color:#064e3b;
+    class A,B,C,D,E,F,G,H,I,J,K,L stage;

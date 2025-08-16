@@ -1,5 +1,14 @@
-# WF-FND-003 Summary
+# WF‑FND‑003 Executive Summary
 
-WF-FND-003 establishes the core five-layer stack for WIRTHFORGE. Inputs pass through identity checks, invoke local or optional remote models, and are orchestrated into energy-aware events that drive the UI. The design enforces strict layer boundaries and a 60 Hz event cadence so every visual aligns with measurable computation.
+## Purpose
+Outline WIRTHFORGE’s five-layer architecture that transforms user inputs into energy-aware visual experiences while preserving strict layer boundaries and local-first control.
 
-The architecture defaults to local-first execution but can extend to satellite compute when explicitly enabled. All communication flows through structured contracts, enabling audit modes and reproducible sessions.
+## Key Concepts
+- **Layered Responsibilities:** L1 handles input & identity, L2 performs model compute, L3 orchestrates energy and state, L4 transports events, and L5 renders UI with optional audit mode.
+- **Real-Time Cadence:** All layers operate within a 16.67 ms frame budget, communicating through non-blocking queues at 60 Hz.
+- **Local-First Extensibility:** Remote satellite compute is optional and must obey the same contracts, adding no more than 5 ms latency.
+- **Auditability:** Every event carries its originating layer ID and timestamp, enabling full replay and inspection by users or auditors.
+
+## Integration
+The architecture underpins technical specs like System Architecture (WF‑TECH‑001), WebSocket Protocol (WF‑TECH‑003) and Energy Visualization (WF‑UX‑006), and provides context for Decipher (WF‑FND‑004) and Orchestrator (WF‑FND‑005).
+

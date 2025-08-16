@@ -1,0 +1,13 @@
+graph TD
+    A[Token Stream] --> B[Ingestion Queue]
+    B --> C[Normalize Signals]
+    C --> D[Compute Energy per Token]
+    D --> E[Frame Buffer (16.67ms)]
+    E --> F[Smooth via EMA]
+    F --> G[Build energy_frame Event]
+    G --> H[Emit Event over WebSocket]
+    G --> I[Persist via State Store]
+    H --> J[UI Visualization]
+
+    classDef stage fill:#e0f2fe,stroke:#7dd3fc,stroke-width:2px,color:#0369a1;
+    class A,B,C,D,E,F,G,H,I,J stage;

@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://wirthforge.ai/schemas/event-schema.json",
+  "title": "WIRTHFORGE Decipher Event Schema",
+  "description": "Defines the structure of energy_frame and experience_event messages emitted by the Decipher.",
+  "type": "object",
+  "definitions": {
+    "energy_frame": {
+      "type": "object",
+      "required": ["timestamp", "energy", "modelId", "frameNumber"],
+      "properties": {
+        "timestamp": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "energy": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "modelId": {
+          "type": "string",
+          "description": "Identifier for the model or ensemble"
+        },
+        "frameNumber": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "di": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Disagreement Index (optional)"
+        },
+        "ensembleEnergy": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Ensemble energy when multiple models"
+        }
+      }
+    },
+    "experience_event": {
+      "type": "object",
+      "required": ["timestamp", "eventType"],
+      "properties": {
+        "timestamp": { "type": "string", "format": "date-time" },
+        "eventType": {
+          "type": "string",
+          "enum": ["interference", "field", "resonance"]
+        },
+        "strength": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "modelIds": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    }
+  },
+  "oneOf": [
+    { "$ref": "#/definitions/energy_frame" },
+    { "$ref": "#/definitions/experience_event" }
+  ]
+}

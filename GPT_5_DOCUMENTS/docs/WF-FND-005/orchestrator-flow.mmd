@@ -1,0 +1,23 @@
+sequenceDiagram
+    participant ORC as Orchestrator
+    participant Dec as Decipher
+    participant M1 as Model 1
+    participant M2 as Model 2
+    participant L4 as Transport
+    participant UX as UX/Level System
+
+    UX->>ORC: setLevel(2)
+    ORC->>M1: start(prompt)
+    ORC->>M2: start(prompt)
+    loop each token
+      M1-->>ORC: token1
+      M2-->>ORC: token2
+      ORC->>Dec: ingestTokens(tokens)
+      Dec-->>ORC: energyFrame
+      ORC->>ORC: consensusDecision(E(t), DI)
+      ORC-->>L4: sendExperienceEvent(if interference/resonance)
+      ORC->>M1: adjustWeight(alpha1)
+      ORC->>M2: adjustWeight(alpha2)
+    end
+    L4-->>UX: experienceEvent
+    ORC->>UX: councilConsensus
