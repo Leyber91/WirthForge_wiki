@@ -1,0 +1,49 @@
+# wirthforge-processes.yaml
+name: "WIRTHFORGE Local Runtime"
+version: "1.0.0"
+processes:
+  orchestrator:
+    name: "Main Orchestrator"
+    executable: "python"
+    args: ["-m", "wirthforge.orchestrator"]
+    priority: "high"
+    restart: "always"
+    dependencies: []
+    
+  model_engine:
+    name: "Ollama Model Server"
+    executable: "ollama"
+    args: ["serve"]
+    priority: "high" 
+    restart: "on-failure"
+    dependencies: []
+    
+  api_server:
+    name: "FastAPI Transport"
+    executable: "python"
+    args: ["-m", "wirthforge.api"]
+    priority: "medium"
+    restart: "always"
+    dependencies: ["orchestrator"]
+    
+  decipher:
+    name: "DECIPHER Runtime"
+    executable: "python"
+    args: ["-m", "wirthforge.decipher"]
+    priority: "medium"
+    restart: "always"
+    dependencies: ["orchestrator", "model_engine"]
+
+startup_sequence:
+  - orchestrator
+  - model_engine
+  - api_server
+  - decipher
+
+health_checks:
+  orchestrator:
+    endpoint: "http://127.0.0.1:8145/health"
+    interval: 5
+  model_engine:
+    endpoint: "http://127.0.0.1:11434/api/tags"
+    interval: 10
