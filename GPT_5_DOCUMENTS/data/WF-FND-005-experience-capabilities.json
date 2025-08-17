@@ -1,0 +1,374 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "WIRTHFORGE Experience Capabilities Schema",
+  "description": "Defines experience levels, hardware tiers, user paths, and orchestration capabilities",
+  "type": "object",
+  "properties": {
+    "levels": {
+      "type": "object",
+      "description": "Progressive experience levels with capabilities and requirements",
+      "properties": {
+        "1": {
+          "type": "object",
+          "properties": {
+            "name": { "type": "string", "const": "Lightning Strike" },
+            "description": { "type": "string", "const": "Solo AI with instant response visualization" },
+            "max_models": { "type": "integer", "const": 1 },
+            "features": {
+              "type": "array",
+              "items": { "type": "string" },
+              "const": ["single_stream", "token_timing", "basic_energy", "lightning_visualization"]
+            },
+            "unlocked_by": {
+              "type": "array",
+              "items": { "type": "string" },
+              "const": []
+            },
+            "unlock_next_requires": {
+              "type": "array",
+              "items": { "type": "string" },
+              "const": ["first_lightning", "generate_10_responses", "session_time_3h"]
+            },
+            "ui_elements": {
+              "type": "array",
+              "items": { "type": "string" },
+              "const": ["prompt_input", "send_button", "single_response_view", "lightning_canvas", "basic_energy_meter"]
+            }
+          },
+          "required": ["name", "description", "max_models", "features", "unlocked_by", "unlock_next_requires", "ui_elements"]
+        },
+        "2": {
+          "type": "object",
+          "properties": {
+            "name": { "type": "string", "const": "Council Formation" },
+            "description": { "type": "string", "const": "Multiple AI models running in parallel with interference detection" },
+            "max_models": { "type": "integer", "const": 3 },
+            "features": {
+              "type": "array",
+              "items": { "type": "string" },
+              "const": ["multi_stream", "interference_detection", "consensus_synthesis", "parallel_visualization", "model_identification"]
+            },
+            "unlocked_by": {
+              "type": "array",
+              "items": { "type": "string" },
+              "const": ["first_lightning", "generate_10_responses", "session_time_3h"]
+            },
+            "unlock_next_requires": {
+              "type": "array",
+              "items": { "type": "string" },
+              "const": ["council_master", "harmony_achieved", "interference_observed", "session_time_10h"]
+            },
+            "ui_elements": {
+              "type": "array",
+              "items": { "type": "string" },
+              "const": ["model_selector", "stream_visualization", "interference_overlay", "consensus_display", "timing_metrics"]
+            }
+          },
+          "required": ["name", "description", "max_models", "features", "unlocked_by", "unlock_next_requires", "ui_elements"]
+        },
+        "3": {
+          "type": "object",
+          "properties": {
+            "name": { "type": "string", "const": "Architect Mind" },
+            "description": { "type": "string", "const": "Structured AI pipelines with chaining and routing capabilities" },
+            "max_models": { "type": "integer", "const": 4 },
+            "features": {
+              "type": "array",
+              "items": { "type": "string" },
+              "const": ["node_architecture", "pattern_library", "workflow_chaining", "routing_logic", "persistent_patterns"]
+            },
+            "unlocked_by": {
+              "type": "array",
+              "items": { "type": "string" },
+              "const": ["council_master", "harmony_achieved", "interference_observed", "session_time_10h"]
+            },
+            "unlock_next_requires": {
+              "type": "array",
+              "items": { "type": "string" },
+              "const": ["architecture_built", "dynamic_paths", "pattern_reuse", "session_time_25h"]
+            },
+            "ui_elements": {
+              "type": "array",
+              "items": { "type": "string" },
+              "const": ["architecture_builder", "node_palette", "connection_editor", "pattern_library_browser", "workflow_executor"]
+            }
+          },
+          "required": ["name", "description", "max_models", "features", "unlocked_by", "unlock_next_requires", "ui_elements"]
+        },
+        "4": {
+          "type": "object",
+          "properties": {
+            "name": { "type": "string", "const": "Adaptive Flow" },
+            "description": { "type": "string", "const": "Dynamic self-optimizing system with usage learning" },
+            "max_models": { "type": "integer", "const": 4 },
+            "features": {
+              "type": "array",
+              "items": { "type": "string" },
+              "const": ["adaptive_visuals", "system_suggestions", "usage_learning", "auto_optimization", "collaborative_field"]
+            },
+            "unlocked_by": {
+              "type": "array",
+              "items": { "type": "string" },
+              "const": ["architecture_built", "dynamic_paths", "pattern_reuse", "session_time_25h"]
+            },
+            "unlock_next_requires": {
+              "type": "array",
+              "items": { "type": "string" },
+              "const": ["adaptive_mastery", "flow_control", "optimization_accepted", "session_time_50h"]
+            },
+            "ui_elements": {
+              "type": "array",
+              "items": { "type": "string" },
+              "const": ["suggestion_panel", "feedback_controls", "adaptation_dashboard", "optimization_history", "collaborative_indicators"]
+            }
+          },
+          "required": ["name", "description", "max_models", "features", "unlocked_by", "unlock_next_requires", "ui_elements"]
+        },
+        "5": {
+          "type": "object",
+          "properties": {
+            "name": { "type": "string", "const": "Consciousness Emergence" },
+            "description": { "type": "string", "const": "Full model orchestra with emergent intelligence and resonance detection" },
+            "max_models": { "type": "integer", "const": 6 },
+            "features": {
+              "type": "array",
+              "items": { "type": "string" },
+              "const": ["full_council", "resonance_detection", "generative_art_modes", "consciousness_emergence", "collective_intelligence"]
+            },
+            "unlocked_by": {
+              "type": "array",
+              "items": { "type": "string" },
+              "const": ["adaptive_mastery", "flow_control", "optimization_accepted", "session_time_50h"]
+            },
+            "unlock_next_requires": {
+              "type": "array",
+              "items": { "type": "string" },
+              "const": []
+            },
+            "ui_elements": {
+              "type": "array",
+              "items": { "type": "string" },
+              "const": ["full_orchestra_view", "resonance_visualizer", "art_generation_controls", "consciousness_monitor", "emergence_tracker"]
+            }
+          },
+          "required": ["name", "description", "max_models", "features", "unlocked_by", "unlock_next_requires", "ui_elements"]
+        }
+      },
+      "required": ["1", "2", "3", "4", "5"]
+    },
+    "tiers": {
+      "type": "object",
+      "description": "Hardware capability tiers with resource constraints",
+      "properties": {
+        "low": {
+          "type": "object",
+          "properties": {
+            "name": { "type": "string", "const": "Low Tier" },
+            "description": { "type": "string", "const": "CPU-only, limited resources" },
+            "max_parallel_models": { "type": "integer", "const": 2 },
+            "max_loaded_models": { "type": "integer", "const": 3 },
+            "max_model_size": { "type": "string", "const": "1.7B" },
+            "effects_quality": { "type": "string", "enum": ["low"], "const": "low" },
+            "allow_resonance": { "type": "boolean", "const": false },
+            "allow_broker": { "type": "boolean", "const": false },
+            "frame_rate_target": { "type": "integer", "const": 30 },
+            "particle_limit": { "type": "integer", "const": 500 },
+            "notes": { "type": "string", "const": "Simplified processing, reduced visual effects, sequential model execution when needed" }
+          },
+          "required": ["name", "description", "max_parallel_models", "max_loaded_models", "max_model_size", "effects_quality", "allow_resonance", "allow_broker", "frame_rate_target", "particle_limit"]
+        },
+        "mid": {
+          "type": "object",
+          "properties": {
+            "name": { "type": "string", "const": "Mid Tier" },
+            "description": { "type": "string", "const": "GPU available, moderate parallelism" },
+            "max_parallel_models": { "type": "integer", "const": 4 },
+            "max_loaded_models": { "type": "integer", "const": 4 },
+            "max_model_size": { "type": "string", "const": "4B" },
+            "effects_quality": { "type": "string", "enum": ["medium"], "const": "medium" },
+            "allow_resonance": { "type": "boolean", "const": true },
+            "allow_broker": { "type": "boolean", "const": false },
+            "frame_rate_target": { "type": "integer", "const": 60 },
+            "particle_limit": { "type": "integer", "const": 1000 },
+            "notes": { "type": "string", "const": "Full feature set with standard performance, council capabilities enabled" }
+          },
+          "required": ["name", "description", "max_parallel_models", "max_loaded_models", "max_model_size", "effects_quality", "allow_resonance", "allow_broker", "frame_rate_target", "particle_limit"]
+        },
+        "high": {
+          "type": "object",
+          "properties": {
+            "name": { "type": "string", "const": "High Tier" },
+            "description": { "type": "string", "const": "High-end hardware, full capabilities" },
+            "max_parallel_models": { "type": "integer", "const": 6 },
+            "max_loaded_models": { "type": "integer", "const": 6 },
+            "max_model_size": { "type": "string", "const": "8B" },
+            "effects_quality": { "type": "string", "enum": ["high"], "const": "high" },
+            "allow_resonance": { "type": "boolean", "const": true },
+            "allow_broker": { "type": "boolean", "const": true },
+            "frame_rate_target": { "type": "integer", "const": 60 },
+            "particle_limit": { "type": "integer", "const": 2000 },
+            "notes": { "type": "string", "const": "Maximum capabilities, complex visualizations, full resonance detection" }
+          },
+          "required": ["name", "description", "max_parallel_models", "max_loaded_models", "max_model_size", "effects_quality", "allow_resonance", "allow_broker", "frame_rate_target", "particle_limit"]
+        },
+        "hybrid": {
+          "type": "object",
+          "properties": {
+            "name": { "type": "string", "const": "Broker Hybrid" },
+            "description": { "type": "string", "const": "Local processing with optional cloud augmentation" },
+            "max_parallel_models": { "type": "integer", "const": 6 },
+            "max_loaded_models": { "type": "integer", "const": 6 },
+            "max_model_size": { "type": "string", "const": "8B+" },
+            "effects_quality": { "type": "string", "enum": ["high"], "const": "high" },
+            "allow_resonance": { "type": "boolean", "const": true },
+            "allow_broker": { "type": "boolean", "const": true },
+            "broker_usage": { "type": "string", "enum": ["assist"], "const": "assist" },
+            "frame_rate_target": { "type": "integer", "const": 60 },
+            "particle_limit": { "type": "integer", "const": 2000 },
+            "notes": { "type": "string", "const": "Hybrid cloud assistance for heavy computations, maintains local-first control" }
+          },
+          "required": ["name", "description", "max_parallel_models", "max_loaded_models", "max_model_size", "effects_quality", "allow_resonance", "allow_broker", "broker_usage", "frame_rate_target", "particle_limit"]
+        }
+      },
+      "required": ["low", "mid", "high", "hybrid"]
+    },
+    "paths": {
+      "type": "object",
+      "description": "User journey paths with distinct characteristics",
+      "properties": {
+        "forge": {
+          "type": "object",
+          "properties": {
+            "name": { "type": "string", "const": "Forge" },
+            "description": { "type": "string", "const": "Action-oriented, direct responses with energetic visuals" },
+            "model_preference": { "type": "string", "const": "fast_and_direct" },
+            "visual_style": { "type": "string", "const": "fire_and_metal" },
+            "color_palette": {
+              "type": "array",
+              "items": { "type": "string" },
+              "const": ["#FF6B35", "#F7931E", "#FFD23F", "#EE4B2B"]
+            },
+            "interaction_style": { "type": "string", "const": "immediate_feedback" },
+            "preferred_models": {
+              "type": "array",
+              "items": { "type": "string" },
+              "const": ["llama2-7b-chat", "codellama-7b", "mistral-7b-instruct"]
+            }
+          },
+          "required": ["name", "description", "model_preference", "visual_style", "color_palette", "interaction_style", "preferred_models"]
+        },
+        "scholar": {
+          "type": "object",
+          "properties": {
+            "name": { "type": "string", "const": "Scholar" },
+            "description": { "type": "string", "const": "Analytical, detailed responses with structured visuals" },
+            "model_preference": { "type": "string", "const": "detailed_and_cited" },
+            "visual_style": { "type": "string", "const": "water_and_crystal" },
+            "color_palette": {
+              "type": "array",
+              "items": { "type": "string" },
+              "const": ["#1E88E5", "#42A5F5", "#90CAF9", "#E3F2FD"]
+            },
+            "interaction_style": { "type": "string", "const": "methodical_exploration" },
+            "preferred_models": {
+              "type": "array",
+              "items": { "type": "string" },
+              "const": ["llama2-13b-chat", "vicuna-13b", "alpaca-13b"]
+            }
+          },
+          "required": ["name", "description", "model_preference", "visual_style", "color_palette", "interaction_style", "preferred_models"]
+        },
+        "sage": {
+          "type": "object",
+          "properties": {
+            "name": { "type": "string", "const": "Sage" },
+            "description": { "type": "string", "const": "Introspective, holistic responses with organic visuals" },
+            "model_preference": { "type": "string", "const": "introspective_and_holistic" },
+            "visual_style": { "type": "string", "const": "mist_and_geometry" },
+            "color_palette": {
+              "type": "array",
+              "items": { "type": "string" },
+              "const": ["#7B1FA2", "#9C27B0", "#BA68C8", "#E1BEE7"]
+            },
+            "interaction_style": { "type": "string", "const": "contemplative_flow" },
+            "preferred_models": {
+              "type": "array",
+              "items": { "type": "string" },
+              "const": ["llama2-70b-chat", "gpt4all-falcon", "wizardlm-13b"]
+            }
+          },
+          "required": ["name", "description", "model_preference", "visual_style", "color_palette", "interaction_style", "preferred_models"]
+        }
+      },
+      "required": ["forge", "scholar", "sage"]
+    },
+    "achievements": {
+      "type": "object",
+      "description": "Achievement definitions for progression tracking",
+      "properties": {
+        "first_lightning": {
+          "type": "object",
+          "properties": {
+            "name": { "type": "string", "const": "First Lightning" },
+            "description": { "type": "string", "const": "Successfully generated your first AI response with energy visualization" },
+            "trigger": { "type": "string", "const": "first_successful_generation" },
+            "level_requirement": { "type": "integer", "const": 1 },
+            "energy_reward": { "type": "number", "const": 10.0 }
+          },
+          "required": ["name", "description", "trigger", "level_requirement", "energy_reward"]
+        },
+        "generate_10_responses": {
+          "type": "object",
+          "properties": {
+            "name": { "type": "string", "const": "Conversation Starter" },
+            "description": { "type": "string", "const": "Generated 10 AI responses, showing engagement with the system" },
+            "trigger": { "type": "string", "const": "response_count_milestone" },
+            "threshold": { "type": "integer", "const": 10 },
+            "level_requirement": { "type": "integer", "const": 1 },
+            "energy_reward": { "type": "number", "const": 25.0 }
+          },
+          "required": ["name", "description", "trigger", "threshold", "level_requirement", "energy_reward"]
+        },
+        "council_master": {
+          "type": "object",
+          "properties": {
+            "name": { "type": "string", "const": "Council Master" },
+            "description": { "type": "string", "const": "Successfully orchestrated multiple AI models in parallel" },
+            "trigger": { "type": "string", "const": "successful_council_sessions" },
+            "threshold": { "type": "integer", "const": 5 },
+            "level_requirement": { "type": "integer", "const": 2 },
+            "energy_reward": { "type": "number", "const": 50.0 }
+          },
+          "required": ["name", "description", "trigger", "threshold", "level_requirement", "energy_reward"]
+        },
+        "harmony_achieved": {
+          "type": "object",
+          "properties": {
+            "name": { "type": "string", "const": "Harmony Achieved" },
+            "description": { "type": "string", "const": "Witnessed interference patterns between multiple AI streams" },
+            "trigger": { "type": "string", "const": "interference_detected" },
+            "threshold": { "type": "integer", "const": 3 },
+            "level_requirement": { "type": "integer", "const": 2 },
+            "energy_reward": { "type": "number", "const": 75.0 }
+          },
+          "required": ["name", "description", "trigger", "threshold", "level_requirement", "energy_reward"]
+        }
+      },
+      "required": ["first_lightning", "generate_10_responses", "council_master", "harmony_achieved"]
+    },
+    "performance_thresholds": {
+      "type": "object",
+      "description": "Performance requirements and thresholds",
+      "properties": {
+        "frame_budget_ms": { "type": "number", "const": 16.67 },
+        "target_fps": { "type": "integer", "const": 60 },
+        "max_event_queue_size": { "type": "integer", "const": 1000 },
+        "backpressure_threshold": { "type": "number", "const": 0.8 },
+        "graceful_degradation_threshold": { "type": "number", "const": 0.9 },
+        "emergency_drop_threshold": { "type": "number", "const": 0.95 }
+      },
+      "required": ["frame_budget_ms", "target_fps", "max_event_queue_size", "backpressure_threshold", "graceful_degradation_threshold", "emergency_drop_threshold"]
+    }
+  },
+  "required": ["levels", "tiers", "paths", "achievements", "performance_thresholds"]
+}

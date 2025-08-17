@@ -1,0 +1,541 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "WIRTHFORGE Governance Decision Matrix",
+  "description": "Decision framework for evaluating proposals against core principles and governance criteria",
+  "type": "object",
+  "properties": {
+    "evaluation_framework": {
+      "type": "object",
+      "description": "Core framework for evaluating all governance decisions",
+      "properties": {
+        "core_principle_checks": {
+          "type": "object",
+          "description": "Mandatory checks against inviolable core principles",
+          "properties": {
+            "local_first_enforcement": {
+              "type": "object",
+              "properties": {
+                "question": { "type": "string", "const": "Does this proposal maintain local-first processing for core modules?" },
+                "weight": { "type": "number", "const": 1.0 },
+                "pass_threshold": { "type": "number", "const": 1.0 },
+                "evaluation_criteria": {
+                  "type": "array",
+                  "items": { "type": "string" },
+                  "const": [
+                    "No cloud dependencies for core functionality",
+                    "Local data processing and storage",
+                    "Offline capability preservation",
+                    "User data sovereignty maintained"
+                  ]
+                },
+                "failure_action": { "type": "string", "const": "immediate_rejection" }
+              },
+              "required": ["question", "weight", "pass_threshold", "evaluation_criteria", "failure_action"]
+            },
+            "docker_prohibition": {
+              "type": "object",
+              "properties": {
+                "question": { "type": "string", "const": "Does this proposal avoid Docker usage in core modules?" },
+                "weight": { "type": "number", "const": 1.0 },
+                "pass_threshold": { "type": "number", "const": 1.0 },
+                "evaluation_criteria": {
+                  "type": "array",
+                  "items": { "type": "string" },
+                  "const": [
+                    "No Docker containers in core architecture",
+                    "Native process execution maintained",
+                    "Direct hardware access preserved",
+                    "Containerization limited to optional modules"
+                  ]
+                },
+                "failure_action": { "type": "string", "const": "immediate_rejection" }
+              },
+              "required": ["question", "weight", "pass_threshold", "evaluation_criteria", "failure_action"]
+            },
+            "performance_constraint": {
+              "type": "object",
+              "properties": {
+                "question": { "type": "string", "const": "Does this proposal maintain 60 FPS real-time performance?" },
+                "weight": { "type": "number", "const": 1.0 },
+                "pass_threshold": { "type": "number", "const": 1.0 },
+                "evaluation_criteria": {
+                  "type": "array",
+                  "items": { "type": "string" },
+                  "const": [
+                    "16.67ms frame budget compliance",
+                    "No blocking operations in render path",
+                    "Performance degradation analysis provided",
+                    "Hardware tier compatibility maintained"
+                  ]
+                },
+                "failure_action": { "type": "string", "const": "conditional_approval_with_performance_plan" }
+              },
+              "required": ["question", "weight", "pass_threshold", "evaluation_criteria", "failure_action"]
+            },
+            "energy_truth_visualization": {
+              "type": "object",
+              "properties": {
+                "question": { "type": "string", "const": "Does this proposal maintain energy-truth visualization principles?" },
+                "weight": { "type": "number", "const": 1.0 },
+                "pass_threshold": { "type": "number", "const": 1.0 },
+                "evaluation_criteria": {
+                  "type": "array",
+                  "items": { "type": "string" },
+                  "const": [
+                    "Visual representation matches computational reality",
+                    "No fabricated or misleading effects",
+                    "Energy particle generation tied to actual processing",
+                    "User can verify system behavior through visuals"
+                  ]
+                },
+                "failure_action": { "type": "string", "const": "requires_redesign" }
+              },
+              "required": ["question", "weight", "pass_threshold", "evaluation_criteria", "failure_action"]
+            },
+            "ui_presence_requirement": {
+              "type": "object",
+              "properties": {
+                "question": { "type": "string", "const": "Does this proposal maintain visible UI presence for all AI operations?" },
+                "weight": { "type": "number", "const": 1.0 },
+                "pass_threshold": { "type": "number", "const": 1.0 },
+                "evaluation_criteria": {
+                  "type": "array",
+                  "items": { "type": "string" },
+                  "const": [
+                    "No hidden or background AI operations",
+                    "User awareness of all AI activity",
+                    "Transparent processing indicators",
+                    "Clear user control mechanisms"
+                  ]
+                },
+                "failure_action": { "type": "string", "const": "requires_transparency_enhancement" }
+              },
+              "required": ["question", "weight", "pass_threshold", "evaluation_criteria", "failure_action"]
+            },
+            "emergent_behavior_support": {
+              "type": "object",
+              "properties": {
+                "question": { "type": "string", "const": "Does this proposal support emergent AI behavior patterns?" },
+                "weight": { "type": "number", "const": 1.0 },
+                "pass_threshold": { "type": "number", "const": 1.0 },
+                "evaluation_criteria": {
+                  "type": "array",
+                  "items": { "type": "string" },
+                  "const": [
+                    "Allows for unpredictable AI responses",
+                    "Supports creative and novel outputs",
+                    "Avoids over-constraining AI behavior",
+                    "Enables serendipitous discoveries"
+                  ]
+                },
+                "failure_action": { "type": "string", "const": "requires_flexibility_enhancement" }
+              },
+              "required": ["question", "weight", "pass_threshold", "evaluation_criteria", "failure_action"]
+            }
+          },
+          "required": ["local_first_enforcement", "docker_prohibition", "performance_constraint", "energy_truth_visualization", "ui_presence_requirement", "emergent_behavior_support"]
+        },
+        "technical_evaluation": {
+          "type": "object",
+          "description": "Technical merit and implementation feasibility assessment",
+          "properties": {
+            "architecture_compatibility": {
+              "type": "object",
+              "properties": {
+                "question": { "type": "string", "const": "How well does this proposal integrate with existing architecture?" },
+                "weight": { "type": "number", "const": 0.8 },
+                "scoring_criteria": {
+                  "type": "object",
+                  "properties": {
+                    "seamless_integration": { "type": "number", "const": 5.0 },
+                    "minor_modifications": { "type": "number", "const": 4.0 },
+                    "moderate_refactoring": { "type": "number", "const": 3.0 },
+                    "significant_changes": { "type": "number", "const": 2.0 },
+                    "architectural_overhaul": { "type": "number", "const": 1.0 }
+                  },
+                  "required": ["seamless_integration", "minor_modifications", "moderate_refactoring", "significant_changes", "architectural_overhaul"]
+                },
+                "pass_threshold": { "type": "number", "const": 3.0 }
+              },
+              "required": ["question", "weight", "scoring_criteria", "pass_threshold"]
+            },
+            "implementation_complexity": {
+              "type": "object",
+              "properties": {
+                "question": { "type": "string", "const": "What is the implementation complexity and risk level?" },
+                "weight": { "type": "number", "const": 0.7 },
+                "scoring_criteria": {
+                  "type": "object",
+                  "properties": {
+                    "low_complexity_low_risk": { "type": "number", "const": 5.0 },
+                    "moderate_complexity_low_risk": { "type": "number", "const": 4.0 },
+                    "moderate_complexity_moderate_risk": { "type": "number", "const": 3.0 },
+                    "high_complexity_moderate_risk": { "type": "number", "const": 2.0 },
+                    "high_complexity_high_risk": { "type": "number", "const": 1.0 }
+                  },
+                  "required": ["low_complexity_low_risk", "moderate_complexity_low_risk", "moderate_complexity_moderate_risk", "high_complexity_moderate_risk", "high_complexity_high_risk"]
+                },
+                "pass_threshold": { "type": "number", "const": 2.5 }
+              },
+              "required": ["question", "weight", "scoring_criteria", "pass_threshold"]
+            },
+            "testing_strategy": {
+              "type": "object",
+              "properties": {
+                "question": { "type": "string", "const": "How comprehensive is the testing and validation strategy?" },
+                "weight": { "type": "number", "const": 0.6 },
+                "scoring_criteria": {
+                  "type": "object",
+                  "properties": {
+                    "comprehensive_test_suite": { "type": "number", "const": 5.0 },
+                    "adequate_unit_integration_tests": { "type": "number", "const": 4.0 },
+                    "basic_testing_coverage": { "type": "number", "const": 3.0 },
+                    "minimal_testing_plan": { "type": "number", "const": 2.0 },
+                    "no_testing_strategy": { "type": "number", "const": 1.0 }
+                  },
+                  "required": ["comprehensive_test_suite", "adequate_unit_integration_tests", "basic_testing_coverage", "minimal_testing_plan", "no_testing_strategy"]
+                },
+                "pass_threshold": { "type": "number", "const": 3.0 }
+              },
+              "required": ["question", "weight", "scoring_criteria", "pass_threshold"]
+            }
+          },
+          "required": ["architecture_compatibility", "implementation_complexity", "testing_strategy"]
+        },
+        "user_impact_assessment": {
+          "type": "object",
+          "description": "Assessment of impact on user experience and community",
+          "properties": {
+            "user_experience_enhancement": {
+              "type": "object",
+              "properties": {
+                "question": { "type": "string", "const": "How significantly does this proposal improve user experience?" },
+                "weight": { "type": "number", "const": 0.9 },
+                "scoring_criteria": {
+                  "type": "object",
+                  "properties": {
+                    "transformative_improvement": { "type": "number", "const": 5.0 },
+                    "significant_enhancement": { "type": "number", "const": 4.0 },
+                    "moderate_improvement": { "type": "number", "const": 3.0 },
+                    "minor_enhancement": { "type": "number", "const": 2.0 },
+                    "no_user_benefit": { "type": "number", "const": 1.0 }
+                  },
+                  "required": ["transformative_improvement", "significant_enhancement", "moderate_improvement", "minor_enhancement", "no_user_benefit"]
+                },
+                "pass_threshold": { "type": "number", "const": 2.5 }
+              },
+              "required": ["question", "weight", "scoring_criteria", "pass_threshold"]
+            },
+            "accessibility_impact": {
+              "type": "object",
+              "properties": {
+                "question": { "type": "string", "const": "Does this proposal maintain or improve accessibility?" },
+                "weight": { "type": "number", "const": 0.7 },
+                "scoring_criteria": {
+                  "type": "object",
+                  "properties": {
+                    "significant_accessibility_improvement": { "type": "number", "const": 5.0 },
+                    "maintains_accessibility_adds_features": { "type": "number", "const": 4.0 },
+                    "maintains_current_accessibility": { "type": "number", "const": 3.0 },
+                    "minor_accessibility_regression": { "type": "number", "const": 2.0 },
+                    "significant_accessibility_loss": { "type": "number", "const": 1.0 }
+                  },
+                  "required": ["significant_accessibility_improvement", "maintains_accessibility_adds_features", "maintains_current_accessibility", "minor_accessibility_regression", "significant_accessibility_loss"]
+                },
+                "pass_threshold": { "type": "number", "const": 3.0 }
+              },
+              "required": ["question", "weight", "scoring_criteria", "pass_threshold"]
+            },
+            "learning_curve_impact": {
+              "type": "object",
+              "properties": {
+                "question": { "type": "string", "const": "How does this proposal affect the user learning curve?" },
+                "weight": { "type": "number", "const": 0.5 },
+                "scoring_criteria": {
+                  "type": "object",
+                  "properties": {
+                    "simplifies_user_experience": { "type": "number", "const": 5.0 },
+                    "maintains_current_complexity": { "type": "number", "const": 4.0 },
+                    "adds_optional_complexity": { "type": "number", "const": 3.0 },
+                    "increases_required_learning": { "type": "number", "const": 2.0 },
+                    "significantly_complicates_usage": { "type": "number", "const": 1.0 }
+                  },
+                  "required": ["simplifies_user_experience", "maintains_current_complexity", "adds_optional_complexity", "increases_required_learning", "significantly_complicates_usage"]
+                },
+                "pass_threshold": { "type": "number", "const": 3.0 }
+              },
+              "required": ["question", "weight", "scoring_criteria", "pass_threshold"]
+            }
+          },
+          "required": ["user_experience_enhancement", "accessibility_impact", "learning_curve_impact"]
+        },
+        "strategic_alignment": {
+          "type": "object",
+          "description": "Alignment with long-term platform strategy and vision",
+          "properties": {
+            "platform_vision_alignment": {
+              "type": "object",
+              "properties": {
+                "question": { "type": "string", "const": "How well does this proposal align with the platform's long-term vision?" },
+                "weight": { "type": "number", "const": 0.8 },
+                "scoring_criteria": {
+                  "type": "object",
+                  "properties": {
+                    "perfect_strategic_alignment": { "type": "number", "const": 5.0 },
+                    "strong_alignment": { "type": "number", "const": 4.0 },
+                    "moderate_alignment": { "type": "number", "const": 3.0 },
+                    "weak_alignment": { "type": "number", "const": 2.0 },
+                    "misaligned_with_vision": { "type": "number", "const": 1.0 }
+                  },
+                  "required": ["perfect_strategic_alignment", "strong_alignment", "moderate_alignment", "weak_alignment", "misaligned_with_vision"]
+                },
+                "pass_threshold": { "type": "number", "const": 3.0 }
+              },
+              "required": ["question", "weight", "scoring_criteria", "pass_threshold"]
+            },
+            "ecosystem_impact": {
+              "type": "object",
+              "properties": {
+                "question": { "type": "string", "const": "What is the impact on the broader WIRTHFORGE ecosystem?" },
+                "weight": { "type": "number", "const": 0.6 },
+                "scoring_criteria": {
+                  "type": "object",
+                  "properties": {
+                    "enables_ecosystem_growth": { "type": "number", "const": 5.0 },
+                    "positive_ecosystem_impact": { "type": "number", "const": 4.0 },
+                    "neutral_ecosystem_impact": { "type": "number", "const": 3.0 },
+                    "minor_ecosystem_disruption": { "type": "number", "const": 2.0 },
+                    "significant_ecosystem_disruption": { "type": "number", "const": 1.0 }
+                  },
+                  "required": ["enables_ecosystem_growth", "positive_ecosystem_impact", "neutral_ecosystem_impact", "minor_ecosystem_disruption", "significant_ecosystem_disruption"]
+                },
+                "pass_threshold": { "type": "number", "const": 2.5 }
+              },
+              "required": ["question", "weight", "scoring_criteria", "pass_threshold"]
+            }
+          },
+          "required": ["platform_vision_alignment", "ecosystem_impact"]
+        }
+      },
+      "required": ["core_principle_checks", "technical_evaluation", "user_impact_assessment", "strategic_alignment"]
+    },
+    "decision_outcomes": {
+      "type": "object",
+      "description": "Possible outcomes and their criteria",
+      "properties": {
+        "immediate_approval": {
+          "type": "object",
+          "properties": {
+            "criteria": {
+              "type": "array",
+              "items": { "type": "string" },
+              "const": [
+                "All core principle checks pass",
+                "Technical evaluation score >= 3.5",
+                "User impact score >= 3.0",
+                "Strategic alignment score >= 3.0"
+              ]
+            },
+            "next_steps": {
+              "type": "array",
+              "items": { "type": "string" },
+              "const": [
+                "Proceed to sandbox implementation",
+                "Assign development resources",
+                "Create implementation timeline",
+                "Begin stakeholder communication"
+              ]
+            }
+          },
+          "required": ["criteria", "next_steps"]
+        },
+        "conditional_approval": {
+          "type": "object",
+          "properties": {
+            "criteria": {
+              "type": "array",
+              "items": { "type": "string" },
+              "const": [
+                "All core principle checks pass",
+                "Technical evaluation score >= 2.5",
+                "User impact score >= 2.0",
+                "Strategic alignment score >= 2.5"
+              ]
+            },
+            "required_conditions": {
+              "type": "array",
+              "items": { "type": "string" },
+              "const": [
+                "Address identified technical concerns",
+                "Provide detailed implementation plan",
+                "Complete additional testing requirements",
+                "Demonstrate performance compliance"
+              ]
+            },
+            "next_steps": {
+              "type": "array",
+              "items": { "type": "string" },
+              "const": [
+                "Revise proposal to address conditions",
+                "Re-submit for final approval",
+                "Begin conditional sandbox testing",
+                "Monitor progress against conditions"
+              ]
+            }
+          },
+          "required": ["criteria", "required_conditions", "next_steps"]
+        },
+        "deferred_decision": {
+          "type": "object",
+          "properties": {
+            "criteria": {
+              "type": "array",
+              "items": { "type": "string" },
+              "const": [
+                "All core principle checks pass",
+                "Insufficient information for evaluation",
+                "Requires additional research or prototyping",
+                "Dependencies on other pending decisions"
+              ]
+            },
+            "required_actions": {
+              "type": "array",
+              "items": { "type": "string" },
+              "const": [
+                "Gather additional technical information",
+                "Create proof-of-concept implementation",
+                "Conduct user research or testing",
+                "Wait for dependency resolution"
+              ]
+            },
+            "timeline": { "type": "string", "const": "30-90 days maximum" }
+          },
+          "required": ["criteria", "required_actions", "timeline"]
+        },
+        "rejection": {
+          "type": "object",
+          "properties": {
+            "criteria": {
+              "type": "array",
+              "items": { "type": "string" },
+              "const": [
+                "Any core principle check fails",
+                "Technical evaluation score < 2.0",
+                "Significant negative user impact",
+                "Misalignment with platform vision"
+              ]
+            },
+            "feedback_requirements": {
+              "type": "array",
+              "items": { "type": "string" },
+              "const": [
+                "Detailed explanation of rejection reasons",
+                "Suggestions for alternative approaches",
+                "Guidance for future proposal improvements",
+                "Timeline for potential re-submission"
+              ]
+            }
+          },
+          "required": ["criteria", "feedback_requirements"]
+        }
+      },
+      "required": ["immediate_approval", "conditional_approval", "deferred_decision", "rejection"]
+    },
+    "governance_board_roles": {
+      "type": "object",
+      "description": "Roles and responsibilities in the decision process",
+      "properties": {
+        "technical_architect": {
+          "type": "object",
+          "properties": {
+            "primary_focus": {
+              "type": "array",
+              "items": { "type": "string" },
+              "const": [
+                "Architecture compatibility assessment",
+                "Performance impact evaluation",
+                "Implementation complexity analysis",
+                "Technical risk assessment"
+              ]
+            },
+            "voting_weight": { "type": "number", "const": 0.3 },
+            "veto_power": {
+              "type": "array",
+              "items": { "type": "string" },
+              "const": ["Performance constraint violations", "Architecture incompatibility"]
+            }
+          },
+          "required": ["primary_focus", "voting_weight", "veto_power"]
+        },
+        "user_experience_lead": {
+          "type": "object",
+          "properties": {
+            "primary_focus": {
+              "type": "array",
+              "items": { "type": "string" },
+              "const": [
+                "User experience impact assessment",
+                "Accessibility compliance verification",
+                "Learning curve evaluation",
+                "Community impact analysis"
+              ]
+            },
+            "voting_weight": { "type": "number", "const": 0.25 },
+            "veto_power": {
+              "type": "array",
+              "items": { "type": "string" },
+              "const": ["Significant accessibility regressions", "UI presence violations"]
+            }
+          },
+          "required": ["primary_focus", "voting_weight", "veto_power"]
+        },
+        "platform_strategist": {
+          "type": "object",
+          "properties": {
+            "primary_focus": {
+              "type": "array",
+              "items": { "type": "string" },
+              "const": [
+                "Strategic alignment evaluation",
+                "Long-term vision compatibility",
+                "Ecosystem impact assessment",
+                "Resource allocation considerations"
+              ]
+            },
+            "voting_weight": { "type": "number", "const": 0.25 },
+            "veto_power": {
+              "type": "array",
+              "items": { "type": "string" },
+              "const": ["Vision misalignment", "Ecosystem disruption"]
+            }
+          },
+          "required": ["primary_focus", "voting_weight", "veto_power"]
+        },
+        "security_compliance_officer": {
+          "type": "object",
+          "properties": {
+            "primary_focus": {
+              "type": "array",
+              "items": { "type": "string" },
+              "const": [
+                "Core principle compliance verification",
+                "Security boundary assessment",
+                "Data sovereignty protection",
+                "Sandbox policy enforcement"
+              ]
+            },
+            "voting_weight": { "type": "number", "const": 0.2 },
+            "veto_power": {
+              "type": "array",
+              "items": { "type": "string" },
+              "const": ["Core principle violations", "Security boundary breaches", "Local-first violations"]
+            }
+          },
+          "required": ["primary_focus", "voting_weight", "veto_power"]
+        }
+      },
+      "required": ["technical_architect", "user_experience_lead", "platform_strategist", "security_compliance_officer"]
+    }
+  },
+  "required": ["evaluation_framework", "decision_outcomes", "governance_board_roles"]
+}

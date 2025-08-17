@@ -121,36 +121,51 @@ Old → New highlights:
 **FOUNDATION**
 
 * **WF-FND-001** Vision & Principles (P0)
-* **WF-FND-002** Energy & Consciousness Framework (P0)
-* **WF-FND-003** Core Architecture Overview (Abstraction Layers) (P0)
-* **WF-FND-004** The Decipher (Central Compiler) (P0)
-* **WF-FND-005** Module & Plugin Philosophy (P1)
-* **WF-FND-006** Glossary (Living) (P0)
+* **WF-FND-002** Energy & Circuits (P0)
+* **WF-FND-003** 5-Layer Architecture (P0)
+* **WF-FND-004** DECIPHER (Real-time Compiler) (P0)
+* **WF-FND-005** Experience Orchestrator (P0)
+* **WF-FND-006** Governance & Evolution (P0)
 
 **TECHNICAL**
 
-* **WF-TECH-001** System Architecture & Components (P0)
-* **WF-TECH-002** Local AI Integration (Native Ollama) (P0)
+* **WF-TECH-001** System Runtime & Services (P0)
+* **WF-TECH-002** Local AI Integration & Turbo/Broker (P0)
 * **WF-TECH-003** Real-Time Protocol (WebSockets) (P0)
-* **WF-TECH-004** State Management & Storage (Energy + DB) (P0)
-* **WF-TECH-005** Security & Privacy (P0)
-* **WF-TECH-006** API & Integration Points (P1)
-* **WF-TECH-007** Quality, Ops & Deployment (Combined) (P1)
-* **WF-TECH-008** Core Algorithms (Council, Structures, Adaptation, Resonance) (P1)
+* **WF-TECH-004** State & Storage (P0)
+* **WF-TECH-005** DECIPHER Implementation (P0)
+* **WF-TECH-006** Security & Privacy (P0)
+* **WF-TECH-007** Testing & QA (P0)
+* **WF-TECH-008** Plugin / Module Architecture & Sandbox (P1)
+* **WF-TECH-009** Observability & Metrics (P1)
+* **WF-TECH-010** Performance & Capacity (P1)
 
 **USER EXPERIENCE**
 
-* **WF-UX-001** Level 1 — Lightning Strikes (P0)
-* **WF-UX-002** Level 2 — Parallel Streams (Council) (P1)
-* **WF-UX-003** Level 3 — Structured Architectures (P1)
-* **WF-UX-004** Level 4 — Adaptive Fields (P1)
-* **WF-UX-005** Level 5 — Resonance Fields (P1)
-* **WF-UX-006** Energy Visualization & UI Specs (Unified) (P0)
+* **WF-UX-001** Level 1: Lightning Strikes (P0)
+* **WF-UX-002** Level 2: Parallel Streams / Council (P0)
+* **WF-UX-003** Level 3: Structured Architectures (P1)
+* **WF-UX-004** Level 4: Adaptive Fields (P1)
+* **WF-UX-005** Level 5: Resonance Fields (P1)
+* **WF-UX-006** Unified Energy Visualization System (P0)
+* **WF-UX-007** UI Component Library (P0)
+* **WF-UX-008** Onboarding & Doors (P0)
+* **WF-UX-009** Gamification & Achievements (P0)
+* **WF-UX-010** Accessibility & Internationalization (P1)
 
-**BUSINESS**
+**BUSINESS / OPERATIONS**
 
-* **WF-BIZ-001** Business Model & Requirements (P2)
-* **WF-BIZ-002** Legal & Policy Overview (P2)
+* **WF-BIZ-001** Monetization & Pricing (P0)
+* **WF-BIZ-002** Licensing, Privacy & Terms (P0)
+* **WF-OPS-001** Packaging & Release (P0)
+* **WF-OPS-002** Support & Telemetry Policy (P1)
+* **WF-OPS-003** Data Export / Backup (P1)
+
+**RESEARCH & DEVELOPMENT**
+
+* **WF-R&D-001** Turbo Mode Roadmap (P2)
+* **WF-R&D-002** Broker Network & Scheduling (P2)
+* **WF-R&D-003** Resonance Research Agenda (P2)
 
 ---
 
@@ -168,148 +183,148 @@ Use the universal template. Frame user empowerment, local-first, energy-truth vi
 **/meta/prompts/WF-FND-002.md**
 
 ```
-Generate Document: WF-FND-002 - Energy & Consciousness Framework
-Define EU math from token timings, particle lifecycle, field coherence metrics, emergence thresholds; show 60 Hz → frames mapping. Include state machine and worked examples.
+Generate Document: WF-FND-002 - Energy & Circuits
+Define Energy Units, 60 Hz cadence, circuits→fields→resonance math. Powers all visualization, performance budgets, and fidelity tests. Include particle lifecycle and worked examples.
 ```
 
 **/meta/prompts/WF-FND-003.md**
 
 ```
-Generate Document: WF-FND-003 - Core Architecture Overview (Abstraction Layers)
-Describe the 5-layer model, boundaries, allowed directions; data-flow input→models→energy state→UI; anti-patterns checklist.
+Generate Document: WF-FND-003 - 5-Layer Architecture
+Enforces boundaries (Input → Model → Decipher → Transport → UI), allowed flows, and anti-patterns. Every TECH/UX spec references these seams.
 ```
 
 **/meta/prompts/WF-FND-004.md**
 
 ```
-Generate Document: WF-FND-004 - The Decipher (Central Compiler)
-Define compiler passes (ingest, align, time-slice, emit EU, persist deltas), interfaces (adapters, emission hooks, state writer, viz bus), sequence prompt→models→Decipher→EnergyState→WS, frame-safe backpressure.
+Generate Document: WF-FND-004 - DECIPHER
+Gives the real-time compiler, event contracts, and audit paths at 60 Hz. All runtime data, visuals, and tests hinge on its events.
 ```
 
 **/meta/prompts/WF-FND-005.md**
 
 ```
-Generate Document: WF-FND-005 - Module & Plugin Philosophy
-Principles for optionality, capability tokens, sandboxing; host↔plugin contracts; energy metering; decision tree core vs plugin.
+Generate Document: WF-FND-005 - Experience Orchestrator
+Policy engine that gates features by Door/Level, coordinates councils, budgets, progression, and emits experience.*/council.* events. UX levels and TECH runtime obey it.
 ```
 
 **/meta/prompts/WF-FND-006.md**
 
 ```
-Generate Document: WF-FND-006 - Glossary (Living)
-Authoritative definitions; link-on-first-use policy; term-linter checklist; term metadata (owner doc, last change).
+Generate Document: WF-FND-006 - Governance & Evolution
+Versioning, sandbox, metrics, audits. Keeps every change principled (no Docker in core, schema discipline, safe experiments) and measurable.
 ```
 
 **/meta/prompts/WF-TECH-001.md**
 
 ```
-Generate Document: WF-TECH-001 - System Architecture & Components
-C4 context/container/component diagrams; runtime topology (local services) and ports; flow model→EnergyState→UI; "hello-energy" reference path.
+Generate Document: WF-TECH-001 - System Runtime & Services
+Process model, service graph, process manager, threading/async model, build/packaging (local-first; no Docker in core). Consumes FND-003, FND-006.
 ```
 
 **/meta/prompts/WF-TECH-002.md**
 
 ```
-Generate Document: WF-TECH-002 - Local AI Integration (Native Ollama)
-Native (no Docker) install; model lifecycle; parallelism/GPU; request→token timings→EU instrumentation; warmup/preload/evict; hardware-tier config matrix; CLI to validate token→EU mapping.
+Generate Document: WF-TECH-002 - Local AI Integration & Turbo/Broker
+Ollama integration (streaming tokens), model pool/load policy, "Turbo" local ensembles, Broker-Hybrid as parallel satellite (opt-in). Consumes FND-001/002/005.
 ```
 
 **/meta/prompts/WF-TECH-003.md**
 
 ```
 Generate Document: WF-TECH-003 - Real-Time Protocol (WebSockets)
-Channels (energy/control/health), JSON/MessagePack schemas, heartbeats, reconnection, 60 Hz budgets, backpressure policy.
+Channels, ordering, backpressure, binary energy frames, JSON event schemas for energy.*, experience.*, council.*, reward.*. Consumes FND-004/005/006.
 ```
 
 **/meta/prompts/WF-TECH-004.md**
 
 ```
-Generate Document: WF-TECH-004 - State Management & Storage (Energy + DB)
-Frame-safe in-mem Energy state; event-sourced persistence; ERD; snapshots; pruning/retention; read models.
+Generate Document: WF-TECH-004 - State & Storage
+Postgres/Timescale for sessions & metrics; Redis for live state; audit log tables. Consumes FND-004/005/006.
 ```
 
 **/meta/prompts/WF-TECH-005.md**
 
 ```
-Generate Document: WF-TECH-005 - Security & Privacy
-Device-key identity, capability tokens, local/web boundary classifier, E2E encryption; threat model; test checklist.
+Generate Document: WF-TECH-005 - DECIPHER Implementation
+Concrete 60 Hz compiler runtime, parsers, energy mappers, queue policy, drop/degrade behavior. Consumes FND-002/004.
 ```
 
 **/meta/prompts/WF-TECH-006.md**
 
 ```
-Generate Document: WF-TECH-006 - API & Integration Points
-Internal service APIs + early external read-only hooks; OpenAPI 3.1; WS event catalog; SDK stubs (TS/Python); rate/shape constraints; contract tests.
+Generate Document: WF-TECH-006 - Security & Privacy
+Local data boundaries, sandbox perms, Broker data minimization, PII policy, threat model. Consumes FND-001/006.
 ```
 
 **/meta/prompts/WF-TECH-007.md**
 
 ```
-Generate Document: WF-TECH-007 - Quality, Ops & Deployment (Combined)
-Perf SLOs (frame time, p95), profiling plan; testing (unit/contract/load/visual-fidelity); error taxonomy + recovery; logs/traces/metrics; local installer + updates.
+Generate Document: WF-TECH-007 - Testing & QA
+Unit/integration for DECIPHER/Orchestrator, golden-run replays, frame-budget tests, schema regression. Consumes FND-002/004/005/006.
 ```
 
 **/meta/prompts/WF-TECH-008.md**
 
 ```
-Generate Document: WF-TECH-008 - Core Algorithms (Council, Structures, Adaptation, Resonance)
-Formal definitions + pseudo-code; complexity and latency bounds; deterministic seeds; dataflow diagrams.
+Generate Document: WF-TECH-008 - Plugin / Module Architecture & Sandbox
+Extension interfaces, capability descriptors, sandbox policy enforcement, promotion workflow. Consumes FND-003/006.
 ```
 
 **/meta/prompts/WF-UX-006.md**
 
 ```
-Generate Document: WF-UX-006 - Energy Visualization & UI Specs (Unified)
-Particle classes, field dynamics, resonance effects, component library; 16.67 ms animation budget; accessibility modes; tokens (color/type/motion).
+Generate Document: WF-UX-006 - Unified Energy Visualization System
+Visual language, shaders, scales, accessibility; perf budgets. Consumes FND-002/004.
 ```
 
 **/meta/prompts/WF-UX-001.md**
 
 ```
 Generate Document: WF-UX-001 - Level 1: Lightning Strikes
-“Wow in 10s” script; EU examples; path styles (Forge/Scholar/Sage); state timeline; KPIs (TTI to first strike, gather efficiency).
+Solo stream UI; token-to-energy visual mapping; 60 fps canvas budget. Consumes FND-002/004/005.
 ```
 
 **/meta/prompts/WF-UX-002.md**
 
 ```
-Generate Document: WF-UX-002 - Level 2: Parallel Streams (Council)
-Interference, consensus visuals, council types; telemetry (consensus rate, EU amplification).
+Generate Document: WF-UX-002 - Level 2: Parallel Streams / Council
+Multi-stream layout, interference overlays, consensus reveal. Consumes FND-005.
 ```
 
 **/meta/prompts/WF-UX-003.md**
 
 ```
 Generate Document: WF-UX-003 - Level 3: Structured Architectures
-Nodes/links/templates; growth & leveling; memory loops; marketplace stub; EU/quality ratio metrics.
+Node/edge builder, execution traces, step visuals. Consumes FND-003/004/005.
 ```
 
 **/meta/prompts/WF-UX-004.md**
 
 ```
 Generate Document: WF-UX-004 - Level 4: Adaptive Fields
-Architect-AI co-creation; field tuning; adaptation loop; KPIs (latency vs goal success).
+Suggestions, preference learning UI, adaptive visuals with transparency controls. Consumes FND-005/006.
 ```
 
 **/meta/prompts/WF-UX-005.md**
 
 ```
 Generate Document: WF-UX-005 - Level 5: Resonance Fields
-Consciousness metrics panel; resonance types; persistence/restore flows; milestone animations.
+Emergence visuals (mandala/symphony/fractal modes), celebration & audit overlays. Consumes FND-002/005.
 ```
 
 **/meta/prompts/WF-BIZ-001.md**
 
 ```
-Generate Document: WF-BIZ-001 - Business Model & Requirements
-Value prop; early tiering; constraints that affect tech (offline rights, export/ownership); risk table.
+Generate Document: WF-BIZ-001 - Monetization & Pricing
+Free w/ 3 ads/day; €9.42 + tax subscription; Broker usage model (sub or usage-based). Consumes FND-001/006.
 ```
 
 **/meta/prompts/WF-BIZ-002.md**
 
 ```
-Generate Document: WF-BIZ-002 - Legal & Policy Overview
-ToS/Privacy principles; data map local vs optional share; consent flows; retention/deletion guarantees.
+Generate Document: WF-BIZ-002 - Licensing, Privacy & Terms
+Local data policy, export/delete, Broker disclosures, module marketplace terms. Consumes FND-006.
 ```
 
 ---
@@ -407,30 +422,42 @@ graph TB
     {"id":"WF-META-001","title":"Master Guide (Beacon)","category":"META","priority":"P0","requires":[],"enables":["ALL"]},
 
     {"id":"WF-FND-001","title":"Vision & Principles","category":"FND","priority":"P0","requires":["WF-META-001"],"enables":["WF-FND-002","WF-BIZ-001"]},
-    {"id":"WF-FND-002","title":"Energy & Consciousness Framework","category":"FND","priority":"P0","requires":["WF-FND-001"],"enables":["WF-TECH-004","WF-UX-001","WF-UX-006"]},
-    {"id":"WF-FND-003","title":"Core Architecture Overview","category":"FND","priority":"P0","requires":["WF-FND-001","WF-FND-002"],"enables":["WF-TECH-001","WF-UX-006"]},
-    {"id":"WF-FND-004","title":"The Decipher (Central Compiler)","category":"FND","priority":"P0","requires":["WF-FND-003"],"enables":["WF-TECH-001","WF-TECH-004","WF-TECH-008","WF-UX-003"]},
-    {"id":"WF-FND-005","title":"Module & Plugin Philosophy","category":"FND","priority":"P1","requires":["WF-FND-004"],"enables":["WF-TECH-006"]},
-    {"id":"WF-FND-006","title":"Glossary (Living)","category":"FND","priority":"P0","requires":["WF-META-001"],"enables":["ALL"]},
+    {"id":"WF-FND-002","title":"Energy & Circuits","category":"FND","priority":"P0","requires":["WF-FND-001"],"enables":["WF-TECH-004","WF-UX-001","WF-UX-006"]},
+    {"id":"WF-FND-003","title":"5-Layer Architecture","category":"FND","priority":"P0","requires":["WF-FND-001","WF-FND-002"],"enables":["WF-TECH-001","WF-UX-006"]},
+    {"id":"WF-FND-004","title":"DECIPHER (Real-time Compiler)","category":"FND","priority":"P0","requires":["WF-FND-003"],"enables":["WF-TECH-001","WF-TECH-004","WF-TECH-008","WF-UX-003"]},
+    {"id":"WF-FND-005","title":"Experience Orchestrator","category":"FND","priority":"P0","requires":["WF-FND-004"],"enables":["WF-TECH-006"]},
+    {"id":"WF-FND-006","title":"Governance & Evolution","category":"FND","priority":"P0","requires":["WF-META-001"],"enables":["ALL"]},
 
-    {"id":"WF-TECH-001","title":"System Architecture & Components","category":"TECH","priority":"P0","requires":["WF-FND-003","WF-FND-006"],"enables":["WF-TECH-002","WF-TECH-003","WF-TECH-004","WF-TECH-006"]},
-    {"id":"WF-TECH-002","title":"Local AI Integration (Native Ollama)","category":"TECH","priority":"P0","requires":["WF-TECH-001","WF-FND-001"],"enables":["WF-UX-001"]},
+    {"id":"WF-TECH-001","title":"System Runtime & Services","category":"TECH","priority":"P0","requires":["WF-FND-003","WF-FND-006"],"enables":["WF-TECH-002","WF-TECH-003","WF-TECH-004","WF-TECH-006"]},
+    {"id":"WF-TECH-002","title":"Local AI Integration & Turbo/Broker","category":"TECH","priority":"P0","requires":["WF-TECH-001","WF-FND-001"],"enables":["WF-UX-001"]},
     {"id":"WF-TECH-003","title":"Real-Time Protocol (WebSockets)","category":"TECH","priority":"P0","requires":["WF-TECH-001","WF-FND-004"],"enables":["WF-TECH-004","WF-UX-006","WF-UX-001"]},
-    {"id":"WF-TECH-004","title":"State Management & Storage (Energy + DB)","category":"TECH","priority":"P0","requires":["WF-TECH-001","WF-TECH-003","WF-FND-002"],"enables":["WF-UX-006","WF-UX-001"]},
-    {"id":"WF-TECH-005","title":"Security & Privacy","category":"TECH","priority":"P0","requires":["WF-TECH-001","WF-FND-001","WF-FND-005"],"enables":["WF-TECH-006","WF-BIZ-002"]},
-    {"id":"WF-TECH-006","title":"API & Integration Points","category":"TECH","priority":"P1","requires":["WF-TECH-001","WF-TECH-005"],"enables":["Future Integrations"]},
-    {"id":"WF-TECH-007","title":"Quality, Ops & Deployment (Combined)","category":"TECH","priority":"P1","requires":["WF-TECH-001","WF-TECH-006"],"enables":["Launch Readiness"]},
-    {"id":"WF-TECH-008","title":"Core Algorithms (Council/Structures/Adaptation/Resonance)","category":"TECH","priority":"P1","requires":["WF-TECH-001","WF-TECH-004","WF-FND-004"],"enables":["WF-UX-002","WF-UX-003","WF-UX-004","WF-UX-005"]},
+    {"id":"WF-TECH-004","title":"State & Storage","category":"TECH","priority":"P0","requires":["WF-TECH-001","WF-TECH-003","WF-FND-002"],"enables":["WF-UX-006","WF-UX-001"]},
+    {"id":"WF-TECH-005","title":"DECIPHER Implementation","category":"TECH","priority":"P0","requires":["WF-TECH-001","WF-FND-004"],"enables":["WF-TECH-006","WF-UX-001"]},
+    {"id":"WF-TECH-006","title":"Security & Privacy","category":"TECH","priority":"P0","requires":["WF-TECH-001","WF-FND-001"],"enables":["WF-BIZ-002"]},
+    {"id":"WF-TECH-007","title":"Testing & QA","category":"TECH","priority":"P0","requires":["WF-TECH-001","WF-FND-006"],"enables":["Launch Readiness"]},
+    {"id":"WF-TECH-008","title":"Plugin / Module Architecture & Sandbox","category":"TECH","priority":"P1","requires":["WF-TECH-001","WF-FND-003","WF-FND-006"],"enables":["WF-UX-002","WF-UX-003","WF-UX-004","WF-UX-005"]},
+    {"id":"WF-TECH-009","title":"Observability & Metrics","category":"TECH","priority":"P1","requires":["WF-TECH-001","WF-FND-006"],"enables":["Performance Monitoring"]},
+    {"id":"WF-TECH-010","title":"Performance & Capacity","category":"TECH","priority":"P1","requires":["WF-TECH-001","WF-FND-002"],"enables":["Scalability"]},
 
-    {"id":"WF-UX-006","title":"Energy Visualization & UI Specs (Unified)","category":"UX","priority":"P0","requires":["WF-FND-002","WF-TECH-003","WF-TECH-004"],"enables":["WF-UX-001","WF-UX-002","WF-UX-003","WF-UX-004","WF-UX-005"]},
-    {"id":"WF-UX-001","title":"Level 1 - Lightning Strikes","category":"UX","priority":"P0","requires":["WF-UX-006","WF-TECH-002","WF-FND-002"],"enables":["WF-UX-002"]},
-    {"id":"WF-UX-002","title":"Level 2 - Parallel Streams (Council)","category":"UX","priority":"P1","requires":["WF-UX-001","WF-TECH-008","WF-UX-006"],"enables":["WF-UX-003"]},
-    {"id":"WF-UX-003","title":"Level 3 - Structured Architectures","category":"UX","priority":"P1","requires":["WF-UX-002","WF-TECH-008"],"enables":["WF-UX-004"]},
-    {"id":"WF-UX-004","title":"Level 4 - Adaptive Fields","category":"UX","priority":"P1","requires":["WF-UX-003","WF-TECH-008"],"enables":["WF-UX-005"]},
-    {"id":"WF-UX-005","title":"Level 5 - Resonance Fields","category":"UX","priority":"P1","requires":["WF-UX-004","WF-TECH-008"],"enables":[]},
+    {"id":"WF-UX-001","title":"Level 1: Lightning Strikes","category":"UX","priority":"P0","requires":["WF-UX-006","WF-TECH-002","WF-FND-002"],"enables":["WF-UX-002"]},
+    {"id":"WF-UX-002","title":"Level 2: Parallel Streams / Council","category":"UX","priority":"P0","requires":["WF-UX-001","WF-TECH-008","WF-UX-006"],"enables":["WF-UX-003"]},
+    {"id":"WF-UX-003","title":"Level 3: Structured Architectures","category":"UX","priority":"P1","requires":["WF-UX-002","WF-TECH-008"],"enables":["WF-UX-004"]},
+    {"id":"WF-UX-004","title":"Level 4: Adaptive Fields","category":"UX","priority":"P1","requires":["WF-UX-003","WF-TECH-008"],"enables":["WF-UX-005"]},
+    {"id":"WF-UX-005","title":"Level 5: Resonance Fields","category":"UX","priority":"P1","requires":["WF-UX-004","WF-TECH-008"],"enables":[]},
+    {"id":"WF-UX-006","title":"Unified Energy Visualization System","category":"UX","priority":"P0","requires":["WF-FND-002","WF-TECH-003","WF-TECH-004"],"enables":["WF-UX-001","WF-UX-002","WF-UX-003","WF-UX-004","WF-UX-005"]},
+    {"id":"WF-UX-007","title":"UI Component Library","category":"UX","priority":"P0","requires":["WF-UX-006"],"enables":["All UX Levels"]},
+    {"id":"WF-UX-008","title":"Onboarding & Doors","category":"UX","priority":"P0","requires":["WF-FND-005"],"enables":["User Journey"]},
+    {"id":"WF-UX-009","title":"Gamification & Achievements","category":"UX","priority":"P0","requires":["WF-FND-005"],"enables":["User Engagement"]},
+    {"id":"WF-UX-010","title":"Accessibility & Internationalization","category":"UX","priority":"P1","requires":["WF-UX-006"],"enables":["Global Access"]},
 
-    {"id":"WF-BIZ-001","title":"Business Model & Requirements","category":"BIZ","priority":"P2","requires":["WF-META-001","WF-FND-001"],"enables":["Pricing"]},
-    {"id":"WF-BIZ-002","title":"Legal & Policy Overview","category":"BIZ","priority":"P2","requires":["WF-TECH-005"],"enables":["Launch Readiness"]}
+    {"id":"WF-BIZ-001","title":"Monetization & Pricing","category":"BIZ","priority":"P0","requires":["WF-META-001","WF-FND-001"],"enables":["Revenue Model"]},
+    {"id":"WF-BIZ-002","title":"Licensing, Privacy & Terms","category":"BIZ","priority":"P0","requires":["WF-TECH-006","WF-FND-006"],"enables":["Legal Compliance"]},
+    {"id":"WF-OPS-001","title":"Packaging & Release","category":"OPS","priority":"P0","requires":["WF-TECH-007"],"enables":["Deployment"]},
+    {"id":"WF-OPS-002","title":"Support & Telemetry Policy","category":"OPS","priority":"P1","requires":["WF-TECH-009"],"enables":["Operations"]},
+    {"id":"WF-OPS-003","title":"Data Export / Backup","category":"OPS","priority":"P1","requires":["WF-TECH-004"],"enables":["Data Portability"]},
+    {"id":"WF-R&D-001","title":"Turbo Mode Roadmap","category":"R&D","priority":"P2","requires":["WF-TECH-002"],"enables":["Advanced Features"]},
+    {"id":"WF-R&D-002","title":"Broker Network & Scheduling","category":"R&D","priority":"P2","requires":["WF-TECH-002"],"enables":["Distributed Processing"]},
+    {"id":"WF-R&D-003","title":"Resonance Research Agenda","category":"R&D","priority":"P2","requires":["WF-UX-005"],"enables":["Future Research"]}
   ]
 }
 ```
@@ -466,41 +493,48 @@ docs:
     ui: []
   WF-FND-001:
     diagrams:
-      - assets/diagrams/WF-FND-001-principles-flow.mmd
+      - assets/diagrams/WF-FND-001-vision-principles.mmd
     ui: []
     code: []
     schemas: []
     tests: []
   WF-FND-002:
     diagrams:
-      - assets/diagrams/WF-FND-002-lifecycle.mmd
+      - assets/diagrams/WF-FND-002-energy-circuits.mmd
     schemas:
-      - schemas/WF-FND-002-energy.json
+      - schemas/WF-FND-002-energy-units.json
     tests:
-      - tests/WF-FND-002/energy-sanity.spec.md
+      - tests/WF-FND-002/energy-validation.spec.md
   WF-FND-003:
     diagrams:
-      - assets/diagrams/WF-FND-003-layers.mmd
-      - assets/diagrams/WF-FND-003-dataflow.mmd
+      - assets/diagrams/WF-FND-003-5-layer-architecture.mmd
+      - assets/diagrams/WF-FND-003-layer-boundaries.mmd
     code: []
-    schemas: []
+    schemas:
+      - schemas/WF-FND-003-layer-contracts.json
   WF-FND-004:
     diagrams:
-      - assets/diagrams/WF-FND-004-sequence.mmd
+      - assets/diagrams/WF-FND-004-decipher-runtime.mmd
     schemas:
-      - schemas/WF-FND-004-emission.json
+      - schemas/WF-FND-004-event-contracts.json
     code:
-      - code/WF-FND-004/reference/decipher-pass-pseudocode.md
+      - code/WF-FND-004/decipher-compiler.py
+    tests:
+      - tests/WF-FND-004/compiler-validation.spec.md
   WF-FND-005:
     diagrams:
-      - assets/diagrams/WF-FND-005-sandbox.mmd
-    schemas:
-      - schemas/WF-FND-005-capabilities.json
-  WF-FND-006:
-    schemas:
-      - schemas/WF-FND-006-glossary.json
+      - assets/diagrams/WF-FND-005-orchestrator-flow.mmd
     code:
-      - code/WF-FND-006/reference/term-linter.md
+      - code/WF-FND-005/experience-orchestrator.py
+    schemas:
+      - schemas/WF-FND-005-policy-engine.json
+  WF-FND-006:
+    diagrams:
+      - assets/diagrams/WF-FND-006-governance-flow.mmd
+    code:
+      - code/WF-FND-006/governance-validator.py
+    schemas:
+      - schemas/WF-FND-006-governance-rules.json
 
   WF-TECH-001:
     diagrams:

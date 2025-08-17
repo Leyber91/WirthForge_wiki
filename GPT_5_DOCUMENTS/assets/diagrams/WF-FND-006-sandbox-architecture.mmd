@@ -1,0 +1,129 @@
+graph TB
+    subgraph "WIRTHFORGE Sandbox Architecture"
+        subgraph "Main System"
+            MainUI[Main UI Layer]
+            MainState[Persistent State]
+            MainEvents[Main Event Bus]
+            MainModules[Core Modules]
+        end
+        
+        subgraph "Sandbox Environment"
+            SandboxManager[Sandbox Manager]
+            SandboxPolicy[Sandbox Policy Engine]
+            
+            subgraph "Sandbox Instance"
+                SandboxModule[Experimental Module]
+                SandboxEvents[Sandbox Event Bus]
+                SandboxUI[Debug UI/Console]
+                TempData[Temporary Data]
+            end
+            
+            subgraph "Resource Limits"
+                MemoryLimit[Memory Limit<br/>128MB Max]
+                CPULimit[CPU Time Limit<br/>5ms per frame]
+                NetworkLimit[Network Access<br/>None/Restricted]
+                FileLimit[File System<br/>Temp only]
+            end
+        end
+        
+        subgraph "Security Boundaries"
+            SecurityWall[Security Firewall]
+            AccessControl[Access Control Layer]
+            APIGateway[Restricted API Gateway]
+        end
+        
+        subgraph "Data Flow Control"
+            ReadOnlyAccess[Read-Only Data Access]
+            EventFilter[Event Filter]
+            OutputCapture[Output Capture]
+            LoggingSystem[Sandbox Logging]
+        end
+    end
+    
+    %% Data Flow Connections
+    MainEvents -->|Read-Only| EventFilter
+    EventFilter -->|Filtered Events| SandboxEvents
+    SandboxModule -->|Subscribe| SandboxEvents
+    
+    SandboxModule -->|Output| OutputCapture
+    OutputCapture -->|Captured| SandboxUI
+    SandboxModule -->|Logs| LoggingSystem
+    
+    %% Security Enforcement
+    SandboxManager --> SandboxPolicy
+    SandboxPolicy --> SecurityWall
+    SecurityWall --> AccessControl
+    AccessControl --> APIGateway
+    
+    %% Resource Management
+    SandboxManager --> MemoryLimit
+    SandboxManager --> CPULimit
+    SandboxManager --> NetworkLimit
+    SandboxManager --> FileLimit
+    
+    %% Blocked Connections (shown as dashed red)
+    SandboxModule -.->|❌ BLOCKED| MainUI
+    SandboxModule -.->|❌ BLOCKED| MainState
+    SandboxModule -.->|❌ BLOCKED| MainEvents
+    
+    %% Promotion Path
+    SandboxModule -->|Promotion Request| PromotionPipeline[Promotion Pipeline]
+    PromotionPipeline --> StagingUI[Staging UI]
+    StagingUI --> BetaTesting[Beta Testing]
+    BetaTesting --> MainModules
+    
+    %% Policy Configuration
+    subgraph "Sandbox Policy Configuration"
+        PolicyConfig[Sandbox Policy Config]
+        PolicyConfig --> ReadEvents[canReadEvents: []<br/>EnergyStream, UserPrompt]
+        PolicyConfig --> WriteEvents[canWriteEvents: []<br/>Empty - No writes allowed]
+        PolicyConfig --> UIRender[allowUIRender: false<br/>No main UI access]
+        PolicyConfig --> Persistence[allowPersistence: false<br/>No data saving]
+        PolicyConfig --> Resources[Resource Limits<br/>Memory, CPU, Network]
+    end
+    
+    SandboxPolicy --> PolicyConfig
+    
+    %% Monitoring and Alerts
+    subgraph "Monitoring System"
+        ResourceMonitor[Resource Monitor]
+        ViolationDetector[Policy Violation Detector]
+        AlertSystem[Alert System]
+        
+        ResourceMonitor --> ViolationDetector
+        ViolationDetector --> AlertSystem
+        AlertSystem --> SandboxManager
+    end
+    
+    SandboxManager --> ResourceMonitor
+    
+    %% Clean Exit Process
+    subgraph "Clean Exit"
+        ExitTrigger[Exit Trigger<br/>Test Complete/Timeout]
+        ResourceCleanup[Resource Cleanup]
+        TempDataWipe[Temp Data Wipe]
+        MemoryRelease[Memory Release]
+        
+        ExitTrigger --> ResourceCleanup
+        ResourceCleanup --> TempDataWipe
+        ResourceCleanup --> MemoryRelease
+    end
+    
+    SandboxManager --> ExitTrigger
+    
+    %% Styling
+    classDef main fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
+    classDef sandbox fill:#fff8e1,stroke:#ef6c00,stroke-width:2px
+    classDef security fill:#ffebee,stroke:#c62828,stroke-width:2px
+    classDef policy fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+    classDef monitoring fill:#f3e5f5,stroke:#6a1b9a,stroke-width:2px
+    classDef promotion fill:#f1f8e9,stroke:#558b2f,stroke-width:2px
+    classDef cleanup fill:#fce4ec,stroke:#ad1457,stroke-width:2px
+    
+    class MainUI,MainState,MainEvents,MainModules main
+    class SandboxManager,SandboxModule,SandboxEvents,SandboxUI,TempData,MemoryLimit,CPULimit,NetworkLimit,FileLimit sandbox
+    class SecurityWall,AccessControl,APIGateway security
+    class SandboxPolicy,PolicyConfig,ReadEvents,WriteEvents,UIRender,Persistence,Resources policy
+    class ResourceMonitor,ViolationDetector,AlertSystem monitoring
+    class PromotionPipeline,StagingUI,BetaTesting promotion
+    class ExitTrigger,ResourceCleanup,TempDataWipe,MemoryRelease cleanup

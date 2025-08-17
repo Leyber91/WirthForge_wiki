@@ -1,0 +1,654 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "DECIPHER State Management Schema",
+  "description": "Internal state management data structures for DECIPHER Layer 3 engine",
+  "version": "1.0.0",
+  "definitions": {
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "energyUnit": {
+      "type": "number",
+      "minimum": 0,
+      "multipleOf": 0.001
+    },
+    "modelId": {
+      "type": "string",
+      "pattern": "^[a-z0-9_-]+$"
+    },
+    "streamId": {
+      "type": "string",
+      "pattern": "^stream_[a-f0-9]{8}$"
+    }
+  },
+  "schemas": {
+    "energyAccumulator": {
+      "type": "object",
+      "required": ["totalEnergy", "sessionStart", "lastUpdate"],
+      "properties": {
+        "totalEnergy": {
+          "$ref": "#/definitions/energyUnit",
+          "description": "Total accumulated energy since session start"
+        },
+        "sessionStart": {
+          "$ref": "#/definitions/timestamp",
+          "description": "Session start timestamp"
+        },
+        "lastUpdate": {
+          "$ref": "#/definitions/timestamp",
+          "description": "Last accumulator update timestamp"
+        },
+        "peakEnergy": {
+          "$ref": "#/definitions/energyUnit",
+          "description": "Peak energy value in current session"
+        },
+        "peakTimestamp": {
+          "$ref": "#/definitions/timestamp",
+          "description": "When peak energy was reached"
+        },
+        "energyRate": {
+          "type": "number",
+          "description": "Current energy generation rate (EU/second)"
+        },
+        "averageRate": {
+          "type": "number",
+          "description": "Session average energy rate"
+        }
+      }
+    },
+    "emaFilter": {
+      "type": "object",
+      "required": ["alpha", "currentValue", "initialized"],
+      "properties": {
+        "alpha": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "EMA smoothing factor (0-1)"
+        },
+        "currentValue": {
+          "$ref": "#/definitions/energyUnit",
+          "description": "Current smoothed value"
+        },
+        "initialized": {
+          "type": "boolean",
+          "description": "Whether filter has been initialized"
+        },
+        "lastUpdate": {
+          "$ref": "#/definitions/timestamp"
+        },
+        "sampleCount": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Number of samples processed"
+        }
+      }
+    },
+    "tokenQueue": {
+      "type": "object",
+      "required": ["maxSize", "currentSize", "items"],
+      "properties": {
+        "maxSize": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Maximum queue capacity"
+        },
+        "currentSize": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Current number of items in queue"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["timestamp", "streamId", "tokenCount"],
+            "properties": {
+              "timestamp": {
+                "$ref": "#/definitions/timestamp"
+              },
+              "streamId": {
+                "$ref": "#/definitions/streamId"
+              },
+              "modelId": {
+                "$ref": "#/definitions/modelId"
+              },
+              "tokenCount": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "complexity": {
+                "type": "number",
+                "minimum": 0.1,
+                "maximum": 10.0
+              },
+              "speed": {
+                "type": "number",
+                "minimum": 0
+              },
+              "metadata": {
+                "type": "object",
+                "properties": {
+                  "hasCode": {
+                    "type": "boolean"
+                  },
+                  "hasMath": {
+                    "type": "boolean"
+                  },
+                  "language": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "overflowCount": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Number of items dropped due to overflow"
+        },
+        "mergeCount": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Number of merge operations performed"
+        }
+      }
+    },
+    "frameState": {
+      "type": "object",
+      "required": ["sequence", "startTime", "budgetMs", "status"],
+      "properties": {
+        "sequence": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Frame sequence number"
+        },
+        "startTime": {
+          "$ref": "#/definitions/timestamp",
+          "description": "Frame processing start time"
+        },
+        "budgetMs": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 20,
+          "description": "Frame time budget in milliseconds"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["processing", "completed", "overrun", "error"]
+        },
+        "actualDuration": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Actual frame processing duration"
+        },
+        "tasksCompleted": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["token_processing", "energy_calculation", "state_update", "pattern_analysis", "event_emission"]
+          }
+        },
+        "tasksSkipped": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "tokensProcessed": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "energyGenerated": {
+          "$ref": "#/definitions/energyUnit"
+        },
+        "patternsDetected": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "performanceMetrics": {
+      "type": "object",
+      "required": ["frameRate", "overrunCount", "throughput"],
+      "properties": {
+        "frameRate": {
+          "type": "object",
+          "required": ["target", "actual", "stability"],
+          "properties": {
+            "target": {
+              "type": "number",
+              "const": 60,
+              "description": "Target frame rate (60 Hz)"
+            },
+            "actual": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Actual measured frame rate"
+            },
+            "stability": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "Frame rate stability (0-1)"
+            }
+          }
+        },
+        "overrunCount": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Total frame budget overruns"
+        },
+        "throughput": {
+          "type": "object",
+          "required": ["tokensPerSecond", "eventsPerSecond"],
+          "properties": {
+            "tokensPerSecond": {
+              "type": "number",
+              "minimum": 0
+            },
+            "eventsPerSecond": {
+              "type": "number",
+              "minimum": 0
+            },
+            "energyPerSecond": {
+              "type": "number",
+              "minimum": 0
+            }
+          }
+        },
+        "latency": {
+          "type": "object",
+          "properties": {
+            "tokenToEvent": {
+              "type": "object",
+              "properties": {
+                "p50": {
+                  "type": "number"
+                },
+                "p95": {
+                  "type": "number"
+                },
+                "p99": {
+                  "type": "number"
+                }
+              }
+            },
+            "endToEnd": {
+              "type": "object",
+              "properties": {
+                "p50": {
+                  "type": "number"
+                },
+                "p95": {
+                  "type": "number"
+                },
+                "p99": {
+                  "type": "number"
+                }
+              }
+            }
+          }
+        },
+        "resourceUsage": {
+          "type": "object",
+          "properties": {
+            "cpuPercent": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "memoryMB": {
+              "type": "number",
+              "minimum": 0
+            },
+            "queueUtilization": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          }
+        }
+      }
+    },
+    "streamRegistry": {
+      "type": "object",
+      "required": ["streams", "activeCount"],
+      "properties": {
+        "streams": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "required": ["streamId", "modelId", "status", "created"],
+            "properties": {
+              "streamId": {
+                "$ref": "#/definitions/streamId"
+              },
+              "modelId": {
+                "$ref": "#/definitions/modelId"
+              },
+              "status": {
+                "type": "string",
+                "enum": ["active", "idle", "error", "disconnected"]
+              },
+              "created": {
+                "$ref": "#/definitions/timestamp"
+              },
+              "lastActivity": {
+                "$ref": "#/definitions/timestamp"
+              },
+              "tokenCount": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "energyContribution": {
+                "$ref": "#/definitions/energyUnit"
+              },
+              "errorCount": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "averageComplexity": {
+                "type": "number",
+                "minimum": 0
+              },
+              "averageSpeed": {
+                "type": "number",
+                "minimum": 0
+              }
+            }
+          }
+        },
+        "activeCount": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Number of currently active streams"
+        },
+        "maxConcurrent": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Maximum concurrent streams supported"
+        }
+      }
+    },
+    "patternState": {
+      "type": "object",
+      "required": ["interferenceDetector", "resonanceDetector"],
+      "properties": {
+        "interferenceDetector": {
+          "type": "object",
+          "required": ["enabled", "threshold", "history"],
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "threshold": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "adaptiveThreshold": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "history": {
+              "type": "array",
+              "maxItems": 100,
+              "items": {
+                "type": "object",
+                "required": ["timestamp", "pattern", "strength"],
+                "properties": {
+                  "timestamp": {
+                    "$ref": "#/definitions/timestamp"
+                  },
+                  "pattern": {
+                    "type": "string",
+                    "enum": ["constructive", "destructive", "partial", "chaotic"]
+                  },
+                  "strength": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                  },
+                  "confidence": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                  }
+                }
+              }
+            },
+            "correlationMatrix": {
+              "type": "object",
+              "description": "Cross-correlation data between streams"
+            }
+          }
+        },
+        "resonanceDetector": {
+          "type": "object",
+          "required": ["enabled", "threshold", "history"],
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "threshold": {
+              "type": "number",
+              "minimum": 0
+            },
+            "criticalThreshold": {
+              "type": "number",
+              "minimum": 0
+            },
+            "history": {
+              "type": "array",
+              "maxItems": 50,
+              "items": {
+                "type": "object",
+                "required": ["timestamp", "phenomenon", "intensity"],
+                "properties": {
+                  "timestamp": {
+                    "$ref": "#/definitions/timestamp"
+                  },
+                  "phenomenon": {
+                    "type": "string",
+                    "enum": ["harmonic", "feedback", "emergent", "consciousness"]
+                  },
+                  "intensity": {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  "frequency": {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  "sustainedDuration": {
+                    "type": "number",
+                    "minimum": 0
+                  }
+                }
+              }
+            },
+            "frequencyAnalyzer": {
+              "type": "object",
+              "properties": {
+                "windowSize": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "overlap": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "lastAnalysis": {
+                  "$ref": "#/definitions/timestamp"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "configurationState": {
+      "type": "object",
+      "required": ["uxLevel", "frameBudget", "features"],
+      "properties": {
+        "uxLevel": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5,
+          "description": "Current user experience level"
+        },
+        "frameBudget": {
+          "type": "number",
+          "minimum": 10,
+          "maximum": 20,
+          "description": "Frame processing budget in milliseconds"
+        },
+        "features": {
+          "type": "object",
+          "required": ["patternDetection", "auditMode", "debugTaps"],
+          "properties": {
+            "patternDetection": {
+              "type": "boolean",
+              "description": "Enable pattern detection (Level 2+)"
+            },
+            "interferenceDetection": {
+              "type": "boolean",
+              "description": "Enable interference detection (Level 3+)"
+            },
+            "resonanceDetection": {
+              "type": "boolean",
+              "description": "Enable resonance detection (Level 5)"
+            },
+            "auditMode": {
+              "type": "boolean",
+              "description": "Enable comprehensive audit logging"
+            },
+            "debugTaps": {
+              "type": "boolean",
+              "description": "Enable debug tap mechanisms"
+            },
+            "privacyMode": {
+              "type": "string",
+              "enum": ["strict", "standard", "relaxed"],
+              "description": "Privacy protection level"
+            }
+          }
+        },
+        "thresholds": {
+          "type": "object",
+          "properties": {
+            "interferenceBase": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "resonanceBase": {
+              "type": "number",
+              "minimum": 0
+            },
+            "celebrationTrigger": {
+              "type": "number",
+              "minimum": 0
+            }
+          }
+        },
+        "adaptiveSettings": {
+          "type": "object",
+          "properties": {
+            "autoTuning": {
+              "type": "boolean",
+              "description": "Enable automatic threshold tuning"
+            },
+            "loadBalancing": {
+              "type": "boolean",
+              "description": "Enable dynamic load balancing"
+            },
+            "qualityScaling": {
+              "type": "boolean",
+              "description": "Enable quality scaling under load"
+            }
+          }
+        }
+      }
+    },
+    "errorState": {
+      "type": "object",
+      "required": ["errorCount", "lastError", "recoveryAttempts"],
+      "properties": {
+        "errorCount": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Total error count since session start"
+        },
+        "lastError": {
+          "type": "object",
+          "properties": {
+            "timestamp": {
+              "$ref": "#/definitions/timestamp"
+            },
+            "code": {
+              "type": "string"
+            },
+            "message": {
+              "type": "string"
+            },
+            "severity": {
+              "type": "string",
+              "enum": ["low", "medium", "high", "critical"]
+            }
+          }
+        },
+        "recoveryAttempts": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "errorHistory": {
+          "type": "array",
+          "maxItems": 100,
+          "items": {
+            "type": "object",
+            "required": ["timestamp", "code", "severity"],
+            "properties": {
+              "timestamp": {
+                "$ref": "#/definitions/timestamp"
+              },
+              "code": {
+                "type": "string"
+              },
+              "severity": {
+                "type": "string"
+              },
+              "recovered": {
+                "type": "boolean"
+              }
+            }
+          }
+        },
+        "circuitBreaker": {
+          "type": "object",
+          "properties": {
+            "state": {
+              "type": "string",
+              "enum": ["closed", "open", "half_open"]
+            },
+            "failureCount": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "lastFailure": {
+              "$ref": "#/definitions/timestamp"
+            },
+            "nextRetry": {
+              "$ref": "#/definitions/timestamp"
+            }
+          }
+        }
+      }
+    }
+  }
+}
