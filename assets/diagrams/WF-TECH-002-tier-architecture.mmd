@@ -1,90 +1,173 @@
 graph TB
-    subgraph "Hardware Tier Classification"
-        subgraph "Low-Tier (8GB RAM, Integrated GPU)"
-            L1[Single Model Only]
-            L2[Basic Energy Tracking]
-            L3[Simple UI Feedback]
+    subgraph "🖥️ Hardware Tier Classification & Auto-Detection"
+        subgraph "⚡ Low-Tier (8GB RAM, Integrated GPU)"
+            L1[🤖 Single Model Only<br/>Llama2:7B or Phi3:3.8B]
+            L2[📊 Basic Energy Tracking<br/>Simple E(t) calculation]
+            L3[🎯 Minimal UI Feedback<br/>Text-based updates]
+            L4[🔋 Power Efficiency Mode<br/>CPU-optimized inference]
         end
         
-        subgraph "Mid-Tier (16GB RAM, Dedicated GPU)"
-            M1[2-3 Models Concurrent]
-            M2[Advanced Energy Metrics]
-            M3[Real-time Visualization]
-            M4[Turbo Mode Available]
+        subgraph "🚀 Mid-Tier (16GB RAM, Dedicated GPU)"
+            M1[🤖 2-3 Models Concurrent<br/>Llama2:13B + Mistral:7B]
+            M2[📈 Advanced Energy Metrics<br/>Diversity Index + Temporal]
+            M3[🌟 Real-time Visualization<br/>60Hz Energy Truth]
+            M4[⚡ Turbo Mode Available<br/>Parallel Model Processing]
+            M5[🎭 Ensemble Coordination<br/>Multi-model synchronization]
         end
         
-        subgraph "High-Tier (32GB+ RAM, High-end GPU)"
-            H1[4-6 Models Concurrent]
-            H2[Full Council Mode]
-            H3[Complex Interference Patterns]
-            H4[Advanced Resonance Detection]
-            H5[Hybrid Broker Integration]
+        subgraph "🏆 High-Tier (32GB+ RAM, High-end GPU)"
+            H1[🤖 4-6 Models Concurrent<br/>Full Model Council]
+            H2[🎭 Full Council Mode<br/>Advanced orchestration]
+            H3[🌊 Complex Interference Patterns<br/>Wave analysis & resonance]
+            H4[🎵 Advanced Resonance Detection<br/>Harmonic synchronization]
+            H5[🔗 Hybrid Broker Integration<br/>Distributed processing]
+            H6[🧠 Memory Pool Optimization<br/>Dynamic allocation]
         end
     end
     
-    subgraph "Model Pool Management"
-        subgraph "Memory Allocation"
-            MA[Memory Monitor]
-            MS[Model Swapping]
-            MC[Cache Management]
+    subgraph "🎯 Model Pool Management & Resource Optimization"
+        subgraph "💾 Memory Allocation Engine"
+            MA[🔍 Memory Monitor<br/>Real-time usage tracking]
+            MS[🔄 Model Swapping<br/>Dynamic load/unload]
+            MC[⚡ Cache Management<br/>Inference optimization]
+            MO[📊 Memory Optimization<br/>Tier-based allocation]
         end
         
-        subgraph "Load Balancing"
-            LB[Request Distribution]
-            PQ[Priority Queue]
-            RT[Response Time Optimization]
+        subgraph "⚖️ Load Balancing & Performance"
+            LB[📡 Request Distribution<br/>Intelligent routing]
+            PQ[📋 Priority Queue<br/>Energy-aware scheduling]
+            RT[⏱️ Response Time Optimization<br/>Sub-50ms API targets]
+            TH[🚀 Throughput Management<br/>847 tokens/sec target]
+        end
+        
+        subgraph "🩺 Health & Monitoring"
+            HM[💓 Health Monitoring<br/>10s interval checks]
+            PM[📊 Performance Metrics<br/>Latency & throughput]
+            EM[⚡ Energy Monitoring<br/>Real-time E(t) tracking]
+            AM[🚨 Alert Management<br/>Tier policy violations]
         end
     end
     
-    subgraph "Progressive Feature Unlocking"
-        subgraph "Level 1: Lightning"
-            F1[Single Model Generation]
-            F2[Basic Energy Visualization]
+    subgraph "🌟 Progressive Feature Unlocking (WIRTHFORGE Levels)"
+        subgraph "⚡ Level 1: Lightning (Entry)"
+            F1[🤖 Single Model Generation<br/>Basic token streaming]
+            F2[📊 Basic Energy Visualization<br/>Simple E(t) display]
+            F3[🎯 Local-First Operation<br/>127.0.0.1 only]
         end
         
-        subgraph "Level 2: Stream"
-            F3[Parallel Processing]
-            F4[Energy Field Visualization]
+        subgraph "🌊 Level 2: Stream (Parallel)"
+            F4[🚀 Parallel Processing<br/>Multi-model coordination]
+            F5[🌟 Energy Field Visualization<br/>Real-time energy mapping]
+            F6[📈 Diversity Index Tracking<br/>Model variance analysis]
         end
         
-        subgraph "Level 3: Interference"
-            F5[Multi-Model Coordination]
-            F6[Interference Pattern Detection]
+        subgraph "🌊 Level 3: Interference (Ensemble)"
+            F7[🎭 Multi-Model Coordination<br/>Ensemble synchronization]
+            F8[🌊 Interference Pattern Detection<br/>Constructive/destructive analysis]
+            F9[🎵 Harmonic Analysis<br/>Resonance frequency detection]
         end
         
-        subgraph "Level 4: Resonance"
-            F7[Council Synchronization]
-            F8[Resonance Celebration]
+        subgraph "🎵 Level 4: Resonance (Council)"
+            F10[🎭 Council Synchronization<br/>Advanced orchestration]
+            F11[🎆 Resonance Celebration<br/>Aurora-like visualizations]
+            F12[🧠 Collective Intelligence<br/>Emergent behavior patterns]
         end
         
-        subgraph "Level 5: Orchestration"
-            F9[Hybrid Broker Integration]
-            F10[Advanced Ensemble Management]
+        subgraph "🚀 Level 5: Orchestration (Mastery)"
+            F13[🔗 Hybrid Broker Integration<br/>Distributed processing]
+            F14[🎯 Advanced Ensemble Management<br/>Dynamic model selection]
+            F15[🌟 Energy Truth Mastery<br/>Perfect 60Hz visualization]
         end
     end
     
-    %% Tier Connections
+    %% Hardware Tier to Feature Unlocking
     L1 --> F1
     L2 --> F2
+    L3 --> F3
     
-    M1 --> F3
-    M2 --> F4
-    M4 --> F5
+    M1 --> F4
+    M2 --> F5
+    M3 --> F6
+    M4 --> F7
+    M5 --> F8
     
-    H1 --> F7
-    H2 --> F8
-    H5 --> F9
+    H1 --> F10
+    H2 --> F11
+    H3 --> F12
+    H4 --> F13
+    H5 --> F14
+    H6 --> F15
     
-    %% Management Connections
+    %% Management System Connections
     MA --> MS
     MS --> MC
+    MC --> MO
     LB --> PQ
     PQ --> RT
+    RT --> TH
+    HM --> PM
+    PM --> EM
+    EM --> AM
     
-    %% Styling
-    style L1 fill:#ffeb3b
-    style M1 fill:#ff9800
-    style H1 fill:#f44336
-    style F1 fill:#e3f2fd
-    style F5 fill:#e8f5e8
-    style F9 fill:#fce4ec
+    %% Cross-system integration
+    MA --> HM
+    LB --> MA
+    F5 --> EM
+    F8 --> PM
+    F11 --> AM
+    
+    %% Progressive unlocking flow
+    F1 --> F4
+    F4 --> F7
+    F7 --> F10
+    F10 --> F13
+    
+    F2 --> F5
+    F5 --> F8
+    F8 --> F11
+    F11 --> F14
+    
+    F3 --> F6
+    F6 --> F9
+    F9 --> F12
+    F12 --> F15
+    
+    %% Styling with WIRTHFORGE colors and tier indicators
+    style L1 fill:#FEF3C7,stroke:#F59E0B,color:#000,stroke-width:2px
+    style L2 fill:#FEF3C7,stroke:#F59E0B,color:#000,stroke-width:2px
+    style L3 fill:#FEF3C7,stroke:#F59E0B,color:#000,stroke-width:2px
+    style L4 fill:#FEF3C7,stroke:#F59E0B,color:#000,stroke-width:2px
+    
+    style M1 fill:#DBEAFE,stroke:#3B82F6,color:#000,stroke-width:2px
+    style M2 fill:#DBEAFE,stroke:#3B82F6,color:#000,stroke-width:2px
+    style M3 fill:#DBEAFE,stroke:#3B82F6,color:#000,stroke-width:2px
+    style M4 fill:#DBEAFE,stroke:#3B82F6,color:#000,stroke-width:2px
+    style M5 fill:#DBEAFE,stroke:#3B82F6,color:#000,stroke-width:2px
+    
+    style H1 fill:#FECACA,stroke:#EF4444,color:#000,stroke-width:2px
+    style H2 fill:#FECACA,stroke:#EF4444,color:#000,stroke-width:2px
+    style H3 fill:#FECACA,stroke:#EF4444,color:#000,stroke-width:2px
+    style H4 fill:#FECACA,stroke:#EF4444,color:#000,stroke-width:2px
+    style H5 fill:#FECACA,stroke:#EF4444,color:#000,stroke-width:2px
+    style H6 fill:#FECACA,stroke:#EF4444,color:#000,stroke-width:2px
+    
+    %% Feature level styling
+    style F1 fill:#D1FAE5,stroke:#10B981,color:#000
+    style F4 fill:#D1FAE5,stroke:#10B981,color:#000
+    style F7 fill:#E9D5FF,stroke:#8B5CF6,color:#000
+    style F10 fill:#FBCFE8,stroke:#EC4899,color:#000
+    style F13 fill:#FDE68A,stroke:#F59E0B,color:#000
+    
+    %% Management system styling
+    style MA fill:#374151,stroke:#6B7280,color:#FFF
+    style LB fill:#374151,stroke:#6B7280,color:#FFF
+    style HM fill:#374151,stroke:#6B7280,color:#FFF
+    
+    %% Performance class definitions
+    classDef performance fill:#065F46,stroke:#10B981,color:#FFF,stroke-width:3px
+    classDef realtime fill:#7C2D12,stroke:#EA580C,color:#FFF,stroke-width:2px
+    classDef management fill:#1E293B,stroke:#475569,color:#FFF,stroke-width:2px
+    
+    class M3,H3,F5,F8,F11 realtime
+    class MA,LB,HM performance
+    class MS,PQ,PM management

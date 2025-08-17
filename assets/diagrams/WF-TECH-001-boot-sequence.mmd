@@ -1,46 +1,97 @@
 sequenceDiagram
-    participant User as User
-    participant Boot as Boot Controller
-    participant HW as Hardware Detector
-    participant Orch as Orchestrator
-    participant Ollama as Ollama Server
-    participant API as FastAPI Server
-    participant Dec as DECIPHER
-    participant UI as Web Browser
+    participant User as 👤 User
+    participant Boot as 🚀 Boot Controller
+    participant HW as 🖥️ Hardware Detector
+    participant Orch as 🎭 Orchestrator
+    participant Health as 🩺 Health Monitor
+    participant Ollama as 🤖 Ollama Server
+    participant API as 🌐 FastAPI Server
+    participant Dec as ⚡ DECIPHER Engine
+    participant UI as 🌐 Web Browser
 
-    Note over User,UI: WIRTHFORGE Zero-Config Boot Sequence
+    Note over User,UI: 🚀 WIRTHFORGE Zero-Config Boot Sequence (≤2000ms)
 
-    User->>Boot: Launch WIRTHFORGE
-    Boot->>HW: Detect Hardware Capabilities
-    HW->>Boot: Hardware Tier (Low/Mid/High)
+    User->>Boot: 🎯 Launch WIRTHFORGE
+    activate Boot
     
-    Note over Boot: Phase 1: Core Services
-    Boot->>Orch: Start Orchestrator
-    Orch->>Boot: Ready Signal
+    rect rgb(59, 130, 246, 0.1)
+        Note over Boot,HW: 📊 Phase 1: Hardware Detection (0-300ms)
+        Boot->>HW: 🔍 Detect Hardware Capabilities
+        activate HW
+        HW->>HW: 💾 Scan RAM, CPU, GPU
+        HW->>Boot: 🏷️ Hardware Tier (Low/Mid/High)
+        deactivate HW
+        Boot->>Boot: 📝 Configure Tier Policies
+    end
     
-    Boot->>Ollama: Start Ollama Server
-    Ollama->>Boot: Model Server Ready
+    rect rgb(16, 185, 129, 0.1)
+        Note over Boot,Orch: 🎭 Phase 2: Orchestrator Launch (300-800ms)
+        Boot->>Orch: ▶️ Start Orchestrator Engine
+        activate Orch
+        Orch->>Orch: 🔧 Initialize Integration Seams
+        Orch->>Boot: ✅ Orchestrator Ready
+        
+        Boot->>Health: 🩺 Start Health Monitor
+        activate Health
+        Health->>Health: ⏰ Initialize 10s Check Intervals
+        Health->>Boot: 💚 Health Monitor Active
+    end
     
-    Note over Boot: Phase 2: Transport Layer
-    Boot->>API: Start FastAPI Server
-    API->>Boot: HTTP/WebSocket Ready
+    rect rgb(245, 158, 11, 0.1)
+        Note over Boot,Dec: 🛠️ Phase 3: Service Launch (800-1500ms)
+        Boot->>Ollama: 🤖 Start Ollama Server (TECH-002)
+        activate Ollama
+        Ollama->>Ollama: 📦 Load Model Registry
+        Ollama->>Boot: 🟢 Model Server Ready
+        
+        Boot->>API: 🌐 Start FastAPI Server (localhost:8000)
+        activate API
+        API->>API: 🔌 Initialize WebSocket Endpoints
+        API->>Boot: 🌍 HTTP/WebSocket Ready
+        
+        Boot->>Dec: ⚡ Start DECIPHER Engine (TECH-003)
+        activate Dec
+        Dec->>Orch: 🔗 Register with Orchestrator
+        Dec->>Dec: 🔄 Initialize 60Hz Event Loop
+        Dec->>Boot: ⚡ 60Hz Loop Ready (16.67ms)
+    end
     
-    Note over Boot: Phase 3: Processing Engine
-    Boot->>Dec: Start DECIPHER
-    Dec->>Orch: Register with Orchestrator
-    Dec->>Boot: 60Hz Loop Ready
+    rect rgb(139, 92, 246, 0.1)
+        Note over Boot,Health: 🩺 Phase 4: Health Validation (1500-1800ms)
+        Boot->>Health: 🔍 Perform System Health Check
+        Health->>Orch: 💓 Check Orchestrator Status
+        Orch->>Health: ✅ Status: Healthy
+        Health->>Ollama: 💓 Check Model Server Status
+        Ollama->>Health: ✅ Status: Healthy  
+        Health->>API: 💓 Check API Server Status
+        API->>Health: ✅ Status: Healthy
+        Health->>Dec: 💓 Check DECIPHER Status
+        Dec->>Health: ✅ Status: 60Hz Stable
+        Health->>Boot: 🟢 All Systems Healthy
+    end
     
-    Note over Boot: Health Checks
-    Boot->>Orch: Health Check
-    Orch->>Boot: Status: Healthy
-    Boot->>Ollama: Health Check
-    Ollama->>Boot: Status: Healthy
-    Boot->>API: Health Check
-    API->>Boot: Status: Healthy
+    rect rgb(16, 185, 129, 0.1)
+        Note over Boot,UI: 🎉 Phase 5: System Ready (1800-2000ms)
+        Boot->>UI: 🚀 Launch Browser Interface
+        activate UI
+        UI->>API: 🔌 WebSocket Connect (ws://127.0.0.1:8000)
+        API->>UI: 🎊 startup_complete Event
+        API->>UI: 📊 System Status Dashboard
+        UI->>User: 🎯 WIRTHFORGE Ready for Energy Truth
+        deactivate Boot
+    end
     
-    Note over Boot: System Ready
-    Boot->>UI: Launch Browser Interface
-    UI->>API: WebSocket Connect
-    API->>UI: startup_complete Event
+    Note over User,UI: ✅ Target Achieved: Sub-2s Boot • 60Hz Stable • Local-First Ready
     
-    Note over User,UI: Target: <2s Boot Time to 60Hz Ready
+    %% Ongoing operations
+    loop Every 10 seconds
+        Health->>Orch: 💓 Health Check
+        Health->>Ollama: 💓 Health Check  
+        Health->>API: 💓 Health Check
+        Health->>Dec: 💓 Health Check
+    end
+    
+    loop Every 16.67ms (60Hz)
+        Dec->>API: ⚡ Energy Event Stream
+        API->>UI: 📊 Real-time Energy Updates
+    end

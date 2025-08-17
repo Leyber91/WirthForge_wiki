@@ -1,57 +1,132 @@
 sequenceDiagram
-    participant API as FastAPI Server
-    participant Adapter as Ollama Adapter
-    participant Ollama as Ollama Server
-    participant Dec as DECIPHER
-    participant WS as WebSocket
+    participant API as 🌐 FastAPI Server
+    participant Adapter as 🔌 Ollama Adapter
+    participant Ollama as 🤖 Ollama Server
+    participant Dec as ⚡ DECIPHER Engine
+    participant WS as 🔌 WebSocket Stream
+    participant UI as 🖥️ Browser UI
 
-    Note over API,WS: WIRTHFORGE Ollama Integration Flow
+    Note over API,UI: 🤖 WIRTHFORGE Local AI Integration Flow (TECH-002)
 
-    %% Model Loading
-    API->>Adapter: Load Model Request
-    Adapter->>Ollama: POST /api/pull {model}
-    Ollama->>Adapter: Model Download Progress
-    Adapter->>API: Loading Status Updates
-    Ollama->>Adapter: Model Ready
-    Adapter->>API: Load Complete
-
-    %% Token Generation Stream
-    API->>Adapter: Generate Request
-    Note right of API: {<br/>  "model": "llama2:13b",<br/>  "prompt": "user input",<br/>  "stream": true<br/>}
-    
-    Adapter->>Ollama: POST /api/generate (streaming)
-    
-    loop Token Stream (Real-time)
-        Ollama->>Adapter: Token + Metadata
-        Note right of Ollama: {<br/>  "response": "token",<br/>  "done": false,<br/>  "eval_duration": 1234<br/>}
+    rect rgb(59, 130, 246, 0.1)
+        Note over API,Ollama: 📦 Phase 1: Model Loading & Validation
+        API->>Adapter: 🎯 Load Model Request (Hardware Tier)
+        activate Adapter
+        Adapter->>Adapter: 🏷️ Validate Hardware Tier Policy
+        Adapter->>Ollama: 📥 POST /api/pull {model, tier_config}
+        activate Ollama
         
-        Adapter->>Dec: Token + Timing Data
-        Dec->>Dec: Calculate Energy E(t)
-        Note right of Dec: E(t) = f(Δt, entropy, logprobs)
-        
-        Dec->>WS: energy_update Event
-        Dec->>WS: token_stream Event
-        WS->>API: Forward to UI
-    end
-    
-    Ollama->>Adapter: Stream Complete
-    Adapter->>Dec: Final Metrics
-    Dec->>WS: Session Complete Event
-
-    %% Turbo Mode (Multi-Model)
-    opt Turbo Ensemble
-        API->>Adapter: Turbo Generate Request
-        Note right of API: Multiple models in parallel
-        
-        par Model 1
-            Adapter->>Ollama: Generate (Model 1)
-        and Model 2  
-            Adapter->>Ollama: Generate (Model 2)
-        and Model 3
-            Adapter->>Ollama: Generate (Model 3)
+        loop Model Download Progress
+            Ollama->>Adapter: 📊 Download Progress (%)
+            Adapter->>API: 🔄 Loading Status Updates
+            API->>WS: 📈 model_loading Event
+            WS->>UI: 🎯 Progress Indicator
         end
         
-        Adapter->>Dec: Ensemble Tokens
-        Dec->>Dec: Calculate Interference/Resonance
-        Dec->>WS: ensemble_token Event
+        Ollama->>Adapter: ✅ Model Ready (Memory: 4.2GB)
+        Adapter->>API: 🟢 Load Complete + Model Specs
+        API->>WS: 🎉 model_ready Event
+        WS->>UI: 🚀 Model Available Notification
+        deactivate Ollama
     end
+
+    rect rgb(16, 185, 129, 0.1)
+        Note over API,UI: ⚡ Phase 2: Real-Time Token Generation (60Hz Target)
+        API->>Adapter: 🎯 Generate Request + Energy Config
+        Note right of API: 📝 Request Schema:<br/>{<br/>  "model": "llama2:13b",<br/>  "prompt": "user input",<br/>  "stream": true,<br/>  "energy_tracking": true<br/>}
+        
+        Adapter->>Ollama: 🚀 POST /api/generate (streaming)
+        activate Ollama
+        
+        loop Token Stream (16.67ms Target Frame Budget)
+            Ollama->>Adapter: 🎯 Token + Rich Metadata
+            Note right of Ollama: 📊 Token Data:<br/>{<br/>  "response": "quantum",<br/>  "done": false,<br/>  "eval_duration": 1234,<br/>  "logprobs": [-2.3, -1.8],<br/>  "entropy": 0.847<br/>}
+            
+            Adapter->>Dec: ⚡ Token + Timing + Probability Data
+            activate Dec
+            Dec->>Dec: 🧮 Calculate Energy E(t)
+            Note right of Dec: 🔬 Energy Formula:<br/>E(t) = Σ w_i × log(1 + |Δp_i(t)|)<br/>× diversity_factor × temporal_weight
+            
+            Dec->>Dec: 📊 Update Diversity Index
+            Dec->>WS: ⚡ energy_update Event (E=847.3J)
+            Dec->>WS: 🎯 token_stream Event
+            Dec->>WS: 📈 diversity_index Event (0.847)
+            WS->>UI: 🌟 Real-time Energy Visualization
+            deactivate Dec
+        end
+        
+        Ollama->>Adapter: ✅ Stream Complete (Total: 2.4s)
+        deactivate Ollama
+        Adapter->>Dec: 📊 Final Session Metrics
+        activate Dec
+        Dec->>Dec: 🎯 Calculate Session Energy Total
+        Dec->>WS: 🎉 session_complete Event
+        Dec->>WS: 📊 energy_summary Event
+        WS->>UI: 🏆 Session Results Dashboard
+        deactivate Dec
+        deactivate Adapter
+    end
+
+    rect rgb(139, 92, 246, 0.1)
+        Note over API,UI: 🚀 Phase 3: Turbo Mode Multi-Model Ensemble
+        opt Hardware Tier: Mid/High Only
+            API->>Adapter: 🚀 Turbo Generate Request
+            Note right of API: 🎯 Ensemble Config:<br/>Multiple models in parallel<br/>Hardware tier validation required
+            activate Adapter
+            
+            Adapter->>Adapter: 🏷️ Validate Tier Policy (Mid/High)
+            
+            par Llama Model
+                Adapter->>Ollama: 🦙 Generate (Llama2:13B)
+                activate Ollama
+                Ollama->>Adapter: 🎯 Llama Tokens
+                deactivate Ollama
+            and Mistral Model  
+                Adapter->>Ollama: 🌪️ Generate (Mistral:7B)
+                activate Ollama
+                Ollama->>Adapter: 🎯 Mistral Tokens
+                deactivate Ollama
+            and CodeLlama Model
+                Adapter->>Ollama: 💻 Generate (CodeLlama:7B)
+                activate Ollama
+                Ollama->>Adapter: 🎯 CodeLlama Tokens
+                deactivate Ollama
+            and Phi Model
+                Adapter->>Ollama: φ Generate (Phi3:3.8B)
+                activate Ollama
+                Ollama->>Adapter: 🎯 Phi Tokens
+                deactivate Ollama
+            end
+            
+            Adapter->>Dec: 🌈 Ensemble Token Stream (4 Models)
+            activate Dec
+            Dec->>Dec: 🔬 Calculate Model Interference/Resonance
+            Dec->>Dec: 📊 Compute Diversity Index (Multi-Model)
+            Dec->>Dec: ⚡ Calculate Ensemble Energy
+            Dec->>WS: 🌟 ensemble_energy Event
+            Dec->>WS: 🎭 model_synchronization Event
+            Dec->>WS: 🌈 diversity_peak Event
+            WS->>UI: 🎆 Multi-Model Energy Visualization
+            deactivate Dec
+            deactivate Adapter
+        end
+    end
+
+    rect rgb(245, 158, 11, 0.1)
+        Note over API,UI: 🩺 Phase 4: Health Monitoring & Performance
+        loop Every 10 seconds
+            API->>Adapter: 💓 Health Check Request
+            Adapter->>Ollama: 🔍 GET /api/ps (Process Status)
+            Ollama->>Adapter: 📊 Model Status + Memory Usage
+            Adapter->>API: 🟢 Health Report
+            API->>WS: 💚 ollama_health Event
+            WS->>UI: 📊 System Health Dashboard
+        end
+        
+        loop Every 16.67ms (60Hz)
+            Dec->>WS: ⚡ Real-time Energy Stream
+            WS->>UI: 🌟 60Hz Energy Truth Visualization
+        end
+    end
+
+    Note over API,UI: ✅ Integration Complete: Local AI • Energy Truth • 60Hz Performance

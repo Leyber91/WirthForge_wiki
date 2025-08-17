@@ -1,89 +1,94 @@
 flowchart TD
-    subgraph "Token Stream Input"
-        T[Token Generated]
-        TM[Token Metadata]
-        TS[Timestamp Δt]
+    subgraph INPUT["🎯 TOKEN STREAM INPUT"]
+        T["🎭 Token Generated<br/>('Hello', 'world', '!')"]
+        TM["📊 Token Metadata<br/>(logprobs, position, model)"]
+        TS["⏱️ Timestamp Δt<br/>(generation timing)"]
     end
     
-    subgraph "Energy Calculation Pipeline"
-        subgraph "Timing Analysis"
-            DT[Delta Time Δt]
-            TPS[Tokens Per Second]
-            TTFT[Time to First Token]
+    subgraph PIPELINE["⚡ ENERGY CALCULATION PIPELINE"]
+        subgraph TIMING["🕐 TIMING ANALYSIS"]
+            DT["📏 Delta Time Δt<br/>(ms between tokens)"]
+            TPS["🚀 Tokens Per Second<br/>(generation speed)"]
+            TTFT["⚡ Time to First Token<br/>(TTFT latency)"]
         end
         
-        subgraph "Semantic Analysis"
-            LP[Log Probabilities]
-            ENT[Entropy Calculation]
-            TK[Top-K Diversity]
+        subgraph SEMANTIC["🧠 SEMANTIC ANALYSIS"]
+            LP["📈 Log Probabilities<br/>(model confidence)"]
+            ENT["🌀 Entropy Calculation<br/>(uncertainty measure)"]
+            TK["🎲 Top-K Diversity<br/>(choice breadth)"]
         end
         
-        subgraph "Energy Formula"
-            EF["E(t) = f(Δt, entropy, diversity)"]
-            NORM[Normalize to [0,1]]
-            SMOOTH[Exponential Smoothing]
-        end
-    end
-    
-    subgraph "Output Events"
-        EU[Energy Update]
-        TS_OUT[Token Stream]
-        FM[Frame Metrics]
-    end
-    
-    subgraph "Multi-Model Processing"
-        subgraph "Turbo Mode"
-            M1[Model 1 Token]
-            M2[Model 2 Token] 
-            M3[Model 3 Token]
-        end
-        
-        subgraph "Ensemble Analysis"
-            INT[Interference Pattern]
-            RES[Resonance Detection]
-            DIV[Diversity Index]
-        end
-        
-        subgraph "Council Events"
-            IE[interference_event]
-            RE[resonance_event]
-            EE[ensemble_energy]
+        subgraph FORMULA["🧮 ENERGY FORMULA"]
+            EF["⚡ E(t) = w₁×E_cadence + w₂×E_certainty + w₃×E_stall<br/>🔬 Physics-Based Energy Computation"]
+            NORM["📐 Normalize to [0,1]<br/>(energy bounds)"]
+            SMOOTH["📊 Exponential Moving Average<br/>(α=0.1, smooth visualization)"]
         end
     end
     
-    %% Single Model Flow
-    T --> DT
-    TM --> LP
-    TS --> TPS
+    subgraph OUTPUT["📡 OUTPUT EVENTS (60Hz)"]
+        EU["🌊 Energy Update<br/>(real-time E(t))"]
+        TS_OUT["🎭 Token Stream<br/>(with energy values)"]
+        FM["📊 Frame Metrics<br/>(performance data)"]
+    end
     
-    DT --> EF
-    LP --> ENT
-    ENT --> EF
-    TPS --> TK
-    TK --> EF
+    subgraph MULTI["🎪 MULTI-MODEL PROCESSING"]
+        subgraph TURBO["🚀 TURBO MODE"]
+            M1["🤖 Model 1: LLaMA2-7B<br/>(primary generation)"]
+            M2["🤖 Model 2: CodeLLaMA<br/>(code specialist)"] 
+            M3["🤖 Model 3: Mistral-7B<br/>(reasoning expert)"]
+        end
+        
+        subgraph ENSEMBLE["🔬 ENSEMBLE ANALYSIS"]
+            INT["🌊 Interference Pattern<br/>(model disagreement)"]
+            RES["🎵 Resonance Detection<br/>(model synchronization)"]
+            DIV["📊 Diversity Index<br/>DI = 1 - max(P_i)"]
+        end
+        
+        subgraph COUNCIL["🏛️ COUNCIL EVENTS"]
+            IE["⚡ interference_event<br/>(visual interference)"]
+            RE["✨ resonance_event<br/>(celebration trigger)"]
+            EE["🌟 ensemble_energy<br/>(combined E(t))"]
+        end
+    end
     
-    EF --> NORM
-    NORM --> SMOOTH
-    SMOOTH --> EU
-    T --> TS_OUT
-    EU --> FM
+    %% Enhanced Flow Connections
+    T -.->|"🎯 Raw Token"| DT
+    TM -.->|"📊 Metadata"| LP
+    TS -.->|"⏱️ Timing"| TPS
     
-    %% Multi-Model Flow
-    M1 --> INT
-    M2 --> INT
-    M3 --> INT
+    DT -->|"⚡ Speed Component"| EF
+    LP -->|"🧠 Confidence"| ENT
+    ENT -->|"🌀 Uncertainty"| EF
+    TPS -->|"🚀 Cadence"| TK
+    TK -->|"🎲 Diversity"| EF
     
-    INT --> DIV
-    M1 --> RES
-    M2 --> RES
-    M3 --> RES
+    EF -->|"🧮 Raw Energy"| NORM
+    NORM -->|"📐 Bounded [0,1]"| SMOOTH
+    SMOOTH -->|"📊 Smoothed E(t)"| EU
+    T -->|"🎭 Original Token"| TS_OUT
+    EU -->|"⚡ Energy Data"| FM
     
-    DIV --> IE
-    RES --> RE
-    INT --> EE
+    %% Multi-Model Enhanced Flow
+    M1 -.->|"🤖 Stream A"| INT
+    M2 -.->|"🤖 Stream B"| INT
+    M3 -.->|"🤖 Stream C"| INT
     
-    %% Styling
-    style EF fill:#ff9800
-    style EU fill:#4caf50
-    style INT fill:#e91e63
-    style RES fill:#9c27b0
+    INT -->|"🌊 Pattern Analysis"| DIV
+    M1 -.->|"🎵 Sync Check"| RES
+    M2 -.->|"🎵 Sync Check"| RES
+    M3 -.->|"🎵 Sync Check"| RES
+    
+    DIV -->|"📊 High Diversity"| IE
+    RES -->|"✨ Synchronization"| RE
+    INT -->|"🌟 Combined Energy"| EE
+    
+    %% Visual Enhancement Styling
+    style EF fill:#ff9800,stroke:#f57c00,stroke-width:3px,color:#fff
+    style EU fill:#4caf50,stroke:#388e3c,stroke-width:3px,color:#fff
+    style INT fill:#e91e63,stroke:#c2185b,stroke-width:3px,color:#fff
+    style RES fill:#9c27b0,stroke:#7b1fa2,stroke-width:3px,color:#fff
+    style FORMULA fill:#fff3e0,stroke:#ff9800,stroke-width:2px
+    style TURBO fill:#e8f5e8,stroke:#4caf50,stroke-width:2px
+    style COUNCIL fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
+    style INPUT fill:#e3f2fd,stroke:#2196f3,stroke-width:2px
+    style OUTPUT fill:#fff8e1,stroke:#ffc107,stroke-width:2px

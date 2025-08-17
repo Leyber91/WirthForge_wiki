@@ -1,74 +1,98 @@
 sequenceDiagram
-    participant Browser as Browser UI
-    participant WS as WebSocket Server
-    participant Orch as Orchestrator
-    participant Dec as DECIPHER
-    participant Model as AI Model
+    participant U as 🧑‍💻 User
+    participant B as 🌐 Browser UI
+    participant WS as ⚡ WebSocket Server<br/>(localhost:8145)
+    participant O as 🎭 Orchestrator
+    participant D as 🔮 DECIPHER<br/>(Energy Engine)
+    participant M as 🤖 AI Model Pool
 
-    Note over Browser,Model: WIRTHFORGE WebSocket Protocol Lifecycle
-
-    %% Connection Phase
-    Browser->>WS: WebSocket Connect (ws://localhost:8145/ws)
-    WS->>Browser: Connection Accepted
+    Note over U,M: 🚀 WIRTHFORGE Real-Time Protocol Lifecycle (60Hz Energy Truth)
     
-    %% Startup Handshake
-    Orch->>WS: System Ready Signal
-    WS->>Browser: startup_complete Event
-    Note right of Browser: {<br/>  "type": "startup_complete",<br/>  "model": "LLaMA2-13B",<br/>  "tier": "Mid-Tier",<br/>  "frameRate": 60<br/>}
-    
-    Browser->>WS: Handshake ACK
-    
-    %% Normal Operation - 60Hz Loop
-    loop Every 16.67ms (60Hz)
-        Dec->>WS: energy_update Event
-        WS->>Browser: Forward Energy Data
-        Note right of Browser: {<br/>  "type": "energy_update",<br/>  "frameNumber": N,<br/>  "totalEnergy": 1250.5<br/>}
+    rect rgb(240, 248, 255)
+        Note over U,M: 🔌 PHASE 1: CONNECTION & HANDSHAKE
+        U->>B: Launch WIRTHFORGE
+        B->>WS: 🔗 WebSocket Connect<br/>ws://localhost:8145/ws
+        WS-->>B: ✅ Connection Accepted
         
-        opt Token Generation Active
-            Model->>Dec: New Tokens
-            Dec->>WS: token_stream Event
-            WS->>Browser: Forward Tokens
-            Note right of Browser: {<br/>  "type": "token_stream",<br/>  "tokens": ["Hello", "world"],<br/>  "isComplete": false<br/>}
-        end
+        O->>WS: 🎯 System Ready Signal
+        WS->>B: 📡 startup_complete Event
+        Note right of B: 📋 System Status<br/>{<br/>  "type": "startup_complete",<br/>  "model": "LLaMA2-13B",<br/>  "tier": "Mid-Tier",<br/>  "frameRate": 60,<br/>  "energyTruth": true<br/>}
         
-        opt Multi-Model Council Mode
-            Dec->>WS: interference_event
-            WS->>Browser: Forward Interference
-            Dec->>WS: resonance_event
-            WS->>Browser: Forward Resonance
+        B-->>WS: 🤝 Handshake ACK
+    end
+    
+    rect rgb(245, 255, 245)
+        Note over U,M: ⚡ PHASE 2: 60Hz ENERGY TRUTH LOOP
+        loop Every 16.67ms (60Hz Frame)
+            D->>WS: 🌊 energy_update Event
+            WS->>B: 📊 Energy Visualization Data
+            Note right of B: ⚡ Energy Frame<br/>{<br/>  "type": "energy_update",<br/>  "frameNumber": N,<br/>  "totalEnergy": 1250.5,<br/>  "energyField": [...]<br/>}
+            
+            alt 🔥 Token Generation Active
+                M->>D: 🎯 New Token Stream
+                D->>D: 🧮 Compute E(t) = f(Δt, entropy, logprobs)
+                D->>WS: 🌟 token_stream Event
+                WS->>B: 💫 Real-time Tokens
+                Note right of B: 🎭 Token Stream<br/>{<br/>  "type": "token_stream",<br/>  "tokens": ["Hello", "world"],<br/>  "energy": 0.85,<br/>  "isComplete": false<br/>}
+            end
+            
+            alt 🎪 Multi-Model Council Mode
+                M->>D: 🔀 Parallel Token Streams
+                D->>D: 🌀 Detect Interference Patterns
+                D->>WS: ⚡ interference_event
+                WS->>B: 🌊 Interference Visualization
+                D->>D: 🎵 Detect Resonance Sync
+                D->>WS: 🎆 resonance_event
+                WS->>B: ✨ Resonance Celebration
+            end
         end
     end
     
-    %% Heartbeat Mechanism
-    loop Every 1 second
-        WS->>Browser: heartbeat Event
-        Note right of Browser: {<br/>  "type": "heartbeat",<br/>  "sequence": N,<br/>  "serverTime": timestamp<br/>}
-        Browser->>WS: Heartbeat Response (optional)
+    rect rgb(255, 248, 240)
+        Note over U,M: 💓 PHASE 3: HEALTH & MONITORING
+        loop Every 1 second
+            WS->>B: 💓 heartbeat Event
+            Note right of B: 🩺 Health Check<br/>{<br/>  "type": "heartbeat",<br/>  "sequence": N,<br/>  "serverTime": timestamp,<br/>  "fps": 60.0<br/>}
+            B-->>WS: 💓 Heartbeat Response
+        end
     end
     
-    %% Error Handling
-    opt Error Occurs
-        Dec->>WS: Processing Error
-        WS->>Browser: error_event
-        Note right of Browser: {<br/>  "type": "error_event",<br/>  "severity": "warning",<br/>  "code": "FRAME_OVERRUN"<br/>}
+    rect rgb(255, 245, 245)
+        Note over U,M: ⚠️ PHASE 4: ERROR HANDLING
+        alt 🚨 Performance Issue
+            D->>WS: ⚠️ Frame Overrun Detected
+            WS->>B: 🚨 error_event
+            Note right of B: ⚠️ System Alert<br/>{<br/>  "type": "error_event",<br/>  "severity": "warning",<br/>  "code": "FRAME_OVERRUN",<br/>  "fps": 45.2<br/>}
+            B->>U: 🔧 Performance Warning
+        end
     end
     
-    %% Reward Events
-    opt Achievement Unlocked
-        Orch->>WS: User Achievement
-        WS->>Browser: reward_event
-        Note right of Browser: {<br/>  "type": "reward_event",<br/>  "rewardType": "milestone",<br/>  "title": "Lightning Master"<br/>}
+    rect rgb(248, 255, 248)
+        Note over U,M: 🏆 PHASE 5: ACHIEVEMENTS
+        alt 🎉 Milestone Reached
+            O->>WS: 🏆 Achievement Unlocked
+            WS->>B: 🎊 reward_event
+            Note right of B: 🏆 Achievement<br/>{<br/>  "type": "reward_event",<br/>  "rewardType": "milestone",<br/>  "title": "Lightning Master",<br/>  "level": 3<br/>}
+            B->>U: 🎉 Celebration Animation
+        end
     end
     
-    %% Connection Loss & Recovery
-    Browser->>WS: Connection Lost
-    Note over Browser,WS: Network Interruption
+    rect rgb(255, 240, 245)
+        Note over U,M: 🔄 PHASE 6: RECOVERY & RESILIENCE
+        B-xWS: 💔 Connection Lost
+        Note over B,WS: 🌐 Network Interruption
+        
+        B->>WS: 🔄 Auto-Reconnect (Exponential Backoff)
+        WS-->>B: ✅ Connection Restored
+        WS->>B: 🔄 startup_complete (Resume State)
+        Note right of B: 🔄 State Recovery<br/>Session restored<br/>Energy field synchronized
+    end
     
-    Browser->>WS: Reconnect Attempt
-    WS->>Browser: Connection Restored
-    WS->>Browser: startup_complete (Resume)
-    
-    %% Graceful Shutdown
-    Browser->>WS: Close Connection
-    WS->>Orch: Client Disconnected
-    WS->>Browser: Connection Closed
+    rect rgb(245, 245, 255)
+        Note over U,M: 👋 PHASE 7: GRACEFUL SHUTDOWN
+        U->>B: 🛑 Close Application
+        B->>WS: 👋 Close Connection
+        WS->>O: 📴 Client Disconnected
+        WS-->>B: ✅ Connection Closed
+        Note over U,M: 🏁 Session Complete - All data preserved locally
+    end

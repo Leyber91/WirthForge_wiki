@@ -1,19 +1,54 @@
 graph TB
-    subgraph "User's Local Machine"
-        U[User]
-        WF[WIRTHFORGE System]
-        B[Web Browser]
-        OS[Operating System]
+    subgraph "🖥️ User's Local Machine (127.0.0.1 Only)"
+        U[👤 User Interface]
+        subgraph "🚀 WIRTHFORGE Zero-Config Boot System"
+            WF[🎭 Orchestrator Engine<br/>Sub-2s Startup]
+            HM[🩺 Health Monitor<br/>10s Intervals]
+            IS[🔌 Integration Seams<br/>TECH-002/003/004]
+        end
+        B[🌐 Web Browser<br/>Local UI Server]
+        OS[⚙️ Operating System<br/>Hardware Detection]
     end
     
-    subgraph "External (Optional)"
-        MR[Model Repository<br/>Hugging Face/Ollama]
+    subgraph "🌍 External Resources (Optional)"
+        MR[📦 Model Repository<br/>Hugging Face/Ollama<br/>Download Only]
+        UP[🔄 Updates<br/>Version Check]
     end
     
+    %% User interactions
     U --> B
-    B --> WF
-    WF --> OS
-    WF -.-> MR
+    B <--> WF
     
-    style WF fill:#e1f5fe
-    style MR fill:#fff3e0
+    %% System architecture
+    WF --> HM
+    WF --> IS
+    WF --> OS
+    HM --> OS
+    
+    %% External connections (download only)
+    WF -.->|Model Download| MR
+    WF -.->|Version Check| UP
+    
+    %% Boot sequence flow
+    OS -->|Hardware Info| WF
+    WF -->|Service Health| HM
+    HM -->|Status Report| WF
+    
+    %% Integration points
+    IS -->|Model Interface| WF
+    IS -->|Protocol Interface| WF
+    IS -->|State Interface| WF
+    
+    %% Styling with WIRTHFORGE colors
+    style U fill:#3B82F6,stroke:#1E40AF,color:#FFF
+    style WF fill:#10B981,stroke:#047857,color:#FFF
+    style HM fill:#F59E0B,stroke:#D97706,color:#FFF
+    style IS fill:#8B5CF6,stroke:#7C3AED,color:#FFF
+    style B fill:#06B6D4,stroke:#0891B2,color:#FFF
+    style OS fill:#374151,stroke:#1F2937,color:#FFF
+    style MR fill:#FEF3C7,stroke:#F59E0B,color:#000
+    style UP fill:#DBEAFE,stroke:#3B82F6,color:#000
+    
+    %% Performance annotations
+    classDef performance fill:#065F46,stroke:#10B981,color:#FFF
+    class WF,HM performance
