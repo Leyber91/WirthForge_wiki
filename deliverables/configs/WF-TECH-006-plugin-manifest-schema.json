@@ -1,0 +1,565 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://wirthforge.com/schemas/plugin-manifest.json",
+  "title": "WIRTHFORGE Plugin Manifest Schema",
+  "description": "JSON schema for WIRTHFORGE plugin manifests and permission declarations",
+  "version": "1.0.0",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64,
+      "pattern": "^[a-zA-Z][a-zA-Z0-9_-]*$",
+      "description": "Plugin name (alphanumeric, underscore, hyphen)"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+(-[a-zA-Z0-9]+)?$",
+      "description": "Semantic version (e.g., 1.0.0 or 1.0.0-beta)"
+    },
+    "description": {
+      "type": "string",
+      "minLength": 10,
+      "maxLength": 500,
+      "description": "Plugin description"
+    },
+    "author": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100,
+      "description": "Plugin author name or organization"
+    },
+    "license": {
+      "type": "string",
+      "enum": ["MIT", "Apache-2.0", "GPL-3.0", "BSD-3-Clause", "ISC", "MPL-2.0"],
+      "default": "MIT",
+      "description": "Plugin license"
+    },
+    "homepage": {
+      "type": "string",
+      "format": "uri",
+      "description": "Plugin homepage URL"
+    },
+    "repository": {
+      "type": "string",
+      "format": "uri",
+      "description": "Plugin repository URL"
+    },
+    "entry_point": {
+      "type": "string",
+      "pattern": "^[a-zA-Z_][a-zA-Z0-9_]*\\.py$",
+      "description": "Main Python file (e.g., main.py)"
+    },
+    "wirthforge_version": {
+      "type": "string",
+      "pattern": "^(\\^|~|>=|>|<=|<)?\\d+\\.\\d+\\.\\d+$",
+      "default": "^1.0.0",
+      "description": "Compatible WIRTHFORGE version"
+    },
+    "dependencies": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[a-zA-Z][a-zA-Z0-9_-]*([><=~^]\\d+\\.\\d+\\.\\d+)?$"
+      },
+      "maxItems": 20,
+      "uniqueItems": true,
+      "default": [],
+      "description": "Python package dependencies"
+    },
+    "files": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[a-zA-Z0-9_/-]+\\.(py|json|yaml|yml|txt|md)$"
+      },
+      "maxItems": 50,
+      "uniqueItems": true,
+      "default": [],
+      "description": "Additional files included with plugin"
+    },
+    "permissions": {
+      "type": "object",
+      "description": "Plugin security permissions",
+      "properties": {
+        "events": {
+          "type": "object",
+          "properties": {
+            "read": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "energy.update",
+                  "energy.field",
+                  "energy.pattern",
+                  "energy.resonance",
+                  "experience.token",
+                  "experience.completion",
+                  "experience.state",
+                  "experience.flow",
+                  "council.interference",
+                  "council.resonance",
+                  "council.sync",
+                  "council.decision",
+                  "system.startup",
+                  "system.shutdown",
+                  "system.heartbeat",
+                  "system.status",
+                  "session.start",
+                  "session.end",
+                  "session.state",
+                  "session.activity",
+                  "ui.render",
+                  "ui.interaction",
+                  "ui.state",
+                  "data.read",
+                  "data.query"
+                ]
+              },
+              "maxItems": 50,
+              "uniqueItems": true,
+              "default": [],
+              "description": "Events the plugin can subscribe to and read"
+            },
+            "write": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "energy.update",
+                  "energy.field",
+                  "energy.pattern",
+                  "experience.token",
+                  "experience.completion",
+                  "experience.state",
+                  "council.interference",
+                  "council.resonance",
+                  "system.heartbeat",
+                  "session.state",
+                  "ui.render",
+                  "ui.notification",
+                  "data.write"
+                ]
+              },
+              "maxItems": 10,
+              "uniqueItems": true,
+              "default": [],
+              "description": "Events the plugin can emit and write"
+            }
+          },
+          "additionalProperties": false
+        },
+        "system": {
+          "type": "object",
+          "properties": {
+            "network": {
+              "type": "object",
+              "properties": {
+                "enabled": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Allow network access"
+                },
+                "hosts": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "format": "hostname"
+                  },
+                  "maxItems": 10,
+                  "description": "Allowed hostnames (if network enabled)"
+                },
+                "ports": {
+                  "type": "array",
+                  "items": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 65535
+                  },
+                  "maxItems": 5,
+                  "description": "Allowed ports (if network enabled)"
+                }
+              },
+              "additionalProperties": false
+            },
+            "filesystem": {
+              "type": "object",
+              "properties": {
+                "enabled": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Allow filesystem access"
+                },
+                "read_paths": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "maxItems": 10,
+                  "description": "Allowed read paths (if filesystem enabled)"
+                },
+                "write_paths": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "maxItems": 5,
+                  "description": "Allowed write paths (if filesystem enabled)"
+                },
+                "temp_only": {
+                  "type": "boolean",
+                  "default": true,
+                  "description": "Restrict to temporary directory only"
+                }
+              },
+              "additionalProperties": false
+            },
+            "ui": {
+              "type": "object",
+              "properties": {
+                "render": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Allow UI rendering"
+                },
+                "interact": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Allow UI interaction handling"
+                },
+                "notifications": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Allow sending notifications"
+                }
+              },
+              "additionalProperties": false
+            },
+            "subprocess": {
+              "type": "boolean",
+              "default": false,
+              "description": "Allow subprocess execution (highly restricted)"
+            },
+            "imports": {
+              "type": "object",
+              "properties": {
+                "restricted": {
+                  "type": "boolean",
+                  "default": true,
+                  "description": "Enable import restrictions"
+                },
+                "allowed_modules": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "default": [
+                    "json",
+                    "datetime",
+                    "math",
+                    "random",
+                    "re",
+                    "collections",
+                    "itertools",
+                    "functools",
+                    "typing",
+                    "dataclasses",
+                    "pathlib",
+                    "uuid"
+                  ],
+                  "description": "Allowed Python modules (if restricted)"
+                },
+                "forbidden_modules": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "default": [
+                    "subprocess",
+                    "os.system",
+                    "eval",
+                    "exec",
+                    "compile",
+                    "socket",
+                    "urllib",
+                    "requests",
+                    "http",
+                    "ftplib",
+                    "smtplib",
+                    "telnetlib",
+                    "xmlrpc",
+                    "pickle",
+                    "shelve",
+                    "ctypes",
+                    "multiprocessing",
+                    "threading"
+                  ],
+                  "description": "Explicitly forbidden modules"
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
+        },
+        "resources": {
+          "type": "object",
+          "properties": {
+            "memory": {
+              "type": "object",
+              "properties": {
+                "max_mb": {
+                  "type": "integer",
+                  "minimum": 16,
+                  "maximum": 1024,
+                  "default": 128,
+                  "description": "Maximum memory usage in MB"
+                },
+                "warning_threshold": {
+                  "type": "number",
+                  "minimum": 0.5,
+                  "maximum": 0.95,
+                  "default": 0.8,
+                  "description": "Warning threshold as fraction of max"
+                }
+              },
+              "additionalProperties": false
+            },
+            "cpu": {
+              "type": "object",
+              "properties": {
+                "max_percent": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 100,
+                  "default": 20,
+                  "description": "Maximum CPU usage percentage"
+                },
+                "burst_duration_seconds": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 60,
+                  "default": 5,
+                  "description": "Allowed burst duration"
+                }
+              },
+              "additionalProperties": false
+            },
+            "execution": {
+              "type": "object",
+              "properties": {
+                "max_time_seconds": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 3600,
+                  "default": 300,
+                  "description": "Maximum execution time per operation"
+                },
+                "idle_timeout_seconds": {
+                  "type": "integer",
+                  "minimum": 60,
+                  "maximum": 3600,
+                  "default": 600,
+                  "description": "Idle timeout before suspension"
+                }
+              },
+              "additionalProperties": false
+            },
+            "storage": {
+              "type": "object",
+              "properties": {
+                "max_file_size_mb": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 100,
+                  "default": 10,
+                  "description": "Maximum file size in MB"
+                },
+                "max_total_size_mb": {
+                  "type": "integer",
+                  "minimum": 10,
+                  "maximum": 500,
+                  "default": 50,
+                  "description": "Maximum total storage in MB"
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
+        },
+        "isolation": {
+          "type": "object",
+          "properties": {
+            "process": {
+              "type": "boolean",
+              "default": true,
+              "description": "Run in isolated process"
+            },
+            "sandbox_directory": {
+              "type": "boolean",
+              "default": true,
+              "description": "Use isolated sandbox directory"
+            },
+            "environment_variables": {
+              "type": "boolean",
+              "default": true,
+              "description": "Isolate environment variables"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "required": ["events", "system", "resources", "isolation"],
+      "additionalProperties": false
+    },
+    "configuration": {
+      "type": "object",
+      "properties": {
+        "schema": {
+          "type": "object",
+          "description": "JSON schema for plugin configuration"
+        },
+        "defaults": {
+          "type": "object",
+          "description": "Default configuration values"
+        }
+      },
+      "additionalProperties": false
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "category": {
+          "type": "string",
+          "enum": [
+            "energy",
+            "visualization",
+            "analysis",
+            "integration",
+            "utility",
+            "development",
+            "security",
+            "performance"
+          ],
+          "description": "Plugin category"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "maxLength": 20
+          },
+          "maxItems": 10,
+          "uniqueItems": true,
+          "description": "Plugin tags for discovery"
+        },
+        "maturity": {
+          "type": "string",
+          "enum": ["experimental", "beta", "stable", "deprecated"],
+          "default": "experimental",
+          "description": "Plugin maturity level"
+        },
+        "compatibility": {
+          "type": "object",
+          "properties": {
+            "platforms": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": ["windows", "linux", "macos", "any"]
+              },
+              "default": ["any"],
+              "description": "Compatible platforms"
+            },
+            "python_version": {
+              "type": "string",
+              "pattern": "^>=\\d+\\.\\d+$",
+              "default": ">=3.8",
+              "description": "Minimum Python version"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "name",
+    "version",
+    "description",
+    "author",
+    "entry_point",
+    "permissions"
+  ],
+  "additionalProperties": false,
+  "examples": [
+    {
+      "name": "energy_visualizer",
+      "version": "1.0.0",
+      "description": "Real-time energy field visualization plugin for WIRTHFORGE",
+      "author": "WIRTHFORGE Team",
+      "license": "MIT",
+      "entry_point": "main.py",
+      "wirthforge_version": "^1.0.0",
+      "dependencies": ["numpy>=1.20.0", "matplotlib>=3.5.0"],
+      "permissions": {
+        "events": {
+          "read": ["energy.update", "energy.field", "energy.pattern"],
+          "write": ["ui.render"]
+        },
+        "system": {
+          "network": {
+            "enabled": false
+          },
+          "filesystem": {
+            "enabled": false,
+            "temp_only": true
+          },
+          "ui": {
+            "render": true,
+            "interact": false,
+            "notifications": false
+          },
+          "subprocess": false,
+          "imports": {
+            "restricted": true,
+            "allowed_modules": ["numpy", "matplotlib", "json", "datetime"]
+          }
+        },
+        "resources": {
+          "memory": {
+            "max_mb": 256
+          },
+          "cpu": {
+            "max_percent": 30
+          },
+          "execution": {
+            "max_time_seconds": 60
+          },
+          "storage": {
+            "max_file_size_mb": 5,
+            "max_total_size_mb": 20
+          }
+        },
+        "isolation": {
+          "process": true,
+          "sandbox_directory": true,
+          "environment_variables": true
+        }
+      },
+      "metadata": {
+        "category": "visualization",
+        "tags": ["energy", "real-time", "graphics"],
+        "maturity": "stable",
+        "compatibility": {
+          "platforms": ["any"],
+          "python_version": ">=3.8"
+        }
+      }
+    }
+  ]
+}

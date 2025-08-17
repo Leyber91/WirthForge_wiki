@@ -17,7 +17,7 @@ Document Type: Technical Specification / Protocol Design
 
 Required Before This: WF-TECH-001 (System Runtime & Services – provides the orchestrator and component hooks for startup/monitoring), WF-FND-004 (The Decipher – defines real-time output events and data schemas).
 
-Enables After This: WF-TECH-004 (State & Storage – will build on the streaming data and need this protocol for event logging and persistence), WF-UX-006 (Unified Energy Visualization – UI real-time rendering relies on this protocol), WF-UX-001 (Level 1 Lightning Strikes – base user experience using real-time feedback).
+Enables After This: WF-TECH-004 (State & Storage – will build on the streaming data and need this protocol for event logging and persistence), WF-TECH-006 (Security & Privacy – secure WebSocket authentication and encrypted transport), WF-UX-006 (Unified Energy Visualization – UI real-time rendering relies on this protocol), WF-UX-001 (Level 1 Lightning Strikes – base user experience using real-time feedback).
 
 Cross-References: WF-FND-002 (Energy Framework – 60 Hz timing and frame budget guidelines), WF-FND-001 (Vision – mandates local-first, web-enhanced design), WF-FND-005 (Experience Orchestrator – progressive activation of features like multi-model “Council”), WF-FND-006 (Glossary – consistent terminology), WF-META-001 (System Timing & Template – 60 Hz update loop, template structure).
 

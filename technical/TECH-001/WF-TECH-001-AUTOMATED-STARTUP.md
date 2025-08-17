@@ -18,7 +18,7 @@ Document Type: Technical Specification
 Required Before This: WF-FND-003 (5‑layer architecture blueprint), WF-FND-006 (glossary and governance standards)
 GitHub
 
-Enables After This: WF-TECH-002 (Native Ollama Model Integration), WF-TECH-003 (WebSocket/HTTP Protocol Services), WF-TECH-004 (Flask/FastAPI Microservice Framework), WF-TECH-005 (Energy State Management Loop), WF-TECH-006 (Local Data Persistence), WF-UX-006 (UI Component Library for visual “energy” feedback)
+Enables After This: WF-TECH-002 (Native Ollama Model Integration), WF-TECH-003 (WebSocket/HTTP Protocol Services), WF-TECH-004 (Flask/FastAPI Microservice Framework), WF-TECH-005 (Energy State Management Loop), WF-TECH-006 (Security & Privacy), WF-UX-006 (UI Component Library for visual "energy" feedback)
 
 Cross-References: WF-FND-001 (Manifesto & Local-First Vision), WF-FND-002 (Energy function & 60 Hz frame budget), WF-FND-005 (Progressive orchestration behavior), WF-META-001 (Universal template & constraints)
 

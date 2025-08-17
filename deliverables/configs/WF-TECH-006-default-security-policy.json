@@ -1,0 +1,127 @@
+{
+  "policy_version": "1.0.0",
+  "policy_name": "WIRTHFORGE Default Security Policy",
+  "created_at": "2024-01-15T10:00:00Z",
+  "updated_at": "2024-01-15T10:00:00Z",
+  "network_security": {
+    "localhost_only": true,
+    "allowed_hosts": ["127.0.0.1", "localhost", "::1"],
+    "allowed_ports": [8145, 8146],
+    "tls_required": true,
+    "tls_config": {
+      "min_version": "TLSv1.2",
+      "cipher_suites": [
+        "ECDHE+AESGCM",
+        "ECDHE+CHACHA20",
+        "DHE+AESGCM",
+        "DHE+CHACHA20"
+      ]
+    },
+    "firewall_enabled": true
+  },
+  "authentication": {
+    "session_config": {
+      "token_length_bytes": 32,
+      "session_timeout_minutes": 60,
+      "max_sessions_per_user": 3,
+      "cleanup_interval_minutes": 15
+    },
+    "cookie_config": {
+      "http_only": true,
+      "secure": true,
+      "same_site": "Strict",
+      "domain": "localhost"
+    },
+    "csrf_protection": {
+      "enabled": true,
+      "token_length_bytes": 32,
+      "header_name": "X-CSRF-Token"
+    },
+    "rate_limiting": {
+      "enabled": true,
+      "max_attempts": 5,
+      "window_minutes": 15,
+      "lockout_minutes": 30
+    }
+  },
+  "plugin_sandbox": {
+    "default_permissions": {
+      "read_events": [],
+      "write_events": [],
+      "allow_network": false,
+      "allow_filesystem": false,
+      "allow_ui_render": false,
+      "allow_system_calls": false
+    },
+    "resource_limits": {
+      "max_memory_mb": 128,
+      "max_cpu_percent": 20,
+      "max_execution_time_seconds": 300,
+      "max_file_size_mb": 10
+    },
+    "isolation_config": {
+      "temp_directory_only": true,
+      "isolated_process": true,
+      "restricted_imports": true,
+      "forbidden_modules": [
+        "subprocess",
+        "os.system",
+        "eval",
+        "exec",
+        "compile",
+        "socket",
+        "urllib",
+        "requests",
+        "http",
+        "ftplib",
+        "smtplib",
+        "telnetlib",
+        "xmlrpc",
+        "pickle",
+        "shelve"
+      ]
+    }
+  },
+  "data_protection": {
+    "encryption_at_rest": {
+      "enabled": true,
+      "algorithm": "AES-256-GCM",
+      "key_derivation": "Argon2"
+    },
+    "data_retention": {
+      "session_logs_days": 30,
+      "security_logs_days": 90,
+      "user_data_days": 365
+    },
+    "backup_config": {
+      "enabled": true,
+      "frequency_hours": 24,
+      "retention_count": 7,
+      "encryption_enabled": true
+    }
+  },
+  "audit_logging": {
+    "enabled": true,
+    "log_level": "INFO",
+    "log_format": "JSON",
+    "events_to_log": [
+      "authentication_failure",
+      "csrf_violation",
+      "rate_limit_exceeded",
+      "plugin_violation",
+      "network_security_event",
+      "configuration_change"
+    ],
+    "log_rotation": {
+      "max_size_mb": 100,
+      "backup_count": 5
+    }
+  },
+  "compliance": {
+    "privacy_mode": "strict",
+    "data_minimization": true,
+    "user_consent_required": true,
+    "right_to_deletion": true,
+    "data_portability": true
+  }
+}

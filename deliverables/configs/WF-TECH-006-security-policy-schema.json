@@ -1,0 +1,617 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://wirthforge.com/schemas/security-policy.json",
+  "title": "WIRTHFORGE Security Policy Schema",
+  "description": "JSON schema for WIRTHFORGE security policies and configurations",
+  "version": "1.0.0",
+  "type": "object",
+  "properties": {
+    "policy_version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Semantic version of the security policy"
+    },
+    "policy_name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100,
+      "description": "Human-readable name for the security policy"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp when policy was created"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp when policy was last updated"
+    },
+    "network_security": {
+      "type": "object",
+      "description": "Network security configuration",
+      "properties": {
+        "localhost_only": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enforce localhost-only binding for all services"
+        },
+        "allowed_hosts": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^(127\\.0\\.0\\.1|localhost|::1)$"
+          },
+          "default": ["127.0.0.1", "localhost", "::1"],
+          "description": "List of allowed host addresses"
+        },
+        "allowed_ports": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 1024,
+            "maximum": 65535
+          },
+          "minItems": 1,
+          "maxItems": 10,
+          "default": [8145, 8146],
+          "description": "List of allowed port numbers"
+        },
+        "tls_required": {
+          "type": "boolean",
+          "default": true,
+          "description": "Require TLS for all connections"
+        },
+        "tls_config": {
+          "type": "object",
+          "properties": {
+            "min_version": {
+              "type": "string",
+              "enum": ["TLSv1.2", "TLSv1.3"],
+              "default": "TLSv1.2",
+              "description": "Minimum TLS version"
+            },
+            "cert_path": {
+              "type": "string",
+              "description": "Path to TLS certificate file"
+            },
+            "key_path": {
+              "type": "string",
+              "description": "Path to TLS private key file"
+            },
+            "cipher_suites": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "default": [
+                "ECDHE+AESGCM",
+                "ECDHE+CHACHA20",
+                "DHE+AESGCM",
+                "DHE+CHACHA20"
+              ],
+              "description": "Allowed cipher suites"
+            }
+          },
+          "required": ["min_version"],
+          "additionalProperties": false
+        },
+        "firewall_enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable automatic firewall rule management"
+        }
+      },
+      "required": ["localhost_only", "allowed_hosts", "allowed_ports", "tls_required"],
+      "additionalProperties": false
+    },
+    "authentication": {
+      "type": "object",
+      "description": "Authentication and session management configuration",
+      "properties": {
+        "session_config": {
+          "type": "object",
+          "properties": {
+            "token_length_bytes": {
+              "type": "integer",
+              "minimum": 32,
+              "maximum": 128,
+              "default": 32,
+              "description": "Length of session tokens in bytes"
+            },
+            "session_timeout_minutes": {
+              "type": "integer",
+              "minimum": 5,
+              "maximum": 1440,
+              "default": 60,
+              "description": "Session timeout in minutes"
+            },
+            "max_sessions_per_user": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 10,
+              "default": 3,
+              "description": "Maximum concurrent sessions per user"
+            },
+            "cleanup_interval_minutes": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 60,
+              "default": 15,
+              "description": "Interval for session cleanup in minutes"
+            }
+          },
+          "required": ["token_length_bytes", "session_timeout_minutes"],
+          "additionalProperties": false
+        },
+        "cookie_config": {
+          "type": "object",
+          "properties": {
+            "http_only": {
+              "type": "boolean",
+              "default": true,
+              "description": "Set HttpOnly flag on cookies"
+            },
+            "secure": {
+              "type": "boolean",
+              "default": true,
+              "description": "Set Secure flag on cookies"
+            },
+            "same_site": {
+              "type": "string",
+              "enum": ["Strict", "Lax", "None"],
+              "default": "Strict",
+              "description": "SameSite cookie attribute"
+            },
+            "domain": {
+              "type": "string",
+              "pattern": "^(localhost|127\\.0\\.0\\.1)$",
+              "default": "localhost",
+              "description": "Cookie domain"
+            }
+          },
+          "required": ["http_only", "secure", "same_site"],
+          "additionalProperties": false
+        },
+        "csrf_protection": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "default": true,
+              "description": "Enable CSRF protection"
+            },
+            "token_length_bytes": {
+              "type": "integer",
+              "minimum": 16,
+              "maximum": 64,
+              "default": 32,
+              "description": "Length of CSRF tokens in bytes"
+            },
+            "header_name": {
+              "type": "string",
+              "default": "X-CSRF-Token",
+              "description": "HTTP header name for CSRF token"
+            }
+          },
+          "required": ["enabled"],
+          "additionalProperties": false
+        },
+        "rate_limiting": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "default": true,
+              "description": "Enable rate limiting"
+            },
+            "max_attempts": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 5,
+              "description": "Maximum attempts per window"
+            },
+            "window_minutes": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 60,
+              "default": 15,
+              "description": "Rate limiting window in minutes"
+            },
+            "lockout_minutes": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1440,
+              "default": 30,
+              "description": "Lockout duration in minutes"
+            }
+          },
+          "required": ["enabled", "max_attempts", "window_minutes"],
+          "additionalProperties": false
+        }
+      },
+      "required": ["session_config", "cookie_config", "csrf_protection", "rate_limiting"],
+      "additionalProperties": false
+    },
+    "plugin_sandbox": {
+      "type": "object",
+      "description": "Plugin sandboxing configuration",
+      "properties": {
+        "default_permissions": {
+          "$ref": "#/definitions/plugin_permissions",
+          "description": "Default permissions for plugins"
+        },
+        "resource_limits": {
+          "type": "object",
+          "properties": {
+            "max_memory_mb": {
+              "type": "integer",
+              "minimum": 16,
+              "maximum": 1024,
+              "default": 128,
+              "description": "Default maximum memory per plugin in MB"
+            },
+            "max_cpu_percent": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20,
+              "description": "Default maximum CPU usage per plugin"
+            },
+            "max_execution_time_seconds": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 3600,
+              "default": 300,
+              "description": "Default maximum execution time per plugin"
+            },
+            "max_file_size_mb": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 10,
+              "description": "Default maximum file size per plugin"
+            }
+          },
+          "required": ["max_memory_mb", "max_cpu_percent", "max_execution_time_seconds"],
+          "additionalProperties": false
+        },
+        "isolation_config": {
+          "type": "object",
+          "properties": {
+            "temp_directory_only": {
+              "type": "boolean",
+              "default": true,
+              "description": "Restrict plugins to temporary directories only"
+            },
+            "isolated_process": {
+              "type": "boolean",
+              "default": true,
+              "description": "Run plugins in isolated processes"
+            },
+            "restricted_imports": {
+              "type": "boolean",
+              "default": true,
+              "description": "Restrict dangerous Python imports"
+            },
+            "forbidden_modules": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "default": [
+                "subprocess",
+                "os.system",
+                "eval",
+                "exec",
+                "compile",
+                "socket",
+                "urllib",
+                "requests",
+                "http",
+                "ftplib",
+                "smtplib",
+                "telnetlib",
+                "xmlrpc",
+                "pickle",
+                "shelve"
+              ],
+              "description": "List of forbidden Python modules"
+            }
+          },
+          "required": ["temp_directory_only", "isolated_process", "restricted_imports"],
+          "additionalProperties": false
+        }
+      },
+      "required": ["default_permissions", "resource_limits", "isolation_config"],
+      "additionalProperties": false
+    },
+    "data_protection": {
+      "type": "object",
+      "description": "Data protection and encryption configuration",
+      "properties": {
+        "encryption_at_rest": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "default": true,
+              "description": "Enable encryption at rest"
+            },
+            "algorithm": {
+              "type": "string",
+              "enum": ["AES-256-GCM", "ChaCha20-Poly1305"],
+              "default": "AES-256-GCM",
+              "description": "Encryption algorithm"
+            },
+            "key_derivation": {
+              "type": "string",
+              "enum": ["PBKDF2", "Argon2", "scrypt"],
+              "default": "Argon2",
+              "description": "Key derivation function"
+            }
+          },
+          "required": ["enabled"],
+          "additionalProperties": false
+        },
+        "data_retention": {
+          "type": "object",
+          "properties": {
+            "session_logs_days": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 365,
+              "default": 30,
+              "description": "Retention period for session logs in days"
+            },
+            "security_logs_days": {
+              "type": "integer",
+              "minimum": 30,
+              "maximum": 1095,
+              "default": 90,
+              "description": "Retention period for security logs in days"
+            },
+            "user_data_days": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 3650,
+              "default": 365,
+              "description": "Retention period for user data in days"
+            }
+          },
+          "required": ["session_logs_days", "security_logs_days"],
+          "additionalProperties": false
+        },
+        "backup_config": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "default": true,
+              "description": "Enable automatic backups"
+            },
+            "frequency_hours": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 168,
+              "default": 24,
+              "description": "Backup frequency in hours"
+            },
+            "retention_count": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 7,
+              "description": "Number of backups to retain"
+            },
+            "encryption_enabled": {
+              "type": "boolean",
+              "default": true,
+              "description": "Encrypt backup files"
+            }
+          },
+          "required": ["enabled"],
+          "additionalProperties": false
+        }
+      },
+      "required": ["encryption_at_rest", "data_retention"],
+      "additionalProperties": false
+    },
+    "audit_logging": {
+      "type": "object",
+      "description": "Security audit logging configuration",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable security audit logging"
+        },
+        "log_level": {
+          "type": "string",
+          "enum": ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"],
+          "default": "INFO",
+          "description": "Minimum log level for security events"
+        },
+        "log_format": {
+          "type": "string",
+          "enum": ["JSON", "TEXT"],
+          "default": "JSON",
+          "description": "Log format"
+        },
+        "events_to_log": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "authentication_success",
+              "authentication_failure",
+              "session_created",
+              "session_expired",
+              "csrf_violation",
+              "rate_limit_exceeded",
+              "plugin_loaded",
+              "plugin_violation",
+              "network_security_event",
+              "data_access",
+              "configuration_change"
+            ]
+          },
+          "default": [
+            "authentication_failure",
+            "csrf_violation",
+            "rate_limit_exceeded",
+            "plugin_violation",
+            "network_security_event",
+            "configuration_change"
+          ],
+          "description": "Types of events to log"
+        },
+        "log_rotation": {
+          "type": "object",
+          "properties": {
+            "max_size_mb": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 100,
+              "description": "Maximum log file size in MB"
+            },
+            "backup_count": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 50,
+              "default": 5,
+              "description": "Number of backup log files to keep"
+            }
+          },
+          "required": ["max_size_mb", "backup_count"],
+          "additionalProperties": false
+        }
+      },
+      "required": ["enabled", "events_to_log"],
+      "additionalProperties": false
+    },
+    "compliance": {
+      "type": "object",
+      "description": "Compliance and privacy configuration",
+      "properties": {
+        "privacy_mode": {
+          "type": "string",
+          "enum": ["strict", "balanced", "minimal"],
+          "default": "strict",
+          "description": "Privacy protection level"
+        },
+        "data_minimization": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable data minimization practices"
+        },
+        "user_consent_required": {
+          "type": "boolean",
+          "default": true,
+          "description": "Require explicit user consent for data processing"
+        },
+        "right_to_deletion": {
+          "type": "boolean",
+          "default": true,
+          "description": "Support user right to data deletion"
+        },
+        "data_portability": {
+          "type": "boolean",
+          "default": true,
+          "description": "Support data export for portability"
+        }
+      },
+      "required": ["privacy_mode"],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "policy_version",
+    "policy_name",
+    "network_security",
+    "authentication",
+    "plugin_sandbox",
+    "data_protection",
+    "audit_logging"
+  ],
+  "additionalProperties": false,
+  "definitions": {
+    "plugin_permissions": {
+      "type": "object",
+      "description": "Plugin permission configuration",
+      "properties": {
+        "read_events": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "energy.update",
+              "energy.field",
+              "energy.pattern",
+              "experience.token",
+              "experience.completion",
+              "experience.state",
+              "council.interference",
+              "council.resonance",
+              "council.sync",
+              "system.startup",
+              "system.shutdown",
+              "system.heartbeat",
+              "session.start",
+              "session.end",
+              "session.state"
+            ]
+          },
+          "maxItems": 50,
+          "default": [],
+          "description": "Events the plugin can read"
+        },
+        "write_events": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "energy.update",
+              "energy.field",
+              "energy.pattern",
+              "experience.token",
+              "experience.completion",
+              "experience.state",
+              "council.interference",
+              "council.resonance",
+              "council.sync",
+              "system.heartbeat",
+              "session.state"
+            ]
+          },
+          "maxItems": 10,
+          "default": [],
+          "description": "Events the plugin can write"
+        },
+        "allow_network": {
+          "type": "boolean",
+          "default": false,
+          "description": "Allow network access"
+        },
+        "allow_filesystem": {
+          "type": "boolean",
+          "default": false,
+          "description": "Allow filesystem access"
+        },
+        "allow_ui_render": {
+          "type": "boolean",
+          "default": false,
+          "description": "Allow UI rendering"
+        },
+        "allow_system_calls": {
+          "type": "boolean",
+          "default": false,
+          "description": "Allow system calls (not recommended)"
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

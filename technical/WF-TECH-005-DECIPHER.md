@@ -29,14 +29,7 @@ Enables After This: WF-UX-001 (Level 1 “Lightning” UI – base visual feedb
 GitHub
 ; WF-TECH-006 (Local Data Persistence – logging energy and state); WF-TECH-008 (API Specs – external interfaces leveraging Decipher outputs).
 
-Cross-References: WF-FND-001 (Vision Manifesto – local-first, “energy as computation” ethos)
-GitHub
-; WF-FND-002 (Energy Metaphor – formulas for E(t), stall/burst thresholds)
-GitHub
-GitHub
-; WF-FND-005 (Experience Orchestrator – progressive feature gating e.g. multi-model “Council”)
-GitHub
-; WF-FND-006 (Glossary – ensure terminology consistency); WF-META-001 (System Timing – 60 Hz universal cadence); WF-TECH-001 (Automated Startup – orchestrator hooks and zero-config startup)
+Cross-References: WF-FND-002 (Energy Metaphor – provides the mathematical foundation for energy calculations), WF-FND-004 (Resonance & Flow Network – defines multi-model coordination patterns), WF-TECH-001 (Orchestrator – system startup and service coordination), WF-TECH-003 (WebSocket Protocol – real-time event streaming), WF-TECH-004 (State Storage – persistence of energy states and patterns), WF-TECH-006 (Security & Privacy – secure token processing and plugin sandboxing)
 GitHub
 ; WF-TECH-003 (Real-Time WebSockets – event channels & schema for 60 Hz streams)
 GitHub

@@ -1,0 +1,183 @@
+version: 1
+common:
+  text:
+    - docs/{id}/document.md
+    - docs/{id}/summary.md
+    - changelogs/{id}.md
+  diagrams:
+    - assets/diagrams/{id}-*.mmd
+  code: []
+  schemas: []
+  tests: []
+  ui: []
+docs:
+  WF-META-001:
+    diagrams:
+      - assets/diagrams/WF-META-001-overview.mmd
+      - assets/diagrams/WF-META-001-deps.mmd
+      - assets/diagrams/WF-META-001-energy-lifecycle.mmd
+    schemas:
+      - meta/doc-index.json
+    code:
+      - code/WF-META-001/reference/universal-template.md
+    tests: []
+    ui: []
+  WF-FND-001:
+    diagrams:
+      - assets/diagrams/WF-FND-001-principles-flow.mmd
+    ui: []
+    code: []
+    schemas: []
+    tests: []
+  WF-FND-002:
+    diagrams:
+      - assets/diagrams/WF-FND-002-lifecycle.mmd
+    schemas:
+      - schemas/WF-FND-002-energy.json
+    tests:
+      - tests/WF-FND-002/energy-sanity.spec.md
+  WF-FND-003:
+    diagrams:
+      - assets/diagrams/WF-FND-003-layers.mmd
+      - assets/diagrams/WF-FND-003-dataflow.mmd
+    code: []
+    schemas: []
+  WF-FND-004:
+    diagrams:
+      - assets/diagrams/WF-FND-004-sequence.mmd
+    schemas:
+      - schemas/WF-FND-004-emission.json
+    code:
+      - code/WF-FND-004/reference/decipher-pass-pseudocode.md
+  WF-FND-005:
+    diagrams:
+      - assets/diagrams/WF-FND-005-sandbox.mmd
+    schemas:
+      - schemas/WF-FND-005-capabilities.json
+  WF-FND-006:
+    schemas:
+      - schemas/WF-FND-006-glossary.json
+    code:
+      - code/WF-FND-006/reference/term-linter.md
+
+  WF-TECH-001:
+    diagrams:
+      - assets/diagrams/WF-TECH-001-c4-context.mmd
+      - assets/diagrams/WF-TECH-001-c4-container.mmd
+      - assets/diagrams/WF-TECH-001-eventbus.mmd
+    code:
+      - code/WF-TECH-001/reference/hello-energy.md
+  WF-TECH-002:
+    diagrams:
+      - assets/diagrams/WF-TECH-002-sequence.mmd
+    schemas:
+      - schemas/WF-TECH-002-token-timing.json
+    code:
+      - code/WF-TECH-002/reference/cli-and-snippets.md
+    tests:
+      - tests/WF-TECH-002/token-eu-correlation.spec.md
+  WF-TECH-003:
+    diagrams:
+      - assets/diagrams/WF-TECH-003-ws-lifecycle.mmd
+      - assets/diagrams/WF-TECH-003-channels.mmd
+    schemas:
+      - schemas/WF-TECH-003-ws.json
+    tests:
+      - tests/WF-TECH-003/protocol-contract.spec.md
+  WF-TECH-004:
+    diagrams:
+      - assets/diagrams/WF-TECH-004-erd.mmd
+      - assets/diagrams/WF-TECH-004-event-sourcing.mmd
+    schemas:
+      - schemas/WF-TECH-004-energy-state.json
+      - schemas/WF-TECH-004-events.json
+    tests:
+      - tests/WF-TECH-004/state-consistency.spec.md
+  WF-TECH-005:
+    diagrams:
+      - assets/diagrams/WF-TECH-005-trust-zones.mmd
+    schemas:
+      - schemas/WF-TECH-005-capabilities.json
+    tests:
+      - tests/WF-TECH-005/threat-model-checklist.md
+  WF-TECH-006:
+    schemas:
+      - schemas/WF-TECH-006-rest.json
+      - schemas/WF-TECH-006-ws.json
+    code:
+      - code/WF-TECH-006/reference/sdk-ts-python.md
+    tests:
+      - tests/WF-TECH-006/contract.spec.md
+  WF-TECH-007:
+    figures:
+      - assets/figures/WF-TECH-007-slos.svg
+    code:
+      - code/WF-TECH-007/reference/observability-fields.md
+      - code/WF-TECH-007/reference/installer-notes.md
+    tests:
+      - tests/WF-TECH-007/load-and-visual-fidelity.spec.md
+  WF-TECH-008:
+    diagrams:
+      - assets/diagrams/WF-TECH-008-council-flow.mmd
+      - assets/diagrams/WF-TECH-008-adaptation-loop.mmd
+      - assets/diagrams/WF-TECH-008-resonance-matrix.mmd
+    schemas:
+      - schemas/WF-TECH-008-algo-params.json
+    tests:
+      - tests/WF-TECH-008/latency-bounds.spec.md
+
+  WF-UX-006:
+    diagrams:
+      - assets/diagrams/WF-UX-006-field-dynamics.mmd
+    schemas:
+      - schemas/WF-UX-006-particles.json
+    ui:
+      - ui/WF-UX-006-tokens.json
+    figures:
+      - assets/figures/WF-UX-006-particle-states.svg
+    tests:
+      - tests/WF-UX-006/visual-truth.spec.md
+  WF-UX-001:
+    diagrams:
+      - assets/diagrams/WF-UX-001-strike-timeline.mmd
+    figures:
+      - assets/figures/WF-UX-001-path-styles.svg
+    tests:
+      - tests/WF-UX-001/ttfstrike.spec.md
+  WF-UX-002:
+    diagrams:
+      - assets/diagrams/WF-UX-002-council-topos.mmd
+    figures:
+      - assets/figures/WF-UX-002-interference.svg
+    tests:
+      - tests/WF-UX-002/consensus-telemetry.spec.md
+  WF-UX-003:
+    diagrams:
+      - assets/diagrams/WF-UX-003-architecture-foundry.mmd
+    figures:
+      - assets/figures/WF-UX-003-growth-patterns.svg
+    tests:
+      - tests/WF-UX-003/evolution-triggers.spec.md
+  WF-UX-004:
+    diagrams:
+      - assets/diagrams/WF-UX-004-adaptation-cycle.mmd
+    figures:
+      - assets/figures/WF-UX-004-controls.svg
+    tests:
+      - tests/WF-UX-004/adaptation-latency.spec.md
+  WF-UX-005:
+    diagrams:
+      - assets/diagrams/WF-UX-005-resonance-types.mmd
+    figures:
+      - assets/figures/WF-UX-005-metrics-panel.svg
+    tests:
+      - tests/WF-UX-005/emergence-thresholds.spec.md
+
+  WF-BIZ-001:
+    figures:
+      - assets/figures/WF-BIZ-001-model-canvas.svg
+  WF-BIZ-002:
+    schemas:
+      - schemas/WF-BIZ-002-data-map.json
+    figures:
+      - assets/figures/WF-BIZ-002-consent-flow.svg
