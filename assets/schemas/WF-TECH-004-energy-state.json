@@ -1,0 +1,474 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://wirthforge.local/schemas/WF-TECH-004-energy-state.json",
+  "title": "WIRTHFORGE Energy State Schema",
+  "description": "JSON Schema defining the structure of Energy State data for WIRTHFORGE state management system",
+  "version": "1.0.0",
+  "type": "object",
+  "definitions": {
+    "EnergyUnit": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Energy Units (EU) - quantified computational energy"
+    },
+    "FrameId": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Frame identifier in 60Hz sequence"
+    },
+    "Timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp with microsecond precision"
+    },
+    "ModelId": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9_\\-\\/\\.]+$",
+      "description": "AI model identifier (e.g., 'ollama/llama2:7b')"
+    },
+    "HardwareTier": {
+      "type": "string",
+      "enum": ["low", "mid", "high"],
+      "description": "Hardware tier classification for performance optimization"
+    },
+    "PatternState": {
+      "type": "object",
+      "properties": {
+        "interference_detected": {
+          "type": "boolean",
+          "description": "Whether interference pattern is currently active"
+        },
+        "resonance_detected": {
+          "type": "boolean",
+          "description": "Whether resonance pattern is currently active"
+        },
+        "synchronization_level": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Level of model synchronization (0-1)"
+        },
+        "harmony_frequency": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Detected harmonic frequency in Hz"
+        }
+      },
+      "additionalProperties": false
+    },
+    "DiversityIndex": {
+      "type": "object",
+      "properties": {
+        "current": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Current diversity index value"
+        },
+        "smoothed": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "EMA-smoothed diversity index"
+        },
+        "peak": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Peak diversity index in current session"
+        },
+        "variance": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Statistical variance of diversity measurements"
+        }
+      },
+      "required": ["current"],
+      "additionalProperties": false
+    }
+  },
+  "properties": {
+    "frameState": {
+      "type": "object",
+      "description": "Current frame-level energy state (ephemeral, 60Hz updates)",
+      "properties": {
+        "frame_id": {
+          "$ref": "#/definitions/FrameId"
+        },
+        "timestamp": {
+          "$ref": "#/definitions/Timestamp"
+        },
+        "energy_current": {
+          "$ref": "#/definitions/EnergyUnit",
+          "description": "Energy produced in current frame"
+        },
+        "energy_delta": {
+          "type": "number",
+          "description": "Change in energy from previous frame"
+        },
+        "fps": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 120,
+          "description": "Current frames per second"
+        },
+        "frame_budget_used": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 16.67,
+          "description": "Milliseconds used in 16.67ms frame budget"
+        },
+        "model_active": {
+          "$ref": "#/definitions/ModelId",
+          "description": "Currently active model generating energy"
+        },
+        "pattern_state": {
+          "$ref": "#/definitions/PatternState"
+        },
+        "diversity_index": {
+          "$ref": "#/definitions/DiversityIndex"
+        }
+      },
+      "required": ["frame_id", "timestamp", "energy_current"],
+      "additionalProperties": false
+    },
+    "energyAccumulator": {
+      "type": "object",
+      "description": "Running totals and accumulated energy metrics",
+      "properties": {
+        "total_energy": {
+          "$ref": "#/definitions/EnergyUnit",
+          "description": "Total energy accumulated since session start"
+        },
+        "session_start": {
+          "$ref": "#/definitions/Timestamp"
+        },
+        "frame_count": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Total frames processed in session"
+        },
+        "token_count": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Total tokens processed"
+        },
+        "energy_peaks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "timestamp": {
+                "$ref": "#/definitions/Timestamp"
+              },
+              "energy": {
+                "$ref": "#/definitions/EnergyUnit"
+              },
+              "frame_id": {
+                "$ref": "#/definitions/FrameId"
+              }
+            },
+            "required": ["timestamp", "energy"],
+            "additionalProperties": false
+          },
+          "description": "Notable energy peaks during session"
+        },
+        "model_contributions": {
+          "type": "object",
+          "patternProperties": {
+            "^[a-zA-Z0-9_\\-\\/\\.]+$": {
+              "type": "object",
+              "properties": {
+                "energy": {
+                  "$ref": "#/definitions/EnergyUnit"
+                },
+                "tokens": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "frames": {
+                  "type": "integer",
+                  "minimum": 0
+                }
+              },
+              "required": ["energy"],
+              "additionalProperties": false
+            }
+          },
+          "description": "Energy contributions by model ID"
+        },
+        "interference_events": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Count of interference pattern detections"
+        },
+        "resonance_events": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Count of resonance pattern detections"
+        }
+      },
+      "required": ["total_energy", "session_start", "frame_count"],
+      "additionalProperties": false
+    },
+    "sessionContext": {
+      "type": "object",
+      "description": "Session-level context and metadata",
+      "properties": {
+        "session_id": {
+          "type": "string",
+          "pattern": "^[0-9]{8}T[0-9]{6}Z_[0-9]{3}$",
+          "description": "Unique session identifier"
+        },
+        "user_id": {
+          "type": "string",
+          "description": "User identifier"
+        },
+        "hardware_tier": {
+          "$ref": "#/definitions/HardwareTier"
+        },
+        "models_available": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ModelId"
+          },
+          "description": "List of available AI models"
+        },
+        "session_mode": {
+          "type": "string",
+          "enum": ["normal", "private", "debug", "turbo"],
+          "description": "Session operation mode"
+        },
+        "features_enabled": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "single_model", 
+              "parallel_processing", 
+              "interference_detection", 
+              "resonance_detection", 
+              "ensemble_coordination",
+              "turbo_mode"
+            ]
+          },
+          "description": "Enabled features based on hardware tier and user level"
+        }
+      },
+      "required": ["session_id", "user_id", "hardware_tier"],
+      "additionalProperties": false
+    },
+    "performanceMetrics": {
+      "type": "object",
+      "description": "Real-time performance monitoring data",
+      "properties": {
+        "avg_fps": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Average frames per second over session"
+        },
+        "frame_drops": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Count of dropped frames (>16.67ms)"
+        },
+        "memory_usage": {
+          "type": "object",
+          "properties": {
+            "current_mb": {
+              "type": "number",
+              "minimum": 0
+            },
+            "peak_mb": {
+              "type": "number",
+              "minimum": 0
+            },
+            "available_mb": {
+              "type": "number",
+              "minimum": 0
+            }
+          },
+          "additionalProperties": false
+        },
+        "disk_io": {
+          "type": "object",
+          "properties": {
+            "events_queued": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Events waiting to be written to disk"
+            },
+            "write_latency_ms": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Average write latency in milliseconds"
+            },
+            "batch_size": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Current batch size for event writes"
+            }
+          },
+          "additionalProperties": false
+        },
+        "energy_rate": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Energy units per second"
+        },
+        "token_rate": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Tokens per second"
+        }
+      },
+      "additionalProperties": false
+    },
+    "recoveryContext": {
+      "type": "object",
+      "description": "Context needed for crash recovery and state restoration",
+      "properties": {
+        "last_snapshot_id": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "ID of most recent snapshot"
+        },
+        "last_event_id": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "ID of last processed event"
+        },
+        "incomplete_operations": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "operation_type": {
+                "type": "string",
+                "enum": ["ai_generation", "user_prompt", "model_switch", "snapshot_creation"]
+              },
+              "operation_id": {
+                "type": "string"
+              },
+              "started_at": {
+                "$ref": "#/definitions/Timestamp"
+              },
+              "context": {
+                "type": "object",
+                "description": "Operation-specific context data"
+              }
+            },
+            "required": ["operation_type", "operation_id", "started_at"],
+            "additionalProperties": false
+          },
+          "description": "Operations that were in progress during crash"
+        },
+        "clean_shutdown": {
+          "type": "boolean",
+          "description": "Whether last shutdown was clean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "schema_version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Schema version for migration compatibility"
+    },
+    "created_at": {
+      "$ref": "#/definitions/Timestamp"
+    },
+    "updated_at": {
+      "$ref": "#/definitions/Timestamp"
+    }
+  },
+  "required": [
+    "frameState",
+    "energyAccumulator", 
+    "sessionContext",
+    "schema_version",
+    "created_at",
+    "updated_at"
+  ],
+  "additionalProperties": false,
+  "examples": [
+    {
+      "frameState": {
+        "frame_id": 1234,
+        "timestamp": "2025-08-17T19:48:05.123456Z",
+        "energy_current": 4.2,
+        "energy_delta": 0.8,
+        "fps": 60.0,
+        "frame_budget_used": 12.3,
+        "model_active": "ollama/llama2:7b",
+        "pattern_state": {
+          "interference_detected": false,
+          "resonance_detected": true,
+          "synchronization_level": 0.85,
+          "harmony_frequency": 440.0
+        },
+        "diversity_index": {
+          "current": 0.847,
+          "smoothed": 0.823,
+          "peak": 0.912,
+          "variance": 0.034
+        }
+      },
+      "energyAccumulator": {
+        "total_energy": 1247.8,
+        "session_start": "2025-08-17T19:45:00.000Z",
+        "frame_count": 1234,
+        "token_count": 456,
+        "energy_peaks": [
+          {
+            "timestamp": "2025-08-17T19:47:23.456Z",
+            "energy": 12.7,
+            "frame_id": 890
+          }
+        ],
+        "model_contributions": {
+          "ollama/llama2:7b": {
+            "energy": 1247.8,
+            "tokens": 456,
+            "frames": 1234
+          }
+        },
+        "interference_events": 3,
+        "resonance_events": 7
+      },
+      "sessionContext": {
+        "session_id": "20250817T194500Z_001",
+        "user_id": "default",
+        "hardware_tier": "mid",
+        "models_available": ["ollama/llama2:7b", "ollama/mistral:7b"],
+        "session_mode": "normal",
+        "features_enabled": ["parallel_processing", "interference_detection", "resonance_detection"]
+      },
+      "performanceMetrics": {
+        "avg_fps": 59.8,
+        "frame_drops": 2,
+        "memory_usage": {
+          "current_mb": 2048,
+          "peak_mb": 2304,
+          "available_mb": 14336
+        },
+        "disk_io": {
+          "events_queued": 12,
+          "write_latency_ms": 3.2,
+          "batch_size": 15
+        },
+        "energy_rate": 847.3,
+        "token_rate": 23.4
+      },
+      "recoveryContext": {
+        "last_snapshot_id": 42,
+        "last_event_id": 1567,
+        "incomplete_operations": [],
+        "clean_shutdown": true
+      },
+      "schema_version": "1.0.0",
+      "created_at": "2025-08-17T19:45:00.000Z",
+      "updated_at": "2025-08-17T19:48:05.123456Z"
+    }
+  ]
+}

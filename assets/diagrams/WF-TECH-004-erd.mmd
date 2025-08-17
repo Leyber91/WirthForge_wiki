@@ -1,0 +1,83 @@
+erDiagram
+    USER ||--o{ SESSION : "starts"
+    SESSION ||--o{ EVENT : "has many"
+    SESSION ||--o{ SNAPSHOT : "has snapshots"
+    EVENT }o--|| SESSION : "belongs to"
+    SNAPSHOT }o--|| SESSION : "captures state of"
+    SNAPSHOT }o--o| EVENT : "references last event"
+    AUDIT }o--o| USER : "tracks changes to"
+    AUDIT }o--o| SESSION : "tracks changes to"
+    
+    USER {
+        string user_id PK "Primary user identifier (default: 'default')"
+        int current_level "Current unlocked level (1-5)"
+        int total_sessions "Lifetime session count"
+        float total_energy "Lifetime energy consumption (EU)"
+        int experience_points "Experience points earned"
+        string unlocked_paths "JSON array of unlocked features"
+        string preferences "JSON object for user settings"
+        string created_at "User creation timestamp"
+        string updated_at "Last update timestamp"
+        int schema_version "Schema version for migrations"
+    }
+    
+    SESSION {
+        string session_id PK "Unique session identifier (timestamp-based)"
+        string user_id FK "References user.user_id"
+        string start_time "Session start timestamp (ISO 8601)"
+        string end_time "Session end timestamp (NULL if active)"
+        float total_energy "Total energy consumed in session"
+        int total_events "Count of events in session"
+        string model_id "Primary AI model used"
+        string hardware_tier "Hardware classification (low/mid/high)"
+        string session_mode "Operation mode (normal/private/debug)"
+        boolean clean_shutdown "Whether session ended cleanly"
+        int schema_version "Schema version for migrations"
+        string metadata "JSON object for additional data"
+        string created_at "Session creation timestamp"
+        string updated_at "Last update timestamp"
+    }
+    
+    EVENT {
+        int event_id PK "Auto-increment primary key"
+        string session_id FK "References session.session_id"
+        string timestamp "Event timestamp (ISO 8601 with microseconds)"
+        string type "Event type identifier (e.g., 'energy.update')"
+        string data "JSON blob containing full event details"
+        int frame_id "Frame ID when event occurred (nullable)"
+        float energy_delta "Energy change for this event (nullable)"
+        boolean processed "Whether event has been processed"
+        int schema_version "Schema version for migrations"
+        string created_at "Event creation timestamp"
+    }
+    
+    SNAPSHOT {
+        int snapshot_id PK "Auto-increment primary key"
+        string session_id FK "References session.session_id"
+        string timestamp "Snapshot creation timestamp"
+        string snapshot_type "Type: periodic/session_end/migration/manual"
+        string state "JSON blob of serialized state"
+        int last_event_id FK "References event.event_id (nullable)"
+        float energy_accumulator "Energy total at snapshot time"
+        int frame_count "Frame count at snapshot time"
+        int schema_version "Schema version for migrations"
+        string created_at "Snapshot creation timestamp"
+    }
+    
+    AUDIT {
+        int audit_id PK "Auto-increment primary key"
+        string timestamp "Audit event timestamp"
+        string operation "Operation type (INSERT/UPDATE/DELETE)"
+        string table_name "Table that was modified"
+        string record_id "ID of modified record (nullable)"
+        string old_values "JSON of old values (nullable)"
+        string new_values "JSON of new values (nullable)"
+        string user_context "User context information (nullable)"
+        int schema_version "Schema version for migrations"
+    }
+    
+    SCHEMA_INFO {
+        string key PK "Schema metadata key"
+        string value "Schema metadata value"
+        string updated_at "Last update timestamp"
+    }

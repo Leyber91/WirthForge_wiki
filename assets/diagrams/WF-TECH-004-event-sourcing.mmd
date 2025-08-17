@@ -1,0 +1,169 @@
+sequenceDiagram
+    participant U as User Interface
+    participant O as Orchestrator
+    participant D as Decipher Engine
+    participant SM as State Manager
+    participant DB as Local Database
+    participant WS as WebSocket Server
+    participant BG as Background Writer
+
+    Note over U,BG: WIRTHFORGE Event Sourcing Flow - 60Hz Real-Time State Management
+
+    %% Session Initialization
+    rect rgb(240, 248, 255)
+        Note over O,DB: Session Startup & Recovery
+        O->>SM: init(config)
+        SM->>DB: Check for unclean shutdown
+        alt Crash Recovery Needed
+            DB-->>SM: Last snapshot + events
+            SM->>SM: Replay events from snapshot
+            Note right of SM: Deterministic state reconstruction
+        else Clean Start
+            SM->>DB: Create new session record
+        end
+        SM->>O: State Manager ready
+        O->>D: Start 60Hz loop
+        O->>WS: Start WebSocket server
+    end
+
+    %% Real-Time Event Generation (60Hz Loop)
+    rect rgb(240, 255, 240)
+        Note over D,BG: 60Hz Energy Event Loop
+        loop Every 16.67ms (60 FPS)
+            D->>D: Process AI tokens
+            D->>D: Calculate energy metrics
+            
+            alt Energy threshold exceeded
+                D->>SM: energy.update event
+                Note right of SM: Non-blocking enqueue
+                SM->>SM: Update in-memory state
+                SM->>BG: Queue event for persistence
+                SM->>WS: Broadcast to UI clients
+                WS->>U: Real-time energy update
+            end
+            
+            alt Pattern detected
+                D->>SM: pattern.interference/resonance event
+                SM->>BG: Queue pattern event
+                SM->>WS: Broadcast pattern event
+                WS->>U: Visual pattern effects
+            end
+        end
+    end
+
+    %% User Interaction Events
+    rect rgb(255, 248, 240)
+        Note over U,DB: User Action Processing
+        U->>WS: User prompt/action
+        WS->>SM: Log user event
+        SM->>BG: Queue user.prompt event
+        SM->>D: Forward to processing
+        D->>D: Generate AI response
+        
+        loop Token generation
+            D->>SM: ai.output event
+            SM->>BG: Queue token event
+            SM->>WS: Stream to UI
+            WS->>U: Display token
+        end
+        
+        D->>SM: ai.response_complete event
+        SM->>BG: Queue completion event
+    end
+
+    %% Background Persistence (Async)
+    rect rgb(248, 240, 255)
+        Note over BG,DB: Asynchronous Event Persistence
+        loop Continuous background processing
+            BG->>BG: Batch events (200ms window)
+            BG->>DB: BEGIN TRANSACTION
+            BG->>DB: INSERT events batch
+            BG->>DB: UPDATE session totals
+            BG->>DB: COMMIT TRANSACTION
+            
+            alt Batch write fails
+                BG->>BG: Retry with exponential backoff
+                BG->>SM: Log error event
+            end
+            
+            alt Queue backlog detected
+                BG->>BG: Increase batch size
+                Note right of BG: Performance adaptation
+            end
+        end
+    end
+
+    %% Periodic Snapshots
+    rect rgb(255, 240, 248)
+        Note over SM,DB: State Snapshots for Recovery
+        alt Every 1000 events OR 60 seconds
+            SM->>SM: create_snapshot()
+            SM->>SM: Serialize current state
+            SM->>DB: INSERT snapshot record
+            Note right of DB: Fast recovery point created
+        end
+    end
+
+    %% Health Monitoring
+    rect rgb(248, 248, 240)
+        Note over SM,WS: System Health & Performance
+        loop Every 30 seconds
+            SM->>SM: Collect performance metrics
+            SM->>BG: Queue health.heartbeat event
+            SM->>WS: Broadcast system status
+            WS->>U: Update health indicators
+            
+            alt Performance issue detected
+                SM->>BG: Queue health.performance event
+                SM->>SM: Apply mitigation (drop events, etc.)
+            end
+        end
+    end
+
+    %% Session Termination
+    rect rgb(255, 240, 240)
+        Note over O,DB: Graceful Shutdown
+        U->>O: Shutdown request
+        O->>D: Stop 60Hz loop
+        O->>SM: shutdown()
+        SM->>BG: Flush all queued events
+        BG->>DB: Write remaining events
+        SM->>SM: Create final snapshot
+        SM->>DB: UPDATE session.end_time
+        SM->>DB: SET clean_shutdown = TRUE
+        SM->>O: Shutdown complete
+    end
+
+    %% Error Handling & Recovery
+    rect rgb(255, 240, 240)
+        Note over D,DB: Error Scenarios
+        alt Frame drop detected (>16.67ms)
+            D->>SM: error event
+            SM->>BG: Queue error with context
+            SM->>SM: Skip non-critical events
+        end
+        
+        alt Database write failure
+            BG->>SM: Persistence error
+            SM->>SM: Buffer events in memory
+            SM->>BG: Retry with backoff
+        end
+        
+        alt Memory pressure
+            SM->>SM: Drop oldest buffered events
+            SM->>BG: Queue health.performance event
+        end
+    end
+
+    %% Data Export & Audit
+    rect rgb(240, 240, 255)
+        Note over U,DB: Data Export & Audit Trail
+        U->>SM: Export request
+        SM->>DB: Query session events
+        DB-->>SM: Event log data
+        SM->>SM: Format as JSON/YAML
+        SM-->>U: Exportable data file
+        
+        Note over DB: Complete audit trail maintained
+        Note over DB: Deterministic replay possible
+    end
