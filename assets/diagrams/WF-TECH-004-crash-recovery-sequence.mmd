@@ -1,0 +1,256 @@
+---
+title: "Crash Recovery & Data Integrity Sequence"
+config:
+  theme: dark
+  themeVariables:
+    primaryColor: "#ff6b6b"
+    primaryTextColor: "#ffffff"
+    primaryBorderColor: "#e74c3c"
+    lineColor: "#feca57"
+    secondaryColor: "#4a90e2"
+    tertiaryColor: "#27ae60"
+    background: "#0d1117"
+    mainBkg: "#161b22"
+    secondBkg: "#21262d"
+---
+
+sequenceDiagram
+    participant SYS as 🖥️ System
+    participant SM as 💾 State Manager
+    participant DB as 🗄️ Database
+    participant SN as 📸 Snapshot Mgr
+    participant EP as ⚙️ Event Processor
+    participant VAL as ✅ Validator
+    participant LOG as 📋 Logger
+    participant UI as 🖥️ UI Client
+
+    Note over SYS,UI: System Startup & Crash Detection
+    
+    SYS->>SM: Initialize state manager
+    SM->>DB: Check database integrity
+    
+    alt Database Corrupted
+        DB-->>SM: Corruption detected
+        SM->>LOG: Log corruption error
+        SM->>VAL: Run integrity check
+        VAL->>DB: Scan for recoverable data
+        VAL-->>SM: Recovery assessment
+        SM->>UI: Show recovery options
+        UI-->>SM: User recovery choice
+    else Database Intact
+        DB-->>SM: Database healthy
+    end
+    
+    SM->>DB: Query last session status
+    DB-->>SM: Return session metadata
+    
+    alt Clean Shutdown
+        Note over SM,DB: Normal startup path
+        SM->>SN: Load latest snapshot
+        SN->>DB: SELECT FROM snapshot ORDER BY timestamp DESC LIMIT 1
+        DB-->>SN: Latest snapshot data
+        SN-->>SM: Snapshot loaded successfully
+        SM->>SM: Initialize from snapshot
+        SM-->>SYS: Ready for new session
+        
+    else Unclean Shutdown Detected
+        Note over SM,UI: Crash recovery sequence
+        SM->>LOG: Log crash detection
+        SM->>UI: Show recovery progress
+        
+        rect rgb(255, 107, 107, 0.1)
+            Note over SM,VAL: Recovery Phase 1: Snapshot Recovery
+            SM->>SN: Find latest valid snapshot
+            SN->>DB: SELECT * FROM snapshot WHERE session_id = ? ORDER BY timestamp DESC
+            DB-->>SN: Snapshot candidates
+            
+            loop For each snapshot (newest first)
+                SN->>VAL: Validate snapshot integrity
+                VAL->>VAL: Check JSON schema
+                VAL->>VAL: Verify energy conservation
+                VAL->>VAL: Validate timestamps
+                
+                alt Snapshot Valid
+                    VAL-->>SN: Snapshot OK
+                    SN->>SM: Load snapshot state
+                    SM->>LOG: Log snapshot recovery
+                    Note over SN: Break loop - valid snapshot found
+                else Snapshot Corrupted
+                    VAL-->>SN: Snapshot corrupted
+                    SN->>LOG: Log corrupted snapshot
+                    Note over SN: Try next snapshot
+                end
+            end
+        end
+        
+        rect rgb(254, 202, 87, 0.1)
+            Note over SM,EP: Recovery Phase 2: Event Replay
+            SM->>EP: Begin event replay
+            EP->>DB: SELECT * FROM event WHERE session_id = ? AND timestamp > ? ORDER BY timestamp
+            DB-->>EP: Events after snapshot
+            
+            EP->>VAL: Validate event sequence
+            VAL->>VAL: Check event ordering
+            VAL->>VAL: Verify JSON schemas
+            VAL->>VAL: Validate energy deltas
+            
+            loop For each event batch (50 events)
+                EP->>EP: Apply events to state
+                EP->>VAL: Validate intermediate state
+                
+                alt State Consistent
+                    VAL-->>EP: State valid
+                    EP->>SM: Update recovery progress
+                    SM->>UI: Update progress bar
+                else State Inconsistent
+                    VAL-->>EP: State invalid
+                    EP->>LOG: Log inconsistency
+                    EP->>EP: Mark event as problematic
+                    EP->>EP: Continue with next event
+                end
+            end
+            
+            EP->>SM: Replay complete
+            SM->>VAL: Final state validation
+        end
+        
+        rect rgb(39, 174, 96, 0.1)
+            Note over SM,UI: Recovery Phase 3: Validation & Cleanup
+            VAL->>VAL: Comprehensive state check
+            VAL->>VAL: Energy conservation validation
+            VAL->>VAL: Session metadata consistency
+            VAL->>VAL: Database integrity check
+            
+            alt Recovery Successful
+                VAL-->>SM: Recovery validated
+                SM->>SN: Create recovery checkpoint
+                SN->>DB: INSERT INTO snapshot (recovery checkpoint)
+                SM->>LOG: Log successful recovery
+                SM->>UI: Show recovery success
+                SM-->>SYS: System ready
+                
+            else Recovery Failed
+                VAL-->>SM: Recovery failed
+                SM->>LOG: Log recovery failure
+                SM->>UI: Show recovery options
+                
+                alt User Chooses Safe Mode
+                    UI-->>SM: Start in safe mode
+                    SM->>SM: Initialize minimal state
+                    SM->>LOG: Log safe mode start
+                    SM-->>SYS: Safe mode ready
+                    
+                else User Chooses Data Reset
+                    UI-->>SM: Reset session data
+                    SM->>DB: DELETE FROM event WHERE session_id = ?
+                    SM->>DB: DELETE FROM snapshot WHERE session_id = ?
+                    SM->>LOG: Log data reset
+                    SM->>SM: Initialize fresh state
+                    SM-->>SYS: Fresh state ready
+                end
+            end
+        end
+    end
+
+    Note over SYS,UI: Runtime Error Handling
+    
+    loop During Normal Operation
+        SYS->>SM: Process frame
+        SM->>EP: Handle events
+        
+        alt Database Write Error
+            EP->>DB: Write event batch
+            DB-->>EP: Write failed
+            EP->>LOG: Log write error
+            EP->>EP: Increment retry counter
+            
+            alt Retry Count < 3
+                EP->>EP: Wait exponential backoff
+                EP->>DB: Retry write
+            else Max Retries Reached
+                EP->>SM: Report persistent error
+                SM->>LOG: Log persistent failure
+                SM->>UI: Show storage warning
+                SM->>SM: Switch to memory-only mode
+            end
+            
+        else Memory Pressure
+            SM->>SM: Check memory usage
+            alt Memory > 4GB
+                SM->>LOG: Log memory pressure
+                SM->>EP: Trigger emergency cleanup
+                EP->>EP: Flush event queue
+                EP->>SN: Force snapshot creation
+                SN->>DB: Create emergency snapshot
+                SM->>SM: Clear old in-memory data
+            end
+            
+        else Queue Overflow
+            SM->>SM: Check queue depth
+            alt Queue > 1000 events
+                SM->>LOG: Log queue overflow
+                SM->>EP: Drop non-critical events
+                EP->>EP: Prioritize critical events
+                SM->>UI: Show performance warning
+            end
+        end
+    end
+
+    Note over SYS,UI: Graceful Shutdown Sequence
+    
+    SYS->>SM: Shutdown request
+    SM->>EP: Stop accepting new events
+    SM->>EP: Flush remaining events
+    
+    loop Until queue empty
+        EP->>DB: Write event batch
+        EP->>SM: Report queue status
+        SM->>UI: Update shutdown progress
+    end
+    
+    SM->>SN: Create final snapshot
+    SN->>DB: INSERT final snapshot
+    SM->>DB: UPDATE session end_time
+    SM->>LOG: Log clean shutdown
+    SM-->>SYS: Shutdown complete
+
+    Note over SYS,UI: Data Integrity Monitoring
+    
+    rect rgb(74, 144, 226, 0.1)
+        Note over VAL,LOG: Continuous Validation
+        
+        loop Every 60 seconds
+            VAL->>DB: Run integrity checks
+            VAL->>VAL: Validate foreign keys
+            VAL->>VAL: Check energy conservation
+            VAL->>VAL: Verify timestamp ordering
+            
+            alt Issues Found
+                VAL->>LOG: Log integrity issues
+                VAL->>SM: Report data problems
+                SM->>UI: Show data warning
+            else All Checks Pass
+                VAL->>LOG: Log validation success
+            end
+        end
+    end
+
+    Note over SYS,UI: Performance Metrics
+    Note right of SM: Recovery Time Targets:
+    Note right of SM: • Snapshot load: <2 seconds
+    Note right of SM: • Event replay: <10 seconds per 10K events
+    Note right of SM: • Validation: <5 seconds
+    Note right of SM: • Total recovery: <30 seconds typical
+    
+    Note right of EP: Error Handling:
+    Note right of EP: • Retry attempts: 3 max
+    Note right of EP: • Backoff: 100ms, 200ms, 400ms
+    Note right of EP: • Circuit breaker: 5 failures
+    Note right of EP: • Memory limit: 4GB warning
+    
+    Note right of VAL: Validation Scope:
+    Note right of VAL: • JSON schema compliance
+    Note right of VAL: • Energy conservation (±0.01 EU)
+    Note right of VAL: • Timestamp monotonicity
+    Note right of VAL: • Foreign key integrity
+    Note right of VAL: • Session metadata consistency

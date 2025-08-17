@@ -1,0 +1,176 @@
+---
+title: "Real-time Event Flow & Processing Pipeline"
+config:
+  theme: dark
+  themeVariables:
+    primaryColor: "#61dafb"
+    primaryTextColor: "#ffffff"
+    primaryBorderColor: "#4a90e2"
+    lineColor: "#00ff88"
+    secondaryColor: "#ff6b6b"
+    tertiaryColor: "#feca57"
+    background: "#0d1117"
+    mainBkg: "#161b22"
+    secondBkg: "#21262d"
+---
+
+sequenceDiagram
+    participant U as 👤 User
+    participant UI as 🖥️ UI Client
+    participant WS as 🔌 WebSocket
+    participant O as 🎯 Orchestrator
+    participant D as 🧠 Decipher
+    participant SM as 💾 State Manager
+    participant EQ as 📥 Event Queue
+    participant EP as ⚙️ Event Processor
+    participant BW as 📝 Background Writer
+    participant DB as 🗄️ Database
+    participant SN as 📸 Snapshot Mgr
+
+    Note over U,SN: Session Initialization (t=0ms)
+    U->>UI: Start WIRTHFORGE session
+    UI->>WS: Connect WebSocket
+    WS->>O: Initialize components
+    O->>SM: Initialize state manager
+    SM->>DB: Check for existing session
+    DB-->>SM: Return session data
+    SM->>SN: Load latest snapshot
+    SN-->>SM: Snapshot loaded
+    SM->>EQ: Initialize event queue
+    SM-->>O: State manager ready
+    O->>D: Initialize Decipher engine
+    D-->>O: Decipher ready
+    O-->>WS: System ready
+    WS-->>UI: Connection established
+    UI-->>U: Session active
+
+    Note over U,SN: Real-time Processing Loop (60Hz - 16.67ms budget)
+    
+    loop Every Frame (16.67ms)
+        Note over D,SM: Frame Processing (t=0-12ms)
+        D->>D: Process AI models
+        D->>D: Calculate energy delta
+        D->>D: Detect patterns
+        
+        Note over D,EQ: Event Generation (t=12-14ms)
+        D->>EQ: Queue energy.update event
+        alt Pattern Detected
+            D->>EQ: Queue pattern.interference event
+        else Resonance Found
+            D->>EQ: Queue pattern.resonance event
+        end
+        
+        Note over SM,UI: State Update (t=14-16ms)
+        SM->>SM: Update in-memory state
+        SM->>WS: Broadcast state update
+        WS->>UI: Real-time state sync
+        UI->>UI: Update energy visualization
+    end
+
+    Note over U,SN: User Interaction Flow
+    U->>UI: Enter prompt
+    UI->>WS: Send user.prompt event
+    WS->>SM: Route to state manager
+    SM->>EQ: Queue user.prompt event
+    EQ->>EP: Process event
+    EP->>EP: Validate JSON schema
+    EP->>SM: Update session context
+    EP->>D: Notify new prompt
+    D->>D: Process user input
+    D->>EQ: Queue ai.processing event
+    
+    Note over EQ,DB: Background Persistence (Async)
+    
+    loop Background Processing
+        EQ->>EP: Dequeue event batch (15 events)
+        EP->>EP: Validate event data
+        EP->>EP: Calculate energy conservation
+        EP->>EP: Update aggregated metrics
+        EP->>BW: Send validated batch
+        
+        par Async Write Operations
+            BW->>DB: INSERT INTO event (batch)
+            BW->>DB: UPDATE session totals
+        and Snapshot Check
+            alt Every 1000 events
+                EP->>SN: Trigger snapshot
+                SN->>SN: Serialize current state
+                SN->>DB: INSERT INTO snapshot
+            end
+        end
+        
+        BW-->>EP: Write confirmation
+        EP-->>SM: Update write metrics
+    end
+
+    Note over U,SN: Pattern Detection & Amplification
+    
+    rect rgb(255, 107, 107, 0.1)
+        Note over D,UI: Interference Pattern Detected
+        D->>D: Detect model interference
+        D->>EQ: Queue pattern.interference
+        EQ->>EP: Process pattern event
+        EP->>SM: Update pattern counters
+        SM->>WS: Broadcast pattern event
+        WS->>UI: Show interference visualization
+        UI->>UI: Animate energy disruption
+    end
+    
+    rect rgb(0, 255, 136, 0.1)
+        Note over D,UI: Resonance Pattern Detected
+        D->>D: Detect model resonance
+        D->>EQ: Queue pattern.resonance
+        EQ->>EP: Process pattern event
+        EP->>SM: Amplify energy accumulator
+        SM->>WS: Broadcast amplification
+        WS->>UI: Show resonance visualization
+        UI->>UI: Animate energy amplification
+    end
+
+    Note over U,SN: Health Monitoring & Error Handling
+    
+    loop Every 5 seconds
+        SM->>SM: Check system health
+        SM->>EQ: Queue health.heartbeat
+        EQ->>EP: Process health event
+        EP->>DB: Log health metrics
+        
+        alt Queue Depth > 500
+            SM->>O: Alert: High queue depth
+            O->>UI: Show performance warning
+        else Write Latency > 50ms
+            SM->>O: Alert: Slow persistence
+            O->>UI: Show storage warning
+        end
+    end
+
+    Note over U,SN: Session Termination
+    U->>UI: End session
+    UI->>WS: Disconnect request
+    WS->>O: Shutdown sequence
+    O->>D: Stop Decipher engine
+    D->>EQ: Queue system.shutdown
+    O->>SM: Graceful shutdown
+    
+    SM->>EQ: Flush remaining events
+    EQ->>EP: Process final batch
+    EP->>BW: Write final events
+    BW->>DB: COMMIT transaction
+    
+    SM->>SN: Create final snapshot
+    SN->>DB: Save session snapshot
+    
+    SM->>DB: UPDATE session end_time
+    DB-->>SM: Session closed
+    SM-->>O: Shutdown complete
+    O-->>WS: System stopped
+    WS-->>UI: Disconnected
+    UI-->>U: Session ended
+
+    Note over U,SN: Performance Metrics
+    Note right of SM: • Frame Budget: <16.67ms (60Hz)
+    Note right of EP: • Event Processing: <5ms avg
+    Note right of BW: • Write Latency: <20ms p99
+    Note right of EQ: • Queue Depth: <120 events
+    Note right of DB: • Batch Size: 15 events
+    Note right of SN: • Snapshot Interval: 1000 events

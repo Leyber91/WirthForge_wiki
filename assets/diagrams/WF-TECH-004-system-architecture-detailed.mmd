@@ -1,0 +1,141 @@
+---
+title: "WIRTHFORGE State Management System Architecture"
+config:
+  theme: dark
+  themeVariables:
+    primaryColor: "#4a90e2"
+    primaryTextColor: "#ffffff"
+    primaryBorderColor: "#2c5aa0"
+    lineColor: "#61dafb"
+    secondaryColor: "#f39c12"
+    tertiaryColor: "#e74c3c"
+    background: "#1a1a1a"
+    mainBkg: "#2d2d2d"
+    secondBkg: "#3d3d3d"
+---
+
+graph TB
+    %% User Interface Layer
+    subgraph UI["🖥️ User Interface Layer"]
+        Browser["🌐 Web Browser<br/>React/Vue Components"]
+        Desktop["🖥️ Desktop App<br/>Electron/Tauri"]
+        Mobile["📱 Mobile App<br/>React Native"]
+    end
+
+    %% WebSocket Communication Layer
+    subgraph WS["🔌 Real-time Communication"]
+        WSServer["WebSocket Server<br/>📡 FastAPI/uvicorn<br/>Port: 8080"]
+        WSConnections["Active Connections<br/>👥 Multi-client support<br/>Event broadcasting"]
+    end
+
+    %% Core Application Layer
+    subgraph CORE["⚡ WIRTHFORGE Core System"]
+        direction TB
+        Orchestrator["🎯 System Orchestrator<br/>WF-TECH-001<br/>• Component lifecycle<br/>• Resource management<br/>• Error coordination"]
+        
+        Decipher["🧠 Decipher Engine<br/>WF-FND-004<br/>• AI model management<br/>• Energy calculations<br/>• Pattern detection<br/>• 60Hz processing"]
+        
+        StateManager["💾 State Manager<br/>WF-TECH-004<br/>• Event sourcing<br/>• Real-time persistence<br/>• Crash recovery<br/>• Performance monitoring"]
+    end
+
+    %% State Management Subsystem Detail
+    subgraph STATE["🏗️ State Management Subsystem (WF-TECH-004)"]
+        direction TB
+        
+        subgraph MEMORY["🧠 In-Memory State"]
+            CurrentState["Current State<br/>📊 Energy Accumulator<br/>🎯 Frame State<br/>📈 Performance Metrics"]
+            EventQueue["Event Queue<br/>📥 Async Buffer<br/>Max: 1000 events<br/>Batch: 15 events"]
+        end
+        
+        subgraph PROCESSING["⚙️ Event Processing"]
+            EventValidator["Event Validator<br/>✅ JSON Schema<br/>🔍 Data integrity<br/>⚡ Real-time validation"]
+            
+            EventProcessor["Event Processor<br/>🔄 State updates<br/>📊 Energy calculations<br/>🎯 Pattern detection"]
+            
+            SnapshotManager["Snapshot Manager<br/>📸 Periodic snapshots<br/>🔄 Recovery points<br/>⏱️ Every 1000 events"]
+        end
+        
+        subgraph PERSISTENCE["💾 Persistence Layer"]
+            BackgroundWriter["Background Writer<br/>📝 Async batching<br/>⚡ Non-blocking<br/>🎯 60Hz compliance"]
+            
+            Database["SQLite Database<br/>🗄️ Local storage<br/>📊 Event log<br/>📸 Snapshots<br/>👤 User sessions"]
+        end
+    end
+
+    %% Database Schema Detail
+    subgraph DB["🗄️ Database Schema"]
+        direction LR
+        UserTable["👤 User Table<br/>• user_id (PK)<br/>• username<br/>• preferences<br/>• created_at"]
+        
+        SessionTable["🎮 Session Table<br/>• session_id (PK)<br/>• user_id (FK)<br/>• start_time<br/>• end_time<br/>• total_energy"]
+        
+        EventTable["📝 Event Table<br/>• event_id (PK)<br/>• session_id (FK)<br/>• timestamp<br/>• type<br/>• data (JSON)<br/>• energy_delta"]
+        
+        SnapshotTable["📸 Snapshot Table<br/>• snapshot_id (PK)<br/>• session_id (FK)<br/>• timestamp<br/>• state_data (JSON)<br/>• event_count"]
+        
+        AuditTable["📋 Audit Table<br/>• audit_id (PK)<br/>• session_id (FK)<br/>• action<br/>• timestamp<br/>• metadata"]
+    end
+
+    %% External Integrations
+    subgraph EXTERNAL["🔗 External Integrations"]
+        ModelAPIs["🤖 AI Model APIs<br/>• Ollama (local)<br/>• OpenAI (optional)<br/>• Anthropic (optional)<br/>• Custom models"]
+        
+        FileSystem["📁 File System<br/>• Database files<br/>• Backup storage<br/>• Export files<br/>• Log files"]
+        
+        SystemMonitoring["📊 System Monitoring<br/>• Performance metrics<br/>• Health checks<br/>• Error tracking<br/>• Resource usage"]
+    end
+
+    %% Data Flow Connections
+    UI --> WSServer
+    WSServer --> WSConnections
+    WSConnections --> Orchestrator
+    
+    Orchestrator --> Decipher
+    Orchestrator --> StateManager
+    Decipher --> StateManager
+    
+    StateManager --> CurrentState
+    StateManager --> EventQueue
+    
+    EventQueue --> EventValidator
+    EventValidator --> EventProcessor
+    EventProcessor --> CurrentState
+    EventProcessor --> SnapshotManager
+    EventProcessor --> BackgroundWriter
+    
+    BackgroundWriter --> Database
+    SnapshotManager --> Database
+    
+    Database --> UserTable
+    Database --> SessionTable
+    Database --> EventTable
+    Database --> SnapshotTable
+    Database --> AuditTable
+    
+    StateManager --> FileSystem
+    StateManager --> SystemMonitoring
+    Decipher --> ModelAPIs
+    
+    %% Real-time feedback loops
+    CurrentState -.->|State Updates| WSConnections
+    EventProcessor -.->|Pattern Events| Decipher
+    Database -.->|Recovery Data| StateManager
+    SystemMonitoring -.->|Health Status| Orchestrator
+
+    %% Styling
+    classDef uiClass fill:#4a90e2,stroke:#2c5aa0,stroke-width:2px,color:#fff
+    classDef coreClass fill:#e74c3c,stroke:#c0392b,stroke-width:2px,color:#fff
+    classDef stateClass fill:#27ae60,stroke:#229954,stroke-width:2px,color:#fff
+    classDef dbClass fill:#f39c12,stroke:#e67e22,stroke-width:2px,color:#fff
+    classDef externalClass fill:#9b59b6,stroke:#8e44ad,stroke-width:2px,color:#fff
+    classDef memoryClass fill:#1abc9c,stroke:#16a085,stroke-width:2px,color:#fff
+    classDef processClass fill:#34495e,stroke:#2c3e50,stroke-width:2px,color:#fff
+    classDef persistClass fill:#e67e22,stroke:#d35400,stroke-width:2px,color:#fff
+
+    class Browser,Desktop,Mobile uiClass
+    class Orchestrator,Decipher,StateManager coreClass
+    class EventValidator,EventProcessor,SnapshotManager,BackgroundWriter stateClass
+    class UserTable,SessionTable,EventTable,SnapshotTable,AuditTable,Database dbClass
+    class ModelAPIs,FileSystem,SystemMonitoring externalClass
+    class CurrentState,EventQueue memoryClass
+    class WSServer,WSConnections processClass

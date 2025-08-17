@@ -1,0 +1,157 @@
+---
+title: "Energy Pattern Detection & Visualization Flow"
+config:
+  theme: dark
+  themeVariables:
+    primaryColor: "#00ff88"
+    primaryTextColor: "#ffffff"
+    primaryBorderColor: "#27ae60"
+    lineColor: "#61dafb"
+    secondaryColor: "#ff6b6b"
+    tertiaryColor: "#feca57"
+    background: "#0d1117"
+    mainBkg: "#161b22"
+    secondBkg: "#21262d"
+---
+
+flowchart TD
+    %% Input Sources
+    subgraph INPUTS["🔄 Energy Input Sources"]
+        ModelA["🤖 Model A<br/>Ollama/Llama2:7B<br/>Energy: 4.2 EU/frame"]
+        ModelB["🤖 Model B<br/>Ollama/Mistral:7B<br/>Energy: 3.8 EU/frame"]
+        ModelC["🤖 Model C<br/>OpenAI/GPT-4<br/>Energy: 5.1 EU/frame"]
+        UserInput["👤 User Input<br/>Prompt Energy<br/>Variable: 0.5-2.0 EU"]
+    end
+
+    %% Energy Calculation Engine
+    subgraph CALC["⚡ Energy Calculation Engine"]
+        EnergyCalc["Energy Calculator<br/>📊 Frame-by-frame<br/>🎯 60Hz processing<br/>⚖️ Conservation laws"]
+        
+        PatternDetector["Pattern Detector<br/>🔍 Interference analysis<br/>🌊 Resonance detection<br/>📈 Frequency analysis"]
+        
+        Accumulator["Energy Accumulator<br/>💾 Total: Σ(deltas)<br/>📊 Model contributions<br/>⏱️ Temporal tracking"]
+    end
+
+    %% Pattern Types
+    subgraph PATTERNS["🌊 Pattern Detection"]
+        direction TB
+        
+        subgraph INTERFERENCE["⚡ Interference Patterns"]
+            ConstructiveInt["🔺 Constructive<br/>• Models align<br/>• Energy amplified<br/>• Strength: 0.7-1.0<br/>• Duration: 100-500ms"]
+            
+            DestructiveInt["🔻 Destructive<br/>• Models conflict<br/>• Energy dampened<br/>• Strength: -0.3 to -0.8<br/>• Duration: 50-200ms"]
+        end
+        
+        subgraph RESONANCE["🎵 Resonance Patterns"]
+            SyncResonance["🎯 Synchronous<br/>• Perfect timing<br/>• 2x-5x amplification<br/>• Frequency: 40-60Hz<br/>• Rare: <5% sessions"]
+            
+            HarmonicRes["🎼 Harmonic<br/>• Frequency multiples<br/>• 1.5x-3x amplification<br/>• Sustained: 1-10s<br/>• Common: 15% sessions"]
+        end
+    end
+
+    %% State Management
+    subgraph STATE["💾 State Management"]
+        CurrentState["Current State<br/>🎯 Frame state<br/>⚡ Energy current<br/>📊 Accumulator<br/>🎮 Session context"]
+        
+        EventQueue["Event Queue<br/>📥 Async buffer<br/>🔄 15 event batches<br/>⏱️ 200ms timeout<br/>📊 Max 1000 events"]
+        
+        Snapshots["Snapshots<br/>📸 Every 1000 events<br/>🔄 Recovery points<br/>💾 JSON serialized<br/>⏱️ Timestamp indexed"]
+    end
+
+    %% Visualization Engine
+    subgraph VIZ["🎨 Visualization Engine"]
+        EnergyGraph["Energy Graph<br/>📈 Real-time plot<br/>🎯 60Hz updates<br/>📊 Multi-model overlay<br/>🌈 Color-coded"]
+        
+        PatternViz["Pattern Visualizer<br/>🌊 Wave animations<br/>⚡ Interference effects<br/>🎵 Resonance ripples<br/>🎨 Dynamic colors"]
+        
+        MetricsDisplay["Metrics Display<br/>📊 Performance stats<br/>⏱️ Frame timing<br/>💾 Memory usage<br/>🔄 Queue depth"]
+    end
+
+    %% Data Flow Connections
+    ModelA --> EnergyCalc
+    ModelB --> EnergyCalc
+    ModelC --> EnergyCalc
+    UserInput --> EnergyCalc
+    
+    EnergyCalc --> PatternDetector
+    EnergyCalc --> Accumulator
+    
+    PatternDetector --> ConstructiveInt
+    PatternDetector --> DestructiveInt
+    PatternDetector --> SyncResonance
+    PatternDetector --> HarmonicRes
+    
+    ConstructiveInt --> CurrentState
+    DestructiveInt --> CurrentState
+    SyncResonance --> CurrentState
+    HarmonicRes --> CurrentState
+    
+    Accumulator --> CurrentState
+    CurrentState --> EventQueue
+    EventQueue --> Snapshots
+    
+    CurrentState --> EnergyGraph
+    ConstructiveInt --> PatternViz
+    DestructiveInt --> PatternViz
+    SyncResonance --> PatternViz
+    HarmonicRes --> PatternViz
+    
+    EventQueue --> MetricsDisplay
+    Snapshots --> MetricsDisplay
+
+    %% Pattern Analysis Details
+    subgraph ANALYSIS["🔬 Pattern Analysis Details"]
+        direction LR
+        
+        FreqAnalysis["Frequency Analysis<br/>📊 FFT processing<br/>🎯 40-60Hz detection<br/>📈 Spectral density<br/>⏱️ Sliding window"]
+        
+        CorrelationCalc["Correlation Calculator<br/>📊 Cross-correlation<br/>🎯 Phase alignment<br/>📈 Coherence measure<br/>⏱️ Time-delayed"]
+        
+        AmplificationCalc["Amplification Calculator<br/>📊 Energy ratios<br/>🎯 Peak detection<br/>📈 Sustained levels<br/>⏱️ Duration tracking"]
+    end
+
+    PatternDetector --> FreqAnalysis
+    PatternDetector --> CorrelationCalc
+    PatternDetector --> AmplificationCalc
+
+    %% Real-time Processing Pipeline
+    subgraph PIPELINE["🔄 Real-time Processing Pipeline"]
+        direction TB
+        
+        Frame1["Frame N<br/>⏱️ t=0ms<br/>📊 Collect energies<br/>🔍 Detect patterns"]
+        Frame2["Frame N+1<br/>⏱️ t=16.67ms<br/>📊 Update accumulator<br/>🎨 Update visuals"]
+        Frame3["Frame N+2<br/>⏱️ t=33.33ms<br/>📊 Queue events<br/>💾 Background write"]
+        
+        Frame1 --> Frame2
+        Frame2 --> Frame3
+        Frame3 --> Frame1
+    end
+
+    EnergyCalc -.-> Frame1
+    PatternDetector -.-> Frame1
+    CurrentState -.-> Frame2
+    EventQueue -.-> Frame3
+
+    %% Performance Annotations
+    note1["Performance Targets:<br/>• Frame budget: <16.67ms<br/>• Pattern detection: <5ms<br/>• Visualization update: <8ms<br/>• Event queuing: <2ms"]
+    
+    note2["Pattern Thresholds:<br/>• Interference: |correlation| > 0.6<br/>• Resonance: coherence > 0.8<br/>• Amplification: ratio > 1.5x<br/>• Duration: >100ms sustained"]
+    
+    note3["Energy Conservation:<br/>• Total = Σ(model_energies)<br/>• Tolerance: ±0.01 EU<br/>• Validation: every frame<br/>• Audit: full session"]
+
+    %% Styling
+    classDef inputClass fill:#4a90e2,stroke:#2c5aa0,stroke-width:2px,color:#fff
+    classDef calcClass fill:#27ae60,stroke:#229954,stroke-width:2px,color:#fff
+    classDef patternClass fill:#e74c3c,stroke:#c0392b,stroke-width:2px,color:#fff
+    classDef stateClass fill:#f39c12,stroke:#e67e22,stroke-width:2px,color:#fff
+    classDef vizClass fill:#9b59b6,stroke:#8e44ad,stroke-width:2px,color:#fff
+    classDef analysisClass fill:#1abc9c,stroke:#16a085,stroke-width:2px,color:#fff
+    classDef pipelineClass fill:#34495e,stroke:#2c3e50,stroke-width:2px,color:#fff
+
+    class ModelA,ModelB,ModelC,UserInput inputClass
+    class EnergyCalc,PatternDetector,Accumulator calcClass
+    class ConstructiveInt,DestructiveInt,SyncResonance,HarmonicRes patternClass
+    class CurrentState,EventQueue,Snapshots stateClass
+    class EnergyGraph,PatternViz,MetricsDisplay vizClass
+    class FreqAnalysis,CorrelationCalc,AmplificationCalc analysisClass
+    class Frame1,Frame2,Frame3 pipelineClass

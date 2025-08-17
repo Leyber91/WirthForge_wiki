@@ -1,0 +1,200 @@
+---
+title: "WIRTHFORGE State Transitions & Energy Flow"
+config:
+  theme: dark
+  themeVariables:
+    primaryColor: "#00ff88"
+    primaryTextColor: "#ffffff"
+    primaryBorderColor: "#4a90e2"
+    lineColor: "#61dafb"
+    secondaryColor: "#ff6b6b"
+    tertiaryColor: "#feca57"
+    background: "#0d1117"
+    mainBkg: "#161b22"
+    secondBkg: "#21262d"
+---
+
+stateDiagram-v2
+    [*] --> SystemInitialization : System Start
+
+    state SystemInitialization {
+        [*] --> CheckingDatabase
+        CheckingDatabase --> LoadingSchema : Schema Valid
+        CheckingDatabase --> CreatingSchema : No Schema
+        CreatingSchema --> LoadingSchema : Schema Created
+        LoadingSchema --> CheckingRecovery : Schema Loaded
+        CheckingRecovery --> CleanStart : No Previous Session
+        CheckingRecovery --> RecoveryMode : Unclean Shutdown
+        CleanStart --> Ready
+        RecoveryMode --> Ready : Recovery Complete
+    }
+
+    Ready --> SessionActive : Start Session
+
+    state SessionActive {
+        [*] --> Idle
+        
+        state "Energy Processing" as EnergyProc {
+            [*] --> CalculatingEnergy
+            CalculatingEnergy --> ValidatingEnergy : Energy Calculated
+            ValidatingEnergy --> UpdatingAccumulator : Valid Energy
+            ValidatingEnergy --> ErrorHandling : Invalid Energy
+            UpdatingAccumulator --> CheckingPatterns : Accumulator Updated
+            CheckingPatterns --> [*] : No Patterns
+            CheckingPatterns --> InterferenceDetected : Interference Found
+            CheckingPatterns --> ResonanceDetected : Resonance Found
+            InterferenceDetected --> [*] : Pattern Processed
+            ResonanceDetected --> [*] : Pattern Processed
+        }
+        
+        state "Event Processing" as EventProc {
+            [*] --> QueueingEvent
+            QueueingEvent --> ValidatingEvent : Event Queued
+            ValidatingEvent --> ProcessingEvent : Valid Event
+            ValidatingEvent --> DroppingEvent : Invalid Event
+            ProcessingEvent --> UpdatingState : Event Processed
+            UpdatingState --> CheckingSnapshot : State Updated
+            CheckingSnapshot --> [*] : No Snapshot Needed
+            CheckingSnapshot --> CreatingSnapshot : Snapshot Trigger
+            CreatingSnapshot --> [*] : Snapshot Created
+            DroppingEvent --> [*] : Event Dropped
+        }
+        
+        state "Background Persistence" as BgPersist {
+            [*] --> BatchingEvents
+            BatchingEvents --> WritingBatch : Batch Ready
+            BatchingEvents --> Waiting : Batch Not Ready
+            Waiting --> BatchingEvents : Timeout/More Events
+            WritingBatch --> VerifyingWrite : Write Complete
+            VerifyingWrite --> [*] : Write Verified
+            VerifyingWrite --> RetryWrite : Write Failed
+            RetryWrite --> WritingBatch : Retry Attempt
+            RetryWrite --> ErrorHandling : Max Retries
+        }
+        
+        Idle --> EnergyProc : Energy Update
+        Idle --> EventProc : User/System Event
+        Idle --> BgPersist : Background Write
+        EnergyProc --> Idle : Processing Complete
+        EventProc --> Idle : Processing Complete
+        BgPersist --> Idle : Write Complete
+        
+        Idle --> UserInteraction : User Input
+        UserInteraction --> EnergyProc : AI Processing
+        UserInteraction --> EventProc : User Event
+        
+        state UserInteraction {
+            [*] --> ReceivingInput
+            ReceivingInput --> ValidatingInput : Input Received
+            ValidatingInput --> ProcessingPrompt : Valid Input
+            ValidatingInput --> RejectingInput : Invalid Input
+            ProcessingPrompt --> GeneratingResponse : Prompt Processed
+            GeneratingResponse --> [*] : Response Generated
+            RejectingInput --> [*] : Input Rejected
+        }
+        
+        Idle --> PatternDetection : Pattern Trigger
+        
+        state PatternDetection {
+            [*] --> AnalyzingModels
+            AnalyzingModels --> DetectingInterference : Multiple Models
+            AnalyzingModels --> DetectingResonance : Synchronized Models
+            AnalyzingModels --> [*] : No Patterns
+            
+            DetectingInterference --> CalculatingInterference : Interference Found
+            CalculatingInterference --> ApplyingInterference : Interference Calculated
+            ApplyingInterference --> [*] : Interference Applied
+            
+            DetectingResonance --> CalculatingResonance : Resonance Found
+            CalculatingResonance --> ApplyingAmplification : Resonance Calculated
+            ApplyingAmplification --> [*] : Amplification Applied
+        }
+        
+        PatternDetection --> Idle : Pattern Complete
+        
+        Idle --> HealthCheck : Health Monitor
+        
+        state HealthCheck {
+            [*] --> CheckingMetrics
+            CheckingMetrics --> HealthyState : All Metrics OK
+            CheckingMetrics --> WarningState : Some Issues
+            CheckingMetrics --> CriticalState : Critical Issues
+            HealthyState --> [*] : Health OK
+            WarningState --> [*] : Warning Logged
+            CriticalState --> ErrorHandling : Critical Error
+        }
+        
+        HealthCheck --> Idle : Health Check Complete
+        
+        state ErrorHandling {
+            [*] --> LoggingError
+            LoggingError --> DeterminingRecovery : Error Logged
+            DeterminingRecovery --> GracefulDegradation : Recoverable
+            DeterminingRecovery --> EmergencyShutdown : Unrecoverable
+            GracefulDegradation --> [*] : Degraded Mode
+            EmergencyShutdown --> SystemShutdown : Emergency
+        }
+        
+        ErrorHandling --> Idle : Error Recovered
+        ErrorHandling --> SystemShutdown : Fatal Error
+    }
+
+    SessionActive --> SessionEnding : End Session Request
+    SessionActive --> CrashRecovery : Unexpected Shutdown
+    SessionActive --> SystemShutdown : System Shutdown
+
+    state SessionEnding {
+        [*] --> FlushingEvents
+        FlushingEvents --> CreatingFinalSnapshot : Events Flushed
+        CreatingFinalSnapshot --> UpdatingSessionRecord : Snapshot Created
+        UpdatingSessionRecord --> CleanupResources : Session Updated
+        CleanupResources --> [*] : Cleanup Complete
+    }
+
+    SessionEnding --> Ready : Session Ended
+
+    state CrashRecovery {
+        [*] --> DetectingCrash
+        DetectingCrash --> LoadingLastSnapshot : Crash Detected
+        LoadingLastSnapshot --> ReplayingEvents : Snapshot Loaded
+        ReplayingEvents --> ValidatingRecovery : Events Replayed
+        ValidatingRecovery --> RecoveryComplete : Recovery Valid
+        ValidatingRecovery --> RecoveryFailed : Recovery Invalid
+        RecoveryComplete --> [*] : Recovery Success
+        RecoveryFailed --> [*] : Recovery Failed
+    }
+
+    CrashRecovery --> Ready : Recovery Complete
+    CrashRecovery --> SystemShutdown : Recovery Failed
+
+    state SystemShutdown {
+        [*] --> StoppingComponents
+        StoppingComponents --> FlushingFinalData : Components Stopped
+        FlushingFinalData --> ClosingDatabase : Data Flushed
+        ClosingDatabase --> ReleasingResources : Database Closed
+        ReleasingResources --> [*] : Resources Released
+    }
+
+    SystemShutdown --> [*] : System Stopped
+
+    %% Energy State Annotations
+    note right of EnergyProc : Energy Accumulator:\n• Total Energy: Σ(energy_deltas)\n• Model Contributions\n• Frame-by-frame tracking\n• Conservation validation
+
+    note right of PatternDetection : Pattern Types:\n• Constructive Interference\n• Destructive Interference\n• Resonance Amplification\n• Synchronization Events
+
+    note right of BgPersist : Performance Targets:\n• Batch Size: 15 events\n• Write Latency: <20ms p99\n• Queue Depth: <500 events\n• Frame Budget: <16.67ms
+
+    note right of HealthCheck : Monitoring Metrics:\n• Memory Usage\n• Queue Depth\n• Write Performance\n• Error Rates\n• Energy Conservation
+
+    %% Styling
+    classDef initClass fill:#4a90e2,stroke:#2c5aa0,stroke-width:2px,color:#fff
+    classDef activeClass fill:#27ae60,stroke:#229954,stroke-width:2px,color:#fff
+    classDef processingClass fill:#f39c12,stroke:#e67e22,stroke-width:2px,color:#fff
+    classDef errorClass fill:#e74c3c,stroke:#c0392b,stroke-width:2px,color:#fff
+    classDef shutdownClass fill:#95a5a6,stroke:#7f8c8d,stroke-width:2px,color:#fff
+
+    class SystemInitialization,Ready initClass
+    class SessionActive,SessionEnding activeClass
+    class EnergyProc,EventProc,BgPersist,PatternDetection,HealthCheck processingClass
+    class ErrorHandling,CrashRecovery errorClass
+    class SystemShutdown shutdownClass

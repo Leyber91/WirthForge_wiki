@@ -1,0 +1,199 @@
+---
+title: "Database Operations & Performance Flow"
+config:
+  theme: dark
+  themeVariables:
+    primaryColor: "#feca57"
+    primaryTextColor: "#ffffff"
+    primaryBorderColor: "#f39c12"
+    lineColor: "#00ff88"
+    secondaryColor: "#4a90e2"
+    tertiaryColor: "#e74c3c"
+    background: "#0d1117"
+    mainBkg: "#161b22"
+    secondBkg: "#21262d"
+---
+
+graph TD
+    %% Application Layer
+    subgraph APP["🚀 Application Layer"]
+        StateManager["💾 State Manager<br/>• Event coordination<br/>• Memory management<br/>• Performance monitoring"]
+        
+        EventProcessor["⚙️ Event Processor<br/>• JSON validation<br/>• Schema compliance<br/>• Batch coordination"]
+        
+        BackgroundWriter["📝 Background Writer<br/>• Async operations<br/>• Batch optimization<br/>• Error handling"]
+    end
+
+    %% Connection Pool & Management
+    subgraph CONN["🔗 Connection Management"]
+        ConnPool["Connection Pool<br/>📊 Max: 10 connections<br/>⏱️ Timeout: 30s<br/>🔄 Reuse optimization"]
+        
+        TransactionMgr["Transaction Manager<br/>🔒 ACID compliance<br/>📊 Batch transactions<br/>🔄 Rollback handling"]
+        
+        LockManager["Lock Manager<br/>🔐 Row-level locking<br/>⏱️ Deadlock detection<br/>🔄 Retry logic"]
+    end
+
+    %% Database Engine
+    subgraph DB["🗄️ SQLite Database Engine"]
+        direction TB
+        
+        subgraph TABLES["📊 Table Operations"]
+            UserOps["👤 User Operations<br/>• INSERT user<br/>• UPDATE preferences<br/>• SELECT profile"]
+            
+            SessionOps["🎮 Session Operations<br/>• INSERT session<br/>• UPDATE totals<br/>• SELECT active"]
+            
+            EventOps["📝 Event Operations<br/>• BATCH INSERT events<br/>• SELECT by timestamp<br/>• INDEX optimization"]
+            
+            SnapshotOps["📸 Snapshot Operations<br/>• INSERT snapshot<br/>• SELECT latest<br/>• DELETE old"]
+            
+            AuditOps["📋 Audit Operations<br/>• INSERT audit log<br/>• SELECT by session<br/>• VACUUM cleanup"]
+        end
+        
+        subgraph INDEXES["🔍 Index Management"]
+            PrimaryIdx["Primary Indexes<br/>🔑 user_id, session_id<br/>🔑 event_id, snapshot_id<br/>⚡ O(log n) lookup"]
+            
+            TimeIdx["Timestamp Indexes<br/>⏱️ event.timestamp<br/>⏱️ session.start_time<br/>📊 Range queries"]
+            
+            CompositeIdx["Composite Indexes<br/>🔗 (session_id, timestamp)<br/>🔗 (user_id, session_id)<br/>🎯 Multi-column queries"]
+        end
+        
+        subgraph STORAGE["💾 Storage Engine"]
+            PageCache["Page Cache<br/>📄 4KB pages<br/>💾 LRU eviction<br/>🎯 Hot data priority"]
+            
+            WAL["Write-Ahead Log<br/>📝 Durability guarantee<br/>🔄 Crash recovery<br/>⚡ Concurrent reads"]
+            
+            Vacuum["VACUUM Operations<br/>🧹 Space reclamation<br/>📊 Statistics update<br/>⏱️ Scheduled maintenance"]
+        end
+    end
+
+    %% Performance Monitoring
+    subgraph PERF["📊 Performance Monitoring"]
+        QueryAnalyzer["Query Analyzer<br/>📈 Execution plans<br/>⏱️ Timing analysis<br/>🎯 Bottleneck detection"]
+        
+        MetricsCollector["Metrics Collector<br/>📊 Operation counts<br/>⏱️ Latency tracking<br/>💾 Memory usage"]
+        
+        AlertSystem["Alert System<br/>🚨 Threshold monitoring<br/>📧 Notification system<br/>🔄 Auto-recovery"]
+    end
+
+    %% Data Flow
+    StateManager --> EventProcessor
+    EventProcessor --> BackgroundWriter
+    BackgroundWriter --> ConnPool
+    
+    ConnPool --> TransactionMgr
+    TransactionMgr --> LockManager
+    LockManager --> UserOps
+    LockManager --> SessionOps
+    LockManager --> EventOps
+    LockManager --> SnapshotOps
+    LockManager --> AuditOps
+    
+    UserOps --> PrimaryIdx
+    SessionOps --> PrimaryIdx
+    EventOps --> TimeIdx
+    SnapshotOps --> CompositeIdx
+    AuditOps --> CompositeIdx
+    
+    PrimaryIdx --> PageCache
+    TimeIdx --> PageCache
+    CompositeIdx --> PageCache
+    
+    PageCache --> WAL
+    WAL --> Vacuum
+    
+    %% Monitoring connections
+    ConnPool -.-> MetricsCollector
+    TransactionMgr -.-> QueryAnalyzer
+    EventOps -.-> AlertSystem
+    PageCache -.-> MetricsCollector
+
+    %% Detailed Operation Flows
+    subgraph BATCH_FLOW["📦 Batch Write Flow"]
+        direction LR
+        BatchCollect["Collect Events<br/>📥 Queue: 15 events<br/>⏱️ Timeout: 200ms<br/>🎯 Optimal batch size"]
+        
+        BatchValidate["Validate Batch<br/>✅ JSON schemas<br/>🔍 Foreign keys<br/>⚖️ Energy conservation"]
+        
+        BatchWrite["Write Batch<br/>🔒 BEGIN TRANSACTION<br/>📝 INSERT batch<br/>✅ COMMIT"]
+        
+        BatchCollect --> BatchValidate
+        BatchValidate --> BatchWrite
+    end
+
+    subgraph QUERY_FLOW["🔍 Query Optimization Flow"]
+        direction LR
+        QueryPlan["Query Planning<br/>📋 Analyze query<br/>🔍 Index selection<br/>📊 Cost estimation"]
+        
+        QueryExec["Query Execution<br/>⚡ Index scan<br/>📄 Page reads<br/>🎯 Result assembly"]
+        
+        QueryCache["Result Caching<br/>💾 Query cache<br/>⏱️ TTL: 60s<br/>🔄 Invalidation"]
+        
+        QueryPlan --> QueryExec
+        QueryExec --> QueryCache
+    end
+
+    BackgroundWriter --> BatchCollect
+    EventOps --> QueryPlan
+
+    %% Performance Specifications
+    subgraph SPECS["🎯 Performance Specifications"]
+        WriteSpecs["Write Performance<br/>📝 Batch: 15 events<br/>⏱️ Latency: <20ms p99<br/>🔄 Throughput: 750 events/s<br/>💾 Queue: <500 events"]
+        
+        ReadSpecs["Read Performance<br/>🔍 Recent queries: <100ms<br/>📊 Session load: <2s<br/>🔍 Search: <500ms<br/>📈 Index usage: >95%"]
+        
+        StorageSpecs["Storage Efficiency<br/>💾 Compression: ~60%<br/>🧹 VACUUM: weekly<br/>📊 Growth: <1MB/10K events<br/>🔄 Retention: 90 days"]
+    end
+
+    %% Error Handling & Recovery
+    subgraph ERROR["🚨 Error Handling"]
+        RetryLogic["Retry Logic<br/>🔄 Max attempts: 3<br/>⏱️ Backoff: exponential<br/>🎯 Circuit breaker"]
+        
+        ErrorRecovery["Error Recovery<br/>🔄 Transaction rollback<br/>💾 State restoration<br/>📋 Error logging"]
+        
+        Degradation["Graceful Degradation<br/>💾 Memory-only mode<br/>📊 Reduced functionality<br/>🚨 User notification"]
+        
+        RetryLogic --> ErrorRecovery
+        ErrorRecovery --> Degradation
+    end
+
+    TransactionMgr --> RetryLogic
+    BackgroundWriter --> RetryLogic
+
+    %% Maintenance Operations
+    subgraph MAINT["🔧 Maintenance Operations"]
+        AutoVacuum["Auto VACUUM<br/>🧹 Triggered at 25% fragmentation<br/>⏱️ Scheduled during low usage<br/>📊 Statistics update"]
+        
+        IndexMaint["Index Maintenance<br/>🔍 REINDEX on corruption<br/>📊 ANALYZE for statistics<br/>🎯 Performance optimization"]
+        
+        Backup["Backup Operations<br/>💾 Full backup: daily<br/>📝 Incremental: hourly<br/>🔄 Point-in-time recovery"]
+        
+        AutoVacuum --> IndexMaint
+        IndexMaint --> Backup
+    end
+
+    Vacuum --> AutoVacuum
+    PageCache --> IndexMaint
+
+    %% Real-time Metrics
+    note1["Real-time Metrics:<br/>• Write latency: p50, p95, p99<br/>• Query execution time<br/>• Connection pool usage<br/>• Cache hit ratio<br/>• Queue depth<br/>• Error rates"]
+    
+    note2["Optimization Targets:<br/>• Index selectivity > 0.1<br/>• Cache hit ratio > 90%<br/>• Transaction time < 50ms<br/>• Lock wait time < 10ms<br/>• Page fault rate < 1%"]
+    
+    note3["Scaling Limits:<br/>• Max connections: 10<br/>• Max database size: 10GB<br/>• Max events/session: 1M<br/>• Max concurrent sessions: 100<br/>• Max queue depth: 1000"]
+
+    %% Styling
+    classDef appClass fill:#4a90e2,stroke:#2c5aa0,stroke-width:2px,color:#fff
+    classDef connClass fill:#27ae60,stroke:#229954,stroke-width:2px,color:#fff
+    classDef dbClass fill:#f39c12,stroke:#e67e22,stroke-width:2px,color:#fff
+    classDef perfClass fill:#e74c3c,stroke:#c0392b,stroke-width:2px,color:#fff
+    classDef flowClass fill:#9b59b6,stroke:#8e44ad,stroke-width:2px,color:#fff
+    classDef errorClass fill:#ff6b6b,stroke:#e55656,stroke-width:2px,color:#fff
+    classDef maintClass fill:#1abc9c,stroke:#16a085,stroke-width:2px,color:#fff
+
+    class StateManager,EventProcessor,BackgroundWriter appClass
+    class ConnPool,TransactionMgr,LockManager connClass
+    class UserOps,SessionOps,EventOps,SnapshotOps,AuditOps,PrimaryIdx,TimeIdx,CompositeIdx,PageCache,WAL,Vacuum dbClass
+    class QueryAnalyzer,MetricsCollector,AlertSystem perfClass
+    class BatchCollect,BatchValidate,BatchWrite,QueryPlan,QueryExec,QueryCache flowClass
+    class RetryLogic,ErrorRecovery,Degradation errorClass
+    class AutoVacuum,IndexMaint,Backup maintClass
