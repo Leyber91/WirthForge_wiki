@@ -1,0 +1,74 @@
+sequenceDiagram
+    participant Browser as Browser UI
+    participant WS as WebSocket Server
+    participant Orch as Orchestrator
+    participant Dec as DECIPHER
+    participant Model as AI Model
+
+    Note over Browser,Model: WIRTHFORGE WebSocket Protocol Lifecycle
+
+    %% Connection Phase
+    Browser->>WS: WebSocket Connect (ws://localhost:8145/ws)
+    WS->>Browser: Connection Accepted
+    
+    %% Startup Handshake
+    Orch->>WS: System Ready Signal
+    WS->>Browser: startup_complete Event
+    Note right of Browser: {<br/>  "type": "startup_complete",<br/>  "model": "LLaMA2-13B",<br/>  "tier": "Mid-Tier",<br/>  "frameRate": 60<br/>}
+    
+    Browser->>WS: Handshake ACK
+    
+    %% Normal Operation - 60Hz Loop
+    loop Every 16.67ms (60Hz)
+        Dec->>WS: energy_update Event
+        WS->>Browser: Forward Energy Data
+        Note right of Browser: {<br/>  "type": "energy_update",<br/>  "frameNumber": N,<br/>  "totalEnergy": 1250.5<br/>}
+        
+        opt Token Generation Active
+            Model->>Dec: New Tokens
+            Dec->>WS: token_stream Event
+            WS->>Browser: Forward Tokens
+            Note right of Browser: {<br/>  "type": "token_stream",<br/>  "tokens": ["Hello", "world"],<br/>  "isComplete": false<br/>}
+        end
+        
+        opt Multi-Model Council Mode
+            Dec->>WS: interference_event
+            WS->>Browser: Forward Interference
+            Dec->>WS: resonance_event
+            WS->>Browser: Forward Resonance
+        end
+    end
+    
+    %% Heartbeat Mechanism
+    loop Every 1 second
+        WS->>Browser: heartbeat Event
+        Note right of Browser: {<br/>  "type": "heartbeat",<br/>  "sequence": N,<br/>  "serverTime": timestamp<br/>}
+        Browser->>WS: Heartbeat Response (optional)
+    end
+    
+    %% Error Handling
+    opt Error Occurs
+        Dec->>WS: Processing Error
+        WS->>Browser: error_event
+        Note right of Browser: {<br/>  "type": "error_event",<br/>  "severity": "warning",<br/>  "code": "FRAME_OVERRUN"<br/>}
+    end
+    
+    %% Reward Events
+    opt Achievement Unlocked
+        Orch->>WS: User Achievement
+        WS->>Browser: reward_event
+        Note right of Browser: {<br/>  "type": "reward_event",<br/>  "rewardType": "milestone",<br/>  "title": "Lightning Master"<br/>}
+    end
+    
+    %% Connection Loss & Recovery
+    Browser->>WS: Connection Lost
+    Note over Browser,WS: Network Interruption
+    
+    Browser->>WS: Reconnect Attempt
+    WS->>Browser: Connection Restored
+    WS->>Browser: startup_complete (Resume)
+    
+    %% Graceful Shutdown
+    Browser->>WS: Close Connection
+    WS->>Orch: Client Disconnected
+    WS->>Browser: Connection Closed

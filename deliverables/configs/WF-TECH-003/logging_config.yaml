@@ -1,0 +1,105 @@
+# WIRTHFORGE WebSocket Server Logging Configuration
+# WF-TECH-003 Real-Time Protocol Monitoring
+
+version: 1
+disable_existing_loggers: false
+
+formatters:
+  standard:
+    format: '%(asctime)s [%(levelname)s] %(name)s: %(message)s'
+    datefmt: '%Y-%m-%d %H:%M:%S'
+  
+  detailed:
+    format: '%(asctime)s [%(levelname)s] %(name)s:%(lineno)d - %(funcName)s() - %(message)s'
+    datefmt: '%Y-%m-%d %H:%M:%S.%f'
+  
+  json:
+    format: '{"timestamp": "%(asctime)s", "level": "%(levelname)s", "logger": "%(name)s", "message": "%(message)s", "module": "%(module)s", "function": "%(funcName)s", "line": %(lineno)d}'
+    datefmt: '%Y-%m-%dT%H:%M:%S.%fZ'
+
+handlers:
+  console:
+    class: logging.StreamHandler
+    level: INFO
+    formatter: standard
+    stream: ext://sys.stdout
+  
+  file:
+    class: logging.handlers.RotatingFileHandler
+    level: DEBUG
+    formatter: detailed
+    filename: logs/wirthforge_websocket.log
+    maxBytes: 10485760  # 10MB
+    backupCount: 5
+    encoding: utf8
+  
+  performance:
+    class: logging.handlers.RotatingFileHandler
+    level: INFO
+    formatter: json
+    filename: logs/performance.log
+    maxBytes: 5242880   # 5MB
+    backupCount: 3
+    encoding: utf8
+  
+  error:
+    class: logging.handlers.RotatingFileHandler
+    level: ERROR
+    formatter: detailed
+    filename: logs/errors.log
+    maxBytes: 5242880   # 5MB
+    backupCount: 10
+    encoding: utf8
+
+loggers:
+  wirthforge.websocket:
+    level: DEBUG
+    handlers: [console, file, error]
+    propagate: false
+  
+  wirthforge.performance:
+    level: INFO
+    handlers: [performance]
+    propagate: false
+  
+  wirthforge.decipher:
+    level: INFO
+    handlers: [console, file]
+    propagate: false
+  
+  uvicorn:
+    level: INFO
+    handlers: [console, file]
+    propagate: false
+  
+  uvicorn.access:
+    level: WARNING
+    handlers: [file]
+    propagate: false
+
+root:
+  level: INFO
+  handlers: [console, file]
+
+# Performance monitoring thresholds
+performance_thresholds:
+  frame_processing_ms: 16.67    # 60Hz frame budget
+  websocket_send_ms: 5.0        # WebSocket send timeout
+  message_queue_size: 100       # Max queued messages
+  connection_timeout_s: 30      # Connection timeout
+  heartbeat_interval_s: 1.0     # Heartbeat frequency
+
+# Monitoring configuration
+monitoring:
+  enable_metrics: true
+  metrics_interval_s: 10
+  enable_frame_timing: true
+  enable_latency_tracking: true
+  enable_connection_stats: true
+  
+  # Alert thresholds
+  alerts:
+    high_latency_ms: 10.0
+    frame_drop_threshold: 5
+    connection_failure_rate: 0.1
+    memory_usage_mb: 500

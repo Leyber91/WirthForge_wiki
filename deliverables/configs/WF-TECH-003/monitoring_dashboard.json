@@ -1,0 +1,277 @@
+{
+  "dashboard": {
+    "title": "WIRTHFORGE WebSocket Protocol Monitor",
+    "version": "1.0.0",
+    "description": "Real-time monitoring dashboard for WF-TECH-003 WebSocket protocol",
+    "refreshInterval": 1000,
+    "layout": {
+      "grid": {
+        "columns": 12,
+        "rows": 8
+      }
+    }
+  },
+  "panels": [
+    {
+      "id": "connection_status",
+      "title": "Connection Status",
+      "type": "status",
+      "position": { "x": 0, "y": 0, "w": 3, "h": 2 },
+      "config": {
+        "metrics": [
+          "websocket.connections.active",
+          "websocket.connections.total",
+          "websocket.uptime"
+        ],
+        "thresholds": {
+          "active_connections": { "warning": 0, "critical": 0 },
+          "uptime_hours": { "good": 1, "warning": 0.1 }
+        }
+      }
+    },
+    {
+      "id": "frame_rate",
+      "title": "Frame Rate (Hz)",
+      "type": "gauge",
+      "position": { "x": 3, "y": 0, "w": 3, "h": 2 },
+      "config": {
+        "metric": "decipher.frame_rate",
+        "target": 60,
+        "range": { "min": 0, "max": 70 },
+        "thresholds": {
+          "good": { "min": 58, "max": 62 },
+          "warning": { "min": 55, "max": 65 },
+          "critical": { "min": 0, "max": 55 }
+        }
+      }
+    },
+    {
+      "id": "latency",
+      "title": "Message Latency (ms)",
+      "type": "gauge",
+      "position": { "x": 6, "y": 0, "w": 3, "h": 2 },
+      "config": {
+        "metrics": {
+          "median": "websocket.latency.median",
+          "p99": "websocket.latency.p99"
+        },
+        "target": 5,
+        "range": { "min": 0, "max": 20 },
+        "thresholds": {
+          "good": { "max": 5 },
+          "warning": { "max": 10 },
+          "critical": { "max": 20 }
+        }
+      }
+    },
+    {
+      "id": "energy_metrics",
+      "title": "Energy Metrics",
+      "type": "multi_gauge",
+      "position": { "x": 9, "y": 0, "w": 3, "h": 2 },
+      "config": {
+        "metrics": [
+          {
+            "name": "Total Energy",
+            "metric": "decipher.energy.total",
+            "unit": "EU",
+            "color": "#00ff88"
+          },
+          {
+            "name": "Delta Energy",
+            "metric": "decipher.energy.delta",
+            "unit": "EU/frame",
+            "color": "#00aaff"
+          }
+        ]
+      }
+    },
+    {
+      "id": "frame_timeline",
+      "title": "Frame Processing Timeline",
+      "type": "timeseries",
+      "position": { "x": 0, "y": 2, "w": 6, "h": 3 },
+      "config": {
+        "metrics": [
+          {
+            "name": "Frame Rate",
+            "metric": "decipher.frame_rate",
+            "color": "#00ff88",
+            "yAxis": "left"
+          },
+          {
+            "name": "Processing Time",
+            "metric": "decipher.processing_time_ms",
+            "color": "#ffaa00",
+            "yAxis": "right"
+          },
+          {
+            "name": "Frame Drops",
+            "metric": "decipher.frame_drops",
+            "color": "#ff4444",
+            "yAxis": "right"
+          }
+        ],
+        "timeRange": "5m",
+        "yAxes": {
+          "left": { "label": "Hz", "min": 0, "max": 70 },
+          "right": { "label": "ms / drops", "min": 0, "max": 20 }
+        }
+      }
+    },
+    {
+      "id": "latency_timeline",
+      "title": "Latency Distribution",
+      "type": "timeseries",
+      "position": { "x": 6, "y": 2, "w": 6, "h": 3 },
+      "config": {
+        "metrics": [
+          {
+            "name": "Median",
+            "metric": "websocket.latency.median",
+            "color": "#00ff88"
+          },
+          {
+            "name": "P95",
+            "metric": "websocket.latency.p95",
+            "color": "#00aaff"
+          },
+          {
+            "name": "P99",
+            "metric": "websocket.latency.p99",
+            "color": "#ffaa00"
+          },
+          {
+            "name": "Max",
+            "metric": "websocket.latency.max",
+            "color": "#ff4444"
+          }
+        ],
+        "timeRange": "5m",
+        "yAxis": { "label": "Latency (ms)", "min": 0, "max": 20 }
+      }
+    },
+    {
+      "id": "message_stats",
+      "title": "Message Statistics",
+      "type": "table",
+      "position": { "x": 0, "y": 5, "w": 4, "h": 3 },
+      "config": {
+        "columns": [
+          { "name": "Message Type", "field": "type" },
+          { "name": "Count", "field": "count" },
+          { "name": "Rate/s", "field": "rate" },
+          { "name": "Avg Size", "field": "avg_size" }
+        ],
+        "data_source": "websocket.message_stats",
+        "refresh_interval": 5000
+      }
+    },
+    {
+      "id": "system_resources",
+      "title": "System Resources",
+      "type": "multi_gauge",
+      "position": { "x": 4, "y": 5, "w": 4, "h": 3 },
+      "config": {
+        "metrics": [
+          {
+            "name": "CPU Usage",
+            "metric": "system.cpu_percent",
+            "unit": "%",
+            "color": "#00aaff",
+            "thresholds": { "warning": 70, "critical": 90 }
+          },
+          {
+            "name": "Memory Usage",
+            "metric": "system.memory_mb",
+            "unit": "MB",
+            "color": "#ffaa00",
+            "thresholds": { "warning": 400, "critical": 500 }
+          },
+          {
+            "name": "WebSocket Connections",
+            "metric": "websocket.connections.active",
+            "unit": "conn",
+            "color": "#00ff88"
+          }
+        ]
+      }
+    },
+    {
+      "id": "error_log",
+      "title": "Recent Errors",
+      "type": "log",
+      "position": { "x": 8, "y": 5, "w": 4, "h": 3 },
+      "config": {
+        "log_source": "websocket.errors",
+        "max_entries": 10,
+        "severity_colors": {
+          "ERROR": "#ff4444",
+          "WARNING": "#ffaa00",
+          "INFO": "#00aaff"
+        },
+        "auto_scroll": true
+      }
+    }
+  ],
+  "alerts": [
+    {
+      "name": "High Latency",
+      "condition": "websocket.latency.median > 10",
+      "severity": "warning",
+      "message": "WebSocket median latency exceeds 10ms threshold"
+    },
+    {
+      "name": "Frame Rate Drop",
+      "condition": "decipher.frame_rate < 55",
+      "severity": "critical",
+      "message": "Frame rate dropped below 55 Hz"
+    },
+    {
+      "name": "Connection Lost",
+      "condition": "websocket.connections.active == 0",
+      "severity": "warning",
+      "message": "No active WebSocket connections"
+    },
+    {
+      "name": "Frame Processing Overrun",
+      "condition": "decipher.processing_time_ms > 16.67",
+      "severity": "warning",
+      "message": "Frame processing time exceeds 16.67ms budget"
+    },
+    {
+      "name": "High Memory Usage",
+      "condition": "system.memory_mb > 500",
+      "severity": "warning",
+      "message": "Memory usage exceeds 500MB threshold"
+    }
+  ],
+  "data_sources": {
+    "websocket": {
+      "type": "prometheus",
+      "endpoint": "http://localhost:9090/metrics",
+      "scrape_interval": "1s"
+    },
+    "decipher": {
+      "type": "internal",
+      "endpoint": "/api/metrics",
+      "refresh_interval": "100ms"
+    },
+    "system": {
+      "type": "system_monitor",
+      "refresh_interval": "5s"
+    }
+  },
+  "export_config": {
+    "prometheus": {
+      "enabled": true,
+      "port": 9090,
+      "path": "/metrics"
+    },
+    "json_api": {
+      "enabled": true,
+      "endpoint": "/api/metrics",
+      "cors_origins": ["http://localhost:3000"]
+    }
+  }
+}

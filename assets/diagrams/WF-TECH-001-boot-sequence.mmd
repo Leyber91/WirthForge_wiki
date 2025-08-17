@@ -1,0 +1,46 @@
+sequenceDiagram
+    participant User as User
+    participant Boot as Boot Controller
+    participant HW as Hardware Detector
+    participant Orch as Orchestrator
+    participant Ollama as Ollama Server
+    participant API as FastAPI Server
+    participant Dec as DECIPHER
+    participant UI as Web Browser
+
+    Note over User,UI: WIRTHFORGE Zero-Config Boot Sequence
+
+    User->>Boot: Launch WIRTHFORGE
+    Boot->>HW: Detect Hardware Capabilities
+    HW->>Boot: Hardware Tier (Low/Mid/High)
+    
+    Note over Boot: Phase 1: Core Services
+    Boot->>Orch: Start Orchestrator
+    Orch->>Boot: Ready Signal
+    
+    Boot->>Ollama: Start Ollama Server
+    Ollama->>Boot: Model Server Ready
+    
+    Note over Boot: Phase 2: Transport Layer
+    Boot->>API: Start FastAPI Server
+    API->>Boot: HTTP/WebSocket Ready
+    
+    Note over Boot: Phase 3: Processing Engine
+    Boot->>Dec: Start DECIPHER
+    Dec->>Orch: Register with Orchestrator
+    Dec->>Boot: 60Hz Loop Ready
+    
+    Note over Boot: Health Checks
+    Boot->>Orch: Health Check
+    Orch->>Boot: Status: Healthy
+    Boot->>Ollama: Health Check
+    Ollama->>Boot: Status: Healthy
+    Boot->>API: Health Check
+    API->>Boot: Status: Healthy
+    
+    Note over Boot: System Ready
+    Boot->>UI: Launch Browser Interface
+    UI->>API: WebSocket Connect
+    API->>UI: startup_complete Event
+    
+    Note over User,UI: Target: <2s Boot Time to 60Hz Ready

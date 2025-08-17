@@ -1,0 +1,89 @@
+flowchart TD
+    subgraph "Token Stream Input"
+        T[Token Generated]
+        TM[Token Metadata]
+        TS[Timestamp Δt]
+    end
+    
+    subgraph "Energy Calculation Pipeline"
+        subgraph "Timing Analysis"
+            DT[Delta Time Δt]
+            TPS[Tokens Per Second]
+            TTFT[Time to First Token]
+        end
+        
+        subgraph "Semantic Analysis"
+            LP[Log Probabilities]
+            ENT[Entropy Calculation]
+            TK[Top-K Diversity]
+        end
+        
+        subgraph "Energy Formula"
+            EF["E(t) = f(Δt, entropy, diversity)"]
+            NORM[Normalize to [0,1]]
+            SMOOTH[Exponential Smoothing]
+        end
+    end
+    
+    subgraph "Output Events"
+        EU[Energy Update]
+        TS_OUT[Token Stream]
+        FM[Frame Metrics]
+    end
+    
+    subgraph "Multi-Model Processing"
+        subgraph "Turbo Mode"
+            M1[Model 1 Token]
+            M2[Model 2 Token] 
+            M3[Model 3 Token]
+        end
+        
+        subgraph "Ensemble Analysis"
+            INT[Interference Pattern]
+            RES[Resonance Detection]
+            DIV[Diversity Index]
+        end
+        
+        subgraph "Council Events"
+            IE[interference_event]
+            RE[resonance_event]
+            EE[ensemble_energy]
+        end
+    end
+    
+    %% Single Model Flow
+    T --> DT
+    TM --> LP
+    TS --> TPS
+    
+    DT --> EF
+    LP --> ENT
+    ENT --> EF
+    TPS --> TK
+    TK --> EF
+    
+    EF --> NORM
+    NORM --> SMOOTH
+    SMOOTH --> EU
+    T --> TS_OUT
+    EU --> FM
+    
+    %% Multi-Model Flow
+    M1 --> INT
+    M2 --> INT
+    M3 --> INT
+    
+    INT --> DIV
+    M1 --> RES
+    M2 --> RES
+    M3 --> RES
+    
+    DIV --> IE
+    RES --> RE
+    INT --> EE
+    
+    %% Styling
+    style EF fill:#ff9800
+    style EU fill:#4caf50
+    style INT fill:#e91e63
+    style RES fill:#9c27b0

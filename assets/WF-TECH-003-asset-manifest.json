@@ -1,0 +1,171 @@
+{
+  "manifest": {
+    "document_id": "WF-TECH-003",
+    "title": "Real-Time Protocol (WebSockets)",
+    "version": "1.0.0",
+    "generated_date": "2025-08-17T19:07:20+02:00",
+    "category": "TECH",
+    "priority": "P0",
+    "phase": 1
+  },
+  "assets": {
+    "schemas": [
+      {
+        "name": "WebSocket Event Schemas",
+        "file": "assets/schemas/WF-TECH-003-event-schemas.json",
+        "type": "json_schema",
+        "description": "JSON Schema definitions for all WebSocket event types",
+        "version": "1.0.0",
+        "events_covered": [
+          "startup_complete",
+          "energy_update", 
+          "energy_field",
+          "token_stream",
+          "interference_event",
+          "resonance_event",
+          "reward_event",
+          "heartbeat",
+          "error_event"
+        ]
+      }
+    ],
+    "diagrams": [
+      {
+        "name": "Protocol Lifecycle Sequence",
+        "file": "assets/diagrams/WF-TECH-003-lifecycle.mmd",
+        "type": "mermaid_sequence",
+        "description": "WebSocket protocol lifecycle from connection to shutdown",
+        "export_formats": ["svg", "png"]
+      },
+      {
+        "name": "Connection FSM State Machine", 
+        "file": "assets/diagrams/WF-TECH-003-connection-fsm.mmd",
+        "type": "mermaid_state",
+        "description": "Finite state machine for WebSocket connection management",
+        "export_formats": ["svg", "png"]
+      }
+    ],
+    "code": [
+      {
+        "name": "FastAPI WebSocket Server",
+        "file": "deliverables/code/WF-TECH-003/ws_server.py",
+        "type": "python",
+        "description": "Reference implementation of 60Hz WebSocket server",
+        "dependencies": ["fastapi", "uvicorn", "websockets"],
+        "entry_point": "main"
+      },
+      {
+        "name": "Browser Client Example",
+        "file": "deliverables/code/WF-TECH-003/client-example.html",
+        "type": "html_javascript",
+        "description": "Browser client with auto-reconnect and monitoring",
+        "features": ["auto_reconnect", "real_time_metrics", "event_logging"]
+      },
+      {
+        "name": "Latency Test Suite",
+        "file": "deliverables/code/WF-TECH-003/test_latency.py", 
+        "type": "python_test",
+        "description": "Performance validation tests for <5ms latency requirement",
+        "test_framework": "pytest"
+      },
+      {
+        "name": "Schema Compliance Tests",
+        "file": "deliverables/code/WF-TECH-003/test_schema_compliance.py",
+        "type": "python_test", 
+        "description": "JSON Schema validation tests for all message types",
+        "test_framework": "pytest"
+      }
+    ],
+    "configs": [
+      {
+        "name": "Logging Configuration",
+        "file": "deliverables/configs/WF-TECH-003/logging_config.yaml",
+        "type": "yaml",
+        "description": "Comprehensive logging setup for WebSocket server",
+        "features": ["rotating_files", "performance_tracking", "error_isolation"]
+      },
+      {
+        "name": "Monitoring Dashboard",
+        "file": "deliverables/configs/WF-TECH-003/monitoring_dashboard.json",
+        "type": "json",
+        "description": "Real-time monitoring dashboard specification",
+        "panels": ["connection_status", "frame_rate", "latency", "system_resources"]
+      }
+    ],
+    "documentation": [
+      {
+        "name": "Implementation README",
+        "file": "deliverables/code/WF-TECH-003/README.md",
+        "type": "markdown",
+        "description": "Quick start guide and implementation documentation"
+      },
+      {
+        "name": "Executive Summary",
+        "file": "deliverables/docs/WF-TECH-003/EXECUTIVE_SUMMARY.md",
+        "type": "markdown",
+        "description": "High-level overview for stakeholders"
+      },
+      {
+        "name": "Changelog",
+        "file": "deliverables/docs/WF-TECH-003/CHANGELOG.md",
+        "type": "markdown",
+        "description": "Version history and technical decisions"
+      },
+      {
+        "name": "Universal Template Application",
+        "file": "assets/templates/WF-TECH-003-universal-template.md",
+        "type": "markdown",
+        "description": "Template compliance verification"
+      }
+    ],
+    "dependencies": [
+      {
+        "name": "Python Dependencies",
+        "file": "deliverables/code/WF-TECH-003/requirements.txt",
+        "type": "requirements",
+        "description": "Python package dependencies for implementation"
+      }
+    ]
+  },
+  "integration_points": {
+    "consumes": [
+      "WF-TECH-001 (System Runtime & Services)",
+      "WF-FND-004 (DECIPHER Event Schemas)"
+    ],
+    "enables": [
+      "WF-TECH-004 (State & Storage)",
+      "WF-UX-006 (Energy Visualization)",
+      "WF-UX-001 (Level 1 Lightning Strikes)"
+    ],
+    "cross_references": [
+      "WF-FND-002 (Energy Framework)",
+      "WF-FND-001 (Vision & Principles)",
+      "WF-FND-005 (Experience Orchestrator)",
+      "WF-FND-006 (Glossary)",
+      "WF-META-001 (System Timing & Template)"
+    ]
+  },
+  "quality_metrics": {
+    "performance_targets": {
+      "frame_rate": "60 Hz ±5 Hz",
+      "median_latency": "<5ms",
+      "p99_latency": "<10ms",
+      "reconnect_time": "<2s",
+      "frame_drops": "<10/minute"
+    },
+    "validation_status": {
+      "schema_compliance": "100%",
+      "architecture_alignment": "verified",
+      "documentation_completeness": "complete",
+      "test_coverage": "comprehensive"
+    }
+  },
+  "post_generation_tasks": [
+    "Update WF-FND-006 glossary with new terminology",
+    "Register assets in documentation index",
+    "Build prototype for validation",
+    "Coordinate with UX-006 team for visualization pipeline",
+    "Conduct security review of localhost-only model",
+    "Run extended performance validation on target hardware"
+  ]
+}

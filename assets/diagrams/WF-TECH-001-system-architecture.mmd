@@ -1,0 +1,19 @@
+graph TB
+    subgraph "User's Local Machine"
+        U[User]
+        WF[WIRTHFORGE System]
+        B[Web Browser]
+        OS[Operating System]
+    end
+    
+    subgraph "External (Optional)"
+        MR[Model Repository<br/>Hugging Face/Ollama]
+    end
+    
+    U --> B
+    B --> WF
+    WF --> OS
+    WF -.-> MR
+    
+    style WF fill:#e1f5fe
+    style MR fill:#fff3e0

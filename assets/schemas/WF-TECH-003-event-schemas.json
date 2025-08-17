@@ -1,0 +1,543 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "WIRTHFORGE WebSocket Event Schemas",
+  "description": "JSON Schema definitions for all WebSocket event types in WF-TECH-003 Real-Time Protocol",
+  "version": "1.0.0",
+  "definitions": {
+    "timestamp": {
+      "type": "integer",
+      "description": "Unix timestamp in milliseconds",
+      "minimum": 0
+    },
+    "modelId": {
+      "type": "string",
+      "description": "Unique identifier for AI model",
+      "pattern": "^[a-zA-Z0-9_-]+$"
+    },
+    "frameNumber": {
+      "type": "integer",
+      "description": "Sequential frame number for 60Hz updates",
+      "minimum": 0
+    },
+    "energyValue": {
+      "type": "number",
+      "description": "Energy unit value",
+      "minimum": 0
+    },
+    "channelType": {
+      "type": "string",
+      "enum": ["energy", "experience", "council", "reward", "system"],
+      "description": "WebSocket channel category"
+    }
+  },
+  "oneOf": [
+    {
+      "$ref": "#/schemas/startupCompleteEvent"
+    },
+    {
+      "$ref": "#/schemas/energyUpdateEvent"
+    },
+    {
+      "$ref": "#/schemas/energyFieldEvent"
+    },
+    {
+      "$ref": "#/schemas/tokenStreamEvent"
+    },
+    {
+      "$ref": "#/schemas/interferenceEvent"
+    },
+    {
+      "$ref": "#/schemas/resonanceEvent"
+    },
+    {
+      "$ref": "#/schemas/rewardEvent"
+    },
+    {
+      "$ref": "#/schemas/heartbeatEvent"
+    },
+    {
+      "$ref": "#/schemas/errorEvent"
+    }
+  ],
+  "schemas": {
+    "startupCompleteEvent": {
+      "type": "object",
+      "title": "Startup Complete Event",
+      "description": "Sent when WIRTHFORGE orchestrator completes initialization",
+      "properties": {
+        "type": {
+          "const": "startup_complete"
+        },
+        "channel": {
+          "const": "system"
+        },
+        "timestamp": {
+          "$ref": "#/definitions/timestamp"
+        },
+        "payload": {
+          "type": "object",
+          "properties": {
+            "model": {
+              "$ref": "#/definitions/modelId"
+            },
+            "tier": {
+              "type": "string",
+              "enum": ["Low-Tier", "Mid-Tier", "High-Tier"],
+              "description": "Hardware tier classification"
+            },
+            "version": {
+              "type": "string",
+              "pattern": "^\\d+\\.\\d+\\.\\d+$",
+              "description": "WIRTHFORGE version (SemVer)"
+            },
+            "capabilities": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": ["council", "turbo", "visualization", "plugins"]
+              },
+              "description": "Available system capabilities"
+            },
+            "frameRate": {
+              "type": "number",
+              "const": 60,
+              "description": "Target frame rate in Hz"
+            }
+          },
+          "required": ["model", "tier", "version", "frameRate"],
+          "additionalProperties": false
+        }
+      },
+      "required": ["type", "channel", "timestamp", "payload"],
+      "additionalProperties": false
+    },
+    "energyUpdateEvent": {
+      "type": "object",
+      "title": "Energy Update Event",
+      "description": "Real-time energy metrics for 60Hz visualization",
+      "properties": {
+        "type": {
+          "const": "energy_update"
+        },
+        "channel": {
+          "const": "energy"
+        },
+        "timestamp": {
+          "$ref": "#/definitions/timestamp"
+        },
+        "frameNumber": {
+          "$ref": "#/definitions/frameNumber"
+        },
+        "payload": {
+          "type": "object",
+          "properties": {
+            "totalEnergy": {
+              "$ref": "#/definitions/energyValue"
+            },
+            "deltaEnergy": {
+              "type": "number",
+              "description": "Energy change since last frame"
+            },
+            "tokensGenerated": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Tokens generated this frame"
+            },
+            "processingTime": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 16.67,
+              "description": "Frame processing time in milliseconds"
+            },
+            "modelId": {
+              "$ref": "#/definitions/modelId"
+            },
+            "energyDistribution": {
+              "type": "object",
+              "properties": {
+                "generation": {
+                  "$ref": "#/definitions/energyValue"
+                },
+                "attention": {
+                  "$ref": "#/definitions/energyValue"
+                },
+                "reasoning": {
+                  "$ref": "#/definitions/energyValue"
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "required": ["totalEnergy", "deltaEnergy", "tokensGenerated", "processingTime", "modelId"],
+          "additionalProperties": false
+        }
+      },
+      "required": ["type", "channel", "timestamp", "frameNumber", "payload"],
+      "additionalProperties": false
+    },
+    "energyFieldEvent": {
+      "type": "object",
+      "title": "Energy Field Event",
+      "description": "Spatial energy field data for advanced visualizations",
+      "properties": {
+        "type": {
+          "const": "energy_field"
+        },
+        "channel": {
+          "const": "energy"
+        },
+        "timestamp": {
+          "$ref": "#/definitions/timestamp"
+        },
+        "frameNumber": {
+          "$ref": "#/definitions/frameNumber"
+        },
+        "payload": {
+          "type": "object",
+          "properties": {
+            "fieldType": {
+              "type": "string",
+              "enum": ["lightning", "stream", "interference", "resonance"],
+              "description": "Type of energy field pattern"
+            },
+            "intensity": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "Field intensity (0-1)"
+            },
+            "coordinates": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "x": {"type": "number"},
+                  "y": {"type": "number"},
+                  "energy": {"$ref": "#/definitions/energyValue"}
+                },
+                "required": ["x", "y", "energy"],
+                "additionalProperties": false
+              },
+              "description": "Spatial energy coordinates"
+            },
+            "modelId": {
+              "$ref": "#/definitions/modelId"
+            }
+          },
+          "required": ["fieldType", "intensity", "coordinates", "modelId"],
+          "additionalProperties": false
+        }
+      },
+      "required": ["type", "channel", "timestamp", "frameNumber", "payload"],
+      "additionalProperties": false
+    },
+    "tokenStreamEvent": {
+      "type": "object",
+      "title": "Token Stream Event",
+      "description": "AI-generated token output for user experience",
+      "properties": {
+        "type": {
+          "const": "token_stream"
+        },
+        "channel": {
+          "const": "experience"
+        },
+        "timestamp": {
+          "$ref": "#/definitions/timestamp"
+        },
+        "payload": {
+          "type": "object",
+          "properties": {
+            "tokens": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Generated tokens for this frame"
+            },
+            "isComplete": {
+              "type": "boolean",
+              "description": "Whether generation is complete"
+            },
+            "sessionId": {
+              "type": "string",
+              "description": "Session identifier for token stream"
+            },
+            "modelId": {
+              "$ref": "#/definitions/modelId"
+            },
+            "energyCost": {
+              "$ref": "#/definitions/energyValue",
+              "description": "Energy consumed for these tokens"
+            }
+          },
+          "required": ["tokens", "isComplete", "sessionId", "modelId"],
+          "additionalProperties": false
+        }
+      },
+      "required": ["type", "channel", "timestamp", "payload"],
+      "additionalProperties": false
+    },
+    "interferenceEvent": {
+      "type": "object",
+      "title": "Interference Event",
+      "description": "Multi-model interference patterns for Council mode",
+      "properties": {
+        "type": {
+          "const": "interference_event"
+        },
+        "channel": {
+          "const": "council"
+        },
+        "timestamp": {
+          "$ref": "#/definitions/timestamp"
+        },
+        "frameNumber": {
+          "$ref": "#/definitions/frameNumber"
+        },
+        "payload": {
+          "type": "object",
+          "properties": {
+            "patternType": {
+              "type": "string",
+              "enum": ["constructive", "destructive", "neutral"],
+              "description": "Type of interference pattern"
+            },
+            "models": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/modelId"
+              },
+              "minItems": 2,
+              "description": "Models participating in interference"
+            },
+            "intensity": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "Interference intensity"
+            },
+            "coherenceScore": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "Model coherence measurement"
+            }
+          },
+          "required": ["patternType", "models", "intensity", "coherenceScore"],
+          "additionalProperties": false
+        }
+      },
+      "required": ["type", "channel", "timestamp", "frameNumber", "payload"],
+      "additionalProperties": false
+    },
+    "resonanceEvent": {
+      "type": "object",
+      "title": "Resonance Event",
+      "description": "Multi-model resonance and synchronization events",
+      "properties": {
+        "type": {
+          "const": "resonance_event"
+        },
+        "channel": {
+          "const": "council"
+        },
+        "timestamp": {
+          "$ref": "#/definitions/timestamp"
+        },
+        "frameNumber": {
+          "$ref": "#/definitions/frameNumber"
+        },
+        "payload": {
+          "type": "object",
+          "properties": {
+            "resonanceType": {
+              "type": "string",
+              "enum": ["harmonic", "fundamental", "overtone"],
+              "description": "Type of resonance pattern"
+            },
+            "frequency": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Resonance frequency in Hz"
+            },
+            "amplitude": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "Resonance amplitude"
+            },
+            "participants": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/modelId"
+              },
+              "minItems": 2,
+              "description": "Models in resonance"
+            },
+            "phase": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 360,
+              "description": "Phase angle in degrees"
+            }
+          },
+          "required": ["resonanceType", "frequency", "amplitude", "participants"],
+          "additionalProperties": false
+        }
+      },
+      "required": ["type", "channel", "timestamp", "frameNumber", "payload"],
+      "additionalProperties": false
+    },
+    "rewardEvent": {
+      "type": "object",
+      "title": "Reward Event",
+      "description": "User achievement and feedback events",
+      "properties": {
+        "type": {
+          "const": "reward_event"
+        },
+        "channel": {
+          "const": "reward"
+        },
+        "timestamp": {
+          "$ref": "#/definitions/timestamp"
+        },
+        "payload": {
+          "type": "object",
+          "properties": {
+            "rewardType": {
+              "type": "string",
+              "enum": ["achievement", "milestone", "feedback", "level_up"],
+              "description": "Type of reward event"
+            },
+            "title": {
+              "type": "string",
+              "maxLength": 100,
+              "description": "Reward title"
+            },
+            "description": {
+              "type": "string",
+              "maxLength": 500,
+              "description": "Reward description"
+            },
+            "points": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Points awarded"
+            },
+            "level": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 5,
+              "description": "Experience level (1-5)"
+            },
+            "energyBonus": {
+              "$ref": "#/definitions/energyValue",
+              "description": "Energy bonus awarded"
+            }
+          },
+          "required": ["rewardType", "title", "points"],
+          "additionalProperties": false
+        }
+      },
+      "required": ["type", "channel", "timestamp", "payload"],
+      "additionalProperties": false
+    },
+    "heartbeatEvent": {
+      "type": "object",
+      "title": "Heartbeat Event",
+      "description": "Connection liveness and latency measurement",
+      "properties": {
+        "type": {
+          "const": "heartbeat"
+        },
+        "channel": {
+          "const": "system"
+        },
+        "timestamp": {
+          "$ref": "#/definitions/timestamp"
+        },
+        "payload": {
+          "type": "object",
+          "properties": {
+            "sequence": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Heartbeat sequence number"
+            },
+            "serverTime": {
+              "$ref": "#/definitions/timestamp"
+            },
+            "frameRate": {
+              "type": "number",
+              "description": "Current actual frame rate"
+            },
+            "connectionId": {
+              "type": "string",
+              "description": "WebSocket connection identifier"
+            }
+          },
+          "required": ["sequence", "serverTime"],
+          "additionalProperties": false
+        }
+      },
+      "required": ["type", "channel", "timestamp", "payload"],
+      "additionalProperties": false
+    },
+    "errorEvent": {
+      "type": "object",
+      "title": "Error Event",
+      "description": "Error and warning notifications",
+      "properties": {
+        "type": {
+          "const": "error_event"
+        },
+        "channel": {
+          "const": "system"
+        },
+        "timestamp": {
+          "$ref": "#/definitions/timestamp"
+        },
+        "payload": {
+          "type": "object",
+          "properties": {
+            "severity": {
+              "type": "string",
+              "enum": ["info", "warning", "error", "critical"],
+              "description": "Error severity level"
+            },
+            "code": {
+              "type": "string",
+              "pattern": "^[A-Z0-9_]+$",
+              "description": "Error code identifier"
+            },
+            "message": {
+              "type": "string",
+              "maxLength": 1000,
+              "description": "Human-readable error message"
+            },
+            "component": {
+              "type": "string",
+              "enum": ["orchestrator", "decipher", "websocket", "model", "ui"],
+              "description": "Component that generated the error"
+            },
+            "details": {
+              "type": "object",
+              "description": "Additional error context",
+              "additionalProperties": true
+            },
+            "recoverable": {
+              "type": "boolean",
+              "description": "Whether error is recoverable"
+            }
+          },
+          "required": ["severity", "code", "message", "component"],
+          "additionalProperties": false
+        }
+      },
+      "required": ["type", "channel", "timestamp", "payload"],
+      "additionalProperties": false
+    }
+  }
+}

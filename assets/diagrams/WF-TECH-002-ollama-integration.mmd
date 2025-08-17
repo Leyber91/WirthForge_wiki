@@ -1,0 +1,57 @@
+sequenceDiagram
+    participant API as FastAPI Server
+    participant Adapter as Ollama Adapter
+    participant Ollama as Ollama Server
+    participant Dec as DECIPHER
+    participant WS as WebSocket
+
+    Note over API,WS: WIRTHFORGE Ollama Integration Flow
+
+    %% Model Loading
+    API->>Adapter: Load Model Request
+    Adapter->>Ollama: POST /api/pull {model}
+    Ollama->>Adapter: Model Download Progress
+    Adapter->>API: Loading Status Updates
+    Ollama->>Adapter: Model Ready
+    Adapter->>API: Load Complete
+
+    %% Token Generation Stream
+    API->>Adapter: Generate Request
+    Note right of API: {<br/>  "model": "llama2:13b",<br/>  "prompt": "user input",<br/>  "stream": true<br/>}
+    
+    Adapter->>Ollama: POST /api/generate (streaming)
+    
+    loop Token Stream (Real-time)
+        Ollama->>Adapter: Token + Metadata
+        Note right of Ollama: {<br/>  "response": "token",<br/>  "done": false,<br/>  "eval_duration": 1234<br/>}
+        
+        Adapter->>Dec: Token + Timing Data
+        Dec->>Dec: Calculate Energy E(t)
+        Note right of Dec: E(t) = f(Δt, entropy, logprobs)
+        
+        Dec->>WS: energy_update Event
+        Dec->>WS: token_stream Event
+        WS->>API: Forward to UI
+    end
+    
+    Ollama->>Adapter: Stream Complete
+    Adapter->>Dec: Final Metrics
+    Dec->>WS: Session Complete Event
+
+    %% Turbo Mode (Multi-Model)
+    opt Turbo Ensemble
+        API->>Adapter: Turbo Generate Request
+        Note right of API: Multiple models in parallel
+        
+        par Model 1
+            Adapter->>Ollama: Generate (Model 1)
+        and Model 2  
+            Adapter->>Ollama: Generate (Model 2)
+        and Model 3
+            Adapter->>Ollama: Generate (Model 3)
+        end
+        
+        Adapter->>Dec: Ensemble Tokens
+        Dec->>Dec: Calculate Interference/Resonance
+        Dec->>WS: ensemble_token Event
+    end

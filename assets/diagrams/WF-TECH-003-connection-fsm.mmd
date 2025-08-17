@@ -1,0 +1,61 @@
+stateDiagram-v2
+    [*] --> Disconnected : Initial State
+    
+    Disconnected --> Connecting : connect()
+    Connecting --> Connected : WebSocket Open
+    Connecting --> Disconnected : Connection Failed
+    
+    Connected --> Handshaking : Connection Established
+    Handshaking --> Active : startup_complete Received
+    Handshaking --> Disconnected : Handshake Timeout
+    
+    Active --> Streaming : Begin 60Hz Data Flow
+    Streaming --> Streaming : energy_update Events
+    Streaming --> Streaming : token_stream Events
+    Streaming --> Streaming : heartbeat Events
+    
+    Active --> Reconnecting : Connection Lost
+    Streaming --> Reconnecting : Connection Lost
+    Connected --> Reconnecting : Connection Lost
+    
+    Reconnecting --> Connecting : Retry Timer Expired
+    Reconnecting --> Disconnected : Max Retries Exceeded
+    Reconnecting --> Connected : Immediate Reconnect Success
+    
+    Active --> Closing : close() Called
+    Streaming --> Closing : close() Called
+    Closing --> Disconnected : WebSocket Closed
+    
+    state Active {
+        [*] --> Idle
+        Idle --> Processing : Receive Event
+        Processing --> Idle : Event Handled
+        Processing --> Error : Invalid Event
+        Error --> Idle : Error Handled
+    }
+    
+    state Reconnecting {
+        [*] --> Backoff
+        Backoff --> Retry : Timer Expired
+        Retry --> Backoff : Connection Failed
+        Retry --> [*] : Connection Success
+        
+        note right of Backoff
+            Exponential backoff:
+            1s, 2s, 4s, 8s, 16s max
+        end note
+    }
+    
+    note right of Streaming
+        60Hz Event Loop:
+        - energy_update (every 16.67ms)
+        - token_stream (as needed)
+        - heartbeat (every 1s)
+        - error_event (on errors)
+    end note
+    
+    note right of Handshaking
+        Timeout: 5 seconds
+        Expected: startup_complete
+        Fallback: Disconnect & Retry
+    end note

@@ -1,0 +1,397 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "WIRTHFORGE System Runtime Schemas",
+  "description": "JSON Schema definitions for WF-TECH-001 System Runtime & Services",
+  "version": "1.0.0",
+  "definitions": {
+    "timestamp": {
+      "type": "integer",
+      "description": "Unix timestamp in milliseconds",
+      "minimum": 0
+    },
+    "processId": {
+      "type": "string",
+      "description": "Unique process identifier",
+      "pattern": "^[a-zA-Z0-9_-]+$"
+    },
+    "hardwareTier": {
+      "type": "string",
+      "enum": ["Low-Tier", "Mid-Tier", "High-Tier"],
+      "description": "Hardware capability classification"
+    },
+    "processStatus": {
+      "type": "string",
+      "enum": ["starting", "running", "stopping", "stopped", "error"],
+      "description": "Process lifecycle status"
+    }
+  },
+  "oneOf": [
+    {
+      "$ref": "#/schemas/processManifest"
+    },
+    {
+      "$ref": "#/schemas/healthCheckResult"
+    },
+    {
+      "$ref": "#/schemas/startupEvent"
+    },
+    {
+      "$ref": "#/schemas/systemStatus"
+    },
+    {
+      "$ref": "#/schemas/bootSequence"
+    }
+  ],
+  "schemas": {
+    "processManifest": {
+      "type": "object",
+      "title": "Process Manifest Schema",
+      "description": "Definition of system processes and their configuration",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Runtime name"
+        },
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$",
+          "description": "Version (SemVer)"
+        },
+        "processes": {
+          "type": "object",
+          "patternProperties": {
+            "^[a-zA-Z0-9_]+$": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "Human-readable process name"
+                },
+                "executable": {
+                  "type": "string",
+                  "description": "Executable command"
+                },
+                "args": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Command line arguments"
+                },
+                "priority": {
+                  "type": "string",
+                  "enum": ["low", "medium", "high", "critical"],
+                  "description": "Process priority level"
+                },
+                "restart": {
+                  "type": "string",
+                  "enum": ["never", "on-failure", "always"],
+                  "description": "Restart policy"
+                },
+                "dependencies": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Process dependencies"
+                },
+                "environment": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "description": "Environment variables"
+                }
+              },
+              "required": ["name", "executable", "priority", "restart"],
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
+        },
+        "startup_sequence": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Process startup order"
+        },
+        "health_checks": {
+          "type": "object",
+          "patternProperties": {
+            "^[a-zA-Z0-9_]+$": {
+              "type": "object",
+              "properties": {
+                "endpoint": {
+                  "type": "string",
+                  "format": "uri",
+                  "description": "Health check endpoint URL"
+                },
+                "interval": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "description": "Check interval in seconds"
+                },
+                "timeout": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "description": "Timeout in seconds"
+                },
+                "retries": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "description": "Number of retries before failure"
+                }
+              },
+              "required": ["endpoint", "interval"],
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "required": ["name", "version", "processes", "startup_sequence"],
+      "additionalProperties": false
+    },
+    "healthCheckResult": {
+      "type": "object",
+      "title": "Health Check Result",
+      "description": "Result of a process health check",
+      "properties": {
+        "processId": {
+          "$ref": "#/definitions/processId"
+        },
+        "timestamp": {
+          "$ref": "#/definitions/timestamp"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["healthy", "unhealthy", "timeout", "error"],
+          "description": "Health check status"
+        },
+        "responseTime": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Response time in milliseconds"
+        },
+        "endpoint": {
+          "type": "string",
+          "format": "uri",
+          "description": "Checked endpoint"
+        },
+        "details": {
+          "type": "object",
+          "description": "Additional health check details",
+          "additionalProperties": true
+        },
+        "error": {
+          "type": "string",
+          "description": "Error message if unhealthy"
+        }
+      },
+      "required": ["processId", "timestamp", "status"],
+      "additionalProperties": false
+    },
+    "startupEvent": {
+      "type": "object",
+      "title": "Startup Event",
+      "description": "System startup progress event",
+      "properties": {
+        "type": {
+          "const": "startup_event"
+        },
+        "timestamp": {
+          "$ref": "#/definitions/timestamp"
+        },
+        "phase": {
+          "type": "string",
+          "enum": ["initialization", "process_start", "health_check", "ready", "error"],
+          "description": "Startup phase"
+        },
+        "processId": {
+          "$ref": "#/definitions/processId"
+        },
+        "message": {
+          "type": "string",
+          "description": "Human-readable status message"
+        },
+        "progress": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Startup progress percentage"
+        },
+        "hardwareTier": {
+          "$ref": "#/definitions/hardwareTier"
+        },
+        "bootTime": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Boot time in seconds"
+        }
+      },
+      "required": ["type", "timestamp", "phase", "message"],
+      "additionalProperties": false
+    },
+    "systemStatus": {
+      "type": "object",
+      "title": "System Status",
+      "description": "Overall system status report",
+      "properties": {
+        "timestamp": {
+          "$ref": "#/definitions/timestamp"
+        },
+        "uptime": {
+          "type": "number",
+          "minimum": 0,
+          "description": "System uptime in seconds"
+        },
+        "hardwareTier": {
+          "$ref": "#/definitions/hardwareTier"
+        },
+        "frameRate": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Current frame rate in Hz"
+        },
+        "processes": {
+          "type": "object",
+          "patternProperties": {
+            "^[a-zA-Z0-9_]+$": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "$ref": "#/definitions/processStatus"
+                },
+                "pid": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "description": "Process ID"
+                },
+                "uptime": {
+                  "type": "number",
+                  "minimum": 0,
+                  "description": "Process uptime in seconds"
+                },
+                "memory": {
+                  "type": "number",
+                  "minimum": 0,
+                  "description": "Memory usage in MB"
+                },
+                "cpu": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 100,
+                  "description": "CPU usage percentage"
+                }
+              },
+              "required": ["status"],
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
+        },
+        "systemResources": {
+          "type": "object",
+          "properties": {
+            "cpuUsage": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100,
+              "description": "Overall CPU usage percentage"
+            },
+            "memoryUsage": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Memory usage in MB"
+            },
+            "diskUsage": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100,
+              "description": "Disk usage percentage"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "required": ["timestamp", "uptime", "hardwareTier", "frameRate", "processes"],
+      "additionalProperties": false
+    },
+    "bootSequence": {
+      "type": "object",
+      "title": "Boot Sequence Configuration",
+      "description": "Zero-config boot sequence definition",
+      "properties": {
+        "targetBootTime": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Target boot time in seconds"
+        },
+        "hardwareTier": {
+          "$ref": "#/definitions/hardwareTier"
+        },
+        "phases": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Phase name"
+              },
+              "processes": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Processes to start in this phase"
+              },
+              "timeout": {
+                "type": "number",
+                "minimum": 0,
+                "description": "Phase timeout in seconds"
+              },
+              "parallel": {
+                "type": "boolean",
+                "description": "Whether processes start in parallel"
+              }
+            },
+            "required": ["name", "processes"],
+            "additionalProperties": false
+          }
+        },
+        "healthCheckTimeout": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Global health check timeout in seconds"
+        },
+        "readinessChecks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Check name"
+              },
+              "condition": {
+                "type": "string",
+                "description": "Readiness condition"
+              },
+              "timeout": {
+                "type": "number",
+                "minimum": 0,
+                "description": "Check timeout in seconds"
+              }
+            },
+            "required": ["name", "condition"],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": ["targetBootTime", "hardwareTier", "phases"],
+      "additionalProperties": false
+    }
+  }
+}

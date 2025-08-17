@@ -1,0 +1,37 @@
+graph TB
+    subgraph "WIRTHFORGE Application"
+        subgraph "Core Engine (Python)"
+            O[Orchestrator<br/>asyncio main loop]
+            ES[Energy State Manager<br/>in-memory + SQLite]
+            DC[DECIPHER Compiler<br/>token→energy mapping]
+        end
+        
+        subgraph "Transport Layer"
+            API[FastAPI Server<br/>REST + WebSocket]
+            WS[WebSocket Handler<br/>real-time streams]
+        end
+        
+        subgraph "External Integrations"
+            OL[Ollama Client<br/>HTTP/streaming]
+            FS[File System<br/>config/models/logs]
+        end
+    end
+    
+    subgraph "External Processes"
+        M[Ollama Server<br/>model inference]
+        UI[Web Browser<br/>React/TypeScript UI]
+    end
+    
+    O --> ES
+    O --> DC
+    O --> API
+    API --> WS
+    O --> OL
+    O --> FS
+    OL --> M
+    WS --> UI
+    
+    style O fill:#c8e6c9
+    style API fill:#e3f2fd
+    style M fill:#fff9c4
+    style UI fill:#fce4ec

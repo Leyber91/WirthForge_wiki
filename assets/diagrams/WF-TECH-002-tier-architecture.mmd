@@ -1,0 +1,90 @@
+graph TB
+    subgraph "Hardware Tier Classification"
+        subgraph "Low-Tier (8GB RAM, Integrated GPU)"
+            L1[Single Model Only]
+            L2[Basic Energy Tracking]
+            L3[Simple UI Feedback]
+        end
+        
+        subgraph "Mid-Tier (16GB RAM, Dedicated GPU)"
+            M1[2-3 Models Concurrent]
+            M2[Advanced Energy Metrics]
+            M3[Real-time Visualization]
+            M4[Turbo Mode Available]
+        end
+        
+        subgraph "High-Tier (32GB+ RAM, High-end GPU)"
+            H1[4-6 Models Concurrent]
+            H2[Full Council Mode]
+            H3[Complex Interference Patterns]
+            H4[Advanced Resonance Detection]
+            H5[Hybrid Broker Integration]
+        end
+    end
+    
+    subgraph "Model Pool Management"
+        subgraph "Memory Allocation"
+            MA[Memory Monitor]
+            MS[Model Swapping]
+            MC[Cache Management]
+        end
+        
+        subgraph "Load Balancing"
+            LB[Request Distribution]
+            PQ[Priority Queue]
+            RT[Response Time Optimization]
+        end
+    end
+    
+    subgraph "Progressive Feature Unlocking"
+        subgraph "Level 1: Lightning"
+            F1[Single Model Generation]
+            F2[Basic Energy Visualization]
+        end
+        
+        subgraph "Level 2: Stream"
+            F3[Parallel Processing]
+            F4[Energy Field Visualization]
+        end
+        
+        subgraph "Level 3: Interference"
+            F5[Multi-Model Coordination]
+            F6[Interference Pattern Detection]
+        end
+        
+        subgraph "Level 4: Resonance"
+            F7[Council Synchronization]
+            F8[Resonance Celebration]
+        end
+        
+        subgraph "Level 5: Orchestration"
+            F9[Hybrid Broker Integration]
+            F10[Advanced Ensemble Management]
+        end
+    end
+    
+    %% Tier Connections
+    L1 --> F1
+    L2 --> F2
+    
+    M1 --> F3
+    M2 --> F4
+    M4 --> F5
+    
+    H1 --> F7
+    H2 --> F8
+    H5 --> F9
+    
+    %% Management Connections
+    MA --> MS
+    MS --> MC
+    LB --> PQ
+    PQ --> RT
+    
+    %% Styling
+    style L1 fill:#ffeb3b
+    style M1 fill:#ff9800
+    style H1 fill:#f44336
+    style F1 fill:#e3f2fd
+    style F5 fill:#e8f5e8
+    style F9 fill:#fce4ec
