@@ -1,0 +1,306 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://wirthforge.local/schemas/WF-TECH-005-energy-frame.schema.json",
+  "title": "WIRTHFORGE Energy Frame Event Schema",
+  "description": "Schema for energy.update events from Decipher real-time compiler",
+  "type": "object",
+  "required": ["id", "type", "timestamp", "payload"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique event identifier",
+      "pattern": "^[a-f0-9-]{36}$|^frame-[0-9]+$"
+    },
+    "type": {
+      "type": "string",
+      "const": "energy.update",
+      "description": "Event type identifier"
+    },
+    "timestamp": {
+      "type": "integer",
+      "description": "Event timestamp in milliseconds since epoch",
+      "minimum": 0
+    },
+    "version": {
+      "type": "string",
+      "description": "Schema version",
+      "default": "1.0"
+    },
+    "payload": {
+      "type": "object",
+      "required": ["frame_id", "new_tokens", "energy_generated", "total_energy", "energy_rate", "state"],
+      "properties": {
+        "frame_id": {
+          "type": "integer",
+          "description": "Sequential frame identifier",
+          "minimum": 0
+        },
+        "new_tokens": {
+          "type": "integer",
+          "description": "Number of tokens processed in this frame",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "energy_generated": {
+          "type": "number",
+          "description": "Energy generated this frame in EU",
+          "minimum": 0,
+          "maximum": 1000
+        },
+        "total_energy": {
+          "type": "number",
+          "description": "Cumulative energy since session start in EU",
+          "minimum": 0
+        },
+        "energy_rate": {
+          "type": "number",
+          "description": "Smoothed energy generation rate in EU/second",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "state": {
+          "type": "string",
+          "enum": ["IDLE", "CHARGING", "FLOWING", "STALLING", "DRAINED"],
+          "description": "Current energy state from WF-FND-002 state machine"
+        },
+        "queue_depth": {
+          "type": "integer",
+          "description": "Current token queue depth",
+          "minimum": 0,
+          "maximum": 10000
+        },
+        "processing_time_ms": {
+          "type": "number",
+          "description": "Frame processing time in milliseconds",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "particles": {
+          "type": "array",
+          "description": "Visual particle effects for this frame",
+          "maxItems": 50,
+          "items": {
+            "$ref": "#/definitions/ParticleEffect"
+          }
+        },
+        "interference": {
+          "oneOf": [
+            {"type": "null"},
+            {"$ref": "#/definitions/InterferencePattern"}
+          ],
+          "description": "Interference pattern data if detected"
+        },
+        "resonance": {
+          "oneOf": [
+            {"type": "null"},
+            {"$ref": "#/definitions/ResonancePattern"}
+          ],
+          "description": "Resonance pattern data if detected"
+        },
+        "performance": {
+          "oneOf": [
+            {"type": "null"},
+            {"$ref": "#/definitions/PerformanceMetrics"}
+          ],
+          "description": "Performance monitoring data"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "definitions": {
+    "ParticleEffect": {
+      "type": "object",
+      "required": ["id", "type", "energy", "intensity"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique particle identifier"
+        },
+        "type": {
+          "type": "string",
+          "enum": ["spark", "bolt", "burst", "fade", "glow"],
+          "description": "Particle visual type"
+        },
+        "energy": {
+          "type": "number",
+          "description": "Energy value for this particle in EU",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "intensity": {
+          "type": "number",
+          "description": "Visual intensity (0.0-1.0)",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "position": {
+          "type": "object",
+          "properties": {
+            "x": {"type": "number"},
+            "y": {"type": "number"},
+            "z": {"type": "number"}
+          },
+          "additionalProperties": false
+        },
+        "velocity": {
+          "type": "object",
+          "properties": {
+            "x": {"type": "number"},
+            "y": {"type": "number"},
+            "z": {"type": "number"}
+          },
+          "additionalProperties": false
+        },
+        "color": {
+          "type": "string",
+          "pattern": "^#[0-9a-fA-F]{6}$|^rgb\\([0-9]{1,3},[0-9]{1,3},[0-9]{1,3}\\)$",
+          "description": "Particle color in hex or rgb format"
+        },
+        "lifetime_ms": {
+          "type": "number",
+          "description": "Particle lifetime in milliseconds",
+          "minimum": 0,
+          "maximum": 5000
+        },
+        "model_id": {
+          "type": "string",
+          "description": "Source model identifier"
+        }
+      },
+      "additionalProperties": false
+    },
+    "InterferencePattern": {
+      "type": "object",
+      "required": ["type", "strength", "models_involved", "frequency", "duration_ms"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["constructive", "destructive"],
+          "description": "Type of interference pattern"
+        },
+        "strength": {
+          "type": "number",
+          "description": "Interference strength (0.0-1.0)",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "models_involved": {
+          "type": "array",
+          "description": "Models participating in interference",
+          "minItems": 2,
+          "maxItems": 10,
+          "items": {
+            "type": "string"
+          }
+        },
+        "frequency": {
+          "type": "number",
+          "description": "Interference frequency in Hz",
+          "minimum": 0,
+          "maximum": 1000
+        },
+        "duration_ms": {
+          "type": "number",
+          "description": "Pattern duration in milliseconds",
+          "minimum": 0,
+          "maximum": 10000
+        },
+        "phase_offset": {
+          "type": "number",
+          "description": "Phase offset in radians",
+          "minimum": 0,
+          "maximum": 6.28318530718
+        }
+      },
+      "additionalProperties": false
+    },
+    "ResonancePattern": {
+      "type": "object",
+      "required": ["type", "strength", "frequency", "amplification", "duration_ms"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["harmonic", "subharmonic", "chaotic"],
+          "description": "Type of resonance pattern"
+        },
+        "strength": {
+          "type": "number",
+          "description": "Resonance strength (0.0-1.0)",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "frequency": {
+          "type": "number",
+          "description": "Resonance frequency in Hz",
+          "minimum": 0,
+          "maximum": 1000
+        },
+        "amplification": {
+          "type": "number",
+          "description": "Energy amplification factor",
+          "minimum": 1,
+          "maximum": 10
+        },
+        "duration_ms": {
+          "type": "number",
+          "description": "Pattern duration in milliseconds",
+          "minimum": 0,
+          "maximum": 30000
+        },
+        "coherence": {
+          "type": "number",
+          "description": "Pattern coherence measure (0.0-1.0)",
+          "minimum": 0,
+          "maximum": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "PerformanceMetrics": {
+      "type": "object",
+      "required": ["frame_time_ms", "queue_depth"],
+      "properties": {
+        "frame_time_ms": {
+          "type": "number",
+          "description": "Frame processing time in milliseconds",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "queue_depth": {
+          "type": "integer",
+          "description": "Current event queue depth",
+          "minimum": 0,
+          "maximum": 10000
+        },
+        "memory_usage_mb": {
+          "type": "number",
+          "description": "Memory usage in megabytes",
+          "minimum": 0
+        },
+        "cpu_usage_percent": {
+          "type": "number",
+          "description": "CPU usage percentage",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "frame_overruns": {
+          "type": "integer",
+          "description": "Number of frame budget overruns",
+          "minimum": 0
+        },
+        "dropped_events": {
+          "type": "integer",
+          "description": "Number of dropped events",
+          "minimum": 0
+        },
+        "degraded_mode": {
+          "type": "boolean",
+          "description": "Whether system is in degraded performance mode"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,249 @@
+---
+title: "Decipher Energy State Machine & Transitions"
+config:
+  theme: dark
+  themeVariables:
+    primaryColor: "#00ff88"
+    primaryTextColor: "#ffffff"
+    primaryBorderColor: "#27ae60"
+    lineColor: "#61dafb"
+    secondaryColor: "#ff6b6b"
+    tertiaryColor: "#feca57"
+    background: "#0d1117"
+    mainBkg: "#161b22"
+    secondBkg: "#21262d"
+---
+
+stateDiagram-v2
+    [*] --> IDLE : System Start
+
+    state IDLE {
+        [*] --> WaitingForPrompt
+        WaitingForPrompt : 🔵 No active generation
+        WaitingForPrompt : Energy: 0.0 EU
+        WaitingForPrompt : Rate: 0.0 EU/s
+        WaitingForPrompt : Visual: Dim ambient glow
+    }
+
+    IDLE --> CHARGING : Prompt Received
+
+    state CHARGING {
+        [*] --> ProcessingPrompt
+        ProcessingPrompt : 🟡 Prompt processing
+        ProcessingPrompt : Energy: Building potential
+        ProcessingPrompt : Rate: 0.0 EU/s
+        ProcessingPrompt : Visual: Charging animation
+        ProcessingPrompt : Timeout: 5 seconds max
+        
+        ProcessingPrompt --> WaitingFirstToken
+        WaitingFirstToken : ⏳ Awaiting first token
+        WaitingFirstToken : Energy: Potential energy
+        WaitingFirstToken : Visual: Pulsing charge
+    }
+
+    CHARGING --> FLOWING : First Token Arrives
+    CHARGING --> IDLE : Timeout / Cancel
+
+    state FLOWING {
+        [*] --> ActiveGeneration
+        
+        state ActiveGeneration {
+            [*] --> NormalFlow
+            NormalFlow : 🟢 Tokens flowing normally
+            NormalFlow : Energy: Accumulating
+            NormalFlow : Rate: 1-10 EU/s typical
+            NormalFlow : Visual: Lightning bolts
+            
+            NormalFlow --> BurstFlow : Rapid tokens (>5/sec)
+            BurstFlow : ⚡ High-speed generation
+            BurstFlow : Energy: Rapid accumulation
+            BurstFlow : Rate: >10 EU/s
+            BurstFlow : Visual: Intense lightning
+            BurstFlow --> NormalFlow : Speed normalizes
+            
+            NormalFlow --> SlowFlow : Slow tokens (<1/sec)
+            SlowFlow : 🐌 Slow generation
+            SlowFlow : Energy: Gradual accumulation
+            SlowFlow : Rate: <1 EU/s
+            SlowFlow : Visual: Gentle sparks
+            SlowFlow --> NormalFlow : Speed increases
+        }
+        
+        ActiveGeneration --> PatternDetection : Multi-model active
+        
+        state PatternDetection {
+            [*] --> CheckingPatterns
+            CheckingPatterns : 🔍 Analyzing patterns
+            
+            CheckingPatterns --> InterferenceDetected : Models interfere
+            InterferenceDetected : ⚡ Interference pattern
+            InterferenceDetected : Energy: Modified by correlation
+            InterferenceDetected : Visual: Wave interference
+            InterferenceDetected --> CheckingPatterns : Pattern ends
+            
+            CheckingPatterns --> ResonanceDetected : Models synchronize
+            ResonanceDetected : 🌊 Resonance pattern
+            ResonanceDetected : Energy: Amplified (1.5x-5x)
+            ResonanceDetected : Visual: Resonance waves
+            ResonanceDetected --> CheckingPatterns : Pattern ends
+        }
+        
+        PatternDetection --> ActiveGeneration : Single model
+    }
+
+    FLOWING --> STALLING : No tokens >500ms
+    FLOWING --> DRAINED : Final token received
+
+    state STALLING {
+        [*] --> DetectedStall
+        DetectedStall : 🔴 Generation stalled
+        DetectedStall : Energy: Decaying (friction)
+        DetectedStall : Rate: Decreasing
+        DetectedStall : Visual: Fading effects
+        
+        DetectedStall --> WaitingResumption
+        WaitingResumption : ⏸️ Waiting for resumption
+        WaitingResumption : Energy: Slow decay
+        WaitingResumption : Visual: Dim pulse
+        
+        WaitingResumption --> LongStall : >2 seconds
+        LongStall : ⏹️ Extended stall
+        LongStall : Energy: Minimal
+        LongStall : Visual: Near-off state
+    }
+
+    STALLING --> FLOWING : Token arrives
+    STALLING --> DRAINED : Timeout (>2s)
+
+    state DRAINED {
+        [*] --> GenerationComplete
+        GenerationComplete : ✅ Generation finished
+        GenerationComplete : Energy: Final total
+        GenerationComplete : Rate: 0.0 EU/s
+        GenerationComplete : Visual: Completion effect
+        
+        GenerationComplete --> CooldownPeriod
+        CooldownPeriod : 🌙 Cooldown period
+        CooldownPeriod : Energy: Stable
+        CooldownPeriod : Visual: Gentle fade
+        
+        CooldownPeriod --> ReadyForNext
+        ReadyForNext : 🔄 Ready for next prompt
+        ReadyForNext : Energy: Preserved total
+        ReadyForNext : Visual: Ready indicator
+    }
+
+    DRAINED --> IDLE : Session reset
+    DRAINED --> CHARGING : New prompt
+
+    %% Error states
+    state ErrorHandling {
+        [*] --> ErrorDetected
+        ErrorDetected : ❌ Error occurred
+        ErrorDetected : Energy: Preserved
+        ErrorDetected : Visual: Error indication
+        
+        ErrorDetected --> RecoveryAttempt
+        RecoveryAttempt : 🔧 Attempting recovery
+        RecoveryAttempt : Energy: Stable
+        RecoveryAttempt : Visual: Recovery animation
+        
+        RecoveryAttempt --> ErrorDetected : Recovery failed
+        RecoveryAttempt --> [*] : Recovery successful
+    }
+
+    IDLE --> ErrorHandling : System error
+    CHARGING --> ErrorHandling : Processing error
+    FLOWING --> ErrorHandling : Generation error
+    STALLING --> ErrorHandling : Recovery error
+    DRAINED --> ErrorHandling : Completion error
+
+    ErrorHandling --> IDLE : Error resolved
+
+    %% Performance states
+    state PerformanceMode {
+        [*] --> NormalMode
+        NormalMode : 🟢 Normal performance
+        NormalMode : Frame time: <12ms
+        NormalMode : All features enabled
+        
+        NormalMode --> DegradedMode : Performance issues
+        DegradedMode : 🟡 Degraded performance
+        DegradedMode : Frame time: >16ms
+        DegradedMode : Reduced features
+        
+        DegradedMode --> CriticalMode : Severe issues
+        CriticalMode : 🔴 Critical performance
+        CriticalMode : Frame time: >25ms
+        CriticalMode : Minimal features only
+        
+        CriticalMode --> DegradedMode : Performance improves
+        DegradedMode --> NormalMode : Performance restored
+    }
+
+    %% State annotations with energy formulas
+    note right of IDLE : Energy State: E(t) = 0
+    note right of IDLE : Visual: Ambient glow only
+    note right of IDLE : Frame rate: 60 FPS maintained
+
+    note right of CHARGING : Energy State: E(t) = potential
+    note right of CHARGING : Visual: Charging animation
+    note right of CHARGING : Timeout: 5 second maximum
+
+    note right of FLOWING : Energy State: E(t) = Σ(token_energy)
+    note right of FLOWING : Formula: E = base × (velocity + certainty + friction)
+    note right of FLOWING : Visual: Lightning intensity ∝ energy_rate
+    note right of FLOWING : Particle count ∝ token_velocity
+
+    note right of STALLING : Energy State: E(t) = E(t-1) × decay_factor
+    note right of STALLING : Decay: friction_factor^(stall_time/threshold)
+    note right of STALLING : Visual: Fading effects
+    note right of STALLING : Recovery: immediate on new token
+
+    note right of DRAINED : Energy State: E(t) = final_total (preserved)
+    note right of DRAINED : Visual: Completion celebration
+    note right of DRAINED : Duration: 2-5 seconds typical
+    note right of DRAINED : Metrics: session summary
+
+    %% Transition conditions
+    note top of IDLE : Triggers:
+    note top of IDLE : • System startup
+    note top of IDLE : • Session reset
+    note top of IDLE : • Manual stop
+
+    note top of CHARGING : Triggers:
+    note top of CHARGING : • User prompt submitted
+    note top of CHARGING : • Model initialization
+    note top of CHARGING : • Context preparation
+
+    note top of FLOWING : Triggers:
+    note top of FLOWING : • First token received
+    note top of FLOWING : • Token stream active
+    note top of FLOWING : • Generation in progress
+
+    note top of STALLING : Triggers:
+    note top of STALLING : • No token >500ms
+    note top of STALLING : • Model processing delay
+    note top of STALLING : • Resource contention
+
+    note top of DRAINED : Triggers:
+    note top of DRAINED : • Final token received
+    note top of DRAINED : • Generation complete
+    note top of DRAINED : • Stop signal
+
+    %% Styling
+    classDef idleClass fill:#2c3e50,stroke:#34495e,stroke-width:2px,color:#ecf0f1
+    classDef chargingClass fill:#f39c12,stroke:#e67e22,stroke-width:2px,color:#fff
+    classDef flowingClass fill:#27ae60,stroke:#229954,stroke-width:2px,color:#fff
+    classDef stallingClass fill:#e74c3c,stroke:#c0392b,stroke-width:2px,color:#fff
+    classDef drainedClass fill:#9b59b6,stroke:#8e44ad,stroke-width:2px,color:#fff
+    classDef errorClass fill:#e67e22,stroke:#d35400,stroke-width:2px,color:#fff
+    classDef performanceClass fill:#3498db,stroke:#2980b9,stroke-width:2px,color:#fff
+
+    class IDLE idleClass
+    class CHARGING chargingClass
+    class FLOWING flowingClass
+    class STALLING stallingClass
+    class DRAINED drainedClass
+    class ErrorHandling errorClass
+    class PerformanceMode performanceClass

@@ -1,0 +1,202 @@
+---
+title: "Decipher 60Hz Timing Sequence & Frame Processing"
+config:
+  theme: dark
+  themeVariables:
+    primaryColor: "#00ff88"
+    primaryTextColor: "#ffffff"
+    primaryBorderColor: "#27ae60"
+    lineColor: "#61dafb"
+    secondaryColor: "#ff6b6b"
+    tertiaryColor: "#feca57"
+    background: "#0d1117"
+    mainBkg: "#161b22"
+    secondBkg: "#21262d"
+---
+
+sequenceDiagram
+    participant M as 🤖 AI Model
+    participant D as 🧠 Decipher Loop
+    participant EM as ⚡ Energy Mapper
+    participant FC as 📦 Frame Composer
+    participant WS as 🔌 WebSocket
+    participant UI as 🖥️ UI Client
+
+    Note over M,UI: 60Hz Frame Processing Cycle (16.67ms budget)
+    
+    rect rgb(0, 255, 136, 0.1)
+        Note over D,FC: Frame N (t=0ms) - Normal Load
+        
+        D->>D: Start frame timer
+        D->>D: Collect tokens from queue (2 tokens)
+        
+        loop For each token
+            D->>EM: Calculate energy(token)
+            EM->>EM: Apply velocity + certainty + friction
+            EM-->>D: Energy components (1.2ms)
+        end
+        
+        D->>D: Update state machine (FLOWING)
+        D->>D: Check pattern detection (3ms elapsed)
+        
+        alt Time budget allows (< 8ms)
+            D->>D: Generate particle effects
+            D->>D: Detect interference patterns
+        end
+        
+        D->>FC: Compose frame event (12ms elapsed)
+        FC->>FC: Serialize to JSON (1.5ms)
+        FC->>WS: Emit event (14ms total)
+        WS->>UI: Send frame update
+        
+        D->>D: Sleep until next frame (2.67ms remaining)
+    end
+    
+    rect rgb(255, 107, 107, 0.1)
+        Note over D,FC: Frame N+1 (t=16.67ms) - High Load
+        
+        D->>D: Start frame timer
+        D->>D: Collect tokens from queue (8 tokens - burst!)
+        
+        Note over D: Budget monitoring active
+        
+        loop Process essential tokens only
+            D->>EM: Calculate energy(token)
+            EM-->>D: Energy (cached result - 0.5ms)
+        end
+        
+        D->>D: Update state (8ms elapsed)
+        
+        Note over D: Skip optional processing - over budget
+        alt Time budget exceeded
+            D->>D: Skip particle generation
+            D->>D: Skip pattern detection
+            D->>D: Batch remaining tokens
+        end
+        
+        D->>FC: Compose minimal event (15ms elapsed)
+        FC->>FC: Fast serialization (1ms)
+        FC->>WS: Emit event (16ms total)
+        WS->>UI: Send basic update
+        
+        Note over D: Frame overrun detected (16.5ms)
+        D->>D: Increment overrun counter
+        D->>D: Enter degraded mode
+    end
+    
+    rect rgb(254, 202, 87, 0.1)
+        Note over D,FC: Frame N+2 (t=33.33ms) - Degraded Mode
+        
+        D->>D: Start frame timer
+        D->>D: Process larger token batches (5 tokens/frame)
+        
+        Note over D: Simplified processing in degraded mode
+        
+        D->>EM: Batch calculate energy
+        EM->>EM: Use cached calculations
+        EM-->>D: Batch results (3ms)
+        
+        D->>D: Update state (simplified) (5ms)
+        D->>D: Skip all optional features
+        
+        D->>FC: Compose basic event (8ms)
+        FC->>FC: Minimal JSON (0.5ms)
+        FC->>WS: Emit event (9ms total)
+        WS->>UI: Send degraded update
+        
+        D->>D: Check recovery conditions
+        
+        alt Queue depth < 10 AND no overruns
+            D->>D: Exit degraded mode
+        end
+    end
+    
+    Note over M,UI: Multi-Model Interference Detection
+    
+    rect rgb(138, 43, 226, 0.1)
+        Note over M,UI: Interference Pattern Detection
+        
+        M->>D: Token from Model A
+        M->>D: Token from Model B (simultaneous)
+        
+        D->>D: Detect concurrent tokens
+        D->>EM: Calculate energies
+        EM-->>D: Energy A: 1.2 EU, Energy B: 0.8 EU
+        
+        D->>D: Analyze timing correlation
+        D->>D: Detect constructive interference
+        
+        D->>FC: Compose interference event
+        FC->>FC: Add interference payload
+        FC->>WS: Emit interference event
+        WS->>UI: Show interference visualization
+        
+        Note over UI: UI renders energy amplification effect
+    end
+    
+    Note over M,UI: Error Handling & Recovery
+    
+    rect rgb(220, 20, 60, 0.1)
+        Note over D,FC: Error Scenario
+        
+        M->>D: Malformed token data
+        D->>EM: Calculate energy(invalid_token)
+        EM->>EM: Validation error
+        EM-->>D: Error: Invalid token format
+        
+        D->>D: Log error, continue processing
+        D->>D: Use fallback energy value
+        
+        D->>FC: Compose error event
+        FC->>FC: Create error payload
+        FC->>WS: Emit error event
+        WS->>UI: Show error notification
+        
+        D->>D: Continue with next frame
+        Note over D: System remains stable
+    end
+    
+    Note over M,UI: Session Lifecycle
+    
+    rect rgb(70, 130, 180, 0.1)
+        Note over D,UI: Session Start
+        
+        D->>FC: Emit session.start
+        FC->>WS: Session started
+        WS->>UI: Initialize visualization
+        
+        Note over D: Begin 60Hz loop
+        
+        loop Every 16.67ms
+            Note over D: Process frame as shown above
+        end
+        
+        Note over D: Session End
+        
+        D->>D: Stop loop gracefully
+        D->>FC: Emit session.end with summary
+        FC->>WS: Session ended
+        WS->>UI: Show session summary
+    end
+    
+    Note over M,UI: Performance Targets & Monitoring
+    
+    Note right of D: Frame Budget Breakdown:
+    Note right of D: • Token collection: <2ms
+    Note right of D: • Energy calculation: <5ms
+    Note right of D: • State updates: <3ms
+    Note right of D: • Pattern detection: <4ms
+    Note right of D: • Event composition: <2ms
+    Note right of D: • Total target: <16ms
+    
+    Note right of EM: Energy Calculation:
+    Note right of EM: • Cache hit: <0.5ms
+    Note right of EM: • Cache miss: <1.5ms
+    Note right of EM: • Batch processing: <3ms
+    Note right of EM: • Pattern analysis: <2ms
+    
+    Note right of FC: Event Composition:
+    Note right of FC: • JSON serialization: <1ms
+    Note right of FC: • Schema validation: <0.5ms
+    Note right of FC: • WebSocket send: <0.5ms
+    Note right of FC: • Error handling: <0.2ms

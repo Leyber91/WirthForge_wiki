@@ -1,0 +1,408 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://wirthforge.local/schemas/WF-TECH-005-events.schema.json",
+  "title": "WIRTHFORGE Decipher Events Schema Collection",
+  "description": "Complete schema definitions for all Decipher event types",
+  "definitions": {
+    "BaseEvent": {
+      "type": "object",
+      "required": ["id", "type", "timestamp"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique event identifier"
+        },
+        "type": {
+          "type": "string",
+          "description": "Event type identifier"
+        },
+        "timestamp": {
+          "type": "integer",
+          "description": "Event timestamp in milliseconds since epoch",
+          "minimum": 0
+        },
+        "version": {
+          "type": "string",
+          "description": "Schema version",
+          "default": "1.0"
+        }
+      }
+    },
+    "EnergyUpdateEvent": {
+      "allOf": [
+        {"$ref": "#/definitions/BaseEvent"},
+        {
+          "properties": {
+            "type": {"const": "energy.update"},
+            "payload": {"$ref": "#/definitions/EnergyUpdatePayload"}
+          },
+          "required": ["payload"]
+        }
+      ]
+    },
+    "EnergyUpdatePayload": {
+      "type": "object",
+      "required": ["frame_id", "new_tokens", "energy_generated", "total_energy", "energy_rate", "state"],
+      "properties": {
+        "frame_id": {"type": "integer", "minimum": 0},
+        "new_tokens": {"type": "integer", "minimum": 0, "maximum": 100},
+        "energy_generated": {"type": "number", "minimum": 0},
+        "total_energy": {"type": "number", "minimum": 0},
+        "energy_rate": {"type": "number", "minimum": 0},
+        "state": {"enum": ["IDLE", "CHARGING", "FLOWING", "STALLING", "DRAINED"]},
+        "queue_depth": {"type": "integer", "minimum": 0},
+        "processing_time_ms": {"type": "number", "minimum": 0},
+        "particles": {
+          "type": "array",
+          "items": {"$ref": "#/definitions/ParticleEffect"}
+        },
+        "interference": {
+          "oneOf": [null, {"$ref": "#/definitions/InterferencePattern"}]
+        },
+        "resonance": {
+          "oneOf": [null, {"$ref": "#/definitions/ResonancePattern"}]
+        },
+        "performance": {
+          "oneOf": [null, {"$ref": "#/definitions/PerformanceMetrics"}]
+        }
+      }
+    },
+    "ExperienceTokenEvent": {
+      "allOf": [
+        {"$ref": "#/definitions/BaseEvent"},
+        {
+          "properties": {
+            "type": {"const": "experience.token"},
+            "payload": {"$ref": "#/definitions/ExperienceTokenPayload"}
+          },
+          "required": ["payload"]
+        }
+      ]
+    },
+    "ExperienceTokenPayload": {
+      "type": "object",
+      "required": ["model_id", "energy", "position"],
+      "properties": {
+        "content": {
+          "type": "string",
+          "description": "Token content (may be redacted for privacy)"
+        },
+        "content_hash": {
+          "type": "string",
+          "description": "SHA256 hash of content (privacy mode)"
+        },
+        "model_id": {"type": "string"},
+        "energy": {"type": "number", "minimum": 0},
+        "confidence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "position": {"type": "integer", "minimum": 0},
+        "is_final": {"type": "boolean"},
+        "token_type": {
+          "enum": ["normal", "burst", "stall", "final", "special"]
+        },
+        "timing": {
+          "type": "object",
+          "properties": {
+            "time_since_last_ms": {"type": "number", "minimum": 0},
+            "generation_velocity": {"type": "number", "minimum": 0}
+          }
+        }
+      }
+    },
+    "CouncilInterferenceEvent": {
+      "allOf": [
+        {"$ref": "#/definitions/BaseEvent"},
+        {
+          "properties": {
+            "type": {"const": "council.interference"},
+            "payload": {"$ref": "#/definitions/InterferencePattern"}
+          },
+          "required": ["payload"]
+        }
+      ]
+    },
+    "CouncilResonanceEvent": {
+      "allOf": [
+        {"$ref": "#/definitions/BaseEvent"},
+        {
+          "properties": {
+            "type": {"const": "council.resonance"},
+            "payload": {"$ref": "#/definitions/ResonancePattern"}
+          },
+          "required": ["payload"]
+        }
+      ]
+    },
+    "SessionStartEvent": {
+      "allOf": [
+        {"$ref": "#/definitions/BaseEvent"},
+        {
+          "properties": {
+            "type": {"const": "session.start"},
+            "payload": {"$ref": "#/definitions/SessionStartPayload"}
+          },
+          "required": ["payload"]
+        }
+      ]
+    },
+    "SessionStartPayload": {
+      "type": "object",
+      "required": ["session_id"],
+      "properties": {
+        "session_id": {"type": "string"},
+        "user_id": {"type": "string"},
+        "config": {
+          "type": "object",
+          "properties": {
+            "target_fps": {"type": "integer", "minimum": 1, "maximum": 120},
+            "enable_patterns": {"type": "boolean"},
+            "enable_particles": {"type": "boolean"},
+            "privacy_mode": {"type": "boolean"}
+          }
+        },
+        "capabilities": {
+          "type": "object",
+          "properties": {
+            "max_fps": {"type": "integer"},
+            "supports_multi_model": {"type": "boolean"},
+            "supports_patterns": {"type": "boolean"},
+            "supports_particles": {"type": "boolean"}
+          }
+        },
+        "hardware_profile": {
+          "type": "object",
+          "properties": {
+            "tier": {"enum": ["low", "mid", "high"]},
+            "cpu_cores": {"type": "integer"},
+            "memory_gb": {"type": "number"},
+            "gpu_available": {"type": "boolean"}
+          }
+        }
+      }
+    },
+    "SessionEndEvent": {
+      "allOf": [
+        {"$ref": "#/definitions/BaseEvent"},
+        {
+          "properties": {
+            "type": {"const": "session.end"},
+            "payload": {"$ref": "#/definitions/SessionEndPayload"}
+          },
+          "required": ["payload"]
+        }
+      ]
+    },
+    "SessionEndPayload": {
+      "type": "object",
+      "required": ["session_id", "summary"],
+      "properties": {
+        "session_id": {"type": "string"},
+        "duration_ms": {"type": "integer", "minimum": 0},
+        "summary": {
+          "type": "object",
+          "properties": {
+            "total_energy": {"type": "number", "minimum": 0},
+            "total_tokens": {"type": "integer", "minimum": 0},
+            "total_frames": {"type": "integer", "minimum": 0},
+            "avg_energy_rate": {"type": "number", "minimum": 0},
+            "patterns_detected": {
+              "type": "object",
+              "properties": {
+                "interference_count": {"type": "integer", "minimum": 0},
+                "resonance_count": {"type": "integer", "minimum": 0}
+              }
+            },
+            "performance": {
+              "type": "object",
+              "properties": {
+                "avg_frame_time_ms": {"type": "number", "minimum": 0},
+                "frame_overruns": {"type": "integer", "minimum": 0},
+                "degraded_mode_time_ms": {"type": "integer", "minimum": 0}
+              }
+            }
+          }
+        }
+      }
+    },
+    "SystemErrorEvent": {
+      "allOf": [
+        {"$ref": "#/definitions/BaseEvent"},
+        {
+          "properties": {
+            "type": {"const": "system.error"},
+            "payload": {"$ref": "#/definitions/SystemErrorPayload"}
+          },
+          "required": ["payload"]
+        }
+      ]
+    },
+    "SystemErrorPayload": {
+      "type": "object",
+      "required": ["message", "component", "severity"],
+      "properties": {
+        "message": {"type": "string"},
+        "code": {"type": "string"},
+        "component": {"type": "string"},
+        "severity": {"enum": ["info", "warning", "error", "critical"]},
+        "stack_trace": {"type": "string"},
+        "context": {
+          "type": "object",
+          "properties": {
+            "frame_id": {"type": "integer"},
+            "session_id": {"type": "string"},
+            "model_id": {"type": "string"}
+          }
+        },
+        "recovery_action": {"type": "string"}
+      }
+    },
+    "SystemHeartbeatEvent": {
+      "allOf": [
+        {"$ref": "#/definitions/BaseEvent"},
+        {
+          "properties": {
+            "type": {"const": "system.heartbeat"},
+            "payload": {"$ref": "#/definitions/SystemHeartbeatPayload"}
+          },
+          "required": ["payload"]
+        }
+      ]
+    },
+    "SystemHeartbeatPayload": {
+      "type": "object",
+      "required": ["status"],
+      "properties": {
+        "status": {"enum": ["alive", "degraded", "error"]},
+        "uptime_ms": {"type": "integer", "minimum": 0},
+        "stats": {
+          "type": "object",
+          "properties": {
+            "frames_processed": {"type": "integer", "minimum": 0},
+            "events_emitted": {"type": "integer", "minimum": 0},
+            "current_fps": {"type": "number", "minimum": 0},
+            "memory_usage_mb": {"type": "number", "minimum": 0},
+            "active_sessions": {"type": "integer", "minimum": 0}
+          }
+        }
+      }
+    },
+    "ParticleEffect": {
+      "type": "object",
+      "required": ["id", "type", "energy", "intensity"],
+      "properties": {
+        "id": {"type": "string"},
+        "type": {"enum": ["spark", "bolt", "burst", "fade", "glow", "trail"]},
+        "energy": {"type": "number", "minimum": 0},
+        "intensity": {"type": "number", "minimum": 0, "maximum": 1},
+        "position": {
+          "type": "object",
+          "properties": {
+            "x": {"type": "number"},
+            "y": {"type": "number"},
+            "z": {"type": "number"}
+          }
+        },
+        "velocity": {
+          "type": "object",
+          "properties": {
+            "x": {"type": "number"},
+            "y": {"type": "number"},
+            "z": {"type": "number"}
+          }
+        },
+        "color": {"type": "string"},
+        "lifetime_ms": {"type": "number", "minimum": 0},
+        "model_id": {"type": "string"},
+        "properties": {
+          "type": "object",
+          "properties": {
+            "size": {"type": "number", "minimum": 0},
+            "opacity": {"type": "number", "minimum": 0, "maximum": 1},
+            "rotation": {"type": "number"},
+            "scale": {"type": "number", "minimum": 0}
+          }
+        }
+      }
+    },
+    "InterferencePattern": {
+      "type": "object",
+      "required": ["type", "strength", "models_involved", "frequency", "duration_ms"],
+      "properties": {
+        "type": {"enum": ["constructive", "destructive", "chaotic"]},
+        "strength": {"type": "number", "minimum": 0, "maximum": 1},
+        "models_involved": {
+          "type": "array",
+          "minItems": 2,
+          "items": {"type": "string"}
+        },
+        "frequency": {"type": "number", "minimum": 0},
+        "duration_ms": {"type": "number", "minimum": 0},
+        "phase_offset": {"type": "number"},
+        "pattern_data": {
+          "type": "object",
+          "properties": {
+            "correlation": {"type": "number", "minimum": -1, "maximum": 1},
+            "energy_delta": {"type": "number"},
+            "stability": {"type": "number", "minimum": 0, "maximum": 1}
+          }
+        }
+      }
+    },
+    "ResonancePattern": {
+      "type": "object",
+      "required": ["type", "strength", "frequency", "amplification", "duration_ms"],
+      "properties": {
+        "type": {"enum": ["harmonic", "subharmonic", "chaotic", "synchronized"]},
+        "strength": {"type": "number", "minimum": 0, "maximum": 1},
+        "frequency": {"type": "number", "minimum": 0},
+        "amplification": {"type": "number", "minimum": 1},
+        "duration_ms": {"type": "number", "minimum": 0},
+        "coherence": {"type": "number", "minimum": 0, "maximum": 1},
+        "pattern_data": {
+          "type": "object",
+          "properties": {
+            "peak_frequency": {"type": "number"},
+            "bandwidth": {"type": "number"},
+            "q_factor": {"type": "number", "minimum": 0},
+            "energy_buildup": {"type": "number", "minimum": 0}
+          }
+        }
+      }
+    },
+    "PerformanceMetrics": {
+      "type": "object",
+      "required": ["frame_time_ms", "queue_depth"],
+      "properties": {
+        "frame_time_ms": {"type": "number", "minimum": 0},
+        "queue_depth": {"type": "integer", "minimum": 0},
+        "memory_usage_mb": {"type": "number", "minimum": 0},
+        "cpu_usage_percent": {"type": "number", "minimum": 0, "maximum": 100},
+        "frame_overruns": {"type": "integer", "minimum": 0},
+        "dropped_events": {"type": "integer", "minimum": 0},
+        "degraded_mode": {"type": "boolean"},
+        "timing_breakdown": {
+          "type": "object",
+          "properties": {
+            "token_processing_ms": {"type": "number", "minimum": 0},
+            "energy_calculation_ms": {"type": "number", "minimum": 0},
+            "pattern_detection_ms": {"type": "number", "minimum": 0},
+            "event_emission_ms": {"type": "number", "minimum": 0}
+          }
+        }
+      }
+    }
+  },
+  "oneOf": [
+    {"$ref": "#/definitions/EnergyUpdateEvent"},
+    {"$ref": "#/definitions/ExperienceTokenEvent"},
+    {"$ref": "#/definitions/CouncilInterferenceEvent"},
+    {"$ref": "#/definitions/CouncilResonanceEvent"},
+    {"$ref": "#/definitions/SessionStartEvent"},
+    {"$ref": "#/definitions/SessionEndEvent"},
+    {"$ref": "#/definitions/SystemErrorEvent"},
+    {"$ref": "#/definitions/SystemHeartbeatEvent"}
+  ]
+}
