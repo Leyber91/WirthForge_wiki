@@ -1,0 +1,310 @@
+{
+  "document": "WF-FND-002",
+  "title": "Output Physics Visual Asset Specifications",
+  "version": "1.0.0",
+  "lastUpdated": "2025-01-12",
+  "visualAssets": {
+    "lightningBolt": {
+      "name": "Lightning Bolt (Token Generation)",
+      "purpose": "Visualize individual token generation speed and timing",
+      "appearance": {
+        "shape": "Jagged, organic lightning bolt path",
+        "color": "Golden yellow (#fbbf24) with intensity variations",
+        "thickness": "Variable based on tokens per second (2-8px)",
+        "effects": ["glow", "pulse", "particle_scatter"]
+      },
+      "behavior": {
+        "thicknessMapping": "Token generation speed → bolt thickness",
+        "pulseRate": "Synchronized with actual token emission",
+        "branches": "Secondary branches for token complexity",
+        "particles": "Probability uncertainty visualization"
+      },
+      "metrics": {
+        "tokensPerSecond": "Real-time TPS measurement",
+        "timeToFirstToken": "TTFT in milliseconds",
+        "confidenceLevel": "Token probability distribution"
+      },
+      "accessibility": {
+        "altText": "Lightning bolt showing token generation at {tps} tokens per second",
+        "colorBlindSafe": true,
+        "motionReduced": "Static thickness indicator available"
+      }
+    },
+    "energyStream": {
+      "name": "Energy Stream/Flow Ribbon",
+      "purpose": "Visualize continuous token flow from multiple models",
+      "appearance": {
+        "shape": "Curved flowing ribbon with gradient",
+        "color": "Blue spectrum (#60a5fa to #1e40af)",
+        "width": "Variable based on throughput (4-12px)",
+        "effects": ["flow_animation", "glow", "particle_flow"]
+      },
+      "behavior": {
+        "widthMapping": "Throughput rate → stream width",
+        "flowSpeed": "Proportional to actual token velocity",
+        "parallelStreams": "Multiple models = multiple streams",
+        "interference": "Visual overlay where streams interact"
+      },
+      "metrics": {
+        "throughputRate": "Tokens per second per model",
+        "streamSync": "Cross-model synchronization coefficient",
+        "latencyVariation": "Stream consistency measurement"
+      },
+      "accessibility": {
+        "altText": "Energy stream showing {model} at {rate} tokens per second",
+        "colorBlindSafe": true,
+        "motionReduced": "Static width bars available"
+      }
+    },
+    "interferencePattern": {
+      "name": "Interference Pattern Overlay",
+      "purpose": "Show synchronization/desynchronization between parallel models",
+      "appearance": {
+        "shape": "Ripple patterns and wave overlays",
+        "color": "Purple spectrum (#c084fc) for constructive, red (#ef4444) for destructive",
+        "intensity": "Based on correlation strength",
+        "effects": ["wave_propagation", "ripple", "fade_zones"]
+      },
+      "behavior": {
+        "constructiveZones": "Models in sync → purple glow zones",
+        "destructiveZones": "Models out of sync → red interference",
+        "correlationMapping": "Statistical correlation → visual intensity",
+        "dynamicUpdate": "Real-time pattern evolution"
+      },
+      "metrics": {
+        "syncCorrelation": "Cross-model correlation coefficient (-1 to +1)",
+        "interferenceStrength": "Magnitude of pattern interaction",
+        "coherenceTime": "Duration of synchronization events"
+      },
+      "accessibility": {
+        "altText": "Interference pattern showing {correlation} sync between models",
+        "colorBlindSafe": true,
+        "patternAlternatives": "Texture patterns for color-blind users"
+      }
+    },
+    "pauseBuildupIndicator": {
+      "name": "Pause Buildup Indicator",
+      "purpose": "Visualize model thinking/processing time before token emission",
+      "appearance": {
+        "shape": "Expanding circle or charging effect",
+        "color": "Warm orange (#f59e0b) building to bright yellow",
+        "size": "Grows with processing time",
+        "effects": ["charging_animation", "pulse", "spark_buildup"]
+      },
+      "behavior": {
+        "buildupTime": "Visual accumulation during processing delays",
+        "releaseEffect": "Burst when token finally emits",
+        "intensityMapping": "Processing complexity → buildup intensity",
+        "timeoutHandling": "Visual indication of processing limits"
+      },
+      "metrics": {
+        "processingDelay": "Time between request and first token",
+        "complexityEstimate": "Inferred processing difficulty",
+        "resourceUtilization": "CPU/GPU usage during pause"
+      },
+      "accessibility": {
+        "altText": "Model processing for {duration} seconds",
+        "colorBlindSafe": true,
+        "motionReduced": "Static progress bar available"
+      }
+    },
+    "tokenProbabilityParticles": {
+      "name": "Token Probability Particles",
+      "purpose": "Visualize uncertainty and probability distributions in token selection",
+      "appearance": {
+        "shape": "Small particles/dots of varying sizes",
+        "color": "Spectrum from blue (low prob) to yellow (high prob)",
+        "density": "Based on entropy/uncertainty levels",
+        "effects": ["scatter_animation", "fade", "clustering"]
+      },
+      "behavior": {
+        "densityMapping": "Token uncertainty → particle density",
+        "colorMapping": "Probability score → particle color",
+        "clusteringEffect": "High-confidence tokens cluster together",
+        "scatterPattern": "Uncertain tokens spread widely"
+      },
+      "metrics": {
+        "entropyScore": "Token selection uncertainty (bits)",
+        "probabilityDistribution": "Top-k token probabilities",
+        "confidenceInterval": "Statistical confidence bounds"
+      },
+      "accessibility": {
+        "altText": "Token probability particles showing {entropy} uncertainty",
+        "colorBlindSafe": true,
+        "sizeAlternatives": "Size-based encoding for color-blind users"
+      }
+    },
+    "modelStreamTags": {
+      "name": "Model Stream Identifier Tags",
+      "purpose": "Label and identify different model streams in parallel processing",
+      "appearance": {
+        "shape": "Rounded rectangle badges",
+        "color": "Distinct colors per model (blue, purple, green, orange)",
+        "text": "Model name and key metrics",
+        "effects": ["subtle_glow", "fade_on_inactive"]
+      },
+      "behavior": {
+        "colorConsistency": "Same model = same color across sessions",
+        "activeIndicator": "Brighter when model is actively generating",
+        "metricDisplay": "Real-time TPS and status information",
+        "positionTracking": "Tags follow their associated streams"
+      },
+      "metrics": {
+        "modelIdentifier": "Unique model name/ID",
+        "currentTPS": "Real-time tokens per second",
+        "activeStatus": "Currently generating (boolean)"
+      },
+      "accessibility": {
+        "altText": "Model {name} generating at {tps} tokens per second",
+        "colorBlindSafe": true,
+        "textLabels": "Always include text identifiers"
+      }
+    },
+    "nodeConnectionGraphics": {
+      "name": "Node & Connection Graphics",
+      "purpose": "Visualize user-built AI pipelines and architectural structures",
+      "appearance": {
+        "nodeShape": "Rounded rectangles with model icons",
+        "connectionLines": "Curved lines with flow indicators",
+        "color": "Consistent with model stream colors",
+        "effects": ["flow_animation", "node_pulse", "connection_glow"]
+      },
+      "behavior": {
+        "dragAndDrop": "Interactive node positioning",
+        "connectionFlow": "Animated data flow visualization",
+        "nodeStatus": "Visual indication of processing state",
+        "growthAnimation": "Structures build/expand over time"
+      },
+      "metrics": {
+        "pipelineComplexity": "Number of nodes and connections",
+        "throughputRate": "Data flow rate through pipeline",
+        "processingLatency": "End-to-end pipeline timing"
+      },
+      "accessibility": {
+        "altText": "Pipeline with {nodes} nodes and {connections} connections",
+        "keyboardNavigation": "Full keyboard control of node manipulation",
+        "screenReaderSupport": "Detailed pipeline structure description"
+      }
+    },
+    "adaptiveFieldBackground": {
+      "name": "Adaptive Field Background",
+      "purpose": "Dynamic background that adapts to user behavior and system performance",
+      "appearance": {
+        "pattern": "Subtle geometric or organic patterns",
+        "color": "Adaptive based on usage patterns and performance",
+        "intensity": "Varies with system load and user activity",
+        "effects": ["subtle_animation", "color_transitions", "pattern_morphing"]
+      },
+      "behavior": {
+        "usageAdaptation": "Background evolves based on user interaction patterns",
+        "performanceMapping": "System performance → background intensity",
+        "contextAwareness": "Different patterns for different task types",
+        "auditTransparency": "Always explainable adaptation logic"
+      },
+      "metrics": {
+        "usagePatterns": "User interaction frequency and types",
+        "systemPerformance": "CPU/GPU utilization and responsiveness",
+        "adaptationScore": "Degree of personalization applied"
+      },
+      "accessibility": {
+        "altText": "Adaptive background optimized for {context}",
+        "motionReduced": "Static patterns available",
+        "contrastMaintained": "Always maintains WCAG contrast ratios"
+      }
+    },
+    "resonanceCelebration": {
+      "name": "Resonance Celebration Effect",
+      "purpose": "Special effect for confirmed multi-model synchronization events",
+      "appearance": {
+        "pattern": "Aurora borealis-like waves or mandala burst",
+        "color": "Multi-colored spectrum cycling through all model colors",
+        "duration": "1-2 seconds, rate-limited",
+        "effects": ["aurora_wave", "particle_burst", "mandala_formation"]
+      },
+      "behavior": {
+        "triggerCondition": "Statistical significance threshold for resonance",
+        "rateLimiting": "Maximum frequency to avoid spam",
+        "auditMode": "Minimal version for analysis contexts",
+        "celebrationIntensity": "Proportional to resonance strength"
+      },
+      "metrics": {
+        "resonanceStrength": "Statistical measure of synchronization",
+        "participatingModels": "Number of models in resonant state",
+        "eventFrequency": "Rate-limited celebration frequency"
+      },
+      "accessibility": {
+        "altText": "Resonance celebration: {models} models synchronized",
+        "motionReduced": "Static icon flash available",
+        "soundOptional": "Audio celebration is optional enhancement"
+      }
+    },
+    "legendTutorialOverlays": {
+      "name": "Legend and Tutorial Overlays",
+      "purpose": "Educational overlays explaining visual elements and their meanings",
+      "appearance": {
+        "layout": "Clean sidebar or overlay panel",
+        "icons": "Miniature versions of actual visual elements",
+        "text": "Clear, concise explanations",
+        "effects": ["contextual_highlighting", "fade_in_out"]
+      },
+      "behavior": {
+        "contextualDisplay": "Shows relevant legend items based on current visuals",
+        "tutorialProgression": "Introduces new elements as user advances levels",
+        "toggleVisibility": "User can show/hide legend at will",
+        "highlightSync": "Legend items highlight when corresponding visuals appear"
+      },
+      "metrics": {
+        "comprehensionTracking": "User understanding of visual elements",
+        "tutorialProgress": "Completion of educational sequences",
+        "helpUsage": "Frequency of legend consultation"
+      },
+      "accessibility": {
+        "altText": "Legend explaining {count} visual elements",
+        "screenReaderFriendly": "Full text descriptions available",
+        "keyboardNavigation": "Keyboard access to all legend functions"
+      }
+    }
+  },
+  "technicalRequirements": {
+    "performance": {
+      "frameRate": "60Hz (16.67ms frame budget)",
+      "latencyTarget": "< 50ms for visual updates",
+      "memoryUsage": "< 100MB for all visual assets",
+      "cpuOverhead": "< 5% additional CPU usage"
+    },
+    "compatibility": {
+      "browsers": ["Chrome 90+", "Firefox 88+", "Safari 14+", "Edge 90+"],
+      "platforms": ["Windows", "macOS", "Linux"],
+      "devices": ["Desktop", "Tablet", "Mobile (responsive)"]
+    },
+    "accessibility": {
+      "wcagCompliance": "WCAG 2.2 AA",
+      "colorBlindSupport": "Full deuteranopia/protanopia support",
+      "motionReduction": "Respects prefers-reduced-motion",
+      "screenReaders": "Full ARIA support and descriptions"
+    }
+  },
+  "integrationPoints": {
+    "ollamaAPI": {
+      "tokenStreaming": "Real-time token reception and processing",
+      "metricsCapture": "TPS, TTFT, probability distributions",
+      "modelIdentification": "Model names and capabilities"
+    },
+    "wirthforgeBroker": {
+      "multiModelCoordination": "Parallel model orchestration",
+      "syncDetection": "Cross-model correlation analysis",
+      "performanceMonitoring": "System resource utilization"
+    },
+    "userInterface": {
+      "levelProgression": "Progressive complexity unlocking",
+      "interactiveControls": "User customization and preferences",
+      "auditMode": "Transparency and verification features"
+    }
+  },
+  "qualityAssurance": {
+    "scientificAccuracy": "All visuals correspond to measurable phenomena",
+    "userTesting": "Comprehension and usability validation",
+    "performanceTesting": "Frame rate and resource usage verification",
+    "accessibilityTesting": "WCAG compliance and assistive technology compatibility"
+  }
+}

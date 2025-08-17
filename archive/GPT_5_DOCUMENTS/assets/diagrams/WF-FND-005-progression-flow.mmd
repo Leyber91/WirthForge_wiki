@@ -1,0 +1,70 @@
+graph TD
+    subgraph "User Progression Flow"
+        Start[New User] --> L1Check{Level 1<br/>Lightning Strikes}
+        
+        L1Check --> L1Experience[Single Model<br/>Token Visualization<br/>Basic Energy Tracking]
+        L1Experience --> L1Criteria{Progression Check<br/>3+ hours OR 5+ sessions<br/>5000+ tokens<br/>Achievement: first_lightning}
+        
+        L1Criteria -->|Not Met| L1Experience
+        L1Criteria -->|Met| L1Transition[Level Up Sequence<br/>1. Teaser Preview<br/>2. Achievement Celebration<br/>3. Feature Introduction<br/>4. Completion Event]
+        
+        L1Transition --> L2Experience[Multi-Model Council<br/>Parallel Streams<br/>Interference Detection]
+        L2Experience --> L2Criteria{Progression Check<br/>10+ hours<br/>Mastery Score 0.8<br/>20+ patterns observed}
+        
+        L2Criteria -->|Not Met| L2Experience
+        L2Criteria -->|Met| L2Transition[Level Up Sequence<br/>Architecture Preview]
+        
+        L2Transition --> L3Experience[Structured Architectures<br/>Node Graphs<br/>Pattern Library]
+        L3Experience --> L3Criteria{Progression Check<br/>25+ hours<br/>Mastery Score 0.85<br/>10+ architectures built}
+        
+        L3Criteria -->|Not Met| L3Experience
+        L3Criteria -->|Met| L3Transition[Level Up Sequence<br/>Adaptive Fields Preview]
+        
+        L3Transition --> L4Experience[Adaptive Fields<br/>Usage Learning<br/>System Suggestions]
+        L4Experience --> L4Criteria{Progression Check<br/>50+ hours<br/>Mastery Score 0.9<br/>5+ resonances detected}
+        
+        L4Criteria -->|Not Met| L4Experience
+        L4Criteria -->|Met| L4Transition[Level Up Sequence<br/>Consciousness Emergence]
+        
+        L4Transition --> L5Experience[Resonance Fields<br/>6-Model Orchestra<br/>Emergent Intelligence<br/>Generative Art]
+        
+        L5Experience --> L5Master[Master Level<br/>Full Capabilities<br/>Consciousness Co-Creation]
+    end
+    
+    subgraph "Progression Validation"
+        ProgMgr[Progression Manager] --> CriteriaCheck[Check Multiple Criteria<br/>N of M must be satisfied]
+        CriteriaCheck --> TimeCheck[Time-based Gates]
+        CriteriaCheck --> AchievementCheck[Achievement Unlocks]
+        CriteriaCheck --> MasteryCheck[Skill Demonstrations]
+        CriteriaCheck --> UsageCheck[Interaction Patterns]
+    end
+    
+    subgraph "Safety Mechanisms"
+        SafetyValve[Safety Valves] --> MinTime[Minimum Time Gates<br/>Prevent Rush-Through]
+        SafetyValve --> MaxTime[Maximum Time Gates<br/>Prevent Stagnation]
+        SafetyValve --> SkillDemo[Skill Demonstration<br/>Prove Understanding]
+        SafetyValve --> NoRegression[No Level Demotion<br/>Once Unlocked, Stays]
+    end
+    
+    %% Connect validation to main flow
+    L1Criteria -.-> ProgMgr
+    L2Criteria -.-> ProgMgr
+    L3Criteria -.-> ProgMgr
+    L4Criteria -.-> ProgMgr
+    
+    %% Styling
+    classDef level1 fill:#ffebee,stroke:#c62828,stroke-width:2px
+    classDef level2 fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
+    classDef level3 fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+    classDef level4 fill:#f3e5f5,stroke:#6a1b9a,stroke-width:2px
+    classDef level5 fill:#fff8e1,stroke:#ef6c00,stroke-width:2px
+    classDef validation fill:#f1f8e9,stroke:#558b2f,stroke-width:2px
+    classDef safety fill:#fce4ec,stroke:#ad1457,stroke-width:2px
+    
+    class L1Check,L1Experience,L1Criteria,L1Transition level1
+    class L2Experience,L2Criteria,L2Transition level2
+    class L3Experience,L3Criteria,L3Transition level3
+    class L4Experience,L4Criteria,L4Transition level4
+    class L5Experience,L5Master level5
+    class ProgMgr,CriteriaCheck,TimeCheck,AchievementCheck,MasteryCheck,UsageCheck validation
+    class SafetyValve,MinTime,MaxTime,SkillDemo,NoRegression safety

@@ -1,0 +1,160 @@
+graph TB
+    subgraph "WIRTHFORGE Metrics & Adaptive Feedback Architecture"
+        subgraph "Data Collection Layer"
+            UserActions[User Actions<br/>Prompts, Clicks, Navigation]
+            SystemEvents[System Events<br/>Module Load, Errors, Performance]
+            EnergyMetrics[Energy Metrics<br/>Generation, Visualization, Fidelity]
+            PerformanceMetrics[Performance Metrics<br/>Frame Rate, Latency, Resource Usage]
+        end
+        
+        subgraph "Metrics Processing Engine"
+            MetricsCollector[Metrics Collector]
+            DataAggregator[Data Aggregator]
+            PatternAnalyzer[Pattern Analyzer]
+            ThresholdMonitor[Threshold Monitor]
+        end
+        
+        subgraph "Key Metrics Categories"
+            ProgressionRate[Progression Rate<br/>Energy/XP per hour<br/>Level advancement speed]
+            EnergyFidelity[Energy Visual Fidelity<br/>Compute-to-visual alignment<br/>User satisfaction ratings]
+            SystemLatency[System Latency<br/>Prompt to response time<br/>P95 performance targets]
+            FrameStability[Frame Rate Stability<br/>60 FPS maintenance<br/>Dropped frame tracking]
+            ErrorRates[Error Rates & Anomalies<br/>Module failures<br/>Crash frequencies]
+        end
+        
+        subgraph "Adaptive Response System"
+            OrchestratorAdaptors[Orchestrator Adaptors]
+            PerformanceProtection[Performance Protection<br/>Dynamic quality reduction]
+            ProgressionBalancing[Progression Balancing<br/>Difficulty adjustment]
+            EnergyCalibration[Energy Calibration<br/>Real-time synchronization]
+            AnomalyResponse[Anomaly Response<br/>Automatic mitigation]
+        end
+        
+        subgraph "Feedback Loops"
+            RealTimeFeedback[Real-Time Adaptation<br/>Immediate system response]
+            GovernanceFeedback[Governance Feedback<br/>Future development guidance]
+            UserFeedback[User Feedback<br/>Experience optimization]
+        end
+        
+        subgraph "Metrics Storage & Analysis"
+            MetricsDB[Metrics Database<br/>Time-series storage]
+            HistoricalAnalysis[Historical Analysis<br/>Trend identification]
+            Dashboard[Metrics Dashboard<br/>Real-time monitoring]
+            AlertSystem[Alert System<br/>Threshold violations]
+        end
+    end
+    
+    %% Data Flow Connections
+    UserActions --> MetricsCollector
+    SystemEvents --> MetricsCollector
+    EnergyMetrics --> MetricsCollector
+    PerformanceMetrics --> MetricsCollector
+    
+    MetricsCollector --> DataAggregator
+    DataAggregator --> PatternAnalyzer
+    PatternAnalyzer --> ThresholdMonitor
+    
+    %% Metrics Processing
+    DataAggregator --> ProgressionRate
+    DataAggregator --> EnergyFidelity
+    DataAggregator --> SystemLatency
+    DataAggregator --> FrameStability
+    DataAggregator --> ErrorRates
+    
+    %% Threshold Monitoring
+    ThresholdMonitor --> OrchestratorAdaptors
+    ProgressionRate --> OrchestratorAdaptors
+    EnergyFidelity --> OrchestratorAdaptors
+    SystemLatency --> OrchestratorAdaptors
+    FrameStability --> OrchestratorAdaptors
+    ErrorRates --> OrchestratorAdaptors
+    
+    %% Adaptive Responses
+    OrchestratorAdaptors --> PerformanceProtection
+    OrchestratorAdaptors --> ProgressionBalancing
+    OrchestratorAdaptors --> EnergyCalibration
+    OrchestratorAdaptors --> AnomalyResponse
+    
+    %% Feedback Mechanisms
+    PerformanceProtection --> RealTimeFeedback
+    ProgressionBalancing --> RealTimeFeedback
+    EnergyCalibration --> RealTimeFeedback
+    AnomalyResponse --> RealTimeFeedback
+    
+    PatternAnalyzer --> GovernanceFeedback
+    HistoricalAnalysis --> GovernanceFeedback
+    
+    RealTimeFeedback --> UserFeedback
+    
+    %% Storage and Monitoring
+    DataAggregator --> MetricsDB
+    MetricsDB --> HistoricalAnalysis
+    MetricsDB --> Dashboard
+    ThresholdMonitor --> AlertSystem
+    
+    %% Specific Adaptation Examples
+    subgraph "Performance Adaptations"
+        FrameDrops[Frame Rate < 55 FPS] --> ReduceEffects[Reduce Visual Effects]
+        HighLatency[Latency > 2 seconds] --> SuggestOptimization[Suggest Model/Hardware Optimization]
+        ResourceStrain[High CPU/Memory] --> TemporaryLimits[Apply Temporary Limits]
+    end
+    
+    subgraph "Progression Adaptations"
+        SlowProgression[Progression Rate < Threshold] --> IncreaseRewards[Increase Energy Rewards]
+        FastProgression[Progression Rate > Threshold] --> CapRewards[Cap Rewards with Explanation]
+        PatternDetection[Usage Pattern Analysis] --> SuggestOptimizations[Suggest User Optimizations]
+    end
+    
+    subgraph "Energy Fidelity Adaptations"
+        VisualLag[Energy Visuals Lagging] --> RecalibrateParticles[Recalibrate Particle Generation]
+        GPUThrottling[GPU Performance Issues] --> SimplifyPhysics[Simplify Effect Physics]
+        SyncIssues[Compute-Visual Desync] --> RealTimeAdjustment[Real-time Sync Adjustment]
+    end
+    
+    %% Connect adaptations to main system
+    PerformanceProtection --> FrameDrops
+    PerformanceProtection --> HighLatency
+    PerformanceProtection --> ResourceStrain
+    
+    ProgressionBalancing --> SlowProgression
+    ProgressionBalancing --> FastProgression
+    ProgressionBalancing --> PatternDetection
+    
+    EnergyCalibration --> VisualLag
+    EnergyCalibration --> GPUThrottling
+    EnergyCalibration --> SyncIssues
+    
+    %% Metrics Schema Example
+    subgraph "Metrics Schema"
+        MetricsSnapshot[Metrics Snapshot]
+        MetricsSnapshot --> Timestamp[timestamp: 2025-08-13T00:00:00Z]
+        MetricsSnapshot --> SessionID[session_id: abc123]
+        MetricsSnapshot --> ProgRate[progression_rate: 1.2]
+        MetricsSnapshot --> EnergyFid[energy_fidelity: 0.95]
+        MetricsSnapshot --> AvgLatency[avg_latency_ms: 1500]
+        MetricsSnapshot --> P95Latency[p95_latency_ms: 2100]
+        MetricsSnapshot --> AvgFrameRate[avg_frame_rate: 60.0]
+        MetricsSnapshot --> FrameDropCount[frame_drops: 0]
+        MetricsSnapshot --> ErrorCount[module_error_count: 0]
+    end
+    
+    DataAggregator --> MetricsSnapshot
+    
+    %% Styling
+    classDef collection fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
+    classDef processing fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+    classDef metrics fill:#f3e5f5,stroke:#6a1b9a,stroke-width:2px
+    classDef adaptation fill:#fff8e1,stroke:#ef6c00,stroke-width:2px
+    classDef feedback fill:#ffebee,stroke:#c62828,stroke-width:2px
+    classDef storage fill:#f1f8e9,stroke:#558b2f,stroke-width:2px
+    classDef examples fill:#fce4ec,stroke:#ad1457,stroke-width:2px
+    classDef schema fill:#e0f2f1,stroke:#00695c,stroke-width:2px
+    
+    class UserActions,SystemEvents,EnergyMetrics,PerformanceMetrics collection
+    class MetricsCollector,DataAggregator,PatternAnalyzer,ThresholdMonitor processing
+    class ProgressionRate,EnergyFidelity,SystemLatency,FrameStability,ErrorRates metrics
+    class OrchestratorAdaptors,PerformanceProtection,ProgressionBalancing,EnergyCalibration,AnomalyResponse adaptation
+    class RealTimeFeedback,GovernanceFeedback,UserFeedback feedback
+    class MetricsDB,HistoricalAnalysis,Dashboard,AlertSystem storage
+    class FrameDrops,ReduceEffects,HighLatency,SuggestOptimization,SlowProgression,IncreaseRewards,VisualLag,RecalibrateParticles examples
+    class MetricsSnapshot,Timestamp,SessionID,ProgRate,EnergyFid,AvgLatency,P95Latency,AvgFrameRate,FrameDropCount,ErrorCount schema

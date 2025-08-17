@@ -1,0 +1,115 @@
+<svg width="400" height="200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Energy stream gradient - flowing from left to right -->
+    <linearGradient id="streamGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#60a5fa;stop-opacity:0.3" />
+      <stop offset="30%" style="stop-color:#3b82f6;stop-opacity:0.8" />
+      <stop offset="70%" style="stop-color:#1d4ed8;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1e40af;stop-opacity:0.6" />
+    </linearGradient>
+    
+    <!-- Flow animation gradient -->
+    <linearGradient id="flowGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#60a5fa;stop-opacity:0">
+        <animate attributeName="stop-opacity" values="0;1;0" dur="2s" repeatCount="indefinite"/>
+      </stop>
+      <stop offset="50%" style="stop-color:#3b82f6;stop-opacity:0.5">
+        <animate attributeName="stop-opacity" values="0.2;1;0.2" dur="2s" repeatCount="indefinite"/>
+      </stop>
+      <stop offset="100%" style="stop-color:#1d4ed8;stop-opacity:0">
+        <animate attributeName="stop-opacity" values="0;0.8;0" dur="2s" repeatCount="indefinite"/>
+      </stop>
+      
+      <!-- Animate gradient position for flow effect -->
+      <animateTransform attributeName="gradientTransform" 
+                        type="translate" 
+                        values="-100 0;400 0;-100 0" 
+                        dur="3s" 
+                        repeatCount="indefinite"/>
+    </linearGradient>
+    
+    <!-- Glow filter for energy effect -->
+    <filter id="streamGlow">
+      <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+      <feMerge> 
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Main energy stream - curved path representing token flow -->
+  <path d="M20 100 Q100 80 200 100 T380 100" 
+        fill="none" 
+        stroke="url(#streamGradient)" 
+        stroke-width="8"
+        filter="url(#streamGlow)">
+    <!-- Animate width based on tokens per second -->
+    <animate attributeName="stroke-width" values="6;12;6" dur="1.5s" repeatCount="indefinite"/>
+  </path>
+  
+  <!-- Secondary stream for parallel model -->
+  <path d="M20 120 Q100 140 200 120 T380 120" 
+        fill="none" 
+        stroke="url(#streamGradient)" 
+        stroke-width="6"
+        opacity="0.7"
+        filter="url(#streamGlow)">
+    <animate attributeName="stroke-width" values="4;8;4" dur="1.8s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.5;0.9;0.5" dur="1.8s" repeatCount="indefinite"/>
+  </path>
+  
+  <!-- Flow particles moving along the stream -->
+  <circle cx="50" cy="100" r="3" fill="#60a5fa" opacity="0.8">
+    <animateMotion dur="2s" repeatCount="indefinite">
+      <mpath href="#streamPath"/>
+    </animateMotion>
+    <animate attributeName="opacity" values="0;1;0" dur="2s" repeatCount="indefinite"/>
+  </circle>
+  
+  <circle cx="30" cy="120" r="2" fill="#3b82f6" opacity="0.6">
+    <animateMotion dur="2.5s" repeatCount="indefinite">
+      <mpath href="#streamPath2"/>
+    </animateMotion>
+    <animate attributeName="opacity" values="0;0.8;0" dur="2.5s" repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Hidden paths for particle motion -->
+  <defs>
+    <path id="streamPath" d="M20 100 Q100 80 200 100 T380 100"/>
+    <path id="streamPath2" d="M20 120 Q100 140 200 120 T380 120"/>
+  </defs>
+  
+  <!-- Interference pattern where streams interact -->
+  <ellipse cx="200" cy="110" rx="15" ry="8" 
+           fill="none" 
+           stroke="#c084fc" 
+           stroke-width="2" 
+           opacity="0.6">
+    <animate attributeName="rx" values="10;20;10" dur="1s" repeatCount="indefinite"/>
+    <animate attributeName="ry" values="5;12;5" dur="1s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.3;0.8;0.3" dur="1s" repeatCount="indefinite"/>
+  </ellipse>
+  
+  <!-- Model identifier tags -->
+  <rect x="15" y="85" width="60" height="15" rx="3" fill="#1e40af" opacity="0.8"/>
+  <text x="45" y="95" font-family="monospace" font-size="8" fill="white" text-anchor="middle">
+    Model-A
+  </text>
+  
+  <rect x="15" y="125" width="60" height="15" rx="3" fill="#7c3aed" opacity="0.8"/>
+  <text x="45" y="135" font-family="monospace" font-size="8" fill="white" text-anchor="middle">
+    Model-B
+  </text>
+  
+  <!-- Performance metrics -->
+  <text x="320" y="90" font-family="monospace" font-size="10" fill="#64748b" opacity="0.7">
+    Stream A: 38.5 t/s
+  </text>
+  <text x="320" y="105" font-family="monospace" font-size="10" fill="#64748b" opacity="0.7">
+    Stream B: 42.1 t/s
+  </text>
+  <text x="320" y="120" font-family="monospace" font-size="10" fill="#64748b" opacity="0.7">
+    Sync: 0.85
+  </text>
+</svg>

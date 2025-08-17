@@ -1,0 +1,115 @@
+# WF-TECH-002: Tier Policy Configuration
+# Defines resource limits and capabilities per progression tier
+
+version: "1.0.0"
+schema_version: "tech-002-v1"
+
+# Tier-based resource allocation
+tiers:
+  low:
+    max_parallel_models: 2
+    max_loaded_models: 4
+    max_model_size_gb: 4
+    vram_budget_gb: 6
+    ram_budget_gb: 8
+    turbo_enabled: false
+    broker_enabled: false
+    target_fps: 55
+    
+  mid:
+    max_parallel_models: 4
+    max_loaded_models: 6
+    max_model_size_gb: 8
+    vram_budget_gb: 12
+    ram_budget_gb: 16
+    turbo_enabled: true
+    broker_enabled: false
+    target_fps: 60
+    
+  high:
+    max_parallel_models: 6
+    max_loaded_models: 8
+    max_model_size_gb: 16
+    vram_budget_gb: 24
+    ram_budget_gb: 32
+    turbo_enabled: true
+    broker_enabled: false
+    target_fps: 60
+    
+  hybrid:
+    max_parallel_models: 6
+    max_loaded_models: 8
+    max_model_size_gb: 16
+    vram_budget_gb: 24
+    ram_budget_gb: 32
+    turbo_enabled: true
+    broker_enabled: true  # Optional, user-controlled
+    target_fps: 60
+
+# Model management policies
+model_pool:
+  warm_up_models: ["llama2:7b", "codellama:7b"]
+  eviction_policy: "lru"
+  eviction_cooldown_ms: 30000
+  preload_timeout_ms: 60000
+  health_check_interval_ms: 5000
+
+# Performance thresholds
+performance:
+  ttft_target_ms:
+    warm: 2000
+    cold: 10000
+  tps_minimum:
+    low: 5
+    mid: 15
+    high: 30
+  frame_budget_ms: 16.67  # 60Hz requirement
+  backpressure_threshold: 0.8
+
+# Energy computation parameters
+energy:
+  ema_alpha: 0.1  # Exponential moving average smoothing
+  cadence_weight: 0.4
+  certainty_weight: 0.4
+  stall_weight: 0.2
+  normalization_window: 100  # tokens
+
+# Turbo ensemble configuration
+turbo:
+  default_models:
+    mid: ["llama2:7b", "codellama:7b", "mistral:7b", "neural-chat:7b"]
+    high: ["llama2:13b", "codellama:13b", "mistral:7b", "neural-chat:7b", "vicuna:13b", "wizardcoder:15b"]
+  
+  diversity_threshold: 0.3  # Minimum DI for ensemble value
+  sync_window_ms: 100       # Token alignment window
+  energy_weights:           # Model confidence weighting
+    default: 1.0
+    high_certainty: 1.2
+    low_certainty: 0.8
+
+# Hybrid broker settings (when enabled)
+broker:
+  default_mode: "advisory"
+  max_requests_per_hour: 100
+  timeout_ms: 5000
+  fallback_threshold: 0.9  # Local resource utilization
+  data_retention: "none"
+  
+# Governance compliance
+governance:
+  local_only: true
+  docker_prohibited: true
+  schema_versioning: true
+  audit_logging: true
+  privacy_preservation: true
+  
+# Resource monitoring
+monitoring:
+  memory_check_interval_ms: 1000
+  performance_log_interval_ms: 5000
+  health_check_endpoints:
+    - "http://127.0.0.1:11434/api/version"
+  alert_thresholds:
+    memory_usage: 0.9
+    frame_drops: 5
+    ttft_degradation: 2.0

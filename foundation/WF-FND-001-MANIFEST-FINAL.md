@@ -23,17 +23,15 @@ risks:
   - Misinterpretation of visuals as “mind reading” despite our honesty pledge; mitigate via Evidence Mode and clear messaging.
 ---
 
-# WIRTHFORGE Manifesto & Vision
+# WIRTHFORGE: Vision, Gamification, and the Power of Local AI
 
-**See AI Think — For Real.**
+## Introduction
 
-## Why It Matters
+WIRTHFORGE is a **local AI platform** that combines the power of on-device models with a captivating web interface. Users install a local backend (e.g. Ollama) but interact through WIRTHFORGE's **rich web UI**, which handles all the complexity behind the scenes. The platform's mission is to **make AI visible and engaging** – turning raw model output into an interactive experience. Instead of building new AI models to compete with existing ones, WIRTHFORGE acts as a **"magic layer"** on top of them, adding visualization, gamification, and orchestration to showcase what's possible. In short, if the local AI engine is the "codec," WIRTHFORGE is the **"Netflix"** that delivers a delightful user experience on top.
 
-Large language models generate text token by token. Each token has a timing, a probability mass and, when multiple models run in parallel, a measurable divergence. Today those signals are invisible to end users, making AI feel mystical and hard to debug. **WIRTHFORGE turns on the lights** and shows only what is really there—live, local and measurable.
+## Why a Dedicated Interface Matters (Netflix vs Codec)
 
-## What WIRTHFORGE Really Is
-
-WIRTHFORGE is an **oscilloscope for AI thought**. We render **live, local** token‑level signals—inter‑arrival times, probability mass and model disagreement—into **precise, art‑grade visuals** with a documented, one‑to‑one mapping. We are **not** an enterprise tracing dashboard or an attention‑map explainer; we are a truthful visual instrument for builders, creators and educators.
+While one could use a local model via a basic chat or CLI (like Ollama's default interface), **WIRTHFORGE's interface is essential** for mainstream adoption. It provides a seamless experience that **abstracts away technical hurdles** (auto-detecting hardware, one-click setup, model management) so that users can get started in seconds. This lowers the barrier for non-technical users who would otherwise struggle with configuring local AI. More importantly, WIRTHFORGE adds value by orchestrating and visualizing AI interactions in ways a simple chat cannot. It **"makes their models magical through visualization and gamification"**. In other words, the platform doesn't replace the AI models; it **amplifies** them. Users still leverage the same local AI core, but WIRTHFORGE's interface unlocks advanced capabilities (like running multiple models together, see below) and presents outcomes in an intuitive, captivating form. Without this layer, using local AI would be like using raw electricity without any appliance – powerful but not user-friendly. WIRTHFORGE channels that power into an accessible experience.
 
 ## Honesty First — WVMP & Evidence Mode
 

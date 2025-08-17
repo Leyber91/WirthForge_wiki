@@ -1,0 +1,86 @@
+graph TB
+    subgraph "WIRTHFORGE Master Architecture"
+        META[WF-META-001<br/>Master Guide<br/>🧬 Beacon]
+        
+        subgraph "Foundation Layer (P0)"
+            FND1[WF-FND-001<br/>Vision & Principles]
+            FND2[WF-FND-002<br/>Energy & Consciousness]
+            FND3[WF-FND-003<br/>Core Architecture]
+            FND4[WF-FND-004<br/>The Decipher]
+            FND5[WF-FND-005<br/>Module System]
+            FND6[WF-FND-006<br/>Glossary]
+        end
+        
+        subgraph "Technical Layer (P0-P1)"
+            TECH1[WF-TECH-001<br/>System Architecture]
+            TECH2[WF-TECH-002<br/>Local AI Integration]
+            TECH3[WF-TECH-003<br/>Real-Time Protocol]
+            TECH4[WF-TECH-004<br/>State Management]
+            TECH5[WF-TECH-005<br/>Security & Privacy]
+            TECH6[WF-TECH-006<br/>API Integration]
+            TECH7[WF-TECH-007<br/>Quality & Ops]
+            TECH8[WF-TECH-008<br/>Core Algorithms]
+        end
+        
+        subgraph "User Experience Layer (P0-P1)"
+            UX6[WF-UX-006<br/>Energy Visualization]
+            UX1[WF-UX-001<br/>Lightning Strikes]
+            UX2[WF-UX-002<br/>Parallel Streams]
+            UX3[WF-UX-003<br/>Structured Architectures]
+            UX4[WF-UX-004<br/>Adaptive Fields]
+            UX5[WF-UX-005<br/>Resonance Fields]
+        end
+        
+        subgraph "Business Layer (P2)"
+            BIZ1[WF-BIZ-001<br/>Business Model]
+            BIZ2[WF-BIZ-002<br/>Legal & Policy]
+        end
+    end
+    
+    %% Primary Dependencies
+    META --> FND1
+    META --> FND6
+    FND1 --> FND2
+    FND2 --> FND3
+    FND3 --> FND4
+    FND4 --> FND5
+    
+    %% Tech Dependencies
+    FND3 --> TECH1
+    FND4 --> TECH1
+    TECH1 --> TECH2
+    TECH1 --> TECH3
+    TECH1 --> TECH4
+    TECH1 --> TECH5
+    TECH5 --> TECH6
+    TECH6 --> TECH7
+    FND4 --> TECH8
+    
+    %% UX Dependencies
+    FND2 --> UX6
+    TECH3 --> UX6
+    TECH4 --> UX6
+    UX6 --> UX1
+    TECH2 --> UX1
+    UX1 --> UX2
+    TECH8 --> UX2
+    UX2 --> UX3
+    UX3 --> UX4
+    UX4 --> UX5
+    
+    %% Business Dependencies
+    FND1 --> BIZ1
+    TECH5 --> BIZ2
+    
+    %% Styling
+    classDef meta fill:#f59e0b,stroke:#d97706,stroke-width:3px,color:#000
+    classDef foundation fill:#3b82f6,stroke:#2563eb,stroke-width:2px,color:#fff
+    classDef tech fill:#10b981,stroke:#059669,stroke-width:2px,color:#fff
+    classDef ux fill:#a855f7,stroke:#9333ea,stroke-width:2px,color:#fff
+    classDef biz fill:#ef4444,stroke:#dc2626,stroke-width:2px,color:#fff
+    
+    class META meta
+    class FND1,FND2,FND3,FND4,FND5,FND6 foundation
+    class TECH1,TECH2,TECH3,TECH4,TECH5,TECH6,TECH7,TECH8 tech
+    class UX1,UX2,UX3,UX4,UX5,UX6 ux
+    class BIZ1,BIZ2 biz

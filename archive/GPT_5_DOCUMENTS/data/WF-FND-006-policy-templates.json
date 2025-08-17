@@ -1,0 +1,510 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "WIRTHFORGE Governance Policy Templates",
+  "description": "Standardized templates for creating governance policies and procedures",
+  "type": "object",
+  "properties": {
+    "policy_template_framework": {
+      "type": "object",
+      "description": "Standard framework for all governance policies",
+      "properties": {
+        "policy_header": {
+          "type": "object",
+          "properties": {
+            "policy_id": {
+              "type": "string",
+              "pattern": "^WF-POL-[0-9]{3}$",
+              "description": "Unique policy identifier following WF-POL-XXX format"
+            },
+            "policy_title": {
+              "type": "string",
+              "description": "Clear, descriptive title of the policy"
+            },
+            "version": {
+              "type": "string",
+              "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$",
+              "description": "Semantic version number"
+            },
+            "effective_date": {
+              "type": "string",
+              "format": "date",
+              "description": "Date when policy becomes effective"
+            },
+            "review_date": {
+              "type": "string",
+              "format": "date",
+              "description": "Next scheduled review date"
+            },
+            "owner": {
+              "type": "string",
+              "description": "Governance board member responsible for policy"
+            },
+            "approval_authority": {
+              "type": "string",
+              "enum": ["governance_board", "technical_architect", "security_officer"],
+              "description": "Authority level required for approval"
+            }
+          },
+          "required": ["policy_id", "policy_title", "version", "effective_date", "review_date", "owner", "approval_authority"]
+        },
+        "policy_body": {
+          "type": "object",
+          "properties": {
+            "purpose": {
+              "type": "string",
+              "description": "Clear statement of policy purpose and objectives"
+            },
+            "scope": {
+              "type": "string",
+              "description": "What systems, processes, or personnel are covered"
+            },
+            "core_principle_alignment": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": ["local_first", "no_docker", "60fps_performance", "energy_truth", "ui_presence", "emergent_behavior"]
+              },
+              "description": "Which core principles this policy supports"
+            },
+            "policy_statements": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "statement_id": { "type": "string" },
+                  "requirement": { "type": "string" },
+                  "enforcement_level": {
+                    "type": "string",
+                    "enum": ["mandatory", "recommended", "optional"]
+                  },
+                  "verification_method": { "type": "string" }
+                },
+                "required": ["statement_id", "requirement", "enforcement_level", "verification_method"]
+              }
+            },
+            "exceptions": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "condition": { "type": "string" },
+                  "approval_required": { "type": "string" },
+                  "documentation_requirements": { "type": "string" }
+                },
+                "required": ["condition", "approval_required", "documentation_requirements"]
+              }
+            }
+          },
+          "required": ["purpose", "scope", "core_principle_alignment", "policy_statements"]
+        }
+      },
+      "required": ["policy_header", "policy_body"]
+    },
+    "specific_policy_templates": {
+      "type": "object",
+      "description": "Pre-configured templates for common policy types",
+      "properties": {
+        "feature_development_policy": {
+          "type": "object",
+          "properties": {
+            "template_id": { "type": "string", "const": "WF-TEMPLATE-001" },
+            "template_name": { "type": "string", "const": "Feature Development Policy Template" },
+            "default_values": {
+              "type": "object",
+              "properties": {
+                "policy_id": { "type": "string", "const": "WF-POL-XXX" },
+                "policy_title": { "type": "string", "const": "[Feature Name] Development Policy" },
+                "owner": { "type": "string", "const": "technical_architect" },
+                "approval_authority": { "type": "string", "const": "governance_board" },
+                "core_principle_alignment": {
+                  "type": "array",
+                  "items": { "type": "string" },
+                  "const": ["local_first", "60fps_performance", "energy_truth"]
+                },
+                "required_policy_statements": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "statement_id": { "type": "string" },
+                      "requirement": { "type": "string" },
+                      "enforcement_level": { "type": "string" },
+                      "verification_method": { "type": "string" }
+                    },
+                    "required": ["statement_id", "requirement", "enforcement_level", "verification_method"]
+                  },
+                  "const": [
+                    {
+                      "statement_id": "FD-001",
+                      "requirement": "All new features must undergo sandbox testing before production deployment",
+                      "enforcement_level": "mandatory",
+                      "verification_method": "Sandbox test results documentation"
+                    },
+                    {
+                      "statement_id": "FD-002",
+                      "requirement": "Performance impact assessment required for all features",
+                      "enforcement_level": "mandatory",
+                      "verification_method": "Performance benchmark comparison"
+                    },
+                    {
+                      "statement_id": "FD-003",
+                      "requirement": "Core principle compliance verification required",
+                      "enforcement_level": "mandatory",
+                      "verification_method": "Governance board review and approval"
+                    }
+                  ]
+                }
+              },
+              "required": ["policy_id", "policy_title", "owner", "approval_authority", "core_principle_alignment", "required_policy_statements"]
+            }
+          },
+          "required": ["template_id", "template_name", "default_values"]
+        },
+        "security_policy": {
+          "type": "object",
+          "properties": {
+            "template_id": { "type": "string", "const": "WF-TEMPLATE-002" },
+            "template_name": { "type": "string", "const": "Security Policy Template" },
+            "default_values": {
+              "type": "object",
+              "properties": {
+                "policy_id": { "type": "string", "const": "WF-POL-XXX" },
+                "policy_title": { "type": "string", "const": "[Security Domain] Security Policy" },
+                "owner": { "type": "string", "const": "security_compliance_officer" },
+                "approval_authority": { "type": "string", "const": "security_officer" },
+                "core_principle_alignment": {
+                  "type": "array",
+                  "items": { "type": "string" },
+                  "const": ["local_first", "no_docker", "ui_presence"]
+                },
+                "required_policy_statements": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "statement_id": { "type": "string" },
+                      "requirement": { "type": "string" },
+                      "enforcement_level": { "type": "string" },
+                      "verification_method": { "type": "string" }
+                    },
+                    "required": ["statement_id", "requirement", "enforcement_level", "verification_method"]
+                  },
+                  "const": [
+                    {
+                      "statement_id": "SEC-001",
+                      "requirement": "All data processing must occur within local security boundaries",
+                      "enforcement_level": "mandatory",
+                      "verification_method": "Network traffic analysis and data flow audit"
+                    },
+                    {
+                      "statement_id": "SEC-002",
+                      "requirement": "User data sovereignty must be maintained at all times",
+                      "enforcement_level": "mandatory",
+                      "verification_method": "Data storage location verification and access control audit"
+                    },
+                    {
+                      "statement_id": "SEC-003",
+                      "requirement": "Security incidents must be logged and reported within 1 hour",
+                      "enforcement_level": "mandatory",
+                      "verification_method": "Incident response log review"
+                    }
+                  ]
+                }
+              },
+              "required": ["policy_id", "policy_title", "owner", "approval_authority", "core_principle_alignment", "required_policy_statements"]
+            }
+          },
+          "required": ["template_id", "template_name", "default_values"]
+        },
+        "performance_policy": {
+          "type": "object",
+          "properties": {
+            "template_id": { "type": "string", "const": "WF-TEMPLATE-003" },
+            "template_name": { "type": "string", "const": "Performance Policy Template" },
+            "default_values": {
+              "type": "object",
+              "properties": {
+                "policy_id": { "type": "string", "const": "WF-POL-XXX" },
+                "policy_title": { "type": "string", "const": "[Component] Performance Policy" },
+                "owner": { "type": "string", "const": "technical_architect" },
+                "approval_authority": { "type": "string", "const": "technical_architect" },
+                "core_principle_alignment": {
+                  "type": "array",
+                  "items": { "type": "string" },
+                  "const": ["60fps_performance", "energy_truth", "emergent_behavior"]
+                },
+                "required_policy_statements": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "statement_id": { "type": "string" },
+                      "requirement": { "type": "string" },
+                      "enforcement_level": { "type": "string" },
+                      "verification_method": { "type": "string" }
+                    },
+                    "required": ["statement_id", "requirement", "enforcement_level", "verification_method"]
+                  },
+                  "const": [
+                    {
+                      "statement_id": "PERF-001",
+                      "requirement": "All operations must complete within 16.67ms frame budget",
+                      "enforcement_level": "mandatory",
+                      "verification_method": "Real-time performance monitoring and frame timing analysis"
+                    },
+                    {
+                      "statement_id": "PERF-002",
+                      "requirement": "Performance degradation triggers must initiate automatic mitigation",
+                      "enforcement_level": "mandatory",
+                      "verification_method": "Automated response system testing"
+                    },
+                    {
+                      "statement_id": "PERF-003",
+                      "requirement": "Performance metrics must be collected and analyzed continuously",
+                      "enforcement_level": "mandatory",
+                      "verification_method": "Metrics collection system audit"
+                    }
+                  ]
+                }
+              },
+              "required": ["policy_id", "policy_title", "owner", "approval_authority", "core_principle_alignment", "required_policy_statements"]
+            }
+          },
+          "required": ["template_id", "template_name", "default_values"]
+        },
+        "sandbox_policy": {
+          "type": "object",
+          "properties": {
+            "template_id": { "type": "string", "const": "WF-TEMPLATE-004" },
+            "template_name": { "type": "string", "const": "Sandbox Environment Policy Template" },
+            "default_values": {
+              "type": "object",
+              "properties": {
+                "policy_id": { "type": "string", "const": "WF-POL-XXX" },
+                "policy_title": { "type": "string", "const": "[Sandbox Type] Sandbox Policy" },
+                "owner": { "type": "string", "const": "technical_architect" },
+                "approval_authority": { "type": "string", "const": "governance_board" },
+                "core_principle_alignment": {
+                  "type": "array",
+                  "items": { "type": "string" },
+                  "const": ["local_first", "no_docker", "ui_presence"]
+                },
+                "required_policy_statements": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "statement_id": { "type": "string" },
+                      "requirement": { "type": "string" },
+                      "enforcement_level": { "type": "string" },
+                      "verification_method": { "type": "string" }
+                    },
+                    "required": ["statement_id", "requirement", "enforcement_level", "verification_method"]
+                  },
+                  "const": [
+                    {
+                      "statement_id": "SAND-001",
+                      "requirement": "Sandbox environments must be completely isolated from production systems",
+                      "enforcement_level": "mandatory",
+                      "verification_method": "Network isolation testing and access control verification"
+                    },
+                    {
+                      "statement_id": "SAND-002",
+                      "requirement": "Resource limits must be enforced to prevent system impact",
+                      "enforcement_level": "mandatory",
+                      "verification_method": "Resource monitoring and limit enforcement testing"
+                    },
+                    {
+                      "statement_id": "SAND-003",
+                      "requirement": "Sandbox cleanup must be completed within 24 hours of test completion",
+                      "enforcement_level": "mandatory",
+                      "verification_method": "Automated cleanup verification and manual audit"
+                    },
+                    {
+                      "statement_id": "SAND-004",
+                      "requirement": "Promotion to production requires documented approval from governance board",
+                      "enforcement_level": "mandatory",
+                      "verification_method": "Approval documentation review and signature verification"
+                    }
+                  ]
+                }
+              },
+              "required": ["policy_id", "policy_title", "owner", "approval_authority", "core_principle_alignment", "required_policy_statements"]
+            }
+          },
+          "required": ["template_id", "template_name", "default_values"]
+        }
+      },
+      "required": ["feature_development_policy", "security_policy", "performance_policy", "sandbox_policy"]
+    },
+    "policy_creation_workflow": {
+      "type": "object",
+      "description": "Step-by-step workflow for creating new policies",
+      "properties": {
+        "workflow_steps": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "step_number": { "type": "integer" },
+              "step_name": { "type": "string" },
+              "description": { "type": "string" },
+              "responsible_party": { "type": "string" },
+              "deliverables": {
+                "type": "array",
+                "items": { "type": "string" }
+              },
+              "approval_required": { "type": "boolean" },
+              "estimated_duration": { "type": "string" }
+            },
+            "required": ["step_number", "step_name", "description", "responsible_party", "deliverables", "approval_required", "estimated_duration"]
+          },
+          "const": [
+            {
+              "step_number": 1,
+              "step_name": "Policy Need Identification",
+              "description": "Identify the need for a new policy based on gaps, incidents, or new requirements",
+              "responsible_party": "any_governance_board_member",
+              "deliverables": ["Policy need assessment document", "Initial scope definition"],
+              "approval_required": false,
+              "estimated_duration": "1-2 days"
+            },
+            {
+              "step_number": 2,
+              "step_name": "Template Selection",
+              "description": "Select appropriate policy template or create custom template if needed",
+              "responsible_party": "policy_owner",
+              "deliverables": ["Selected template", "Customization requirements"],
+              "approval_required": false,
+              "estimated_duration": "1 day"
+            },
+            {
+              "step_number": 3,
+              "step_name": "Policy Drafting",
+              "description": "Create initial policy draft using selected template",
+              "responsible_party": "policy_owner",
+              "deliverables": ["Policy draft v0.1", "Core principle alignment verification"],
+              "approval_required": false,
+              "estimated_duration": "3-5 days"
+            },
+            {
+              "step_number": 4,
+              "step_name": "Stakeholder Review",
+              "description": "Circulate draft to relevant stakeholders for feedback",
+              "responsible_party": "policy_owner",
+              "deliverables": ["Stakeholder feedback compilation", "Policy draft v0.2"],
+              "approval_required": false,
+              "estimated_duration": "1 week"
+            },
+            {
+              "step_number": 5,
+              "step_name": "Governance Board Review",
+              "description": "Present policy to governance board for formal review",
+              "responsible_party": "governance_board",
+              "deliverables": ["Board review minutes", "Approval decision", "Required modifications"],
+              "approval_required": true,
+              "estimated_duration": "1-2 weeks"
+            },
+            {
+              "step_number": 6,
+              "step_name": "Policy Finalization",
+              "description": "Incorporate board feedback and finalize policy",
+              "responsible_party": "policy_owner",
+              "deliverables": ["Final policy document v1.0", "Implementation plan"],
+              "approval_required": false,
+              "estimated_duration": "2-3 days"
+            },
+            {
+              "step_number": 7,
+              "step_name": "Policy Publication",
+              "description": "Publish policy and communicate to affected parties",
+              "responsible_party": "governance_board",
+              "deliverables": ["Published policy", "Communication plan execution", "Training materials"],
+              "approval_required": false,
+              "estimated_duration": "1 week"
+            }
+          ]
+        },
+        "quality_gates": {
+          "type": "object",
+          "properties": {
+            "core_principle_compliance": {
+              "type": "string",
+              "const": "All policies must explicitly address core principle alignment"
+            },
+            "enforceability": {
+              "type": "string",
+              "const": "All policy statements must include clear verification methods"
+            },
+            "completeness": {
+              "type": "string",
+              "const": "Policies must address purpose, scope, requirements, and exceptions"
+            },
+            "stakeholder_approval": {
+              "type": "string",
+              "const": "Affected stakeholders must provide formal approval before publication"
+            }
+          },
+          "required": ["core_principle_compliance", "enforceability", "completeness", "stakeholder_approval"]
+        }
+      },
+      "required": ["workflow_steps", "quality_gates"]
+    },
+    "policy_maintenance": {
+      "type": "object",
+      "description": "Framework for ongoing policy maintenance and updates",
+      "properties": {
+        "review_schedule": {
+          "type": "object",
+          "properties": {
+            "routine_reviews": {
+              "type": "object",
+              "properties": {
+                "frequency": { "type": "string", "const": "annually" },
+                "scope": { "type": "string", "const": "all_active_policies" },
+                "responsible_party": { "type": "string", "const": "policy_owner" },
+                "deliverables": {
+                  "type": "array",
+                  "items": { "type": "string" },
+                  "const": ["Policy relevance assessment", "Update recommendations", "Retirement proposals"]
+                }
+              },
+              "required": ["frequency", "scope", "responsible_party", "deliverables"]
+            },
+            "triggered_reviews": {
+              "type": "object",
+              "properties": {
+                "triggers": {
+                  "type": "array",
+                  "items": { "type": "string" },
+                  "const": [
+                    "Core principle changes",
+                    "Major system architecture updates",
+                    "Compliance violations",
+                    "Stakeholder requests"
+                  ]
+                },
+                "response_time": { "type": "string", "const": "within_30_days" },
+                "scope": { "type": "string", "const": "affected_policies_only" }
+              },
+              "required": ["triggers", "response_time", "scope"]
+            }
+          },
+          "required": ["routine_reviews", "triggered_reviews"]
+        },
+        "version_control": {
+          "type": "object",
+          "properties": {
+            "versioning_scheme": { "type": "string", "const": "semantic_versioning" },
+            "change_documentation": { "type": "string", "const": "all_changes_must_be_documented_with_rationale" },
+            "backward_compatibility": { "type": "string", "const": "breaking_changes_require_governance_board_approval" },
+            "deprecation_process": { "type": "string", "const": "6_month_notice_period_for_policy_retirement" }
+          },
+          "required": ["versioning_scheme", "change_documentation", "backward_compatibility", "deprecation_process"]
+        }
+      },
+      "required": ["review_schedule", "version_control"]
+    }
+  },
+  "required": ["policy_template_framework", "specific_policy_templates", "policy_creation_workflow", "policy_maintenance"]
+}

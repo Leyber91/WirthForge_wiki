@@ -1,0 +1,260 @@
+{
+  "schema_version": "tech-002-v1.0.0",
+  "api_version": "1.0.0",
+  "endpoints": {
+    "/models": {
+      "GET": {
+        "description": "List available local models and their status",
+        "response": {
+          "type": "object",
+          "properties": {
+            "models": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {"type": "string"},
+                  "size_gb": {"type": "number"},
+                  "status": {"type": "string", "enum": ["loaded", "available", "downloading"]},
+                  "last_used": {"type": "string", "format": "iso8601"},
+                  "memory_usage_mb": {"type": "number"},
+                  "capabilities": {
+                    "type": "array",
+                    "items": {"type": "string"}
+                  }
+                }
+              }
+            },
+            "total_memory_gb": {"type": "number"},
+            "available_memory_gb": {"type": "number"}
+          }
+        }
+      }
+    },
+    "/models/load": {
+      "POST": {
+        "description": "Load a model into memory",
+        "request": {
+          "type": "object",
+          "properties": {
+            "name": {"type": "string"},
+            "priority": {"type": "string", "enum": ["low", "normal", "high"]},
+            "warm_up": {"type": "boolean", "default": true}
+          },
+          "required": ["name"]
+        },
+        "response": {
+          "type": "object",
+          "properties": {
+            "success": {"type": "boolean"},
+            "model": {"type": "string"},
+            "load_time_ms": {"type": "number"},
+            "memory_allocated_mb": {"type": "number"}
+          }
+        }
+      }
+    },
+    "/generate": {
+      "POST": {
+        "description": "Start token generation stream",
+        "request": {
+          "type": "object",
+          "properties": {
+            "model": {"type": "string"},
+            "prompt": {"type": "string"},
+            "mode": {"type": "string", "enum": ["single", "turbo"], "default": "single"},
+            "models": {
+              "type": "array",
+              "items": {"type": "string"},
+              "description": "For turbo mode only"
+            },
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "temperature": {"type": "number", "minimum": 0, "maximum": 2},
+                "top_p": {"type": "number", "minimum": 0, "maximum": 1},
+                "max_tokens": {"type": "integer", "minimum": 1},
+                "stop": {"type": "array", "items": {"type": "string"}}
+              }
+            }
+          },
+          "required": ["model", "prompt"]
+        },
+        "response": {
+          "type": "object",
+          "properties": {
+            "session_id": {"type": "string"},
+            "stream_url": {"type": "string"},
+            "estimated_tokens": {"type": "integer"}
+          }
+        }
+      }
+    },
+    "/stop": {
+      "POST": {
+        "description": "Stop active generation session",
+        "request": {
+          "type": "object",
+          "properties": {
+            "session_id": {"type": "string"}
+          },
+          "required": ["session_id"]
+        },
+        "response": {
+          "type": "object",
+          "properties": {
+            "success": {"type": "boolean"},
+            "tokens_generated": {"type": "integer"},
+            "duration_ms": {"type": "number"}
+          }
+        }
+      }
+    },
+    "/stats": {
+      "GET": {
+        "description": "Get real-time performance statistics",
+        "response": {
+          "type": "object",
+          "properties": {
+            "models": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "object",
+                "properties": {
+                  "tps_current": {"type": "number"},
+                  "tps_average": {"type": "number"},
+                  "ttft_ms": {"type": "number"},
+                  "energy_rate": {"type": "number"},
+                  "active_sessions": {"type": "integer"},
+                  "total_tokens": {"type": "integer"}
+                }
+              }
+            },
+            "system": {
+              "type": "object",
+              "properties": {
+                "fps_current": {"type": "number"},
+                "fps_average": {"type": "number"},
+                "memory_usage_percent": {"type": "number"},
+                "cpu_usage_percent": {"type": "number"},
+                "active_models": {"type": "integer"}
+              }
+            },
+            "turbo": {
+              "type": "object",
+              "properties": {
+                "active_ensembles": {"type": "integer"},
+                "diversity_index": {"type": "number"},
+                "ensemble_energy": {"type": "number"},
+                "sync_latency_ms": {"type": "number"}
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "events": {
+    "token_generated": {
+      "description": "Emitted for each generated token",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "session_id": {"type": "string"},
+          "token": {"type": "string"},
+          "timestamp_ms": {"type": "integer"},
+          "delta_ms": {"type": "integer"},
+          "model": {"type": "string"},
+          "energy": {"type": "number", "minimum": 0, "maximum": 1},
+          "logprobs": {
+            "type": "array",
+            "items": {"type": "number"}
+          },
+          "metadata": {
+            "type": "object",
+            "properties": {
+              "position": {"type": "integer"},
+              "is_final": {"type": "boolean"}
+            }
+          }
+        },
+        "required": ["session_id", "token", "timestamp_ms", "model", "energy"]
+      }
+    },
+    "ensemble_token": {
+      "description": "Emitted for turbo ensemble tokens",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "session_id": {"type": "string"},
+          "tokens": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "token": {"type": "string"},
+                "model": {"type": "string"},
+                "energy": {"type": "number"},
+                "confidence": {"type": "number"}
+              }
+            }
+          },
+          "ensemble_energy": {"type": "number"},
+          "diversity_index": {"type": "number"},
+          "timestamp_ms": {"type": "integer"}
+        },
+        "required": ["session_id", "tokens", "ensemble_energy", "timestamp_ms"]
+      }
+    },
+    "frame_update": {
+      "description": "60Hz frame update with aggregated metrics",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "frame_id": {"type": "integer"},
+          "timestamp_ms": {"type": "integer"},
+          "energy_values": {
+            "type": "array",
+            "items": {"type": "number"}
+          },
+          "active_sessions": {"type": "integer"},
+          "system_health": {
+            "type": "object",
+            "properties": {
+              "fps": {"type": "number"},
+              "memory_usage": {"type": "number"},
+              "model_count": {"type": "integer"}
+            }
+          }
+        },
+        "required": ["frame_id", "timestamp_ms", "energy_values"]
+      }
+    }
+  },
+  "error_codes": {
+    "MODEL_NOT_FOUND": {
+      "code": 404,
+      "message": "Requested model not available"
+    },
+    "MODEL_LOAD_FAILED": {
+      "code": 500,
+      "message": "Failed to load model into memory"
+    },
+    "INSUFFICIENT_MEMORY": {
+      "code": 507,
+      "message": "Not enough memory to load model"
+    },
+    "SESSION_NOT_FOUND": {
+      "code": 404,
+      "message": "Generation session not found"
+    },
+    "TIER_LIMIT_EXCEEDED": {
+      "code": 429,
+      "message": "Tier resource limits exceeded"
+    },
+    "TURBO_NOT_AVAILABLE": {
+      "code": 403,
+      "message": "Turbo mode not available for current tier"
+    }
+  }
+}

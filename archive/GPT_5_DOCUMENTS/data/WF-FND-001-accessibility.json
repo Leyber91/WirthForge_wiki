@@ -1,0 +1,306 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://wirthforge.ai/schemas/accessibility-specs.json",
+  "title": "WF-FND-001 Accessibility Specifications",
+  "description": "Comprehensive accessibility requirements and compliance specifications for all WF-FND-001 assets",
+  "type": "object",
+  "required": ["wcagCompliance", "colorContrast", "textAlternatives", "keyboardNavigation", "screenReader"],
+  "properties": {
+    "wcagCompliance": {
+      "type": "object",
+      "required": ["level", "guidelines", "testingCriteria"],
+      "properties": {
+        "level": {
+          "type": "string",
+          "const": "AA",
+          "description": "WCAG 2.2 Level AA compliance required"
+        },
+        "guidelines": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "principle": {"type": "string", "enum": ["Perceivable", "Operable", "Understandable", "Robust"]},
+              "guideline": {"type": "string"},
+              "successCriteria": {"type": "array", "items": {"type": "string"}},
+              "level": {"type": "string", "enum": ["A", "AA", "AAA"]}
+            }
+          },
+          "minItems": 4
+        },
+        "testingCriteria": {
+          "type": "object",
+          "properties": {
+            "automated": {"type": "array", "items": {"type": "string"}},
+            "manual": {"type": "array", "items": {"type": "string"}},
+            "userTesting": {"type": "array", "items": {"type": "string"}}
+          }
+        }
+      }
+    },
+    "colorContrast": {
+      "type": "object",
+      "required": ["ratios", "validatedPairs", "colorBlindness"],
+      "properties": {
+        "ratios": {
+          "type": "object",
+          "properties": {
+            "normalText": {"type": "number", "minimum": 4.5},
+            "largeText": {"type": "number", "minimum": 3.0},
+            "uiComponents": {"type": "number", "minimum": 3.0},
+            "graphicalObjects": {"type": "number", "minimum": 3.0}
+          }
+        },
+        "validatedPairs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "foreground": {"type": "string", "pattern": "^#[0-9a-fA-F]{6}$"},
+              "background": {"type": "string", "pattern": "^#[0-9a-fA-F]{6}$"},
+              "ratio": {"type": "number"},
+              "compliant": {"type": "boolean"},
+              "usage": {"type": "string"}
+            }
+          }
+        },
+        "colorBlindness": {
+          "type": "object",
+          "properties": {
+            "protanopia": {"type": "boolean", "const": true},
+            "deuteranopia": {"type": "boolean", "const": true},
+            "tritanopia": {"type": "boolean", "const": true},
+            "achromatopsia": {"type": "boolean", "const": true}
+          }
+        }
+      }
+    },
+    "textAlternatives": {
+      "type": "object",
+      "required": ["images", "diagrams", "icons", "decorativeElements"],
+      "properties": {
+        "images": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "filename": {"type": "string"},
+              "altText": {"type": "string", "minLength": 10, "maxLength": 125},
+              "longDescription": {"type": "string"},
+              "context": {"type": "string"}
+            }
+          }
+        },
+        "diagrams": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "filename": {"type": "string"},
+              "altText": {"type": "string"},
+              "detailedDescription": {"type": "string"},
+              "dataTable": {"type": "string", "description": "Path to accessible data table version"}
+            }
+          }
+        },
+        "icons": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "symbol": {"type": "string"},
+              "meaning": {"type": "string"},
+              "altText": {"type": "string"},
+              "ariaLabel": {"type": "string"}
+            }
+          }
+        },
+        "decorativeElements": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "element": {"type": "string"},
+              "altText": {"type": "string", "const": ""},
+              "ariaHidden": {"type": "boolean", "const": true}
+            }
+          }
+        }
+      }
+    },
+    "keyboardNavigation": {
+      "type": "object",
+      "required": ["focusOrder", "keyboardShortcuts", "trapFocus"],
+      "properties": {
+        "focusOrder": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "Logical tab order for interactive elements"
+        },
+        "keyboardShortcuts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "key": {"type": "string"},
+              "action": {"type": "string"},
+              "description": {"type": "string"}
+            }
+          }
+        },
+        "trapFocus": {
+          "type": "boolean",
+          "description": "Focus management for modal dialogs"
+        }
+      }
+    },
+    "screenReader": {
+      "type": "object",
+      "required": ["compatibility", "landmarks", "headingStructure", "announcements"],
+      "properties": {
+        "compatibility": {
+          "type": "array",
+          "items": {"type": "string", "enum": ["NVDA", "JAWS", "VoiceOver", "TalkBack", "Orca"]},
+          "minItems": 3
+        },
+        "landmarks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "role": {"type": "string", "enum": ["banner", "navigation", "main", "complementary", "contentinfo"]},
+              "label": {"type": "string"},
+              "description": {"type": "string"}
+            }
+          }
+        },
+        "headingStructure": {
+          "type": "object",
+          "properties": {
+            "h1": {"type": "string", "description": "Main page title"},
+            "h2": {"type": "array", "items": {"type": "string"}},
+            "h3": {"type": "array", "items": {"type": "string"}},
+            "logical": {"type": "boolean", "const": true}
+          }
+        },
+        "announcements": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "trigger": {"type": "string"},
+              "message": {"type": "string"},
+              "priority": {"type": "string", "enum": ["polite", "assertive", "off"]}
+            }
+          }
+        }
+      }
+    },
+    "visualDesign": {
+      "type": "object",
+      "required": ["typography", "spacing", "animation", "responsive"],
+      "properties": {
+        "typography": {
+          "type": "object",
+          "properties": {
+            "minimumSize": {"type": "string", "const": "16px"},
+            "lineHeight": {"type": "number", "minimum": 1.5},
+            "letterSpacing": {"type": "string"},
+            "fontWeight": {"type": "number", "minimum": 400}
+          }
+        },
+        "spacing": {
+          "type": "object",
+          "properties": {
+            "clickTargets": {"type": "string", "const": "44px"},
+            "whitespace": {"type": "string", "description": "Adequate spacing between elements"},
+            "margins": {"type": "string", "description": "Consistent margin system"}
+          }
+        },
+        "animation": {
+          "type": "object",
+          "properties": {
+            "respectMotionPreference": {"type": "boolean", "const": true},
+            "maxDuration": {"type": "string", "const": "5s"},
+            "pauseControl": {"type": "boolean", "const": true}
+          }
+        },
+        "responsive": {
+          "type": "object",
+          "properties": {
+            "zoomSupport": {"type": "string", "const": "400%"},
+            "reflow": {"type": "boolean", "const": true},
+            "orientation": {"type": "array", "items": {"type": "string", "enum": ["portrait", "landscape"]}}
+          }
+        }
+      }
+    },
+    "testing": {
+      "type": "object",
+      "required": ["tools", "procedures", "userGroups"],
+      "properties": {
+        "tools": {
+          "type": "array",
+          "items": {"type": "string", "enum": ["axe-core", "WAVE", "Lighthouse", "Color Oracle", "Screen Reader"]},
+          "minItems": 3
+        },
+        "procedures": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "test": {"type": "string"},
+              "method": {"type": "string", "enum": ["automated", "manual", "user"]},
+              "frequency": {"type": "string", "enum": ["pre-release", "post-release", "continuous"]},
+              "criteria": {"type": "string"}
+            }
+          }
+        },
+        "userGroups": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "disability": {"type": "string"},
+              "assistiveTech": {"type": "string"},
+              "testingFocus": {"type": "string"}
+            }
+          }
+        }
+      }
+    },
+    "compliance": {
+      "type": "object",
+      "required": ["certifications", "audits", "documentation"],
+      "properties": {
+        "certifications": {
+          "type": "array",
+          "items": {"type": "string", "enum": ["WCAG 2.2 AA", "Section 508", "EN 301 549", "ADA"]}
+        },
+        "audits": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "date": {"type": "string", "format": "date"},
+              "auditor": {"type": "string"},
+              "scope": {"type": "string"},
+              "result": {"type": "string", "enum": ["pass", "conditional-pass", "fail"]},
+              "issues": {"type": "array", "items": {"type": "string"}},
+              "recommendations": {"type": "array", "items": {"type": "string"}}
+            }
+          }
+        },
+        "documentation": {
+          "type": "object",
+          "properties": {
+            "accessibilityStatement": {"type": "string"},
+            "userGuide": {"type": "string"},
+            "supportContact": {"type": "string"},
+            "feedbackMechanism": {"type": "string"}
+          }
+        }
+      }
+    }
+  }
+}

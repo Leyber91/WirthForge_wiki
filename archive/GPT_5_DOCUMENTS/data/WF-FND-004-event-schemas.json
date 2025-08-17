@@ -1,0 +1,771 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "DECIPHER Event Schemas",
+  "description": "JSON schemas for DECIPHER Layer 3 energy events, state management, and audit data structures",
+  "version": "1.0.0",
+  "definitions": {
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp with microsecond precision"
+    },
+    "frameId": {
+      "type": "string",
+      "pattern": "^frame_[0-9]+_[0-9]{13}$",
+      "description": "Unique frame identifier: frame_{sequence}_{timestamp_ms}"
+    },
+    "energyUnit": {
+      "type": "number",
+      "minimum": 0,
+      "multipleOf": 0.001,
+      "description": "Energy Unit (EU) value with 3 decimal precision"
+    },
+    "modelId": {
+      "type": "string",
+      "pattern": "^[a-z0-9_-]+$",
+      "description": "Model identifier (e.g., llama2_7b, codellama_13b)"
+    },
+    "streamId": {
+      "type": "string",
+      "pattern": "^stream_[a-f0-9]{8}$",
+      "description": "Token stream identifier"
+    },
+    "uxLevel": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 5,
+      "description": "User experience level (1-5)"
+    }
+  },
+  "schemas": {
+    "energyUpdateEvent": {
+      "type": "object",
+      "required": ["type", "timestamp", "frameId", "energy", "metadata"],
+      "properties": {
+        "type": {
+          "const": "energy_update"
+        },
+        "timestamp": {
+          "$ref": "#/definitions/timestamp"
+        },
+        "frameId": {
+          "$ref": "#/definitions/frameId"
+        },
+        "energy": {
+          "type": "object",
+          "required": ["current", "rate", "accumulated"],
+          "properties": {
+            "current": {
+              "$ref": "#/definitions/energyUnit",
+              "description": "Current frame energy value"
+            },
+            "rate": {
+              "type": "number",
+              "description": "Energy rate (EU/second)"
+            },
+            "accumulated": {
+              "$ref": "#/definitions/energyUnit",
+              "description": "Total accumulated energy"
+            },
+            "smoothed": {
+              "$ref": "#/definitions/energyUnit",
+              "description": "EMA smoothed energy value"
+            },
+            "peak": {
+              "$ref": "#/definitions/energyUnit",
+              "description": "Peak energy in current session"
+            }
+          }
+        },
+        "tokens": {
+          "type": "object",
+          "required": ["count", "rate"],
+          "properties": {
+            "count": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Tokens processed in this frame"
+            },
+            "rate": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Tokens per second"
+            },
+            "total": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Total tokens processed in session"
+            }
+          }
+        },
+        "metadata": {
+          "type": "object",
+          "required": ["frameSequence", "frameDuration"],
+          "properties": {
+            "frameSequence": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Sequential frame number"
+            },
+            "frameDuration": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 20,
+              "description": "Frame processing duration in milliseconds"
+            },
+            "uxLevel": {
+              "$ref": "#/definitions/uxLevel"
+            },
+            "activeModels": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/modelId"
+              },
+              "description": "Currently active model identifiers"
+            }
+          }
+        }
+      }
+    },
+    "tokenStreamEvent": {
+      "type": "object",
+      "required": ["type", "timestamp", "streamId", "tokens"],
+      "properties": {
+        "type": {
+          "const": "token_stream"
+        },
+        "timestamp": {
+          "$ref": "#/definitions/timestamp"
+        },
+        "streamId": {
+          "$ref": "#/definitions/streamId"
+        },
+        "modelId": {
+          "$ref": "#/definitions/modelId"
+        },
+        "tokens": {
+          "type": "object",
+          "required": ["count", "complexity"],
+          "properties": {
+            "count": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Number of tokens in this batch"
+            },
+            "complexity": {
+              "type": "number",
+              "minimum": 0.1,
+              "maximum": 10.0,
+              "description": "Average token complexity factor"
+            },
+            "speed": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Generation speed (tokens/second)"
+            },
+            "metadata": {
+              "type": "object",
+              "properties": {
+                "hasCode": {
+                  "type": "boolean",
+                  "description": "Contains code tokens"
+                },
+                "hasMath": {
+                  "type": "boolean",
+                  "description": "Contains mathematical expressions"
+                },
+                "language": {
+                  "type": "string",
+                  "description": "Detected language code"
+                }
+              }
+            }
+          }
+        },
+        "timing": {
+          "type": "object",
+          "properties": {
+            "generationStart": {
+              "$ref": "#/definitions/timestamp"
+            },
+            "firstToken": {
+              "$ref": "#/definitions/timestamp"
+            },
+            "lastToken": {
+              "$ref": "#/definitions/timestamp"
+            }
+          }
+        }
+      }
+    },
+    "interferenceEvent": {
+      "type": "object",
+      "required": ["type", "timestamp", "frameId", "interference"],
+      "properties": {
+        "type": {
+          "const": "interference"
+        },
+        "timestamp": {
+          "$ref": "#/definitions/timestamp"
+        },
+        "frameId": {
+          "$ref": "#/definitions/frameId"
+        },
+        "interference": {
+          "type": "object",
+          "required": ["pattern", "strength", "streams"],
+          "properties": {
+            "pattern": {
+              "type": "string",
+              "enum": ["constructive", "destructive", "partial", "chaotic"],
+              "description": "Type of interference pattern detected"
+            },
+            "strength": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "Interference strength (0-1)"
+            },
+            "confidence": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "Detection confidence (0-1)"
+            },
+            "streams": {
+              "type": "array",
+              "minItems": 2,
+              "items": {
+                "type": "object",
+                "required": ["streamId", "modelId", "phase"],
+                "properties": {
+                  "streamId": {
+                    "$ref": "#/definitions/streamId"
+                  },
+                  "modelId": {
+                    "$ref": "#/definitions/modelId"
+                  },
+                  "phase": {
+                    "type": "number",
+                    "minimum": -3.14159,
+                    "maximum": 3.14159,
+                    "description": "Phase offset in radians"
+                  },
+                  "amplitude": {
+                    "type": "number",
+                    "minimum": 0,
+                    "description": "Stream amplitude"
+                  }
+                }
+              }
+            },
+            "duration": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Interference duration in milliseconds"
+            }
+          }
+        },
+        "visualization": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "Whether visualization should be triggered"
+            },
+            "intensity": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "Visual effect intensity"
+            },
+            "color": {
+              "type": "string",
+              "pattern": "^#[0-9a-fA-F]{6}$",
+              "description": "Interference visualization color"
+            }
+          }
+        }
+      }
+    },
+    "resonanceEvent": {
+      "type": "object",
+      "required": ["type", "timestamp", "frameId", "resonance"],
+      "properties": {
+        "type": {
+          "const": "resonance"
+        },
+        "timestamp": {
+          "$ref": "#/definitions/timestamp"
+        },
+        "frameId": {
+          "$ref": "#/definitions/frameId"
+        },
+        "resonance": {
+          "type": "object",
+          "required": ["phenomenon", "intensity", "frequency"],
+          "properties": {
+            "phenomenon": {
+              "type": "string",
+              "enum": ["harmonic", "feedback", "emergent", "consciousness"],
+              "description": "Type of resonance phenomenon"
+            },
+            "intensity": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 10,
+              "description": "Resonance intensity level"
+            },
+            "frequency": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Resonance frequency in Hz"
+            },
+            "confidence": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "Detection confidence (0-1)"
+            },
+            "sustainedDuration": {
+              "type": "number",
+              "minimum": 0,
+              "description": "How long resonance has been sustained (ms)"
+            },
+            "participants": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["streamId", "modelId", "contribution"],
+                "properties": {
+                  "streamId": {
+                    "$ref": "#/definitions/streamId"
+                  },
+                  "modelId": {
+                    "$ref": "#/definitions/modelId"
+                  },
+                  "contribution": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1,
+                    "description": "Model's contribution to resonance"
+                  },
+                  "phase": {
+                    "type": "number",
+                    "description": "Phase relationship"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "celebration": {
+          "type": "object",
+          "properties": {
+            "trigger": {
+              "type": "boolean",
+              "description": "Whether to trigger celebration visualization"
+            },
+            "level": {
+              "type": "string",
+              "enum": ["subtle", "moderate", "spectacular"],
+              "description": "Celebration intensity level"
+            },
+            "duration": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Celebration duration in milliseconds"
+            }
+          }
+        }
+      }
+    },
+    "energyFieldEvent": {
+      "type": "object",
+      "required": ["type", "timestamp", "frameId", "field"],
+      "properties": {
+        "type": {
+          "const": "energy_field"
+        },
+        "timestamp": {
+          "$ref": "#/definitions/timestamp"
+        },
+        "frameId": {
+          "$ref": "#/definitions/frameId"
+        },
+        "field": {
+          "type": "object",
+          "required": ["intensity", "coverage", "stability"],
+          "properties": {
+            "intensity": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Overall field intensity"
+            },
+            "coverage": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "Field coverage percentage (0-1)"
+            },
+            "stability": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "Field stability measure (0-1)"
+            },
+            "gradient": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["position", "intensity"],
+                "properties": {
+                  "position": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1,
+                    "description": "Position along field (0-1)"
+                  },
+                  "intensity": {
+                    "type": "number",
+                    "minimum": 0,
+                    "description": "Intensity at this position"
+                  }
+                }
+              }
+            },
+            "harmonics": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["frequency", "amplitude"],
+                "properties": {
+                  "frequency": {
+                    "type": "number",
+                    "minimum": 0,
+                    "description": "Harmonic frequency"
+                  },
+                  "amplitude": {
+                    "type": "number",
+                    "minimum": 0,
+                    "description": "Harmonic amplitude"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "errorEvent": {
+      "type": "object",
+      "required": ["type", "timestamp", "error"],
+      "properties": {
+        "type": {
+          "const": "error"
+        },
+        "timestamp": {
+          "$ref": "#/definitions/timestamp"
+        },
+        "frameId": {
+          "$ref": "#/definitions/frameId"
+        },
+        "error": {
+          "type": "object",
+          "required": ["code", "message", "severity"],
+          "properties": {
+            "code": {
+              "type": "string",
+              "enum": [
+                "FRAME_OVERRUN",
+                "TOKEN_VALIDATION_FAILED",
+                "ENERGY_CALCULATION_ERROR",
+                "PATTERN_DETECTION_ERROR",
+                "SERIALIZATION_ERROR",
+                "TRANSPORT_ERROR",
+                "MEMORY_PRESSURE",
+                "QUEUE_OVERFLOW"
+              ]
+            },
+            "message": {
+              "type": "string",
+              "description": "Human-readable error message"
+            },
+            "severity": {
+              "type": "string",
+              "enum": ["low", "medium", "high", "critical"]
+            },
+            "context": {
+              "type": "object",
+              "properties": {
+                "frameSequence": {
+                  "type": "integer"
+                },
+                "streamId": {
+                  "$ref": "#/definitions/streamId"
+                },
+                "modelId": {
+                  "$ref": "#/definitions/modelId"
+                },
+                "stackTrace": {
+                  "type": "string"
+                }
+              }
+            },
+            "recovery": {
+              "type": "object",
+              "properties": {
+                "attempted": {
+                  "type": "boolean"
+                },
+                "successful": {
+                  "type": "boolean"
+                },
+                "strategy": {
+                  "type": "string",
+                  "enum": ["retry", "skip", "degrade", "restart"]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "stateSnapshot": {
+      "type": "object",
+      "required": ["timestamp", "frameId", "state"],
+      "properties": {
+        "timestamp": {
+          "$ref": "#/definitions/timestamp"
+        },
+        "frameId": {
+          "$ref": "#/definitions/frameId"
+        },
+        "state": {
+          "type": "object",
+          "required": ["energy", "performance", "streams"],
+          "properties": {
+            "energy": {
+              "type": "object",
+              "required": ["accumulator", "rate", "history"],
+              "properties": {
+                "accumulator": {
+                  "$ref": "#/definitions/energyUnit"
+                },
+                "rate": {
+                  "type": "number"
+                },
+                "emaFilter": {
+                  "type": "object",
+                  "properties": {
+                    "alpha": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    },
+                    "value": {
+                      "$ref": "#/definitions/energyUnit"
+                    }
+                  }
+                },
+                "history": {
+                  "type": "array",
+                  "maxItems": 3600,
+                  "items": {
+                    "type": "object",
+                    "required": ["timestamp", "value"],
+                    "properties": {
+                      "timestamp": {
+                        "$ref": "#/definitions/timestamp"
+                      },
+                      "value": {
+                        "$ref": "#/definitions/energyUnit"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "performance": {
+              "type": "object",
+              "required": ["frameRate", "overruns", "throughput"],
+              "properties": {
+                "frameRate": {
+                  "type": "number",
+                  "minimum": 0,
+                  "description": "Actual frame rate (Hz)"
+                },
+                "overruns": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "description": "Frame budget overruns count"
+                },
+                "throughput": {
+                  "type": "number",
+                  "minimum": 0,
+                  "description": "Token processing throughput"
+                },
+                "latency": {
+                  "type": "object",
+                  "properties": {
+                    "p50": {
+                      "type": "number"
+                    },
+                    "p95": {
+                      "type": "number"
+                    },
+                    "p99": {
+                      "type": "number"
+                    }
+                  }
+                }
+              }
+            },
+            "streams": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "object",
+                "required": ["streamId", "modelId", "status"],
+                "properties": {
+                  "streamId": {
+                    "$ref": "#/definitions/streamId"
+                  },
+                  "modelId": {
+                    "$ref": "#/definitions/modelId"
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": ["active", "idle", "error", "disconnected"]
+                  },
+                  "lastActivity": {
+                    "$ref": "#/definitions/timestamp"
+                  },
+                  "tokenCount": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "energyContribution": {
+                    "$ref": "#/definitions/energyUnit"
+                  }
+                }
+              }
+            },
+            "patterns": {
+              "type": "object",
+              "properties": {
+                "interferenceHistory": {
+                  "type": "array",
+                  "maxItems": 100,
+                  "items": {
+                    "type": "object",
+                    "required": ["timestamp", "pattern", "strength"],
+                    "properties": {
+                      "timestamp": {
+                        "$ref": "#/definitions/timestamp"
+                      },
+                      "pattern": {
+                        "type": "string"
+                      },
+                      "strength": {
+                        "type": "number"
+                      }
+                    }
+                  }
+                },
+                "resonanceHistory": {
+                  "type": "array",
+                  "maxItems": 50,
+                  "items": {
+                    "type": "object",
+                    "required": ["timestamp", "phenomenon", "intensity"],
+                    "properties": {
+                      "timestamp": {
+                        "$ref": "#/definitions/timestamp"
+                      },
+                      "phenomenon": {
+                        "type": "string"
+                      },
+                      "intensity": {
+                        "type": "number"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "auditRecord": {
+      "type": "object",
+      "required": ["timestamp", "action", "actor", "resource"],
+      "properties": {
+        "timestamp": {
+          "$ref": "#/definitions/timestamp"
+        },
+        "action": {
+          "type": "string",
+          "enum": [
+            "FRAME_PROCESSED",
+            "TOKEN_INGESTED",
+            "ENERGY_CALCULATED",
+            "PATTERN_DETECTED",
+            "EVENT_EMITTED",
+            "ERROR_OCCURRED",
+            "STATE_SAVED",
+            "CONFIG_CHANGED"
+          ]
+        },
+        "actor": {
+          "type": "string",
+          "enum": ["decipher_core", "frame_loop", "energy_engine", "pattern_detector", "event_builder", "user", "system"]
+        },
+        "resource": {
+          "type": "object",
+          "required": ["type", "id"],
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": ["frame", "token_batch", "energy_calculation", "pattern", "event", "state", "config"]
+            },
+            "id": {
+              "type": "string"
+            },
+            "metadata": {
+              "type": "object"
+            }
+          }
+        },
+        "outcome": {
+          "type": "string",
+          "enum": ["success", "failure", "partial"]
+        },
+        "details": {
+          "type": "object",
+          "properties": {
+            "duration": {
+              "type": "number",
+              "description": "Operation duration in milliseconds"
+            },
+            "inputSize": {
+              "type": "integer",
+              "description": "Input data size"
+            },
+            "outputSize": {
+              "type": "integer",
+              "description": "Output data size"
+            },
+            "errorCode": {
+              "type": "string"
+            },
+            "privacyCompliant": {
+              "type": "boolean",
+              "description": "Whether operation maintained privacy compliance"
+            }
+          }
+        }
+      }
+    }
+  }
+}

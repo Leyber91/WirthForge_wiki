@@ -1,0 +1,51 @@
+graph TB
+    subgraph "Experience Orchestrator Architecture"
+        subgraph "Input Layer"
+            UI[User Interface L5] --> Transport[Transport Layer L4]
+            Transport --> Identity[Input & Identity L1]
+        end
+        
+        subgraph "Orchestration Core"
+            Identity --> Orchestrator[Experience Orchestrator L3]
+            Orchestrator --> ProgMgr[Progression Manager]
+            Orchestrator --> CouncilEng[Council Engine]
+            Orchestrator --> ResonanceDet[Resonance Detector]
+            Orchestrator --> EventBus[Event Dispatcher]
+        end
+        
+        subgraph "Model Layer"
+            Orchestrator --> ModelComp[Model Compute L2]
+            ModelComp --> LocalModels[Local AI Models]
+            ModelComp --> BrokerModels[Broker Models<br/>Optional]
+        end
+        
+        subgraph "State Management"
+            Orchestrator --> StateStore[State Store]
+            StateStore --> UserProfile[User Progress]
+            StateStore --> EnergyState[Energy Accumulation]
+            StateStore --> SessionState[Session Context]
+        end
+        
+        subgraph "Output Processing"
+            EventBus --> Transport
+            Transport --> UI
+            StateStore --> AuditLog[Audit Trail]
+        end
+    end
+    
+    %% Data Flow Annotations
+    Identity -.->|"InputEvent<br/>{userId, sessionId, payload}"| Orchestrator
+    ModelComp -.->|"TokenStream<br/>{token, timing, model}"| Orchestrator
+    Orchestrator -.->|"ExperienceEvent<br/>{type, level, data}"| EventBus
+    EventBus -.->|"WebSocket Events<br/>60Hz cadence"| Transport
+    
+    %% Styling
+    classDef orchestratorCore fill:#e1f5fe,stroke:#0277bd,stroke-width:2px
+    classDef inputOutput fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    classDef models fill:#e8f5e8,stroke:#388e3c,stroke-width:2px
+    classDef state fill:#fff3e0,stroke:#f57c00,stroke-width:2px
+    
+    class Orchestrator,ProgMgr,CouncilEng,ResonanceDet,EventBus orchestratorCore
+    class UI,Transport,Identity inputOutput
+    class ModelComp,LocalModels,BrokerModels models
+    class StateStore,UserProfile,EnergyState,SessionState,AuditLog state
