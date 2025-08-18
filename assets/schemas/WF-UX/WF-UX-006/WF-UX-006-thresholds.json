@@ -1,0 +1,502 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "WF-UX-006 Performance Thresholds Schema",
+  "description": "Performance thresholds and trigger points for WIRTHFORGE optimization system",
+  "type": "object",
+  "properties": {
+    "version": {
+      "type": "string",
+      "description": "Schema version",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "frameThresholds": {
+      "type": "object",
+      "description": "Frame timing thresholds",
+      "properties": {
+        "target": {
+          "type": "number",
+          "minimum": 8.33,
+          "maximum": 33.33,
+          "description": "Target frame time in milliseconds",
+          "default": 16.67
+        },
+        "warning": {
+          "type": "number",
+          "minimum": 16.67,
+          "maximum": 25.0,
+          "description": "Warning threshold in milliseconds",
+          "default": 18.0
+        },
+        "critical": {
+          "type": "number",
+          "minimum": 20.0,
+          "maximum": 50.0,
+          "description": "Critical threshold in milliseconds",
+          "default": 25.0
+        },
+        "emergency": {
+          "type": "number",
+          "minimum": 30.0,
+          "maximum": 100.0,
+          "description": "Emergency threshold in milliseconds",
+          "default": 40.0
+        },
+        "consecutiveFrames": {
+          "type": "object",
+          "properties": {
+            "warningCount": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 60,
+              "description": "Consecutive warning frames to trigger adaptation",
+              "default": 3
+            },
+            "criticalCount": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 10,
+              "description": "Consecutive critical frames to trigger emergency",
+              "default": 2
+            }
+          },
+          "required": ["warningCount", "criticalCount"]
+        }
+      },
+      "required": ["target", "warning", "critical", "emergency", "consecutiveFrames"]
+    },
+    "systemThresholds": {
+      "type": "object",
+      "description": "System resource thresholds",
+      "properties": {
+        "cpu": {
+          "type": "object",
+          "properties": {
+            "warning": {
+              "type": "number",
+              "minimum": 0.5,
+              "maximum": 0.9,
+              "description": "CPU warning threshold (0-1)",
+              "default": 0.7
+            },
+            "critical": {
+              "type": "number",
+              "minimum": 0.7,
+              "maximum": 0.95,
+              "description": "CPU critical threshold (0-1)",
+              "default": 0.85
+            },
+            "sustainedDuration": {
+              "type": "integer",
+              "minimum": 1000,
+              "maximum": 30000,
+              "description": "Sustained high usage duration in milliseconds",
+              "default": 5000
+            }
+          },
+          "required": ["warning", "critical", "sustainedDuration"]
+        },
+        "gpu": {
+          "type": "object",
+          "properties": {
+            "warning": {
+              "type": "number",
+              "minimum": 0.6,
+              "maximum": 0.9,
+              "description": "GPU warning threshold (0-1)",
+              "default": 0.8
+            },
+            "critical": {
+              "type": "number",
+              "minimum": 0.8,
+              "maximum": 0.98,
+              "description": "GPU critical threshold (0-1)",
+              "default": 0.9
+            },
+            "memoryWarning": {
+              "type": "number",
+              "minimum": 0.7,
+              "maximum": 0.9,
+              "description": "GPU memory warning threshold (0-1)",
+              "default": 0.8
+            },
+            "memoryCritical": {
+              "type": "number",
+              "minimum": 0.85,
+              "maximum": 0.98,
+              "description": "GPU memory critical threshold (0-1)",
+              "default": 0.9
+            }
+          },
+          "required": ["warning", "critical", "memoryWarning", "memoryCritical"]
+        },
+        "memory": {
+          "type": "object",
+          "properties": {
+            "warningMB": {
+              "type": "integer",
+              "minimum": 100,
+              "description": "Memory warning threshold in MB"
+            },
+            "criticalMB": {
+              "type": "integer",
+              "minimum": 200,
+              "description": "Memory critical threshold in MB"
+            },
+            "pressureThreshold": {
+              "type": "number",
+              "minimum": 0.7,
+              "maximum": 0.95,
+              "description": "System memory pressure threshold (0-1)",
+              "default": 0.85
+            }
+          },
+          "required": ["warningMB", "criticalMB", "pressureThreshold"]
+        },
+        "thermal": {
+          "type": "object",
+          "properties": {
+            "warningTemp": {
+              "type": "number",
+              "minimum": 60,
+              "maximum": 90,
+              "description": "Warning temperature in Celsius",
+              "default": 75
+            },
+            "criticalTemp": {
+              "type": "number",
+              "minimum": 70,
+              "maximum": 100,
+              "description": "Critical temperature in Celsius",
+              "default": 85
+            },
+            "throttleDetection": {
+              "type": "boolean",
+              "description": "Whether to detect thermal throttling",
+              "default": true
+            }
+          },
+          "required": ["warningTemp", "criticalTemp", "throttleDetection"]
+        }
+      },
+      "required": ["cpu", "gpu", "memory", "thermal"]
+    },
+    "batteryThresholds": {
+      "type": "object",
+      "description": "Battery-related thresholds",
+      "properties": {
+        "levels": {
+          "type": "object",
+          "properties": {
+            "normal": {
+              "type": "number",
+              "minimum": 0.5,
+              "maximum": 1.0,
+              "description": "Normal battery level threshold",
+              "default": 0.5
+            },
+            "conservative": {
+              "type": "number",
+              "minimum": 0.2,
+              "maximum": 0.5,
+              "description": "Conservative mode threshold",
+              "default": 0.3
+            },
+            "emergency": {
+              "type": "number",
+              "minimum": 0.05,
+              "maximum": 0.2,
+              "description": "Emergency mode threshold",
+              "default": 0.15
+            },
+            "critical": {
+              "type": "number",
+              "minimum": 0.01,
+              "maximum": 0.1,
+              "description": "Critical battery level",
+              "default": 0.05
+            }
+          },
+          "required": ["normal", "conservative", "emergency", "critical"]
+        },
+        "drainRate": {
+          "type": "object",
+          "properties": {
+            "warningRate": {
+              "type": "number",
+              "minimum": 0.01,
+              "maximum": 0.1,
+              "description": "Warning drain rate per minute",
+              "default": 0.02
+            },
+            "criticalRate": {
+              "type": "number",
+              "minimum": 0.02,
+              "maximum": 0.2,
+              "description": "Critical drain rate per minute",
+              "default": 0.05
+            }
+          },
+          "required": ["warningRate", "criticalRate"]
+        },
+        "chargingState": {
+          "type": "object",
+          "properties": {
+            "enableAggressiveMode": {
+              "type": "boolean",
+              "description": "Enable aggressive performance when charging",
+              "default": true
+            },
+            "hysteresis": {
+              "type": "number",
+              "minimum": 0.01,
+              "maximum": 0.1,
+              "description": "Battery level hysteresis to prevent oscillation",
+              "default": 0.05
+            }
+          },
+          "required": ["enableAggressiveMode", "hysteresis"]
+        }
+      },
+      "required": ["levels", "drainRate", "chargingState"]
+    },
+    "pluginThresholds": {
+      "type": "object",
+      "description": "Plugin performance thresholds",
+      "properties": {
+        "frameTime": {
+          "type": "object",
+          "properties": {
+            "maxBudgetMs": {
+              "type": "number",
+              "minimum": 0.5,
+              "maximum": 10.0,
+              "description": "Maximum plugin frame time budget in milliseconds",
+              "default": 3.3
+            },
+            "warningMs": {
+              "type": "number",
+              "minimum": 0.3,
+              "maximum": 8.0,
+              "description": "Plugin warning threshold in milliseconds",
+              "default": 2.5
+            },
+            "violationCount": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 10,
+              "description": "Violations before throttling",
+              "default": 3
+            }
+          },
+          "required": ["maxBudgetMs", "warningMs", "violationCount"]
+        },
+        "memory": {
+          "type": "object",
+          "properties": {
+            "maxUsageMB": {
+              "type": "integer",
+              "minimum": 10,
+              "maximum": 1000,
+              "description": "Maximum plugin memory usage in MB",
+              "default": 100
+            },
+            "warningMB": {
+              "type": "integer",
+              "minimum": 5,
+              "maximum": 500,
+              "description": "Plugin memory warning threshold in MB",
+              "default": 75
+            }
+          },
+          "required": ["maxUsageMB", "warningMB"]
+        },
+        "throttling": {
+          "type": "object",
+          "properties": {
+            "initialReduction": {
+              "type": "number",
+              "minimum": 0.1,
+              "maximum": 0.8,
+              "description": "Initial throttling reduction factor",
+              "default": 0.5
+            },
+            "maxReduction": {
+              "type": "number",
+              "minimum": 0.05,
+              "maximum": 0.9,
+              "description": "Maximum throttling reduction factor",
+              "default": 0.1
+            },
+            "recoveryTime": {
+              "type": "integer",
+              "minimum": 1000,
+              "maximum": 30000,
+              "description": "Time before attempting recovery in milliseconds",
+              "default": 5000
+            }
+          },
+          "required": ["initialReduction", "maxReduction", "recoveryTime"]
+        }
+      },
+      "required": ["frameTime", "memory", "throttling"]
+    },
+    "adaptationThresholds": {
+      "type": "object",
+      "description": "Quality adaptation thresholds",
+      "properties": {
+        "qualityReduction": {
+          "type": "object",
+          "properties": {
+            "triggerDelay": {
+              "type": "integer",
+              "minimum": 100,
+              "maximum": 5000,
+              "description": "Delay before triggering quality reduction in milliseconds",
+              "default": 1000
+            },
+            "stepSize": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 3,
+              "description": "Quality levels to reduce per step",
+              "default": 1
+            },
+            "minQualityLevel": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 2,
+              "description": "Minimum quality level (0 = emergency)",
+              "default": 0
+            }
+          },
+          "required": ["triggerDelay", "stepSize", "minQualityLevel"]
+        },
+        "qualityRecovery": {
+          "type": "object",
+          "properties": {
+            "stabilityPeriod": {
+              "type": "integer",
+              "minimum": 2000,
+              "maximum": 30000,
+              "description": "Stable performance period before recovery in milliseconds",
+              "default": 5000
+            },
+            "recoveryRate": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 3,
+              "description": "Quality levels to recover per step",
+              "default": 1
+            },
+            "maxQualityLevel": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 3,
+              "description": "Maximum quality level",
+              "default": 3
+            }
+          },
+          "required": ["stabilityPeriod", "recoveryRate", "maxQualityLevel"]
+        }
+      },
+      "required": ["qualityReduction", "qualityRecovery"]
+    },
+    "tierSpecificThresholds": {
+      "type": "object",
+      "description": "Hardware tier-specific threshold overrides",
+      "properties": {
+        "low": {
+          "$ref": "#/definitions/tierThresholdOverrides"
+        },
+        "mid": {
+          "$ref": "#/definitions/tierThresholdOverrides"
+        },
+        "high": {
+          "$ref": "#/definitions/tierThresholdOverrides"
+        }
+      },
+      "required": ["low", "mid", "high"]
+    }
+  },
+  "required": ["version", "frameThresholds", "systemThresholds", "batteryThresholds", "pluginThresholds", "adaptationThresholds", "tierSpecificThresholds"],
+  "definitions": {
+    "tierThresholdOverrides": {
+      "type": "object",
+      "description": "Tier-specific threshold overrides",
+      "properties": {
+        "frameThresholds": {
+          "type": "object",
+          "properties": {
+            "warning": {
+              "type": "number",
+              "description": "Override warning frame time threshold"
+            },
+            "critical": {
+              "type": "number",
+              "description": "Override critical frame time threshold"
+            }
+          }
+        },
+        "systemThresholds": {
+          "type": "object",
+          "properties": {
+            "cpu": {
+              "type": "object",
+              "properties": {
+                "warning": {
+                  "type": "number",
+                  "description": "Override CPU warning threshold"
+                },
+                "critical": {
+                  "type": "number",
+                  "description": "Override CPU critical threshold"
+                }
+              }
+            },
+            "gpu": {
+              "type": "object",
+              "properties": {
+                "warning": {
+                  "type": "number",
+                  "description": "Override GPU warning threshold"
+                },
+                "critical": {
+                  "type": "number",
+                  "description": "Override GPU critical threshold"
+                }
+              }
+            }
+          }
+        },
+        "pluginThresholds": {
+          "type": "object",
+          "properties": {
+            "frameTime": {
+              "type": "object",
+              "properties": {
+                "maxBudgetMs": {
+                  "type": "number",
+                  "description": "Override plugin frame time budget"
+                }
+              }
+            }
+          }
+        },
+        "adaptationThresholds": {
+          "type": "object",
+          "properties": {
+            "qualityReduction": {
+              "type": "object",
+              "properties": {
+                "triggerDelay": {
+                  "type": "integer",
+                  "description": "Override quality reduction trigger delay"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

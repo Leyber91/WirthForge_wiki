@@ -1,0 +1,419 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "WF-UX-006 Performance Budgets Schema",
+  "description": "Device tier profiles and resource budgets for WIRTHFORGE performance optimization",
+  "type": "object",
+  "properties": {
+    "version": {
+      "type": "string",
+      "description": "Schema version",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "deviceTiers": {
+      "type": "object",
+      "description": "Hardware tier definitions and capabilities",
+      "properties": {
+        "low": {
+          "$ref": "#/definitions/tierProfile"
+        },
+        "mid": {
+          "$ref": "#/definitions/tierProfile"
+        },
+        "high": {
+          "$ref": "#/definitions/tierProfile"
+        }
+      },
+      "required": ["low", "mid", "high"]
+    },
+    "frameBudgets": {
+      "type": "object",
+      "description": "Frame timing budgets and limits",
+      "properties": {
+        "targetFrameTime": {
+          "type": "number",
+          "description": "Target frame time in milliseconds",
+          "minimum": 8.33,
+          "maximum": 33.33,
+          "default": 16.67
+        },
+        "criticalFrameTime": {
+          "type": "number",
+          "description": "Critical frame time threshold in milliseconds",
+          "minimum": 16.67,
+          "maximum": 50.0,
+          "default": 20.0
+        },
+        "budgetDistribution": {
+          "$ref": "#/definitions/budgetDistribution"
+        }
+      },
+      "required": ["targetFrameTime", "criticalFrameTime", "budgetDistribution"]
+    },
+    "resourceLimits": {
+      "type": "object",
+      "description": "System resource usage limits per tier",
+      "properties": {
+        "low": {
+          "$ref": "#/definitions/resourceLimits"
+        },
+        "mid": {
+          "$ref": "#/definitions/resourceLimits"
+        },
+        "high": {
+          "$ref": "#/definitions/resourceLimits"
+        }
+      },
+      "required": ["low", "mid", "high"]
+    },
+    "qualityLevels": {
+      "type": "object",
+      "description": "Visual quality level definitions",
+      "properties": {
+        "emergency": {
+          "$ref": "#/definitions/qualityLevel"
+        },
+        "low": {
+          "$ref": "#/definitions/qualityLevel"
+        },
+        "standard": {
+          "$ref": "#/definitions/qualityLevel"
+        },
+        "high": {
+          "$ref": "#/definitions/qualityLevel"
+        }
+      },
+      "required": ["emergency", "low", "standard", "high"]
+    },
+    "batteryProfiles": {
+      "type": "object",
+      "description": "Battery-aware performance profiles",
+      "properties": {
+        "normal": {
+          "$ref": "#/definitions/batteryProfile"
+        },
+        "conservative": {
+          "$ref": "#/definitions/batteryProfile"
+        },
+        "emergency": {
+          "$ref": "#/definitions/batteryProfile"
+        }
+      },
+      "required": ["normal", "conservative", "emergency"]
+    }
+  },
+  "required": ["version", "deviceTiers", "frameBudgets", "resourceLimits", "qualityLevels", "batteryProfiles"],
+  "definitions": {
+    "tierProfile": {
+      "type": "object",
+      "description": "Hardware tier profile definition",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Human-readable tier name"
+        },
+        "description": {
+          "type": "string",
+          "description": "Tier description and target devices"
+        },
+        "scoreRange": {
+          "type": "object",
+          "properties": {
+            "min": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "max": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            }
+          },
+          "required": ["min", "max"]
+        },
+        "capabilities": {
+          "type": "object",
+          "properties": {
+            "maxModels": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 10,
+              "description": "Maximum concurrent AI models"
+            },
+            "maxResolution": {
+              "type": "string",
+              "enum": ["720p", "1080p", "1440p", "4K"],
+              "description": "Maximum rendering resolution"
+            },
+            "councilSupport": {
+              "type": "boolean",
+              "description": "Whether council mode is supported"
+            },
+            "maxCouncilSize": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 10,
+              "description": "Maximum models in council"
+            },
+            "effectsComplexity": {
+              "type": "string",
+              "enum": ["minimal", "basic", "standard", "enhanced", "maximum"],
+              "description": "Visual effects complexity level"
+            },
+            "animationQuality": {
+              "type": "string",
+              "enum": ["static", "simple", "standard", "complex", "cinematic"],
+              "description": "Animation quality level"
+            }
+          },
+          "required": ["maxModels", "maxResolution", "councilSupport", "effectsComplexity", "animationQuality"]
+        },
+        "defaultQualityLevel": {
+          "type": "string",
+          "enum": ["emergency", "low", "standard", "high"],
+          "description": "Default quality level for this tier"
+        }
+      },
+      "required": ["name", "description", "scoreRange", "capabilities", "defaultQualityLevel"]
+    },
+    "budgetDistribution": {
+      "type": "object",
+      "description": "Frame time budget allocation",
+      "properties": {
+        "aiProcessing": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Fraction of frame time for AI processing"
+        },
+        "uiRendering": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Fraction of frame time for UI rendering"
+        },
+        "inputHandling": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Fraction of frame time for input processing"
+        },
+        "pluginExecution": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Fraction of frame time for plugin execution"
+        },
+        "systemOverhead": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Fraction of frame time for system overhead"
+        }
+      },
+      "required": ["aiProcessing", "uiRendering", "inputHandling", "pluginExecution", "systemOverhead"]
+    },
+    "resourceLimits": {
+      "type": "object",
+      "description": "System resource usage limits",
+      "properties": {
+        "cpu": {
+          "type": "object",
+          "properties": {
+            "maxUtilization": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "Maximum CPU utilization (0-1)"
+            },
+            "warningThreshold": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "CPU warning threshold (0-1)"
+            }
+          },
+          "required": ["maxUtilization", "warningThreshold"]
+        },
+        "gpu": {
+          "type": "object",
+          "properties": {
+            "maxUtilization": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "Maximum GPU utilization (0-1)"
+            },
+            "maxMemoryMB": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Maximum GPU memory usage in MB"
+            }
+          },
+          "required": ["maxUtilization", "maxMemoryMB"]
+        },
+        "memory": {
+          "type": "object",
+          "properties": {
+            "maxUsageMB": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Maximum RAM usage in MB"
+            },
+            "warningThresholdMB": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Memory warning threshold in MB"
+            }
+          },
+          "required": ["maxUsageMB", "warningThresholdMB"]
+        },
+        "plugins": {
+          "type": "object",
+          "properties": {
+            "maxFrameTimeMs": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Maximum plugin frame time in milliseconds"
+            },
+            "maxConcurrent": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Maximum concurrent active plugins"
+            }
+          },
+          "required": ["maxFrameTimeMs", "maxConcurrent"]
+        }
+      },
+      "required": ["cpu", "gpu", "memory", "plugins"]
+    },
+    "qualityLevel": {
+      "type": "object",
+      "description": "Visual quality level definition",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Quality level name"
+        },
+        "description": {
+          "type": "string",
+          "description": "Quality level description"
+        },
+        "visualSettings": {
+          "type": "object",
+          "properties": {
+            "particleCount": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Maximum particle count"
+            },
+            "shaderComplexity": {
+              "type": "string",
+              "enum": ["none", "basic", "standard", "complex", "advanced"],
+              "description": "Shader complexity level"
+            },
+            "textureResolution": {
+              "type": "string",
+              "enum": ["quarter", "half", "full", "double"],
+              "description": "Texture resolution multiplier"
+            },
+            "shadowQuality": {
+              "type": "string",
+              "enum": ["none", "low", "medium", "high", "ultra"],
+              "description": "Shadow rendering quality"
+            },
+            "antialiasing": {
+              "type": "boolean",
+              "description": "Whether antialiasing is enabled"
+            },
+            "postProcessing": {
+              "type": "boolean",
+              "description": "Whether post-processing effects are enabled"
+            }
+          },
+          "required": ["particleCount", "shaderComplexity", "textureResolution", "shadowQuality", "antialiasing", "postProcessing"]
+        },
+        "performanceTarget": {
+          "type": "object",
+          "properties": {
+            "targetFPS": {
+              "type": "integer",
+              "minimum": 15,
+              "maximum": 120,
+              "description": "Target frame rate"
+            },
+            "maxFrameTimeMs": {
+              "type": "number",
+              "minimum": 8.33,
+              "maximum": 66.67,
+              "description": "Maximum acceptable frame time"
+            }
+          },
+          "required": ["targetFPS", "maxFrameTimeMs"]
+        }
+      },
+      "required": ["name", "description", "visualSettings", "performanceTarget"]
+    },
+    "batteryProfile": {
+      "type": "object",
+      "description": "Battery-aware performance profile",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Battery profile name"
+        },
+        "batteryRange": {
+          "type": "object",
+          "properties": {
+            "min": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100,
+              "description": "Minimum battery percentage"
+            },
+            "max": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100,
+              "description": "Maximum battery percentage"
+            }
+          },
+          "required": ["min", "max"]
+        },
+        "adaptations": {
+          "type": "object",
+          "properties": {
+            "qualityReduction": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 3,
+              "description": "Quality levels to reduce (0 = no reduction)"
+            },
+            "frameRateLimit": {
+              "type": "integer",
+              "minimum": 15,
+              "maximum": 60,
+              "description": "Maximum frame rate limit"
+            },
+            "brightnessReduction": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "UI brightness reduction factor"
+            },
+            "backgroundProcessing": {
+              "type": "boolean",
+              "description": "Whether background processing is allowed"
+            },
+            "pluginThrottling": {
+              "type": "boolean",
+              "description": "Whether plugins should be throttled"
+            }
+          },
+          "required": ["qualityReduction", "frameRateLimit", "brightnessReduction", "backgroundProcessing", "pluginThrottling"]
+        }
+      },
+      "required": ["name", "batteryRange", "adaptations"]
+    }
+  }
+}

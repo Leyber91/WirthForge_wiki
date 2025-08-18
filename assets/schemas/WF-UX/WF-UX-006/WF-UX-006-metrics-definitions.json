@@ -1,0 +1,346 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "WF-UX-006 Metrics Definitions Schema",
+  "description": "Performance metrics structure and definitions for WIRTHFORGE monitoring system",
+  "type": "object",
+  "properties": {
+    "version": {
+      "type": "string",
+      "description": "Schema version",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "metricsCategories": {
+      "type": "object",
+      "description": "Categories of performance metrics",
+      "properties": {
+        "timing": {
+          "$ref": "#/definitions/metricCategory"
+        },
+        "system": {
+          "$ref": "#/definitions/metricCategory"
+        },
+        "application": {
+          "$ref": "#/definitions/metricCategory"
+        },
+        "plugins": {
+          "$ref": "#/definitions/metricCategory"
+        },
+        "battery": {
+          "$ref": "#/definitions/metricCategory"
+        }
+      },
+      "required": ["timing", "system", "application", "plugins", "battery"]
+    },
+    "metricDefinitions": {
+      "type": "object",
+      "description": "Individual metric definitions",
+      "properties": {
+        "frameTime": {
+          "$ref": "#/definitions/metricDefinition"
+        },
+        "frameRate": {
+          "$ref": "#/definitions/metricDefinition"
+        },
+        "cpuUtilization": {
+          "$ref": "#/definitions/metricDefinition"
+        },
+        "gpuUtilization": {
+          "$ref": "#/definitions/metricDefinition"
+        },
+        "memoryUsage": {
+          "$ref": "#/definitions/metricDefinition"
+        },
+        "batteryLevel": {
+          "$ref": "#/definitions/metricDefinition"
+        },
+        "thermalState": {
+          "$ref": "#/definitions/metricDefinition"
+        },
+        "pluginPerformance": {
+          "$ref": "#/definitions/metricDefinition"
+        },
+        "qualityLevel": {
+          "$ref": "#/definitions/metricDefinition"
+        },
+        "adaptationEvents": {
+          "$ref": "#/definitions/metricDefinition"
+        }
+      },
+      "required": ["frameTime", "frameRate", "cpuUtilization", "gpuUtilization", "memoryUsage", "batteryLevel", "thermalState", "pluginPerformance", "qualityLevel", "adaptationEvents"]
+    },
+    "aggregationMethods": {
+      "type": "object",
+      "description": "Statistical aggregation methods for metrics",
+      "properties": {
+        "instantaneous": {
+          "$ref": "#/definitions/aggregationMethod"
+        },
+        "average": {
+          "$ref": "#/definitions/aggregationMethod"
+        },
+        "percentile": {
+          "$ref": "#/definitions/aggregationMethod"
+        },
+        "minimum": {
+          "$ref": "#/definitions/aggregationMethod"
+        },
+        "maximum": {
+          "$ref": "#/definitions/aggregationMethod"
+        },
+        "trend": {
+          "$ref": "#/definitions/aggregationMethod"
+        }
+      },
+      "required": ["instantaneous", "average", "percentile", "minimum", "maximum", "trend"]
+    },
+    "collectionSettings": {
+      "type": "object",
+      "description": "Metrics collection configuration",
+      "properties": {
+        "samplingRate": {
+          "type": "object",
+          "properties": {
+            "highFrequency": {
+              "type": "number",
+              "minimum": 1,
+              "maximum": 1000,
+              "description": "High frequency sampling rate in Hz"
+            },
+            "mediumFrequency": {
+              "type": "number",
+              "minimum": 0.1,
+              "maximum": 100,
+              "description": "Medium frequency sampling rate in Hz"
+            },
+            "lowFrequency": {
+              "type": "number",
+              "minimum": 0.01,
+              "maximum": 10,
+              "description": "Low frequency sampling rate in Hz"
+            }
+          },
+          "required": ["highFrequency", "mediumFrequency", "lowFrequency"]
+        },
+        "bufferSize": {
+          "type": "object",
+          "properties": {
+            "shortTerm": {
+              "type": "integer",
+              "minimum": 10,
+              "maximum": 1000,
+              "description": "Short-term buffer size in samples"
+            },
+            "mediumTerm": {
+              "type": "integer",
+              "minimum": 100,
+              "maximum": 10000,
+              "description": "Medium-term buffer size in samples"
+            },
+            "longTerm": {
+              "type": "integer",
+              "minimum": 1000,
+              "maximum": 100000,
+              "description": "Long-term buffer size in samples"
+            }
+          },
+          "required": ["shortTerm", "mediumTerm", "longTerm"]
+        },
+        "retentionPolicy": {
+          "type": "object",
+          "properties": {
+            "realTime": {
+              "type": "string",
+              "pattern": "^\\d+[smhd]$",
+              "description": "Real-time data retention period"
+            },
+            "aggregated": {
+              "type": "string",
+              "pattern": "^\\d+[smhd]$",
+              "description": "Aggregated data retention period"
+            },
+            "historical": {
+              "type": "string",
+              "pattern": "^\\d+[smhd]$",
+              "description": "Historical data retention period"
+            }
+          },
+          "required": ["realTime", "aggregated", "historical"]
+        }
+      },
+      "required": ["samplingRate", "bufferSize", "retentionPolicy"]
+    }
+  },
+  "required": ["version", "metricsCategories", "metricDefinitions", "aggregationMethods", "collectionSettings"],
+  "definitions": {
+    "metricCategory": {
+      "type": "object",
+      "description": "Metric category definition",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Category name"
+        },
+        "description": {
+          "type": "string",
+          "description": "Category description"
+        },
+        "priority": {
+          "type": "string",
+          "enum": ["critical", "high", "medium", "low"],
+          "description": "Collection priority"
+        },
+        "samplingFrequency": {
+          "type": "string",
+          "enum": ["highFrequency", "mediumFrequency", "lowFrequency"],
+          "description": "Default sampling frequency"
+        }
+      },
+      "required": ["name", "description", "priority", "samplingFrequency"]
+    },
+    "metricDefinition": {
+      "type": "object",
+      "description": "Individual metric definition",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Metric name"
+        },
+        "description": {
+          "type": "string",
+          "description": "Metric description"
+        },
+        "category": {
+          "type": "string",
+          "enum": ["timing", "system", "application", "plugins", "battery"],
+          "description": "Metric category"
+        },
+        "unit": {
+          "type": "string",
+          "description": "Measurement unit"
+        },
+        "dataType": {
+          "type": "string",
+          "enum": ["number", "integer", "boolean", "string", "object"],
+          "description": "Data type"
+        },
+        "range": {
+          "type": "object",
+          "properties": {
+            "min": {
+              "type": "number",
+              "description": "Minimum valid value"
+            },
+            "max": {
+              "type": "number",
+              "description": "Maximum valid value"
+            }
+          }
+        },
+        "fields": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/metricField"
+          },
+          "description": "Metric fields/sub-metrics"
+        },
+        "aggregations": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["instantaneous", "average", "percentile", "minimum", "maximum", "trend"]
+          },
+          "description": "Supported aggregation methods"
+        },
+        "collectionSettings": {
+          "type": "object",
+          "properties": {
+            "frequency": {
+              "type": "string",
+              "enum": ["highFrequency", "mediumFrequency", "lowFrequency"],
+              "description": "Collection frequency"
+            },
+            "buffer": {
+              "type": "string",
+              "enum": ["shortTerm", "mediumTerm", "longTerm"],
+              "description": "Buffer type"
+            },
+            "critical": {
+              "type": "boolean",
+              "description": "Whether this is a critical metric"
+            }
+          },
+          "required": ["frequency", "buffer", "critical"]
+        }
+      },
+      "required": ["name", "description", "category", "unit", "dataType", "fields", "aggregations", "collectionSettings"]
+    },
+    "metricField": {
+      "type": "object",
+      "description": "Individual field within a metric",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Field name"
+        },
+        "description": {
+          "type": "string",
+          "description": "Field description"
+        },
+        "dataType": {
+          "type": "string",
+          "enum": ["number", "integer", "boolean", "string"],
+          "description": "Field data type"
+        },
+        "unit": {
+          "type": "string",
+          "description": "Field unit"
+        },
+        "required": {
+          "type": "boolean",
+          "description": "Whether this field is required"
+        }
+      },
+      "required": ["name", "description", "dataType", "required"]
+    },
+    "aggregationMethod": {
+      "type": "object",
+      "description": "Statistical aggregation method definition",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Aggregation method name"
+        },
+        "description": {
+          "type": "string",
+          "description": "Method description"
+        },
+        "windowSize": {
+          "type": "object",
+          "properties": {
+            "default": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Default window size in samples"
+            },
+            "configurable": {
+              "type": "boolean",
+              "description": "Whether window size is configurable"
+            }
+          },
+          "required": ["default", "configurable"]
+        },
+        "computationCost": {
+          "type": "string",
+          "enum": ["low", "medium", "high"],
+          "description": "Computational cost of aggregation"
+        },
+        "parameters": {
+          "type": "object",
+          "description": "Method-specific parameters",
+          "additionalProperties": true
+        }
+      },
+      "required": ["name", "description", "windowSize", "computationCost"]
+    }
+  }
+}

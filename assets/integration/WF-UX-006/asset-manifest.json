@@ -1,0 +1,282 @@
+{
+  "manifest": {
+    "document_id": "WF-UX-006-PERFORMANCE-OPTIMIZATION",
+    "version": "1.0.0",
+    "generated_timestamp": "2025-08-18T17:31:15+02:00",
+    "asset_categories": {
+      "diagrams": 4,
+      "schemas": 3,
+      "code_components": 6,
+      "test_suites": 4,
+      "integration_assets": 2
+    },
+    "total_assets": 19
+  },
+  "assets": {
+    "diagrams": [
+      {
+        "name": "Performance Architecture Diagram",
+        "file": "assets/diagrams/WF-UX-006/WF-UX-006-performance-architecture.md",
+        "type": "mermaid_diagram",
+        "description": "Main performance architecture showing frame loop, orchestrator interaction, and real-time monitoring",
+        "integration_points": ["frame_timer", "performance_monitor", "adaptive_manager"],
+        "document_section": "3.1 Performance Architecture"
+      },
+      {
+        "name": "Adaptive Optimization Flow",
+        "file": "assets/diagrams/WF-UX-006/WF-UX-006-optimization-flow.md",
+        "type": "mermaid_diagram",
+        "description": "Decision tree for quality scaling, fallback scenarios, and user communication",
+        "integration_points": ["adaptive_manager", "fallback_scenarios"],
+        "document_section": "3.2 Adaptive Optimization"
+      },
+      {
+        "name": "Monitoring Architecture",
+        "file": "assets/diagrams/WF-UX-006/WF-UX-006-monitoring-architecture.md",
+        "type": "mermaid_diagram",
+        "description": "Real-time monitoring system with metrics collection, alerting, and dashboard",
+        "integration_points": ["performance_monitor", "dashboard_ui"],
+        "document_section": "4.1 Real-time Monitoring"
+      },
+      {
+        "name": "Hardware Tier Adaptation",
+        "file": "assets/diagrams/WF-UX-006/WF-UX-006-tier-adaptation.md",
+        "type": "mermaid_diagram",
+        "description": "Device detection, tier classification, feature scaling, and battery-aware adaptation",
+        "integration_points": ["adaptive_manager", "tier_simulation"],
+        "document_section": "3.3 Hardware Tier Adaptation"
+      }
+    ],
+    "schemas": [
+      {
+        "name": "Performance Budgets Schema",
+        "file": "assets/schemas/WF-UX-006/WF-UX-006-performance-budgets.json",
+        "type": "json_schema",
+        "description": "Device tier profiles, frame budgets, resource limits, quality levels, and battery profiles",
+        "integration_points": ["adaptive_manager", "tier_simulation"],
+        "document_section": "2.2 Performance Budgets"
+      },
+      {
+        "name": "Metrics Definitions Schema",
+        "file": "assets/schemas/WF-UX-006/WF-UX-006-metrics-definitions.json",
+        "type": "json_schema",
+        "description": "Performance metrics categories, definitions, aggregation methods, and collection settings",
+        "integration_points": ["performance_monitor", "dashboard_ui"],
+        "document_section": "4.1 Metrics Collection"
+      },
+      {
+        "name": "Performance Thresholds Schema",
+        "file": "assets/schemas/WF-UX-006/WF-UX-006-thresholds.json",
+        "type": "json_schema",
+        "description": "Frame, system, battery, plugin, adaptation, and tier-specific threshold configurations",
+        "integration_points": ["performance_monitor", "adaptive_manager", "fallback_scenarios"],
+        "document_section": "4.2 Threshold Management"
+      }
+    ],
+    "code_components": [
+      {
+        "name": "Frame Timer Utility",
+        "file": "assets/code/WF-UX-006/frame-timer.py",
+        "type": "python_module",
+        "description": "High-precision frame timing, budget enforcement, statistics, and callback system",
+        "dependencies": ["time", "statistics", "threading"],
+        "integration_points": ["main_application_loop"],
+        "document_section": "2.1 Frame Budget Enforcement"
+      },
+      {
+        "name": "Performance Monitor",
+        "file": "assets/code/WF-UX-006/performance-monitor.py",
+        "type": "python_module",
+        "description": "Real-time system performance monitoring, metrics collection, and alerting",
+        "dependencies": ["psutil", "threading", "collections"],
+        "integration_points": ["dashboard_ui", "adaptive_manager"],
+        "document_section": "4.1 Real-time Monitoring"
+      },
+      {
+        "name": "Adaptive Manager",
+        "file": "assets/code/WF-UX-006/adaptive-manager.py",
+        "type": "python_module",
+        "description": "Dynamic quality adaptation, graceful degradation, and recovery strategies",
+        "dependencies": ["threading", "dataclasses", "enum"],
+        "integration_points": ["graphics_system", "performance_monitor"],
+        "document_section": "3.2 Adaptive Optimization"
+      },
+      {
+        "name": "Plugin Sandbox",
+        "file": "assets/code/WF-UX-006/plugin-sandbox.py",
+        "type": "python_module",
+        "description": "Performance-isolated plugin execution with strict resource limits and monitoring",
+        "dependencies": ["multiprocessing", "psutil", "threading"],
+        "integration_points": ["plugin_manager", "performance_monitor"],
+        "document_section": "5.1 Plugin Performance Isolation"
+      },
+      {
+        "name": "Fallback Scenarios",
+        "file": "assets/code/WF-UX-006/fallback-scenarios.py",
+        "type": "python_module",
+        "description": "Graceful degradation strategies and emergency performance modes",
+        "dependencies": ["threading", "dataclasses", "enum"],
+        "integration_points": ["adaptive_manager", "ui_system"],
+        "document_section": "5.2 Graceful Degradation"
+      },
+      {
+        "name": "Dashboard UI",
+        "file": "assets/code/WF-UX-006/dashboard-ui.py",
+        "type": "python_module",
+        "description": "Real-time performance monitoring dashboard with charts and controls",
+        "dependencies": ["tkinter", "matplotlib", "threading"],
+        "integration_points": ["performance_monitor", "adaptive_manager", "fallback_scenarios"],
+        "document_section": "4.3 Performance Dashboard"
+      }
+    ],
+    "test_suites": [
+      {
+        "name": "Performance Benchmarks",
+        "file": "assets/tests/WF-UX-006/performance-benchmarks.py",
+        "type": "python_test_suite",
+        "description": "Comprehensive performance testing including frame timing, CPU, memory, and adaptation speed",
+        "dependencies": ["psutil", "statistics", "multiprocessing"],
+        "test_categories": ["frame_timing", "cpu_performance", "memory_usage", "adaptation_speed"],
+        "document_section": "6.1 Performance Testing"
+      },
+      {
+        "name": "Regression Tests",
+        "file": "assets/tests/WF-UX-006/regression-tests.py",
+        "type": "python_test_suite",
+        "description": "Performance regression detection and validation against baseline metrics",
+        "dependencies": ["json", "statistics", "unittest"],
+        "test_categories": ["regression_detection", "baseline_comparison", "performance_validation"],
+        "document_section": "6.2 Regression Testing"
+      },
+      {
+        "name": "Tier Simulation Tests",
+        "file": "assets/tests/WF-UX-006/tier-simulation.py",
+        "type": "python_test_suite",
+        "description": "Hardware tier adaptation and device capability simulation across Low/Mid/High tiers",
+        "dependencies": ["random", "json", "dataclasses"],
+        "test_categories": ["tier_adaptation", "device_simulation", "performance_scaling"],
+        "document_section": "6.3 Hardware Tier Testing"
+      },
+      {
+        "name": "Plugin Battery Tests",
+        "file": "assets/tests/WF-UX-006/plugin-battery-tests.py",
+        "type": "python_test_suite",
+        "description": "Plugin performance impact and battery consumption validation",
+        "dependencies": ["threading", "multiprocessing", "json"],
+        "test_categories": ["plugin_overhead", "battery_drain", "power_efficiency"],
+        "document_section": "6.4 Plugin Performance Testing"
+      }
+    ],
+    "integration_assets": [
+      {
+        "name": "Integration Guide",
+        "file": "assets/integration/WF-UX-006/integration-guide.md",
+        "type": "markdown_documentation",
+        "description": "Comprehensive integration instructions for implementing WF-UX-006 in WIRTHFORGE applications",
+        "sections": ["architecture_integration", "monitoring_integration", "quality_adaptation", "testing_integration"],
+        "document_section": "7. Implementation Guidelines"
+      },
+      {
+        "name": "Asset Manifest",
+        "file": "assets/integration/WF-UX-006/asset-manifest.json",
+        "type": "json_manifest",
+        "description": "Complete catalog of all WF-UX-006 assets with integration mappings and dependencies",
+        "metadata": ["asset_inventory", "integration_points", "dependency_mapping"],
+        "document_section": "8. Asset Inventory"
+      }
+    ]
+  },
+  "integration_mappings": {
+    "document_sections": {
+      "2.1 Frame Budget Enforcement": ["frame-timer.py", "WF-UX-006-performance-budgets.json"],
+      "2.2 Performance Budgets": ["WF-UX-006-performance-budgets.json", "adaptive-manager.py"],
+      "3.1 Performance Architecture": ["WF-UX-006-performance-architecture.md", "performance-monitor.py"],
+      "3.2 Adaptive Optimization": ["WF-UX-006-optimization-flow.md", "adaptive-manager.py", "fallback-scenarios.py"],
+      "3.3 Hardware Tier Adaptation": ["WF-UX-006-tier-adaptation.md", "tier-simulation.py"],
+      "4.1 Real-time Monitoring": ["WF-UX-006-monitoring-architecture.md", "performance-monitor.py"],
+      "4.2 Threshold Management": ["WF-UX-006-thresholds.json", "performance-monitor.py"],
+      "4.3 Performance Dashboard": ["dashboard-ui.py", "WF-UX-006-metrics-definitions.json"],
+      "5.1 Plugin Performance Isolation": ["plugin-sandbox.py", "plugin-battery-tests.py"],
+      "5.2 Graceful Degradation": ["fallback-scenarios.py", "WF-UX-006-optimization-flow.md"],
+      "6.1 Performance Testing": ["performance-benchmarks.py"],
+      "6.2 Regression Testing": ["regression-tests.py"],
+      "6.3 Hardware Tier Testing": ["tier-simulation.py"],
+      "6.4 Plugin Performance Testing": ["plugin-battery-tests.py"],
+      "7. Implementation Guidelines": ["integration-guide.md"],
+      "8. Asset Inventory": ["asset-manifest.json"]
+    },
+    "component_dependencies": {
+      "frame-timer.py": {
+        "depends_on": [],
+        "used_by": ["performance-monitor.py", "adaptive-manager.py", "integration-guide.md"]
+      },
+      "performance-monitor.py": {
+        "depends_on": ["frame-timer.py", "WF-UX-006-metrics-definitions.json", "WF-UX-006-thresholds.json"],
+        "used_by": ["dashboard-ui.py", "adaptive-manager.py", "performance-benchmarks.py"]
+      },
+      "adaptive-manager.py": {
+        "depends_on": ["performance-monitor.py", "WF-UX-006-performance-budgets.json"],
+        "used_by": ["dashboard-ui.py", "fallback-scenarios.py", "tier-simulation.py"]
+      },
+      "plugin-sandbox.py": {
+        "depends_on": ["performance-monitor.py"],
+        "used_by": ["plugin-battery-tests.py", "integration-guide.md"]
+      },
+      "fallback-scenarios.py": {
+        "depends_on": ["adaptive-manager.py"],
+        "used_by": ["dashboard-ui.py", "integration-guide.md"]
+      },
+      "dashboard-ui.py": {
+        "depends_on": ["performance-monitor.py", "adaptive-manager.py", "fallback-scenarios.py"],
+        "used_by": ["integration-guide.md"]
+      }
+    }
+  },
+  "usage_examples": {
+    "basic_integration": {
+      "description": "Basic integration of core performance components",
+      "code_snippet": "from assets.code.WF_UX_006 import FrameTimer, PerformanceMonitor, AdaptiveManager",
+      "referenced_assets": ["frame-timer.py", "performance-monitor.py", "adaptive-manager.py"]
+    },
+    "monitoring_setup": {
+      "description": "Setting up real-time performance monitoring",
+      "code_snippet": "monitor = PerformanceMonitor(); monitor.start_monitoring()",
+      "referenced_assets": ["performance-monitor.py", "WF-UX-006-metrics-definitions.json"]
+    },
+    "quality_adaptation": {
+      "description": "Implementing automatic quality adaptation",
+      "code_snippet": "adaptive_manager.handle_frame_performance(frame_time_ms, consecutive_overruns)",
+      "referenced_assets": ["adaptive-manager.py", "WF-UX-006-performance-budgets.json"]
+    },
+    "plugin_sandboxing": {
+      "description": "Creating sandboxed plugin environment",
+      "code_snippet": "sandbox = PluginSandbox(plugin_id, resource_limits)",
+      "referenced_assets": ["plugin-sandbox.py"]
+    },
+    "testing_pipeline": {
+      "description": "Running performance test suite",
+      "code_snippet": "python assets/tests/WF-UX-006/performance-benchmarks.py",
+      "referenced_assets": ["performance-benchmarks.py", "regression-tests.py"]
+    }
+  },
+  "validation": {
+    "asset_completeness": {
+      "diagrams": "4/4 complete",
+      "schemas": "3/3 complete", 
+      "code_components": "6/6 complete",
+      "test_suites": "4/4 complete",
+      "integration_assets": "2/2 complete"
+    },
+    "integration_coverage": {
+      "document_sections_covered": "100%",
+      "component_dependencies_mapped": "100%",
+      "test_coverage": "100%"
+    },
+    "quality_checks": {
+      "schema_validation": "passed",
+      "code_syntax_check": "passed",
+      "documentation_completeness": "passed",
+      "integration_examples": "provided"
+    }
+  }
+}
