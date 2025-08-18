@@ -1,0 +1,608 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "WIRTHFORGE Reward Structures Schema",
+  "description": "Defines energy rewards, multipliers, and economic balancing for the WIRTHFORGE gamification system",
+  "type": "object",
+  "properties": {
+    "energyRewards": {
+      "type": "object",
+      "properties": {
+        "baseRewards": {
+          "$ref": "#/definitions/BaseRewards"
+        },
+        "multipliers": {
+          "$ref": "#/definitions/Multipliers"
+        },
+        "bonuses": {
+          "$ref": "#/definitions/Bonuses"
+        }
+      },
+      "required": ["baseRewards", "multipliers", "bonuses"]
+    },
+    "economicBalancing": {
+      "$ref": "#/definitions/EconomicBalancing"
+    },
+    "celebrationEffects": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/CelebrationEffect"
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "string"
+        },
+        "lastUpdated": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "balanceVersion": {
+          "type": "string"
+        }
+      },
+      "required": ["version", "lastUpdated", "balanceVersion"]
+    }
+  },
+  "required": ["energyRewards", "economicBalancing", "celebrationEffects", "metadata"],
+  "definitions": {
+    "BaseRewards": {
+      "type": "object",
+      "properties": {
+        "tokenGeneration": {
+          "type": "object",
+          "properties": {
+            "energyPerToken": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Base EU awarded per token generated"
+            },
+            "minimumTokensForReward": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Minimum tokens before rewards start"
+            }
+          },
+          "required": ["energyPerToken", "minimumTokensForReward"]
+        },
+        "promptCompletion": {
+          "type": "object",
+          "properties": {
+            "baseReward": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Base EU for completing a prompt"
+            },
+            "qualityBonus": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Additional EU for high-quality responses"
+            },
+            "qualityThreshold": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "Coherence score threshold for quality bonus"
+            }
+          },
+          "required": ["baseReward", "qualityBonus", "qualityThreshold"]
+        },
+        "sessionCompletion": {
+          "type": "object",
+          "properties": {
+            "minimumDuration": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Minimum session duration in minutes for reward"
+            },
+            "rewardPerMinute": {
+              "type": "number",
+              "minimum": 0,
+              "description": "EU awarded per minute of session"
+            },
+            "maximumSessionReward": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Cap on session completion rewards"
+            }
+          },
+          "required": ["minimumDuration", "rewardPerMinute", "maximumSessionReward"]
+        },
+        "achievementRewards": {
+          "type": "object",
+          "properties": {
+            "bronze": {
+              "type": "object",
+              "properties": {
+                "minimum": { "type": "integer", "minimum": 0 },
+                "maximum": { "type": "integer", "minimum": 0 }
+              },
+              "required": ["minimum", "maximum"]
+            },
+            "silver": {
+              "type": "object",
+              "properties": {
+                "minimum": { "type": "integer", "minimum": 0 },
+                "maximum": { "type": "integer", "minimum": 0 }
+              },
+              "required": ["minimum", "maximum"]
+            },
+            "gold": {
+              "type": "object",
+              "properties": {
+                "minimum": { "type": "integer", "minimum": 0 },
+                "maximum": { "type": "integer", "minimum": 0 }
+              },
+              "required": ["minimum", "maximum"]
+            },
+            "platinum": {
+              "type": "object",
+              "properties": {
+                "minimum": { "type": "integer", "minimum": 0 },
+                "maximum": { "type": "integer", "minimum": 0 }
+              },
+              "required": ["minimum", "maximum"]
+            },
+            "legendary": {
+              "type": "object",
+              "properties": {
+                "minimum": { "type": "integer", "minimum": 0 },
+                "maximum": { "type": "integer", "minimum": 0 }
+              },
+              "required": ["minimum", "maximum"]
+            }
+          },
+          "required": ["bronze", "silver", "gold", "platinum", "legendary"]
+        }
+      },
+      "required": ["tokenGeneration", "promptCompletion", "sessionCompletion", "achievementRewards"]
+    },
+    "Multipliers": {
+      "type": "object",
+      "properties": {
+        "speedMultiplier": {
+          "type": "object",
+          "properties": {
+            "thresholds": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "tokensPerSecond": {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  "multiplier": {
+                    "type": "number",
+                    "minimum": 1
+                  }
+                },
+                "required": ["tokensPerSecond", "multiplier"]
+              }
+            }
+          },
+          "required": ["thresholds"]
+        },
+        "multiModelMultiplier": {
+          "type": "object",
+          "properties": {
+            "twoModels": {
+              "type": "number",
+              "minimum": 1
+            },
+            "threeModels": {
+              "type": "number",
+              "minimum": 1
+            },
+            "fourPlusModels": {
+              "type": "number",
+              "minimum": 1
+            }
+          },
+          "required": ["twoModels", "threeModels", "fourPlusModels"]
+        },
+        "efficiencyMultiplier": {
+          "type": "object",
+          "properties": {
+            "thresholds": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "efficiencyPercentage": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 100
+                  },
+                  "multiplier": {
+                    "type": "number",
+                    "minimum": 1
+                  }
+                },
+                "required": ["efficiencyPercentage", "multiplier"]
+              }
+            }
+          },
+          "required": ["thresholds"]
+        },
+        "comboMultiplier": {
+          "type": "object",
+          "properties": {
+            "multipleBonusesActive": {
+              "type": "number",
+              "minimum": 1,
+              "description": "Additional multiplier when multiple bonuses are active"
+            },
+            "perfectPerformance": {
+              "type": "number",
+              "minimum": 1,
+              "description": "Multiplier for achieving all performance metrics simultaneously"
+            }
+          },
+          "required": ["multipleBonusesActive", "perfectPerformance"]
+        }
+      },
+      "required": ["speedMultiplier", "multiModelMultiplier", "efficiencyMultiplier", "comboMultiplier"]
+    },
+    "Bonuses": {
+      "type": "object",
+      "properties": {
+        "dailyLogin": {
+          "type": "object",
+          "properties": {
+            "baseReward": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "streakMultiplier": {
+              "type": "number",
+              "minimum": 1,
+              "description": "Multiplier applied for consecutive days"
+            },
+            "maximumStreak": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Maximum streak days for bonus calculation"
+            }
+          },
+          "required": ["baseReward", "streakMultiplier", "maximumStreak"]
+        },
+        "weeklyChallenges": {
+          "type": "object",
+          "properties": {
+            "completionBonus": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "perfectWeekBonus": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Bonus for completing all weekly challenges"
+            }
+          },
+          "required": ["completionBonus", "perfectWeekBonus"]
+        },
+        "firstTimeFeature": {
+          "type": "object",
+          "properties": {
+            "discoveryBonus": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Bonus for using a feature for the first time"
+            },
+            "masteryBonus": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Bonus for demonstrating feature mastery"
+            }
+          },
+          "required": ["discoveryBonus", "masteryBonus"]
+        }
+      },
+      "required": ["dailyLogin", "weeklyChallenges", "firstTimeFeature"]
+    },
+    "EconomicBalancing": {
+      "type": "object",
+      "properties": {
+        "inflationControl": {
+          "type": "object",
+          "properties": {
+            "fixedCosts": {
+              "type": "boolean",
+              "description": "Whether upgrade costs remain fixed"
+            },
+            "valuePreservation": {
+              "type": "boolean",
+              "description": "Whether past achievements maintain their value"
+            }
+          },
+          "required": ["fixedCosts", "valuePreservation"]
+        },
+        "earningRateControl": {
+          "type": "object",
+          "properties": {
+            "diminishingReturns": {
+              "type": "object",
+              "properties": {
+                "enabled": {
+                  "type": "boolean"
+                },
+                "threshold": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "description": "Number of repeated actions before diminishing returns kick in"
+                },
+                "reductionFactor": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1,
+                  "description": "Factor by which rewards are reduced"
+                }
+              },
+              "required": ["enabled", "threshold", "reductionFactor"]
+            },
+            "dailyCaps": {
+              "type": "object",
+              "properties": {
+                "maxDailyEarnings": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "description": "Maximum EU that can be earned per day"
+                },
+                "softCap": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "description": "Point at which earning rate starts to slow"
+                }
+              },
+              "required": ["maxDailyEarnings", "softCap"]
+            }
+          },
+          "required": ["diminishingReturns", "dailyCaps"]
+        },
+        "spendingLimitations": {
+          "type": "object",
+          "properties": {
+            "cooldownPeriods": {
+              "type": "object",
+              "properties": {
+                "levelUpgrade": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "description": "Hours between level upgrades"
+                },
+                "majorPurchase": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "description": "Hours between major skill purchases"
+                }
+              },
+              "required": ["levelUpgrade", "majorPurchase"]
+            },
+            "dailySpendingLimits": {
+              "type": "object",
+              "properties": {
+                "maxDailySpending": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "exemptions": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Purchase types exempt from daily limits"
+                }
+              },
+              "required": ["maxDailySpending", "exemptions"]
+            }
+          },
+          "required": ["cooldownPeriods", "dailySpendingLimits"]
+        }
+      },
+      "required": ["inflationControl", "earningRateControl", "spendingLimitations"]
+    },
+    "CelebrationEffect": {
+      "type": "object",
+      "properties": {
+        "effectId": {
+          "type": "string"
+        },
+        "effectName": {
+          "type": "string"
+        },
+        "triggerEvent": {
+          "type": "string",
+          "enum": ["achievement_unlock", "level_up", "milestone_reached", "perfect_performance", "streak_bonus"]
+        },
+        "visualEffect": {
+          "type": "object",
+          "properties": {
+            "animationType": {
+              "type": "string",
+              "enum": ["particles", "lightning", "glow", "confetti", "fireworks", "pulse"]
+            },
+            "duration": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Effect duration in milliseconds"
+            },
+            "colors": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^#[0-9A-Fa-f]{6}$"
+              }
+            },
+            "intensity": {
+              "type": "string",
+              "enum": ["subtle", "moderate", "dramatic", "epic"]
+            }
+          },
+          "required": ["animationType", "duration", "colors", "intensity"]
+        },
+        "audioEffect": {
+          "type": "object",
+          "properties": {
+            "soundId": {
+              "type": "string"
+            },
+            "volume": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "optional": {
+              "type": "boolean",
+              "description": "Whether sound can be disabled by user"
+            }
+          },
+          "required": ["soundId", "volume", "optional"]
+        },
+        "accessibilityAlternatives": {
+          "type": "object",
+          "properties": {
+            "screenReaderText": {
+              "type": "string"
+            },
+            "reducedMotionVersion": {
+              "type": "string",
+              "description": "Alternative effect for users with reduced motion preferences"
+            },
+            "hapticFeedback": {
+              "type": "boolean",
+              "description": "Whether to provide haptic feedback on supported devices"
+            }
+          },
+          "required": ["screenReaderText", "reducedMotionVersion"]
+        }
+      },
+      "required": ["effectId", "effectName", "triggerEvent", "visualEffect", "accessibilityAlternatives"]
+    }
+  },
+  "examples": [
+    {
+      "energyRewards": {
+        "baseRewards": {
+          "tokenGeneration": {
+            "energyPerToken": 1.0,
+            "minimumTokensForReward": 1
+          },
+          "promptCompletion": {
+            "baseReward": 5,
+            "qualityBonus": 20,
+            "qualityThreshold": 0.8
+          },
+          "sessionCompletion": {
+            "minimumDuration": 5,
+            "rewardPerMinute": 2,
+            "maximumSessionReward": 100
+          },
+          "achievementRewards": {
+            "bronze": { "minimum": 10, "maximum": 50 },
+            "silver": { "minimum": 25, "maximum": 100 },
+            "gold": { "minimum": 75, "maximum": 250 },
+            "platinum": { "minimum": 150, "maximum": 500 },
+            "legendary": { "minimum": 300, "maximum": 1000 }
+          }
+        },
+        "multipliers": {
+          "speedMultiplier": {
+            "thresholds": [
+              { "tokensPerSecond": 10, "multiplier": 1.2 },
+              { "tokensPerSecond": 20, "multiplier": 1.5 },
+              { "tokensPerSecond": 50, "multiplier": 2.0 }
+            ]
+          },
+          "multiModelMultiplier": {
+            "twoModels": 1.5,
+            "threeModels": 2.0,
+            "fourPlusModels": 2.5
+          },
+          "efficiencyMultiplier": {
+            "thresholds": [
+              { "efficiencyPercentage": 80, "multiplier": 1.2 },
+              { "efficiencyPercentage": 90, "multiplier": 1.5 },
+              { "efficiencyPercentage": 95, "multiplier": 2.0 }
+            ]
+          },
+          "comboMultiplier": {
+            "multipleBonusesActive": 1.3,
+            "perfectPerformance": 3.0
+          }
+        },
+        "bonuses": {
+          "dailyLogin": {
+            "baseReward": 25,
+            "streakMultiplier": 1.1,
+            "maximumStreak": 30
+          },
+          "weeklyChallenges": {
+            "completionBonus": 50,
+            "perfectWeekBonus": 200
+          },
+          "firstTimeFeature": {
+            "discoveryBonus": 15,
+            "masteryBonus": 75
+          }
+        }
+      },
+      "economicBalancing": {
+        "inflationControl": {
+          "fixedCosts": true,
+          "valuePreservation": true
+        },
+        "earningRateControl": {
+          "diminishingReturns": {
+            "enabled": true,
+            "threshold": 100,
+            "reductionFactor": 0.8
+          },
+          "dailyCaps": {
+            "maxDailyEarnings": 1000,
+            "softCap": 750
+          }
+        },
+        "spendingLimitations": {
+          "cooldownPeriods": {
+            "levelUpgrade": 0,
+            "majorPurchase": 24
+          },
+          "dailySpendingLimits": {
+            "maxDailySpending": 500,
+            "exemptions": ["level_upgrades", "celebration_effects"]
+          }
+        }
+      },
+      "celebrationEffects": [
+        {
+          "effectId": "lightning_burst",
+          "effectName": "Lightning Burst",
+          "triggerEvent": "achievement_unlock",
+          "visualEffect": {
+            "animationType": "lightning",
+            "duration": 2000,
+            "colors": ["#fbbf24", "#f59e0b", "#ffffff"],
+            "intensity": "dramatic"
+          },
+          "audioEffect": {
+            "soundId": "thunder_crack",
+            "volume": 0.7,
+            "optional": true
+          },
+          "accessibilityAlternatives": {
+            "screenReaderText": "Achievement unlocked with lightning burst effect",
+            "reducedMotionVersion": "static_glow",
+            "hapticFeedback": true
+          }
+        }
+      ],
+      "metadata": {
+        "version": "1.0.0",
+        "lastUpdated": "2025-01-18T10:00:00Z",
+        "balanceVersion": "beta-1.0"
+      }
+    }
+  ]
+}

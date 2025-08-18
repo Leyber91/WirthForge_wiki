@@ -1,0 +1,450 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "WIRTHFORGE Achievement Definitions Schema",
+  "description": "Defines all achievements, badges, and progression milestones for the WIRTHFORGE gamification system",
+  "type": "object",
+  "properties": {
+    "achievements": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Achievement"
+      }
+    },
+    "badgeCategories": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/BadgeCategory"
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "string"
+        },
+        "lastUpdated": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "totalAchievements": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "required": ["version", "lastUpdated", "totalAchievements"]
+    }
+  },
+  "required": ["achievements", "badgeCategories", "metadata"],
+  "definitions": {
+    "Achievement": {
+      "type": "object",
+      "properties": {
+        "achievementId": {
+          "type": "string",
+          "description": "Unique achievement identifier"
+        },
+        "name": {
+          "type": "string",
+          "description": "Display name of the achievement"
+        },
+        "description": {
+          "type": "string",
+          "description": "Detailed description of what the achievement requires"
+        },
+        "category": {
+          "type": "string",
+          "enum": ["performance", "efficiency", "feature_mastery", "milestone", "community", "discovery"]
+        },
+        "rarity": {
+          "type": "string",
+          "enum": ["bronze", "silver", "gold", "platinum", "legendary"]
+        },
+        "energyReward": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Energy Units awarded for completing this achievement"
+        },
+        "unlockCriteria": {
+          "$ref": "#/definitions/UnlockCriteria"
+        },
+        "prerequisites": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Achievement IDs that must be completed first"
+        },
+        "levelRequirement": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5,
+          "description": "Minimum level required to unlock this achievement"
+        },
+        "isSecret": {
+          "type": "boolean",
+          "default": false,
+          "description": "Whether this achievement is hidden until unlocked"
+        },
+        "visualElements": {
+          "$ref": "#/definitions/AchievementVisuals"
+        },
+        "progressTracking": {
+          "$ref": "#/definitions/ProgressTracking"
+        }
+      },
+      "required": ["achievementId", "name", "description", "category", "rarity", "energyReward", "unlockCriteria"]
+    },
+    "UnlockCriteria": {
+      "type": "object",
+      "properties": {
+        "metricType": {
+          "type": "string",
+          "enum": [
+            "prompts_completed",
+            "tokens_generated", 
+            "session_duration",
+            "tokens_per_second",
+            "models_used_simultaneously",
+            "chains_created",
+            "efficiency_percentage",
+            "feature_usage",
+            "consecutive_sessions",
+            "energy_accumulated",
+            "achievements_unlocked"
+          ]
+        },
+        "targetValue": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Target value for the metric"
+        },
+        "timeframe": {
+          "type": "string",
+          "enum": ["single_session", "daily", "weekly", "monthly", "lifetime"],
+          "description": "Time period over which the metric is measured"
+        },
+        "conditions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Condition"
+          },
+          "description": "Additional conditions that must be met"
+        },
+        "streakRequired": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Number of consecutive occurrences required"
+        }
+      },
+      "required": ["metricType", "targetValue", "timeframe"]
+    },
+    "Condition": {
+      "type": "object",
+      "properties": {
+        "conditionType": {
+          "type": "string",
+          "enum": ["minimum_value", "maximum_value", "exact_value", "feature_enabled", "level_requirement"]
+        },
+        "parameter": {
+          "type": "string",
+          "description": "Parameter being checked"
+        },
+        "value": {
+          "type": ["string", "number", "boolean"],
+          "description": "Expected value for the condition"
+        }
+      },
+      "required": ["conditionType", "parameter", "value"]
+    },
+    "AchievementVisuals": {
+      "type": "object",
+      "properties": {
+        "iconName": {
+          "type": "string",
+          "description": "Icon identifier for the achievement badge"
+        },
+        "primaryColor": {
+          "type": "string",
+          "pattern": "^#[0-9A-Fa-f]{6}$"
+        },
+        "secondaryColor": {
+          "type": "string",
+          "pattern": "^#[0-9A-Fa-f]{6}$"
+        },
+        "badgeShape": {
+          "type": "string",
+          "enum": ["circle", "hexagon", "star", "shield", "crown"]
+        },
+        "animationEffect": {
+          "type": "string",
+          "description": "Animation played when achievement is unlocked"
+        },
+        "glowEffect": {
+          "type": "boolean",
+          "default": false,
+          "description": "Whether the badge has a glow effect"
+        }
+      },
+      "required": ["iconName", "primaryColor", "badgeShape"]
+    },
+    "ProgressTracking": {
+      "type": "object",
+      "properties": {
+        "showProgress": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether to show progress towards this achievement"
+        },
+        "progressFormat": {
+          "type": "string",
+          "enum": ["percentage", "fraction", "count", "time"],
+          "description": "How to display progress"
+        },
+        "milestones": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "percentage": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 100
+              },
+              "message": {
+                "type": "string"
+              }
+            },
+            "required": ["percentage", "message"]
+          },
+          "description": "Progress milestones with custom messages"
+        }
+      }
+    },
+    "BadgeCategory": {
+      "type": "object",
+      "properties": {
+        "categoryId": {
+          "type": "string"
+        },
+        "categoryName": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "themeColor": {
+          "type": "string",
+          "pattern": "^#[0-9A-Fa-f]{6}$"
+        },
+        "iconTheme": {
+          "type": "string"
+        },
+        "sortOrder": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "required": ["categoryId", "categoryName", "description", "themeColor"]
+    }
+  },
+  "examples": [
+    {
+      "achievements": [
+        {
+          "achievementId": "first_strike",
+          "name": "First Strike",
+          "description": "Complete your first prompt and witness the lightning",
+          "category": "milestone",
+          "rarity": "bronze",
+          "energyReward": 50,
+          "unlockCriteria": {
+            "metricType": "prompts_completed",
+            "targetValue": 1,
+            "timeframe": "lifetime"
+          },
+          "prerequisites": [],
+          "levelRequirement": 1,
+          "isSecret": false,
+          "visualElements": {
+            "iconName": "lightning_bolt",
+            "primaryColor": "#fbbf24",
+            "secondaryColor": "#f59e0b",
+            "badgeShape": "circle",
+            "animationEffect": "lightning_flash",
+            "glowEffect": true
+          },
+          "progressTracking": {
+            "showProgress": true,
+            "progressFormat": "fraction",
+            "milestones": [
+              {
+                "percentage": 100,
+                "message": "Lightning strikes! You've completed your first prompt!"
+              }
+            ]
+          }
+        },
+        {
+          "achievementId": "speed_demon_1",
+          "name": "Speed Demon I",
+          "description": "Sustain 10 tokens per second for at least 30 seconds",
+          "category": "performance",
+          "rarity": "bronze",
+          "energyReward": 25,
+          "unlockCriteria": {
+            "metricType": "tokens_per_second",
+            "targetValue": 10,
+            "timeframe": "single_session",
+            "conditions": [
+              {
+                "conditionType": "minimum_value",
+                "parameter": "sustained_duration_seconds",
+                "value": 30
+              }
+            ]
+          },
+          "prerequisites": ["first_strike"],
+          "levelRequirement": 1,
+          "isSecret": false,
+          "visualElements": {
+            "iconName": "speedometer",
+            "primaryColor": "#ef4444",
+            "secondaryColor": "#dc2626",
+            "badgeShape": "hexagon",
+            "animationEffect": "speed_burst"
+          },
+          "progressTracking": {
+            "showProgress": true,
+            "progressFormat": "time",
+            "milestones": [
+              {
+                "percentage": 33,
+                "message": "Building speed..."
+              },
+              {
+                "percentage": 66,
+                "message": "Almost there!"
+              },
+              {
+                "percentage": 100,
+                "message": "Speed demon unleashed!"
+              }
+            ]
+          }
+        },
+        {
+          "achievementId": "council_initiate",
+          "name": "Council Initiate",
+          "description": "Run your first parallel session with multiple AI models",
+          "category": "feature_mastery",
+          "rarity": "silver",
+          "energyReward": 75,
+          "unlockCriteria": {
+            "metricType": "models_used_simultaneously",
+            "targetValue": 2,
+            "timeframe": "single_session"
+          },
+          "prerequisites": ["first_strike"],
+          "levelRequirement": 2,
+          "isSecret": false,
+          "visualElements": {
+            "iconName": "council_table",
+            "primaryColor": "#3b82f6",
+            "secondaryColor": "#1d4ed8",
+            "badgeShape": "shield",
+            "animationEffect": "council_assembly",
+            "glowEffect": true
+          },
+          "progressTracking": {
+            "showProgress": true,
+            "progressFormat": "count"
+          }
+        },
+        {
+          "achievementId": "grand_master",
+          "name": "Grand Master",
+          "description": "Unlock all other achievements and become a true WIRTHFORGE master",
+          "category": "milestone",
+          "rarity": "legendary",
+          "energyReward": 500,
+          "unlockCriteria": {
+            "metricType": "achievements_unlocked",
+            "targetValue": 50,
+            "timeframe": "lifetime",
+            "conditions": [
+              {
+                "conditionType": "feature_enabled",
+                "parameter": "all_features_unlocked",
+                "value": true
+              }
+            ]
+          },
+          "prerequisites": [],
+          "levelRequirement": 5,
+          "isSecret": false,
+          "visualElements": {
+            "iconName": "crown",
+            "primaryColor": "#f59e0b",
+            "secondaryColor": "#d97706",
+            "badgeShape": "crown",
+            "animationEffect": "royal_coronation",
+            "glowEffect": true
+          },
+          "progressTracking": {
+            "showProgress": true,
+            "progressFormat": "percentage",
+            "milestones": [
+              {
+                "percentage": 25,
+                "message": "The journey begins..."
+              },
+              {
+                "percentage": 50,
+                "message": "Halfway to mastery!"
+              },
+              {
+                "percentage": 75,
+                "message": "Almost there, master!"
+              },
+              {
+                "percentage": 100,
+                "message": "Behold, the Grand Master of WIRTHFORGE!"
+              }
+            ]
+          }
+        }
+      ],
+      "badgeCategories": [
+        {
+          "categoryId": "performance",
+          "categoryName": "Performance",
+          "description": "Achievements related to speed, efficiency, and optimization",
+          "themeColor": "#ef4444",
+          "iconTheme": "speed_metrics",
+          "sortOrder": 1
+        },
+        {
+          "categoryId": "feature_mastery",
+          "categoryName": "Feature Mastery",
+          "description": "Achievements for learning and mastering WIRTHFORGE features",
+          "themeColor": "#3b82f6",
+          "iconTheme": "feature_icons",
+          "sortOrder": 2
+        },
+        {
+          "categoryId": "milestone",
+          "categoryName": "Milestones",
+          "description": "Major progression milestones and special moments",
+          "themeColor": "#f59e0b",
+          "iconTheme": "milestone_markers",
+          "sortOrder": 3
+        }
+      ],
+      "metadata": {
+        "version": "1.0.0",
+        "lastUpdated": "2025-01-18T10:00:00Z",
+        "totalAchievements": 4
+      }
+    }
+  ]
+}

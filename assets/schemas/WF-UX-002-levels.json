@@ -1,0 +1,356 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "WIRTHFORGE Level Requirements Schema",
+  "description": "Defines progression levels, unlock criteria, and feature availability for the WIRTHFORGE gamification system",
+  "type": "object",
+  "properties": {
+    "levels": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Level"
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "string",
+          "description": "Schema version"
+        },
+        "lastUpdated": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "balanceVersion": {
+          "type": "string",
+          "description": "Game balance version for tracking changes"
+        }
+      },
+      "required": ["version", "lastUpdated", "balanceVersion"]
+    }
+  },
+  "required": ["levels", "metadata"],
+  "definitions": {
+    "Level": {
+      "type": "object",
+      "properties": {
+        "levelNumber": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5,
+          "description": "Level identifier (1-5)"
+        },
+        "levelName": {
+          "type": "string",
+          "description": "Human-readable level name"
+        },
+        "theme": {
+          "type": "string",
+          "description": "Visual and conceptual theme for the level"
+        },
+        "description": {
+          "type": "string",
+          "description": "Detailed description of level capabilities"
+        },
+        "unlockCriteria": {
+          "$ref": "#/definitions/UnlockCriteria"
+        },
+        "unlockedFeatures": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Feature"
+          }
+        },
+        "visualElements": {
+          "$ref": "#/definitions/VisualElements"
+        },
+        "skillTreeNodes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SkillNode"
+          }
+        },
+        "challenges": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Challenge"
+          }
+        }
+      },
+      "required": ["levelNumber", "levelName", "theme", "description", "unlockCriteria", "unlockedFeatures"]
+    },
+    "UnlockCriteria": {
+      "type": "object",
+      "properties": {
+        "requiredEnergy": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Minimum Energy Units (EU) required"
+        },
+        "requiredAchievements": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Achievement IDs that must be unlocked"
+        },
+        "requiredActions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/RequiredAction"
+          }
+        },
+        "levelUpCost": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "EU cost to actually level up (after meeting criteria)"
+        },
+        "minimumSessionTime": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Minimum total session time in minutes"
+        }
+      },
+      "required": ["requiredEnergy", "requiredAchievements", "levelUpCost"]
+    },
+    "RequiredAction": {
+      "type": "object",
+      "properties": {
+        "actionType": {
+          "type": "string",
+          "enum": ["prompts_completed", "tokens_generated", "models_used", "sessions_completed", "feature_used"]
+        },
+        "count": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "description": {
+          "type": "string"
+        }
+      },
+      "required": ["actionType", "count", "description"]
+    },
+    "Feature": {
+      "type": "object",
+      "properties": {
+        "featureId": {
+          "type": "string",
+          "description": "Unique feature identifier"
+        },
+        "featureName": {
+          "type": "string",
+          "description": "Human-readable feature name"
+        },
+        "category": {
+          "type": "string",
+          "enum": ["ui_component", "model_control", "visualization", "workflow", "social", "performance"]
+        },
+        "description": {
+          "type": "string"
+        },
+        "dependencies": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Other feature IDs this depends on"
+        },
+        "betaFeature": {
+          "type": "boolean",
+          "default": false,
+          "description": "Whether this is a beta/experimental feature"
+        }
+      },
+      "required": ["featureId", "featureName", "category", "description"]
+    },
+    "VisualElements": {
+      "type": "object",
+      "properties": {
+        "primaryColor": {
+          "type": "string",
+          "pattern": "^#[0-9A-Fa-f]{6}$",
+          "description": "Primary theme color for this level"
+        },
+        "secondaryColor": {
+          "type": "string",
+          "pattern": "^#[0-9A-Fa-f]{6}$"
+        },
+        "iconName": {
+          "type": "string",
+          "description": "Icon identifier for level badge"
+        },
+        "animationTheme": {
+          "type": "string",
+          "description": "Animation style theme"
+        },
+        "celebrationEffect": {
+          "type": "string",
+          "description": "Special effect when level is unlocked"
+        },
+        "backgroundPattern": {
+          "type": "string",
+          "description": "Background visual pattern or texture"
+        }
+      },
+      "required": ["primaryColor", "iconName", "animationTheme"]
+    },
+    "SkillNode": {
+      "type": "object",
+      "properties": {
+        "nodeId": {
+          "type": "string"
+        },
+        "nodeName": {
+          "type": "string"
+        },
+        "cost": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "prerequisites": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "category": {
+          "type": "string",
+          "enum": ["visualization", "model_control", "workflow", "performance", "community"]
+        },
+        "description": {
+          "type": "string"
+        },
+        "unlocks": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Feature IDs unlocked by this skill node"
+        }
+      },
+      "required": ["nodeId", "nodeName", "cost", "category", "description"]
+    },
+    "Challenge": {
+      "type": "object",
+      "properties": {
+        "challengeId": {
+          "type": "string"
+        },
+        "challengeName": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "difficulty": {
+          "type": "string",
+          "enum": ["easy", "medium", "hard", "expert"]
+        },
+        "rewardEU": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "completionCriteria": {
+          "type": "object",
+          "properties": {
+            "metricType": {
+              "type": "string"
+            },
+            "targetValue": {
+              "type": "number"
+            },
+            "timeLimit": {
+              "type": "integer",
+              "description": "Time limit in minutes, 0 for no limit"
+            }
+          },
+          "required": ["metricType", "targetValue"]
+        }
+      },
+      "required": ["challengeId", "challengeName", "description", "difficulty", "rewardEU", "completionCriteria"]
+    }
+  },
+  "examples": [
+    {
+      "levels": [
+        {
+          "levelNumber": 1,
+          "levelName": "Lightning Strikes",
+          "theme": "Single Model Mastery",
+          "description": "Master the basics of AI interaction with lightning-fast single model responses",
+          "unlockCriteria": {
+            "requiredEnergy": 0,
+            "requiredAchievements": [],
+            "requiredActions": [
+              {
+                "actionType": "prompts_completed",
+                "count": 1,
+                "description": "Complete the tutorial prompt"
+              }
+            ],
+            "levelUpCost": 100,
+            "minimumSessionTime": 5
+          },
+          "unlockedFeatures": [
+            {
+              "featureId": "single_model_chat",
+              "featureName": "Single Model Chat",
+              "category": "ui_component",
+              "description": "Basic chat interface with one AI model"
+            },
+            {
+              "featureId": "lightning_visualization",
+              "featureName": "Lightning Visualization",
+              "category": "visualization",
+              "description": "Visual representation of token generation as lightning bolts"
+            },
+            {
+              "featureId": "energy_meter",
+              "featureName": "Energy Meter",
+              "category": "ui_component",
+              "description": "Basic energy accumulation display"
+            }
+          ],
+          "visualElements": {
+            "primaryColor": "#fbbf24",
+            "secondaryColor": "#f59e0b",
+            "iconName": "lightning_bolt",
+            "animationTheme": "golden_sparks",
+            "celebrationEffect": "lightning_burst",
+            "backgroundPattern": "subtle_electricity"
+          },
+          "skillTreeNodes": [
+            {
+              "nodeId": "enhanced_lightning",
+              "nodeName": "Enhanced Lightning",
+              "cost": 100,
+              "prerequisites": [],
+              "category": "visualization",
+              "description": "More detailed lightning bolt animations with branching effects",
+              "unlocks": ["advanced_lightning_viz"]
+            }
+          ],
+          "challenges": [
+            {
+              "challengeId": "speed_demon_1",
+              "challengeName": "Speed Demon I",
+              "description": "Sustain 10 tokens per second for 30 seconds",
+              "difficulty": "easy",
+              "rewardEU": 50,
+              "completionCriteria": {
+                "metricType": "tokens_per_second",
+                "targetValue": 10,
+                "timeLimit": 1
+              }
+            }
+          ]
+        }
+      ],
+      "metadata": {
+        "version": "1.0.0",
+        "lastUpdated": "2025-01-18T10:00:00Z",
+        "balanceVersion": "beta-1.0"
+      }
+    }
+  ]
+}
