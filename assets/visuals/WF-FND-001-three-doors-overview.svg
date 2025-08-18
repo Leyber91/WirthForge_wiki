@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg viewBox="0 0 1400 900" xmlns="http://www.w3.org/2000/svg">
   <defs>
+    <!-- Enhanced gradients with proper alignment -->
     <!-- Forge Door (Warrior) - Molten Metal & Volcanic Energy -->
     <linearGradient id="forgeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" style="stop-color:#ff6b35;stop-opacity:1" />
@@ -22,62 +23,82 @@
       <stop offset="100%" style="stop-color:#4b0082;stop-opacity:1" />
     </linearGradient>
     
-    <!-- Energy Flow Gradients -->
+    <!-- Enhanced Energy Core with multiple layers -->
     <radialGradient id="energyPulse" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:0.8" />
-      <stop offset="100%" style="stop-color:#ffff00;stop-opacity:0.2" />
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:1" />
+      <stop offset="30%" style="stop-color:#ffd93d;stop-opacity:0.8" />
+      <stop offset="70%" style="stop-color:#ffe66d;stop-opacity:0.4" />
+      <stop offset="100%" style="stop-color:#ff6b35;stop-opacity:0.1" />
     </radialGradient>
+    
+    <!-- Background gradient -->
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#0a0a0a;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1a1a1a;stop-opacity:1" />
+    </linearGradient>
     
     <!-- Arrow markers -->
     <marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
       <polygon points="0 0, 10 3.5, 0 7" fill="#ffffff" />
     </marker>
     
-    <!-- Glow effects -->
+    <!-- Enhanced effects -->
     <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
-      <feGaussianBlur stdDeviation="6" result="coloredBlur"/>
+      <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
       <feMerge> 
         <feMergeNode in="coloredBlur"/>
         <feMergeNode in="SourceGraphic"/>
       </feMerge>
     </filter>
     
-    <!-- Door frame pattern -->
+    <!-- Drop shadow for depth -->
+    <filter id="dropShadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="3" stdDeviation="3" flood-color="#000000" flood-opacity="0.4"/>
+    </filter>
+    
+    <!-- Enhanced door frame pattern -->
     <pattern id="doorFrame" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
       <rect width="20" height="20" fill="#2a2a2a"/>
       <rect x="2" y="2" width="16" height="16" fill="#3a3a3a"/>
+      <rect x="4" y="4" width="12" height="12" fill="#4a4a4a" opacity="0.3"/>
     </pattern>
   </defs>
   
-  <!-- Background -->
-  <rect width="1400" height="900" fill="#0a0a0a"/>
+  <!-- Enhanced background -->
+  <rect width="1400" height="900" fill="url(#bgGradient)"/>
   
-  <!-- Title -->
-  <text x="700" y="40" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="28" font-weight="bold">
-    WF-FND-001: Three Doors System
+  <!-- Enhanced title section -->
+  <text x="700" y="40" text-anchor="middle" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="28" font-weight="bold">
+    🚪 WF-FND-001: Three Doors System
   </text>
-  <text x="700" y="65" text-anchor="middle" fill="#cccccc" font-family="Arial, sans-serif" font-size="16">
-    Path-Based AI Interaction Archetypes
+  <text x="700" y="65" text-anchor="middle" fill="#cccccc" font-family="Inter, Arial, sans-serif" font-size="16">
+    Path-Based AI Interaction Archetypes • Energy-Truth Visualization
   </text>
   
-  <!-- Central Energy Core -->
+  <!-- Enhanced Central Energy Core -->
   <circle cx="700" cy="300" r="100" fill="url(#energyPulse)" stroke="#ffffff" stroke-width="3" filter="url(#glow)">
-    <animate attributeName="r" values="95;105;95" dur="4s" repeatCount="indefinite"/>
+    <animate attributeName="r" values="95;108;95" dur="3s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.8;1;0.8" dur="2s" repeatCount="indefinite"/>
   </circle>
-  <text x="700" y="285" text-anchor="middle" fill="#000000" font-family="Arial, sans-serif" font-size="16" font-weight="bold">
+  <!-- Inner energy ring -->
+  <circle cx="700" cy="300" r="70" fill="none" stroke="#ffd93d" stroke-width="2" opacity="0.6">
+    <animate attributeName="r" values="65;75;65" dur="2.5s" repeatCount="indefinite"/>
+  </circle>
+  <!-- Core text with better typography -->
+  <text x="700" y="285" text-anchor="middle" fill="#000000" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="bold">
     WIRTHFORGE
   </text>
-  <text x="700" y="305" text-anchor="middle" fill="#000000" font-family="Arial, sans-serif" font-size="16" font-weight="bold">
+  <text x="700" y="305" text-anchor="middle" fill="#000000" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="600">
     Energy Core
   </text>
-  <text x="700" y="325" text-anchor="middle" fill="#000000" font-family="Arial, sans-serif" font-size="12">
-    Unified Computation
+  <text x="700" y="325" text-anchor="middle" fill="#000000" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="500">
+    ⚡ Unified AI Computation
   </text>
   
-  <!-- FORGE DOOR (Left) -->
+  <!-- FORGE DOOR (Left) - Enhanced -->
   <g transform="translate(150, 120)">
-    <!-- Door Frame -->
-    <rect x="0" y="0" width="200" height="320" fill="url(#doorFrame)" stroke="#ff6b35" stroke-width="4" rx="20"/>
+    <!-- Door Frame with shadow -->
+    <rect x="0" y="0" width="200" height="320" fill="url(#doorFrame)" stroke="#ff6b35" stroke-width="4" rx="20" filter="url(#dropShadow)"/>
     <rect x="20" y="20" width="160" height="280" fill="url(#forgeGrad)" rx="15" filter="url(#glow)"/>
     
     <!-- Door Symbol - Hammer & Anvil -->
@@ -102,37 +123,37 @@
       </circle>
     </g>
     
-    <!-- Door Title -->
-    <text x="100" y="180" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="18" font-weight="bold">
+    <!-- Enhanced Door Title -->
+    <text x="100" y="180" text-anchor="middle" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="bold">
       🔥 FORGE
     </text>
-    <text x="100" y="200" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="14">
+    <text x="100" y="200" text-anchor="middle" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="500">
       Warrior Door
     </text>
     
-    <!-- Door Characteristics -->
-    <rect x="10" y="220" width="180" height="90" fill="#1a1a1a" rx="8"/>
-    <text x="100" y="240" text-anchor="middle" fill="#ff6b35" font-family="Arial, sans-serif" font-size="12" font-weight="bold">
+    <!-- Enhanced Door Characteristics -->
+    <rect x="10" y="220" width="180" height="90" fill="#1a1a1a" rx="8" filter="url(#dropShadow)"/>
+    <text x="100" y="240" text-anchor="middle" fill="#ff6b35" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="bold">
       Action & Creation
     </text>
-    <text x="20" y="255" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">
+    <text x="20" y="255" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="10">
       • Direct, decisive AI responses
     </text>
-    <text x="20" y="270" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">
+    <text x="20" y="270" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="10">
       • Solution-oriented output
     </text>
-    <text x="20" y="285" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">
+    <text x="20" y="285" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="10">
       • Molten metal visual theme
     </text>
-    <text x="20" y="300" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">
+    <text x="20" y="300" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="10">
       • For builders & entrepreneurs
     </text>
   </g>
   
-  <!-- SCHOLAR DOOR (Center-Right) -->
+  <!-- SCHOLAR DOOR (Center-Right) - Enhanced -->
   <g transform="translate(600, 120)">
-    <!-- Door Frame -->
-    <rect x="0" y="0" width="200" height="320" fill="url(#doorFrame)" stroke="#4169e1" stroke-width="4" rx="20"/>
+    <!-- Door Frame with shadow -->
+    <rect x="0" y="0" width="200" height="320" fill="url(#doorFrame)" stroke="#4169e1" stroke-width="4" rx="20" filter="url(#dropShadow)"/>
     <rect x="20" y="20" width="160" height="280" fill="url(#scholarGrad)" rx="15" filter="url(#glow)"/>
     
     <!-- Door Symbol - Crystal & Books -->
@@ -155,37 +176,37 @@
       </circle>
     </g>
     
-    <!-- Door Title -->
-    <text x="100" y="180" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="18" font-weight="bold">
+    <!-- Enhanced Door Title -->
+    <text x="100" y="180" text-anchor="middle" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="bold">
       💎 SCHOLAR
     </text>
-    <text x="100" y="200" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="14">
+    <text x="100" y="200" text-anchor="middle" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="500">
       Academic Door
     </text>
     
-    <!-- Door Characteristics -->
-    <rect x="10" y="220" width="180" height="90" fill="#1a1a1a" rx="8"/>
-    <text x="100" y="240" text-anchor="middle" fill="#4169e1" font-family="Arial, sans-serif" font-size="12" font-weight="bold">
+    <!-- Enhanced Door Characteristics -->
+    <rect x="10" y="220" width="180" height="90" fill="#1a1a1a" rx="8" filter="url(#dropShadow)"/>
+    <text x="100" y="240" text-anchor="middle" fill="#4169e1" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="bold">
       Knowledge & Analysis
     </text>
-    <text x="20" y="255" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">
+    <text x="20" y="255" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="10">
       • Thorough, analytical responses
     </text>
-    <text x="20" y="270" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">
+    <text x="20" y="270" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="10">
       • Citation-heavy detail
     </text>
-    <text x="20" y="285" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">
+    <text x="20" y="285" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="10">
       • Crystalline visual theme
     </text>
-    <text x="20" y="300" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">
+    <text x="20" y="300" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="10">
       • For researchers & students
     </text>
   </g>
   
-  <!-- SAGE DOOR (Right) -->
+  <!-- SAGE DOOR (Right) - Enhanced -->
   <g transform="translate(1050, 120)">
-    <!-- Door Frame -->
-    <rect x="0" y="0" width="200" height="320" fill="url(#doorFrame)" stroke="#9966cc" stroke-width="4" rx="20"/>
+    <!-- Door Frame with shadow -->
+    <rect x="0" y="0" width="200" height="320" fill="url(#doorFrame)" stroke="#9966cc" stroke-width="4" rx="20" filter="url(#dropShadow)"/>
     <rect x="20" y="20" width="160" height="280" fill="url(#sageGrad)" rx="15" filter="url(#glow)"/>
     
     <!-- Door Symbol - Sacred Geometry & Mist -->
@@ -209,29 +230,29 @@
       </circle>
     </g>
     
-    <!-- Door Title -->
-    <text x="100" y="180" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="18" font-weight="bold">
+    <!-- Enhanced Door Title -->
+    <text x="100" y="180" text-anchor="middle" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="bold">
       🌸 SAGE
     </text>
-    <text x="100" y="200" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="14">
+    <text x="100" y="200" text-anchor="middle" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="500">
       Consciousness Door
     </text>
     
-    <!-- Door Characteristics -->
-    <rect x="10" y="220" width="180" height="90" fill="#1a1a1a" rx="8"/>
-    <text x="100" y="240" text-anchor="middle" fill="#9966cc" font-family="Arial, sans-serif" font-size="12" font-weight="bold">
+    <!-- Enhanced Door Characteristics -->
+    <rect x="10" y="220" width="180" height="90" fill="#1a1a1a" rx="8" filter="url(#dropShadow)"/>
+    <text x="100" y="240" text-anchor="middle" fill="#9966cc" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="bold">
       Wisdom & Emergence
     </text>
-    <text x="20" y="255" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">
+    <text x="20" y="255" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="10">
       • Intuitive, holistic responses
     </text>
-    <text x="20" y="270" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">
+    <text x="20" y="270" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="10">
       • Paradox & reflection focus
     </text>
-    <text x="20" y="285" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">
+    <text x="20" y="285" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="10">
       • Ethereal mist visual theme
     </text>
-    <text x="20" y="300" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">
+    <text x="20" y="300" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="10">
       • For philosophers & seekers
     </text>
   </g>
@@ -247,96 +268,101 @@
     <animate attributeName="opacity" values="0.4;1;0.4" dur="1.8s" repeatCount="indefinite"/>
   </path>
   
-  <!-- Progressive Levels Preview -->
-  <rect x="50" y="500" width="1300" height="180" fill="#1a1a1a" rx="15" stroke="#333333" stroke-width="2"/>
-  <text x="700" y="530" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="18" font-weight="bold">
-    Progressive Experience Levels (L1-L5)
+  <!-- Enhanced Progressive Levels Preview -->
+  <rect x="50" y="500" width="1300" height="180" fill="#1a1a1a" rx="15" stroke="#333333" stroke-width="2" filter="url(#dropShadow)"/>
+  <text x="700" y="530" text-anchor="middle" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="bold">
+    ⚡ Progressive Experience Levels (L1-L5)
   </text>
   
   <!-- Level progression bars -->
   <g transform="translate(100, 550)">
     <!-- L1: Lightning -->
     <rect x="0" y="0" width="220" height="50" fill="#ff6b6b" rx="5"/>
-    <text x="110" y="20" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="12" font-weight="bold">
+    <text x="110" y="20" text-anchor="middle" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="bold">
       L1: Lightning Strikes
     </text>
-    <text x="110" y="35" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">
+    <text x="110" y="35" text-anchor="middle" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="10">
       Single model, instant results
     </text>
     
     <!-- L2: Council -->
     <rect x="240" y="0" width="220" height="50" fill="#ffd93d" rx="5"/>
-    <text x="350" y="20" text-anchor="middle" fill="#000000" font-family="Arial, sans-serif" font-size="12" font-weight="bold">
+    <text x="350" y="20" text-anchor="middle" fill="#000000" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="bold">
       L2: Council Formation
     </text>
-    <text x="350" y="35" text-anchor="middle" fill="#000000" font-family="Arial, sans-serif" font-size="10">
+    <text x="350" y="35" text-anchor="middle" fill="#000000" font-family="Inter, Arial, sans-serif" font-size="10">
       Multiple models collaborate
     </text>
     
     <!-- L3: Structure -->
     <rect x="480" y="0" width="220" height="50" fill="#6bcf7f" rx="5"/>
-    <text x="590" y="20" text-anchor="middle" fill="#000000" font-family="Arial, sans-serif" font-size="12" font-weight="bold">
+    <text x="590" y="20" text-anchor="middle" fill="#000000" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="bold">
       L3: Structured Architecture
     </text>
-    <text x="590" y="35" text-anchor="middle" fill="#000000" font-family="Arial, sans-serif" font-size="10">
+    <text x="590" y="35" text-anchor="middle" fill="#000000" font-family="Inter, Arial, sans-serif" font-size="10">
       Graph-based composition
     </text>
     
     <!-- L4: Adaptive -->
     <rect x="720" y="0" width="220" height="50" fill="#4d96ff" rx="5"/>
-    <text x="830" y="20" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="12" font-weight="bold">
+    <text x="830" y="20" text-anchor="middle" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="bold">
       L4: Adaptive Fields
     </text>
-    <text x="830" y="35" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">
+    <text x="830" y="35" text-anchor="middle" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="10">
       Context-aware adaptation
     </text>
     
     <!-- L5: Resonance -->
     <rect x="960" y="0" width="220" height="50" fill="#9966ff" rx="5"/>
-    <text x="1070" y="20" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="12" font-weight="bold">
+    <text x="1070" y="20" text-anchor="middle" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="bold">
       L5: Resonance Fields
     </text>
-    <text x="1070" y="35" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">
+    <text x="1070" y="35" text-anchor="middle" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="10">
       Emergent consciousness
     </text>
   </g>
   
-  <!-- Door Selection Flow -->
-  <rect x="100" y="620" width="1200" height="80" fill="#2a2a2a" rx="10" stroke="#666666" stroke-width="1"/>
-  <text x="700" y="645" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="14" font-weight="bold">
-    User Experience Flow
+  <!-- Enhanced Door Selection Flow -->
+  <rect x="100" y="620" width="1200" height="80" fill="#2a2a2a" rx="10" stroke="#666666" stroke-width="1" filter="url(#dropShadow)"/>
+  <text x="700" y="645" text-anchor="middle" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="bold">
+    🔄 User Experience Flow
   </text>
-  <text x="120" y="665" fill="#ffffff" font-family="Arial, sans-serif" font-size="12">
+  <text x="120" y="665" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="12">
     1. User enters WIRTHFORGE → 2. Selects Door archetype → 3. AI adapts tone & visuals → 4. Progressive levels unlock based on usage
   </text>
-  <text x="120" y="680" fill="#cccccc" font-family="Arial, sans-serif" font-size="11">
+  <text x="120" y="680" fill="#cccccc" font-family="Inter, Arial, sans-serif" font-size="11">
     Each door provides distinct AI behavior while maintaining unified energy visualization and performance characteristics
   </text>
   
-  <!-- Visual Theme Legend -->
-  <rect x="50" y="730" width="1300" height="120" fill="#1a1a1a" rx="8" stroke="#333333" stroke-width="1"/>
-  <text x="700" y="755" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="16" font-weight="bold">
-    Visual Theme Mapping
+  <!-- Enhanced Visual Theme Legend -->
+  <rect x="50" y="730" width="1300" height="120" fill="#1a1a1a" rx="8" stroke="#333333" stroke-width="1" filter="url(#dropShadow)"/>
+  <text x="700" y="755" text-anchor="middle" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="bold">
+    🎨 Visual Theme Mapping & Implementation
   </text>
   
-  <text x="70" y="780" fill="#ff6b35" font-family="Arial, sans-serif" font-size="12" font-weight="bold">
-    Forge Door Visual Elements:
+  <text x="70" y="780" fill="#ff6b35" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="bold">
+    🔥 Forge Door Visual Elements:
   </text>
-  <text x="70" y="795" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+  <text x="70" y="795" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="11">
     • Molten metal particle effects • Hammer-strike energy pulses • Volcanic orange/red gradients • Sharp, angular UI elements
   </text>
   
-  <text x="70" y="820" fill="#4169e1" font-family="Arial, sans-serif" font-size="12" font-weight="bold">
-    Scholar Door Visual Elements:
+  <text x="70" y="820" fill="#4169e1" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="bold">
+    💎 Scholar Door Visual Elements:
   </text>
-  <text x="270" y="820" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+  <text x="280" y="820" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="11">
     • Crystalline refraction effects • Flowing water-like animations • Cool blue gradients • Geometric precision UI
   </text>
   
-  <text x="70" y="835" fill="#9966cc" font-family="Arial, sans-serif" font-size="12" font-weight="bold">
-    Sage Door Visual Elements:
+  <text x="70" y="835" fill="#9966cc" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="bold">
+    🌸 Sage Door Visual Elements:
   </text>
-  <text x="250" y="835" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+  <text x="260" y="835" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="11">
     • Ethereal mist particles • Sacred geometry patterns • Purple/indigo gradients • Organic, flowing UI shapes
+  </text>
+  
+  <!-- Performance note -->
+  <text x="700" y="860" text-anchor="middle" fill="#ffd93d" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="500">
+    ⚡ All visual elements optimized for 60Hz performance • WVMP v0.1 compliant • Hardware tier adaptive
   </text>
 </svg>

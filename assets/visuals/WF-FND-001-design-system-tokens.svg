@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg viewBox="0 0 1500 1200" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <!-- Three Doors Core Colors -->
+    <!-- Three Doors Core Colors - Fixed gradients -->
     <!-- Forge (Warrior) - Fire/Volcanic/Molten Metal -->
     <linearGradient id="forgePrimary" x1="0%" y1="0%" x2="100%" y2="0%">
       <stop offset="0%" style="stop-color:#ff6b35;stop-opacity:1" />
@@ -31,368 +31,401 @@
     
     <!-- Performance Level Colors -->
     <linearGradient id="performanceScale" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" style="stop-color:#ff6b6b;stop-opacity:1" />  <!-- Critical -->
-      <stop offset="25%" style="stop-color:#ff9f40;stop-opacity:1" /> <!-- Warning -->
-      <stop offset="50%" style="stop-color:#ffd93d;stop-opacity:1" /> <!-- Normal -->
-      <stop offset="75%" style="stop-color:#6bcf7f;stop-opacity:1" /> <!-- Good -->
-      <stop offset="100%" style="stop-color:#96e6a1;stop-opacity:1" /><!-- Excellent -->
+      <stop offset="0%" style="stop-color:#ff6b6b;stop-opacity:1" />
+      <stop offset="25%" style="stop-color:#ff9f40;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#ffd93d;stop-opacity:1" />
+      <stop offset="75%" style="stop-color:#6bcf7f;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#96e6a1;stop-opacity:1" />
     </linearGradient>
     
-    <!-- Glow effect -->
-    <filter id="glow">
+    <!-- Glow effect - Fixed parameters -->
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
       <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
       <feMerge> 
         <feMergeNode in="coloredBlur"/>
         <feMergeNode in="SourceGraphic"/>
       </feMerge>
     </filter>
+    
+    <!-- Drop shadow for better depth -->
+    <filter id="dropShadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.3"/>
+    </filter>
   </defs>
   
-  <!-- Background -->
-  <rect width="1500" height="1200" fill="#0a0a0a"/>
+  <!-- Background with subtle gradient -->
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#0a0a0a;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1a1a1a;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="1500" height="1200" fill="url(#bgGradient)"/>
   
-  <!-- Title -->
-  <text x="750" y="30" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="26" font-weight="bold">
-    WF-FND-001: WIRTHFORGE Design System & Color Tokens
+  <!-- Title Section - Improved spacing -->
+  <text x="750" y="40" text-anchor="middle" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="28" font-weight="bold">
+    WF-FND-001: WIRTHFORGE Design System
   </text>
-  <text x="750" y="55" text-anchor="middle" fill="#cccccc" font-family="Arial, sans-serif" font-size="16">
+  <text x="750" y="65" text-anchor="middle" fill="#cccccc" font-family="Inter, Arial, sans-serif" font-size="16">
     Three Doors Visual Identity & Energy-Truth Color Palette
   </text>
   
   <!-- Three Doors Color System -->
-  <rect x="50" y="80" width="1400" height="200" fill="#1a1a1a" rx="15" stroke="#333333" stroke-width="2"/>
-  <text x="750" y="110" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="20" font-weight="bold">
-    Three Doors Core Color System
+  <rect x="50" y="90" width="1400" height="200" fill="#1a1a1a" rx="15" stroke="#333333" stroke-width="2" filter="url(#dropShadow)"/>
+  <text x="750" y="120" text-anchor="middle" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="bold">
+    🌟 Three Doors Core Color System
   </text>
   
-  <!-- Forge Door Colors -->
-  <g transform="translate(100, 130)">
-    <rect x="0" y="0" width="400" height="120" fill="url(#forgePrimary)" rx="10" filter="url(#glow)"/>
-    <text x="200" y="25" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="18" font-weight="bold">
+  <!-- Forge Door Colors - Fixed positioning and text -->
+  <g transform="translate(80, 140)">
+    <rect x="0" y="0" width="420" height="120" fill="url(#forgePrimary)" rx="10" filter="url(#glow)"/>
+    <text x="210" y="30" text-anchor="middle" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="bold">
       🔥 FORGE DOOR (Warrior/Action)
     </text>
-    <text x="200" y="45" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="14">
+    <text x="210" y="50" text-anchor="middle" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="14">
       Molten Metal • Volcanic Energy • Fire Elements
     </text>
     
-    <!-- Color swatches -->
-    <rect x="20" y="60" width="60" height="40" fill="#ff6b35" rx="5"/>
-    <text x="50" y="110" text-anchor="middle" fill="#ffffff" font-family="monospace" font-size="10">#ff6b35</text>
+    <!-- Color swatches with better spacing -->
+    <rect x="30" y="65" width="60" height="30" fill="#ff6b35" rx="5"/>
+    <text x="60" y="105" text-anchor="middle" fill="#ffffff" font-family="JetBrains Mono, monospace" font-size="9">#ff6b35</text>
     
-    <rect x="100" y="60" width="60" height="40" fill="#ff4500" rx="5"/>
-    <text x="130" y="110" text-anchor="middle" fill="#ffffff" font-family="monospace" font-size="10">#ff4500</text>
+    <rect x="105" y="65" width="60" height="30" fill="#ff4500" rx="5"/>
+    <text x="135" y="105" text-anchor="middle" fill="#ffffff" font-family="JetBrains Mono, monospace" font-size="9">#ff4500</text>
     
-    <rect x="180" y="60" width="60" height="40" fill="#8b0000" rx="5"/>
-    <text x="210" y="110" text-anchor="middle" fill="#ffffff" font-family="monospace" font-size="10">#8b0000</text>
+    <rect x="180" y="65" width="60" height="30" fill="#8b0000" rx="5"/>
+    <text x="210" y="105" text-anchor="middle" fill="#ffffff" font-family="JetBrains Mono, monospace" font-size="9">#8b0000</text>
     
-    <rect x="260" y="60" width="60" height="40" fill="#ff8c00" rx="5"/>
-    <text x="290" y="110" text-anchor="middle" fill="#ffffff" font-family="monospace" font-size="10">#ff8c00</text>
+    <rect x="255" y="65" width="60" height="30" fill="#ff8c00" rx="5"/>
+    <text x="285" y="105" text-anchor="middle" fill="#ffffff" font-family="JetBrains Mono, monospace" font-size="9">#ff8c00</text>
     
-    <rect x="340" y="60" width="60" height="40" fill="#dc143c" rx="5"/>
-    <text x="370" y="110" text-anchor="middle" fill="#ffffff" font-family="monospace" font-size="10">#dc143c</text>
+    <rect x="330" y="65" width="60" height="30" fill="#dc143c" rx="5"/>
+    <text x="360" y="105" text-anchor="middle" fill="#ffffff" font-family="JetBrains Mono, monospace" font-size="9">#dc143c</text>
   </g>
   
   <!-- Scholar Door Colors -->
-  <g transform="translate(550, 130)">
-    <rect x="0" y="0" width="400" height="120" fill="url(#scholarPrimary)" rx="10" filter="url(#glow)"/>
-    <text x="200" y="25" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="18" font-weight="bold">
+  <g transform="translate(520, 140)">
+    <rect x="0" y="0" width="420" height="120" fill="url(#scholarPrimary)" rx="10" filter="url(#glow)"/>
+    <text x="210" y="30" text-anchor="middle" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="bold">
       💎 SCHOLAR DOOR (Academic/Knowledge)
     </text>
-    <text x="200" y="45" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="14">
+    <text x="210" y="50" text-anchor="middle" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="14">
       Flowing Water • Crystalline • Ice Elements
     </text>
     
     <!-- Color swatches -->
-    <rect x="20" y="60" width="60" height="40" fill="#4169e1" rx="5"/>
-    <text x="50" y="110" text-anchor="middle" fill="#ffffff" font-family="monospace" font-size="10">#4169e1</text>
+    <rect x="30" y="65" width="60" height="30" fill="#4169e1" rx="5"/>
+    <text x="60" y="105" text-anchor="middle" fill="#ffffff" font-family="JetBrains Mono, monospace" font-size="9">#4169e1</text>
     
-    <rect x="100" y="60" width="60" height="40" fill="#1e90ff" rx="5"/>
-    <text x="130" y="110" text-anchor="middle" fill="#ffffff" font-family="monospace" font-size="10">#1e90ff</text>
+    <rect x="105" y="65" width="60" height="30" fill="#1e90ff" rx="5"/>
+    <text x="135" y="105" text-anchor="middle" fill="#ffffff" font-family="JetBrains Mono, monospace" font-size="9">#1e90ff</text>
     
-    <rect x="180" y="60" width="60" height="40" fill="#00bfff" rx="5"/>
-    <text x="210" y="110" text-anchor="middle" fill="#ffffff" font-family="monospace" font-size="10">#00bfff</text>
+    <rect x="180" y="65" width="60" height="30" fill="#00bfff" rx="5"/>
+    <text x="210" y="105" text-anchor="middle" fill="#ffffff" font-family="JetBrains Mono, monospace" font-size="9">#00bfff</text>
     
-    <rect x="260" y="60" width="60" height="40" fill="#87ceeb" rx="5"/>
-    <text x="290" y="110" text-anchor="middle" fill="#ffffff" font-family="monospace" font-size="10">#87ceeb</text>
+    <rect x="255" y="65" width="60" height="30" fill="#87ceeb" rx="5"/>
+    <text x="285" y="105" text-anchor="middle" fill="#000000" font-family="JetBrains Mono, monospace" font-size="9">#87ceeb</text>
     
-    <rect x="340" y="60" width="60" height="40" fill="#b0e0e6" rx="5"/>
-    <text x="370" y="110" text-anchor="middle" fill="#ffffff" font-family="monospace" font-size="10">#b0e0e6</text>
+    <rect x="330" y="65" width="60" height="30" fill="#b0e0e6" rx="5"/>
+    <text x="360" y="105" text-anchor="middle" fill="#000000" font-family="JetBrains Mono, monospace" font-size="9">#b0e0e6</text>
   </g>
   
   <!-- Sage Door Colors -->
-  <g transform="translate(1000, 130)">
-    <rect x="0" y="0" width="400" height="120" fill="url(#sagePrimary)" rx="10" filter="url(#glow)"/>
-    <text x="200" y="25" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="18" font-weight="bold">
+  <g transform="translate(960, 140)">
+    <rect x="0" y="0" width="420" height="120" fill="url(#sagePrimary)" rx="10" filter="url(#glow)"/>
+    <text x="210" y="30" text-anchor="middle" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="bold">
       🌸 SAGE DOOR (Consciousness/Wisdom)
     </text>
-    <text x="200" y="45" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="14">
+    <text x="210" y="50" text-anchor="middle" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="14">
       Ethereal Mist • Sacred Geometry • Spirit Elements
     </text>
     
     <!-- Color swatches -->
-    <rect x="20" y="60" width="60" height="40" fill="#9966cc" rx="5"/>
-    <text x="50" y="110" text-anchor="middle" fill="#ffffff" font-family="monospace" font-size="10">#9966cc</text>
+    <rect x="30" y="65" width="60" height="30" fill="#9966cc" rx="5"/>
+    <text x="60" y="105" text-anchor="middle" fill="#ffffff" font-family="JetBrains Mono, monospace" font-size="9">#9966cc</text>
     
-    <rect x="100" y="60" width="60" height="40" fill="#8a2be2" rx="5"/>
-    <text x="130" y="110" text-anchor="middle" fill="#ffffff" font-family="monospace" font-size="10">#8a2be2</text>
+    <rect x="105" y="65" width="60" height="30" fill="#8a2be2" rx="5"/>
+    <text x="135" y="105" text-anchor="middle" fill="#ffffff" font-family="JetBrains Mono, monospace" font-size="9">#8a2be2</text>
     
-    <rect x="180" y="60" width="60" height="40" fill="#4b0082" rx="5"/>
-    <text x="210" y="110" text-anchor="middle" fill="#ffffff" font-family="monospace" font-size="10">#4b0082</text>
+    <rect x="180" y="65" width="60" height="30" fill="#4b0082" rx="5"/>
+    <text x="210" y="105" text-anchor="middle" fill="#ffffff" font-family="JetBrains Mono, monospace" font-size="9">#4b0082</text>
     
-    <rect x="260" y="60" width="60" height="40" fill="#dda0dd" rx="5"/>
-    <text x="290" y="110" text-anchor="middle" fill="#ffffff" font-family="monospace" font-size="10">#dda0dd</text>
+    <rect x="255" y="65" width="60" height="30" fill="#dda0dd" rx="5"/>
+    <text x="285" y="105" text-anchor="middle" fill="#000000" font-family="JetBrains Mono, monospace" font-size="9">#dda0dd</text>
     
-    <rect x="340" y="60" width="60" height="40" fill="#e6e6fa" rx="5"/>
-    <text x="370" y="110" text-anchor="middle" fill="#ffffff" font-family="monospace" font-size="10">#e6e6fa</text>
+    <rect x="330" y="65" width="60" height="30" fill="#e6e6fa" rx="5"/>
+    <text x="360" y="105" text-anchor="middle" fill="#000000" font-family="JetBrains Mono, monospace" font-size="9">#e6e6fa</text>
   </g>
   
   <!-- Energy System Colors -->
-  <rect x="50" y="300" width="1400" height="180" fill="#1a1a1a" rx="15" stroke="#333333" stroke-width="2"/>
-  <text x="750" y="330" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="20" font-weight="bold">
-    Energy System Color Palette
+  <rect x="50" y="310" width="1400" height="180" fill="#1a1a1a" rx="15" stroke="#333333" stroke-width="2" filter="url(#dropShadow)"/>
+  <text x="750" y="340" text-anchor="middle" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="bold">
+    ⚡ Energy System Color Palette
   </text>
   
   <!-- Energy Core Colors -->
-  <g transform="translate(100, 350)">
-    <text x="0" y="20" fill="#ffffff" font-family="Arial, sans-serif" font-size="16" font-weight="bold">
+  <g transform="translate(100, 360)">
+    <text x="0" y="20" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="bold">
       Energy Core & States:
     </text>
     
-    <!-- Energy states -->
-    <rect x="0" y="30" width="100" height="40" fill="#ffd93d" rx="5"/>
-    <text x="50" y="50" text-anchor="middle" fill="#000000" font-family="Arial, sans-serif" font-size="12" font-weight="bold">Core</text>
-    <text x="50" y="80" text-anchor="middle" fill="#ffffff" font-family="monospace" font-size="10">#ffd93d</text>
+    <!-- Energy states with consistent sizing -->
+    <rect x="0" y="35" width="100" height="45" fill="#ffd93d" rx="8"/>
+    <text x="50" y="55" text-anchor="middle" fill="#000000" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="bold">Core</text>
+    <text x="50" y="70" text-anchor="middle" fill="#000000" font-family="Inter, Arial, sans-serif" font-size="10">Active Energy</text>
+    <text x="50" y="90" text-anchor="middle" fill="#ffffff" font-family="JetBrains Mono, monospace" font-size="9">#ffd93d</text>
     
-    <rect x="120" y="30" width="100" height="40" fill="#6bcf7f" rx="5"/>
-    <text x="170" y="50" text-anchor="middle" fill="#000000" font-family="Arial, sans-serif" font-size="12" font-weight="bold">Flowing</text>
-    <text x="170" y="80" text-anchor="middle" fill="#ffffff" font-family="monospace" font-size="10">#6bcf7f</text>
+    <rect x="115" y="35" width="100" height="45" fill="#6bcf7f" rx="8"/>
+    <text x="165" y="55" text-anchor="middle" fill="#000000" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="bold">Flowing</text>
+    <text x="165" y="70" text-anchor="middle" fill="#000000" font-family="Inter, Arial, sans-serif" font-size="10">High Performance</text>
+    <text x="165" y="90" text-anchor="middle" fill="#ffffff" font-family="JetBrains Mono, monospace" font-size="9">#6bcf7f</text>
     
-    <rect x="240" y="30" width="100" height="40" fill="#ff6b6b" rx="5"/>
-    <text x="290" y="50" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="12" font-weight="bold">Stalled</text>
-    <text x="290" y="80" text-anchor="middle" fill="#ffffff" font-family="monospace" font-size="10">#ff6b6b</text>
+    <rect x="230" y="35" width="100" height="45" fill="#ff6b6b" rx="8"/>
+    <text x="280" y="55" text-anchor="middle" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="bold">Stalled</text>
+    <text x="280" y="70" text-anchor="middle" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="10">Low Performance</text>
+    <text x="280" y="90" text-anchor="middle" fill="#ffffff" font-family="JetBrains Mono, monospace" font-size="9">#ff6b6b</text>
     
-    <rect x="360" y="30" width="100" height="40" fill="#9966ff" rx="5"/>
-    <text x="410" y="50" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="12" font-weight="bold">Resonance</text>
-    <text x="410" y="80" text-anchor="middle" fill="#ffffff" font-family="monospace" font-size="10">#9966ff</text>
+    <rect x="345" y="35" width="100" height="45" fill="#9966ff" rx="8"/>
+    <text x="395" y="55" text-anchor="middle" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="bold">Resonance</text>
+    <text x="395" y="70" text-anchor="middle" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="10">Synchronized</text>
+    <text x="395" y="90" text-anchor="middle" fill="#ffffff" font-family="JetBrains Mono, monospace" font-size="9">#9966ff</text>
     
-    <rect x="480" y="30" width="100" height="40" fill="#4d96ff" rx="5"/>
-    <text x="530" y="50" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="12" font-weight="bold">Council</text>
-    <text x="530" y="80" text-anchor="middle" fill="#ffffff" font-family="monospace" font-size="10">#4d96ff</text>
+    <rect x="460" y="35" width="100" height="45" fill="#4d96ff" rx="8"/>
+    <text x="510" y="55" text-anchor="middle" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="bold">Council</text>
+    <text x="510" y="70" text-anchor="middle" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="10">Multi-Model</text>
+    <text x="510" y="90" text-anchor="middle" fill="#ffffff" font-family="JetBrains Mono, monospace" font-size="9">#4d96ff</text>
   </g>
   
   <!-- Performance Indicators -->
-  <g transform="translate(750, 350)">
-    <text x="0" y="20" fill="#ffffff" font-family="Arial, sans-serif" font-size="16" font-weight="bold">
+  <g transform="translate(750, 360)">
+    <text x="0" y="20" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="bold">
       Performance Indicators:
     </text>
     
-    <rect x="0" y="30" width="80" height="40" fill="#ff6b6b" rx="5"/>
-    <text x="40" y="50" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="10" font-weight="bold">Critical</text>
-    <text x="40" y="80" text-anchor="middle" fill="#ffffff" font-family="monospace" font-size="9">#ff6b6b</text>
+    <rect x="0" y="35" width="80" height="45" fill="#ff6b6b" rx="8"/>
+    <text x="40" y="55" text-anchor="middle" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="bold">Critical</text>
+    <text x="40" y="70" text-anchor="middle" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="9">&lt;30 FPS</text>
+    <text x="40" y="90" text-anchor="middle" fill="#ffffff" font-family="JetBrains Mono, monospace" font-size="8">#ff6b6b</text>
     
-    <rect x="90" y="30" width="80" height="40" fill="#ff9f40" rx="5"/>
-    <text x="130" y="50" text-anchor="middle" fill="#000000" font-family="Arial, sans-serif" font-size="10" font-weight="bold">Warning</text>
-    <text x="130" y="80" text-anchor="middle" fill="#ffffff" font-family="monospace" font-size="9">#ff9f40</text>
+    <rect x="90" y="35" width="80" height="45" fill="#ff9f40" rx="8"/>
+    <text x="130" y="55" text-anchor="middle" fill="#000000" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="bold">Warning</text>
+    <text x="130" y="70" text-anchor="middle" fill="#000000" font-family="Inter, Arial, sans-serif" font-size="9">30-45 FPS</text>
+    <text x="130" y="90" text-anchor="middle" fill="#ffffff" font-family="JetBrains Mono, monospace" font-size="8">#ff9f40</text>
     
-    <rect x="180" y="30" width="80" height="40" fill="#ffd93d" rx="5"/>
-    <text x="220" y="50" text-anchor="middle" fill="#000000" font-family="Arial, sans-serif" font-size="10" font-weight="bold">Normal</text>
-    <text x="220" y="80" text-anchor="middle" fill="#ffffff" font-family="monospace" font-size="9">#ffd93d</text>
+    <rect x="180" y="35" width="80" height="45" fill="#ffd93d" rx="8"/>
+    <text x="220" y="55" text-anchor="middle" fill="#000000" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="bold">Normal</text>
+    <text x="220" y="70" text-anchor="middle" fill="#000000" font-family="Inter, Arial, sans-serif" font-size="9">45-55 FPS</text>
+    <text x="220" y="90" text-anchor="middle" fill="#ffffff" font-family="JetBrains Mono, monospace" font-size="8">#ffd93d</text>
     
-    <rect x="270" y="30" width="80" height="40" fill="#6bcf7f" rx="5"/>
-    <text x="310" y="50" text-anchor="middle" fill="#000000" font-family="Arial, sans-serif" font-size="10" font-weight="bold">Good</text>
-    <text x="310" y="80" text-anchor="middle" fill="#ffffff" font-family="monospace" font-size="9">#6bcf7f</text>
+    <rect x="270" y="35" width="80" height="45" fill="#6bcf7f" rx="8"/>
+    <text x="310" y="55" text-anchor="middle" fill="#000000" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="bold">Good</text>
+    <text x="310" y="70" text-anchor="middle" fill="#000000" font-family="Inter, Arial, sans-serif" font-size="9">55-60 FPS</text>
+    <text x="310" y="90" text-anchor="middle" fill="#ffffff" font-family="JetBrains Mono, monospace" font-size="8">#6bcf7f</text>
     
-    <rect x="360" y="30" width="80" height="40" fill="#96e6a1" rx="5"/>
-    <text x="400" y="50" text-anchor="middle" fill="#000000" font-family="Arial, sans-serif" font-size="10" font-weight="bold">Excellent</text>
-    <text x="400" y="80" text-anchor="middle" fill="#ffffff" font-family="monospace" font-size="9">#96e6a1</text>
+    <rect x="360" y="35" width="80" height="45" fill="#96e6a1" rx="8"/>
+    <text x="400" y="55" text-anchor="middle" fill="#000000" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="bold">Excellent</text>
+    <text x="400" y="70" text-anchor="middle" fill="#000000" font-family="Inter, Arial, sans-serif" font-size="9">60+ FPS</text>
+    <text x="400" y="90" text-anchor="middle" fill="#ffffff" font-family="JetBrains Mono, monospace" font-size="8">#96e6a1</text>
   </g>
   
   <!-- UI Foundation Colors -->
-  <rect x="50" y="500" width="1400" height="160" fill="#1a1a1a" rx="15" stroke="#333333" stroke-width="2"/>
-  <text x="750" y="530" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="20" font-weight="bold">
-    UI Foundation & Neutral Colors
+  <rect x="50" y="510" width="1400" height="160" fill="#1a1a1a" rx="15" stroke="#333333" stroke-width="2" filter="url(#dropShadow)"/>
+  <text x="750" y="540" text-anchor="middle" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="bold">
+    🎨 UI Foundation & System Colors
   </text>
   
   <!-- Background & Surface Colors -->
-  <g transform="translate(100, 550)">
-    <text x="0" y="20" fill="#ffffff" font-family="Arial, sans-serif" font-size="16" font-weight="bold">
+  <g transform="translate(100, 560)">
+    <text x="0" y="20" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="bold">
       Backgrounds & Surfaces:
     </text>
     
-    <rect x="0" y="30" width="80" height="40" fill="#0a0a0a" rx="5" stroke="#333333" stroke-width="1"/>
-    <text x="40" y="50" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="10" font-weight="bold">Primary</text>
-    <text x="40" y="80" text-anchor="middle" fill="#ffffff" font-family="monospace" font-size="9">#0a0a0a</text>
+    <rect x="0" y="35" width="90" height="40" fill="#0a0a0a" rx="8" stroke="#333333" stroke-width="1"/>
+    <text x="45" y="55" text-anchor="middle" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="10" font-weight="bold">Primary</text>
+    <text x="45" y="85" text-anchor="middle" fill="#ffffff" font-family="JetBrains Mono, monospace" font-size="9">#0a0a0a</text>
     
-    <rect x="90" y="30" width="80" height="40" fill="#1a1a1a" rx="5"/>
-    <text x="130" y="50" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="10" font-weight="bold">Surface</text>
-    <text x="130" y="80" text-anchor="middle" fill="#ffffff" font-family="monospace" font-size="9">#1a1a1a</text>
+    <rect x="100" y="35" width="90" height="40" fill="#1a1a1a" rx="8"/>
+    <text x="145" y="55" text-anchor="middle" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="10" font-weight="bold">Surface</text>
+    <text x="145" y="85" text-anchor="middle" fill="#ffffff" font-family="JetBrains Mono, monospace" font-size="9">#1a1a1a</text>
     
-    <rect x="180" y="30" width="80" height="40" fill="#2a2a2a" rx="5"/>
-    <text x="220" y="50" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="10" font-weight="bold">Elevated</text>
-    <text x="220" y="80" text-anchor="middle" fill="#ffffff" font-family="monospace" font-size="9">#2a2a2a</text>
+    <rect x="200" y="35" width="90" height="40" fill="#2a2a2a" rx="8"/>
+    <text x="245" y="55" text-anchor="middle" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="10" font-weight="bold">Elevated</text>
+    <text x="245" y="85" text-anchor="middle" fill="#ffffff" font-family="JetBrains Mono, monospace" font-size="9">#2a2a2a</text>
     
-    <rect x="270" y="30" width="80" height="40" fill="#333333" rx="5"/>
-    <text x="310" y="50" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="10" font-weight="bold">Border</text>
-    <text x="310" y="80" text-anchor="middle" fill="#ffffff" font-family="monospace" font-size="9">#333333</text>
+    <rect x="300" y="35" width="90" height="40" fill="#333333" rx="8"/>
+    <text x="345" y="55" text-anchor="middle" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="10" font-weight="bold">Border</text>
+    <text x="345" y="85" text-anchor="middle" fill="#ffffff" font-family="JetBrains Mono, monospace" font-size="9">#333333</text>
     
-    <rect x="360" y="30" width="80" height="40" fill="#666666" rx="5"/>
-    <text x="400" y="50" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="10" font-weight="bold">Disabled</text>
-    <text x="400" y="80" text-anchor="middle" fill="#ffffff" font-family="monospace" font-size="9">#666666</text>
+    <rect x="400" y="35" width="90" height="40" fill="#666666" rx="8"/>
+    <text x="445" y="55" text-anchor="middle" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="10" font-weight="bold">Disabled</text>
+    <text x="445" y="85" text-anchor="middle" fill="#ffffff" font-family="JetBrains Mono, monospace" font-size="9">#666666</text>
   </g>
   
   <!-- Text Colors -->
-  <g transform="translate(600, 550)">
-    <text x="0" y="20" fill="#ffffff" font-family="Arial, sans-serif" font-size="16" font-weight="bold">
+  <g transform="translate(650, 560)">
+    <text x="0" y="20" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="bold">
       Text Colors:
     </text>
     
-    <rect x="0" y="30" width="80" height="40" fill="#ffffff" rx="5"/>
-    <text x="40" y="50" text-anchor="middle" fill="#000000" font-family="Arial, sans-serif" font-size="10" font-weight="bold">Primary</text>
-    <text x="40" y="80" text-anchor="middle" fill="#ffffff" font-family="monospace" font-size="9">#ffffff</text>
+    <rect x="0" y="35" width="90" height="40" fill="#ffffff" rx="8"/>
+    <text x="45" y="55" text-anchor="middle" fill="#000000" font-family="Inter, Arial, sans-serif" font-size="10" font-weight="bold">Primary</text>
+    <text x="45" y="85" text-anchor="middle" fill="#ffffff" font-family="JetBrains Mono, monospace" font-size="9">#ffffff</text>
     
-    <rect x="90" y="30" width="80" height="40" fill="#cccccc" rx="5"/>
-    <text x="130" y="50" text-anchor="middle" fill="#000000" font-family="Arial, sans-serif" font-size="10" font-weight="bold">Secondary</text>
-    <text x="130" y="80" text-anchor="middle" fill="#ffffff" font-family="monospace" font-size="9">#cccccc</text>
+    <rect x="100" y="35" width="90" height="40" fill="#cccccc" rx="8"/>
+    <text x="145" y="55" text-anchor="middle" fill="#000000" font-family="Inter, Arial, sans-serif" font-size="10" font-weight="bold">Secondary</text>
+    <text x="145" y="85" text-anchor="middle" fill="#ffffff" font-family="JetBrains Mono, monospace" font-size="9">#cccccc</text>
     
-    <rect x="180" y="30" width="80" height="40" fill="#999999" rx="5"/>
-    <text x="220" y="50" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="10" font-weight="bold">Tertiary</text>
-    <text x="220" y="80" text-anchor="middle" fill="#ffffff" font-family="monospace" font-size="9">#999999</text>
+    <rect x="200" y="35" width="90" height="40" fill="#999999" rx="8"/>
+    <text x="245" y="55" text-anchor="middle" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="10" font-weight="bold">Tertiary</text>
+    <text x="245" y="85" text-anchor="middle" fill="#ffffff" font-family="JetBrains Mono, monospace" font-size="9">#999999</text>
     
-    <rect x="270" y="30" width="80" height="40" fill="#666666" rx="5"/>
-    <text x="310" y="50" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="10" font-weight="bold">Disabled</text>
-    <text x="310" y="80" text-anchor="middle" fill="#ffffff" font-family="monospace" font-size="9">#666666</text>
+    <rect x="300" y="35" width="90" height="40" fill="#666666" rx="8"/>
+    <text x="345" y="55" text-anchor="middle" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="10" font-weight="bold">Disabled</text>
+    <text x="345" y="85" text-anchor="middle" fill="#ffffff" font-family="JetBrains Mono, monospace" font-size="9">#666666</text>
   </g>
   
   <!-- Progressive Level Colors -->
-  <g transform="translate(1000, 550)">
-    <text x="0" y="20" fill="#ffffff" font-family="Arial, sans-serif" font-size="16" font-weight="bold">
+  <g transform="translate(1100, 560)">
+    <text x="0" y="20" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="bold">
       Progressive Levels:
     </text>
     
-    <rect x="0" y="30" width="60" height="40" fill="#ff6b6b" rx="5"/>
-    <text x="30" y="50" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="10" font-weight="bold">L1</text>
-    <text x="30" y="80" text-anchor="middle" fill="#ffffff" font-family="monospace" font-size="8">#ff6b6b</text>
+    <rect x="0" y="35" width="65" height="40" fill="#ff6b6b" rx="8"/>
+    <text x="32.5" y="55" text-anchor="middle" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="bold">L1</text>
+    <text x="32.5" y="85" text-anchor="middle" fill="#ffffff" font-family="JetBrains Mono, monospace" font-size="8">#ff6b6b</text>
     
-    <rect x="70" y="30" width="60" height="40" fill="#ffd93d" rx="5"/>
-    <text x="100" y="50" text-anchor="middle" fill="#000000" font-family="Arial, sans-serif" font-size="10" font-weight="bold">L2</text>
-    <text x="100" y="80" text-anchor="middle" fill="#ffffff" font-family="monospace" font-size="8">#ffd93d</text>
+    <rect x="75" y="35" width="65" height="40" fill="#ffd93d" rx="8"/>
+    <text x="107.5" y="55" text-anchor="middle" fill="#000000" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="bold">L2</text>
+    <text x="107.5" y="85" text-anchor="middle" fill="#ffffff" font-family="JetBrains Mono, monospace" font-size="8">#ffd93d</text>
     
-    <rect x="140" y="30" width="60" height="40" fill="#6bcf7f" rx="5"/>
-    <text x="170" y="50" text-anchor="middle" fill="#000000" font-family="Arial, sans-serif" font-size="10" font-weight="bold">L3</text>
-    <text x="170" y="80" text-anchor="middle" fill="#ffffff" font-family="monospace" font-size="8">#6bcf7f</text>
+    <rect x="150" y="35" width="65" height="40" fill="#6bcf7f" rx="8"/>
+    <text x="182.5" y="55" text-anchor="middle" fill="#000000" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="bold">L3</text>
+    <text x="182.5" y="85" text-anchor="middle" fill="#ffffff" font-family="JetBrains Mono, monospace" font-size="8">#6bcf7f</text>
     
-    <rect x="210" y="30" width="60" height="40" fill="#4d96ff" rx="5"/>
-    <text x="240" y="50" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="10" font-weight="bold">L4</text>
-    <text x="240" y="80" text-anchor="middle" fill="#ffffff" font-family="monospace" font-size="8">#4d96ff</text>
+    <rect x="225" y="35" width="65" height="40" fill="#4d96ff" rx="8"/>
+    <text x="257.5" y="55" text-anchor="middle" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="bold">L4</text>
+    <text x="257.5" y="85" text-anchor="middle" fill="#ffffff" font-family="JetBrains Mono, monospace" font-size="8">#4d96ff</text>
     
-    <rect x="280" y="30" width="60" height="40" fill="#9966ff" rx="5"/>
-    <text x="310" y="50" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="10" font-weight="bold">L5</text>
-    <text x="310" y="80" text-anchor="middle" fill="#ffffff" font-family="monospace" font-size="8">#9966ff</text>
+    <rect x="300" y="35" width="65" height="40" fill="#9966ff" rx="8"/>
+    <text x="332.5" y="55" text-anchor="middle" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="bold">L5</text>
+    <text x="332.5" y="85" text-anchor="middle" fill="#ffffff" font-family="JetBrains Mono, monospace" font-size="8">#9966ff</text>
   </g>
   
   <!-- Typography System -->
-  <rect x="50" y="680" width="1400" height="160" fill="#1a1a1a" rx="15" stroke="#333333" stroke-width="2"/>
-  <text x="750" y="710" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="20" font-weight="bold">
-    Typography & Design Tokens
+  <rect x="50" y="690" width="1400" height="140" fill="#1a1a1a" rx="15" stroke="#333333" stroke-width="2" filter="url(#dropShadow)"/>
+  <text x="750" y="720" text-anchor="middle" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="bold">
+    📝 Typography & Design Tokens
   </text>
   
   <!-- Font hierarchy -->
-  <g transform="translate(100, 730)">
-    <text x="0" y="30" fill="#ffffff" font-family="Inter" font-size="28" font-weight="bold">
-      Headline 1 - Inter Bold 28px
+  <g transform="translate(100, 740)">
+    <text x="0" y="25" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="24" font-weight="bold">
+      Headline 1 - Inter Bold 24px
     </text>
-    <text x="0" y="55" fill="#ffffff" font-family="Inter" font-size="20" font-weight="600">
-      Headline 2 - Inter SemiBold 20px
+    <text x="0" y="45" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="600">
+      Headline 2 - Inter SemiBold 18px
     </text>
-    <text x="0" y="75" fill="#ffffff" font-family="Inter" font-size="16" font-weight="500">
+    <text x="0" y="65" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="500">
       Body Text - Inter Medium 16px
     </text>
-    <text x="0" y="95" fill="#cccccc" font-family="Inter" font-size="14" font-weight="400">
+    <text x="0" y="80" fill="#cccccc" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="400">
       Secondary Text - Inter Regular 14px
     </text>
-    <text x="0" y="115" fill="#ffffff" font-family="JetBrains Mono" font-size="12" font-weight="400">
+    <text x="0" y="95" fill="#ffffff" font-family="JetBrains Mono, monospace" font-size="12" font-weight="400">
       Code/Data - JetBrains Mono 12px
     </text>
   </g>
   
   <!-- Spacing & Layout -->
-  <g transform="translate(700, 730)">
-    <text x="0" y="20" fill="#ffffff" font-family="Arial, sans-serif" font-size="16" font-weight="bold">
+  <g transform="translate(700, 740)">
+    <text x="0" y="20" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="bold">
       Spacing Scale (8px base):
     </text>
-    <text x="0" y="40" fill="#cccccc" font-family="monospace" font-size="12">
+    <text x="0" y="40" fill="#cccccc" font-family="JetBrains Mono, monospace" font-size="12">
       xs: 4px  •  sm: 8px  •  md: 16px  •  lg: 24px  •  xl: 32px  •  2xl: 48px
     </text>
     
-    <text x="0" y="70" fill="#ffffff" font-family="Arial, sans-serif" font-size="16" font-weight="bold">
+    <text x="0" y="65" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="bold">
       Border Radius Scale:
     </text>
-    <text x="0" y="90" fill="#cccccc" font-family="monospace" font-size="12">
+    <text x="0" y="85" fill="#cccccc" font-family="JetBrains Mono, monospace" font-size="12">
       sm: 5px  •  md: 8px  •  lg: 12px  •  xl: 15px  •  full: 50%
-    </text>
-    
-    <text x="0" y="120" fill="#ffffff" font-family="Arial, sans-serif" font-size="16" font-weight="bold">
-      Component Variants:
-    </text>
-    <text x="0" y="140" fill="#cccccc" font-family="Arial, sans-serif" font-size="12">
-      Buttons, Cards, Modals adapt to user's selected Door theme
     </text>
   </g>
   
   <!-- Accessibility & Usage Guidelines -->
-  <rect x="50" y="860" width="1400" height="200" fill="#1a1a1a" rx="15" stroke="#333333" stroke-width="2"/>
-  <text x="750" y="890" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="20" font-weight="bold">
-    Accessibility & Usage Guidelines
+  <rect x="50" y="850" width="1400" height="180" fill="#1a1a1a" rx="15" stroke="#333333" stroke-width="2" filter="url(#dropShadow)"/>
+  <text x="750" y="880" text-anchor="middle" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="bold">
+    ♿ Accessibility & Usage Guidelines
   </text>
   
   <!-- WCAG Compliance -->
-  <g transform="translate(100, 910)">
-    <text x="0" y="20" fill="#ffffff" font-family="Arial, sans-serif" font-size="16" font-weight="bold">
+  <g transform="translate(80, 900)">
+    <text x="0" y="20" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="bold">
       WCAG 2.2 AA Compliance:
     </text>
-    <text x="0" y="40" fill="#ffffff" font-family="Arial, sans-serif" font-size="12">
-      • Color Contrast: All text maintains 4.5:1 ratio minimum • Alternative indicators beyond color (shapes, icons, patterns)
+    <text x="0" y="38" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="12">
+      • Color Contrast: All text maintains 4.5:1 ratio minimum
     </text>
-    <text x="0" y="55" fill="#ffffff" font-family="Arial, sans-serif" font-size="12">
-      • Motion Sensitivity: Reduced motion options for all animations • Focus indicators meet 3:1 contrast requirement
+    <text x="0" y="53" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="12">
+      • Motion Sensitivity: Reduced motion options for all animations
     </text>
-    
-    <text x="0" y="85" fill="#ffffff" font-family="Arial, sans-serif" font-size="16" font-weight="bold">
-      Color-Blind Accessibility:
-    </text>
-    <text x="0" y="105" fill="#ffffff" font-family="Arial, sans-serif" font-size="12">
-      • Deuteranopia/Protanopia: Red-green distinction via brightness and patterns • Tritanopia: Blue-yellow alternatives available
-    </text>
-    <text x="0" y="120" fill="#ffffff" font-family="Arial, sans-serif" font-size="12">
-      • High Contrast Mode: Monochrome fallback preserves energy visualization meaning • Alternative visual encodings (size, motion, position)
+    <text x="0" y="68" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="12">
+      • Focus indicators meet 3:1 contrast requirement
     </text>
     
-    <text x="0" y="150" fill="#ffffff" font-family="Arial, sans-serif" font-size="16" font-weight="bold">
+    <text x="0" y="95" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="bold">
       Performance Constraints:
     </text>
-    <text x="0" y="170" fill="#ffffff" font-family="Arial, sans-serif" font-size="12">
-      • GPU Acceleration: Colors chosen for efficient shader operations • Memory Impact: Palette optimized for low memory usage
+    <text x="0" y="113" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="12">
+      • 60Hz Target: All color transitions respect 16.67ms frame budget
     </text>
-    <text x="0" y="185" fill="#ffffff" font-family="Arial, sans-serif" font-size="12">
-      • 60Hz Target: All color transitions respect 16.67ms frame budget • Hardware Scaling: Colors adapt to Low/Mid/High tier capabilities
+    <text x="0" y="128" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="12">
+      • Hardware Scaling: Colors adapt to Low/Mid/High tier capabilities
+    </text>
+    <text x="0" y="143" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="12">
+      • Energy Truth: Every color maps to measurable WVMP metrics
     </text>
   </g>
   
-  <!-- Implementation Notes -->
-  <rect x="50" y="1080" width="1400" height="100" fill="#1a1a1a" rx="8" stroke="#333333" stroke-width="1"/>
-  <text x="750" y="1105" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="16" font-weight="bold">
-    Implementation & Validation
+  <!-- Color-Blind Accessibility -->
+  <g transform="translate(750, 900)">
+    <text x="0" y="20" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="bold">
+      Color-Blind Accessibility:
+    </text>
+    <text x="0" y="38" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="12">
+      • Deuteranopia/Protanopia: Red-green distinction via brightness
+    </text>
+    <text x="0" y="53" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="12">
+      • Tritanopia: Blue-yellow alternatives available
+    </text>
+    <text x="0" y="68" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="12">
+      • High Contrast Mode: Monochrome fallback preserves meaning
+    </text>
+    
+    <text x="0" y="95" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="bold">
+      Implementation Notes:
+    </text>
+    <text x="0" y="113" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="12">
+      • CSS Custom Properties: All colors exported as CSS variables
+    </text>
+    <text x="0" y="128" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="12">
+      • React Theme Context: Door selection updates global theme
+    </text>
+    <text x="0" y="143" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="12">
+      • Visual Regression Testing: Automated color contrast validation
+    </text>
+  </g>
+  
+  <!-- Enhanced Footer -->
+  <rect x="50" y="1050" width="1400" height="60" fill="#1a1a1a" rx="8" stroke="#333333" stroke-width="1" filter="url(#dropShadow)"/>
+  <text x="750" y="1075" text-anchor="middle" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="bold">
+    ✅ Success Criteria & Implementation Status
   </text>
-  <text x="70" y="1125" fill="#ffffff" font-family="Arial, sans-serif" font-size="12">
-    • CSS Custom Properties: All colors exported as CSS variables for consistent theming • React Theme Context: Door selection updates global theme
+  <text x="750" y="1095" text-anchor="middle" fill="#cccccc" font-family="Inter, Arial, sans-serif" font-size="12">
+    Users can distinguish between all energy states • Door themes maintain visual consistency across all levels • 60Hz performance maintained
   </text>
-  <text x="70" y="1140" fill="#ffffff" font-family="Arial, sans-serif" font-size="12">
-    • Energy Truth Mapping: Every color maps to measurable WVMP metrics • No arbitrary decorative colors - all serve functional purpose
-  </text>
-  <text x="70" y="1155" fill="#ffffff" font-family="Arial, sans-serif" font-size="12">
-    • Visual Regression Testing: Automated color contrast validation • User Testing: Door preference correlation with personality types
-  </text>
-  <text x="70" y="1170" fill="#ffffff" font-family="Arial, sans-serif" font-size="12">
-    Success Criteria: Users can distinguish between all energy states and Door themes maintain visual consistency across all levels
+  <text x="750" y="1110" text-anchor="middle" fill="#6bcf7f" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="500">
+    🎯 Ready for implementation • Complete design token coverage • WVMP v0.1 compliant
   </text>
 </svg>
