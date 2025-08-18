@@ -3,10 +3,18 @@ from pathlib import Path
 
 import pytest
 
-# Import replayer
-import sys, os
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', 'code', 'WF-TECH', 'WF-TECH-004'))
-from WF-TECH-004-replay import EventReplayer  # type: ignore
+# Load replay module by file path
+import sys, importlib.util
+CODE_DIR = Path(__file__).resolve().parents[2] / 'code' / 'WF-TECH' / 'WF-TECH-004'
+MODULE_PATH = CODE_DIR / 'WF-TECH-004-replay.py'
+
+spec = importlib.util.spec_from_file_location('wf_tech_004_replay', MODULE_PATH)
+assert spec and spec.loader
+wf_tech_004_replay = importlib.util.module_from_spec(spec)
+sys.modules['wf_tech_004_replay'] = wf_tech_004_replay
+spec.loader.exec_module(wf_tech_004_replay)  # type: ignore
+
+EventReplayer = getattr(wf_tech_004_replay, 'EventReplayer')
 
 
 def test_replayer_loads_events_from_json(tmp_path: Path):

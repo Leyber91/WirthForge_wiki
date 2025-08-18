@@ -5,12 +5,19 @@ import types
 import pytest
 
 # Prepare import path and stub jsonschema before importing the validator
-import sys, os, importlib
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', 'code', 'WF-TECH', 'WF-TECH-004'))
+import sys, os, importlib.util
 sys.modules.setdefault('jsonschema', types.SimpleNamespace())
 
-_validator_module = importlib.import_module('WF-TECH-004-validate')  # type: ignore
-DataValidator = getattr(_validator_module, 'DataValidator')
+CODE_DIR = Path(__file__).resolve().parents[2] / 'code' / 'WF-TECH' / 'WF-TECH-004'
+MODULE_PATH = CODE_DIR / 'WF-TECH-004-validate.py'
+
+spec = importlib.util.spec_from_file_location('wf_tech_004_validate', MODULE_PATH)
+assert spec and spec.loader
+wf_tech_004_validate = importlib.util.module_from_spec(spec)
+sys.modules['wf_tech_004_validate'] = wf_tech_004_validate
+spec.loader.exec_module(wf_tech_004_validate)  # type: ignore
+
+DataValidator = getattr(wf_tech_004_validate, 'DataValidator')
 
 
 def test_validator_reports_missing_db(tmp_path: Path):

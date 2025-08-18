@@ -3,10 +3,18 @@ from pathlib import Path
 
 import pytest
 
-# Import StateManager
-import sys, os
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', 'code', 'WF-TECH', 'WF-TECH-004'))
-from WF-TECH-004-snapshot-recovery import StateManager  # type: ignore
+# Load StateManager module by file path
+import sys, importlib.util
+CODE_DIR = Path(__file__).resolve().parents[2] / 'code' / 'WF-TECH' / 'WF-TECH-004'
+MODULE_PATH = CODE_DIR / 'WF-TECH-004-snapshot-recovery.py'
+
+spec = importlib.util.spec_from_file_location('wf_tech_004_snapshot_recovery', MODULE_PATH)
+assert spec and spec.loader
+wf_tech_004_snapshot_recovery = importlib.util.module_from_spec(spec)
+sys.modules['wf_tech_004_snapshot_recovery'] = wf_tech_004_snapshot_recovery
+spec.loader.exec_module(wf_tech_004_snapshot_recovery)  # type: ignore
+
+StateManager = getattr(wf_tech_004_snapshot_recovery, 'StateManager')
 
 
 @pytest.mark.asyncio
