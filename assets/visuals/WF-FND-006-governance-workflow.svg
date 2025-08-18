@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 1000 600" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="proposalGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#ffd93d;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ffe66d;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="reviewGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#4d96ff;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#74b3ff;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="sandboxGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#6bcf7f;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#96e6a1;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="productionGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#9966ff;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#b999ff;stop-opacity:1" />
+    </linearGradient>
+    <marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#ffffff" />
+    </marker>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1000" height="600" fill="#0a0a0a"/>
+  
+  <!-- Title -->
+  <text x="500" y="30" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="20" font-weight="bold">
+    WF-FND-006: Governance Workflow
+  </text>
+  
+  <!-- Proposal -->
+  <rect x="50" y="80" width="140" height="80" fill="url(#proposalGrad)" rx="8"/>
+  <text x="120" y="110" text-anchor="middle" fill="#000000" font-family="Arial, sans-serif" font-size="12" font-weight="bold">
+    Proposal
+  </text>
+  <text x="120" y="130" text-anchor="middle" fill="#000000" font-family="Arial, sans-serif" font-size="10">
+    Change Request
+  </text>
+  
+  <!-- Board Review -->
+  <rect x="250" y="80" width="140" height="80" fill="url(#reviewGrad)" rx="8"/>
+  <text x="320" y="110" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="12" font-weight="bold">
+    Board Review
+  </text>
+  <text x="320" y="130" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">
+    Multi-stakeholder
+  </text>
+  
+  <!-- Sandbox -->
+  <rect x="450" y="80" width="140" height="80" fill="url(#sandboxGrad)" rx="8"/>
+  <text x="520" y="110" text-anchor="middle" fill="#000000" font-family="Arial, sans-serif" font-size="12" font-weight="bold">
+    Sandbox Test
+  </text>
+  <text x="520" y="130" text-anchor="middle" fill="#000000" font-family="Arial, sans-serif" font-size="10">
+    Isolated Validation
+  </text>
+  
+  <!-- Production -->
+  <rect x="650" y="80" width="140" height="80" fill="url(#productionGrad)" rx="8"/>
+  <text x="720" y="110" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="12" font-weight="bold">
+    Production
+  </text>
+  <text x="720" y="130" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">
+    Deploy & Audit
+  </text>
+  
+  <!-- Arrows -->
+  <line x1="190" y1="120" x2="245" y2="120" stroke="#ffffff" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="390" y1="120" x2="445" y2="120" stroke="#ffffff" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="590" y1="120" x2="645" y2="120" stroke="#ffffff" stroke-width="2" marker-end="url(#arrow)"/>
+  
+  <!-- Governance Details -->
+  <rect x="50" y="250" width="740" height="300" fill="#1a1a1a" rx="8" stroke="#333333" stroke-width="1"/>
+  <text x="70" y="275" fill="#ffffff" font-family="Arial, sans-serif" font-size="14" font-weight="bold">
+    Governance Framework
+  </text>
+  
+  <text x="70" y="300" fill="#ffffff" font-family="Arial, sans-serif" font-size="12" font-weight="bold">
+    Core Principles (Inviolable):
+  </text>
+  <text x="70" y="318" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Local-first architecture (no Docker mandate)
+  </text>
+  <text x="70" y="333" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • 60 FPS performance constraint
+  </text>
+  <text x="70" y="348" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Energy truth visualization
+  </text>
+  <text x="70" y="363" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • UI presence requirement
+  </text>
+  
+  <text x="400" y="300" fill="#ffffff" font-family="Arial, sans-serif" font-size="12" font-weight="bold">
+    Board Structure:
+  </text>
+  <text x="400" y="318" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Technical Architect (30%)
+  </text>
+  <text x="400" y="333" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • UX Experience Lead (25%)
+  </text>
+  <text x="400" y="348" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Platform Strategist (25%)
+  </text>
+  <text x="400" y="363" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Security Officer (20%)
+  </text>
+  
+  <text x="70" y="395" fill="#ffffff" font-family="Arial, sans-serif" font-size="12" font-weight="bold">
+    Decision Types:
+  </text>
+  <text x="70" y="413" fill="#6bcf7f" font-family="Arial, sans-serif" font-size="11">
+    • Immediate Approval: All checks pass
+  </text>
+  <text x="70" y="428" fill="#ffd93d" font-family="Arial, sans-serif" font-size="11">
+    • Conditional: Conditions must be met
+  </text>
+  <text x="70" y="443" fill="#ff9f40" font-family="Arial, sans-serif" font-size="11">
+    • Deferred: Requires research
+  </text>
+  <text x="70" y="458" fill="#ff6b6b" font-family="Arial, sans-serif" font-size="11">
+    • Rejection: Principle violations
+  </text>
+  
+  <text x="400" y="395" fill="#ffffff" font-family="Arial, sans-serif" font-size="12" font-weight="bold">
+    Performance Metrics:
+  </text>
+  <text x="400" y="413" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • 2-week maximum decision time
+  </text>
+  <text x="400" y="428" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • 100% audit trail coverage
+  </text>
+  <text x="400" y="443" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Less than 1% system overhead
+  </text>
+  <text x="400" y="458" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Zero security violations
+  </text>
+  
+  <text x="70" y="490" fill="#ffffff" font-family="Arial, sans-serif" font-size="12" font-weight="bold">
+    Sandbox Isolation:
+  </text>
+  <text x="70" y="508" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Complete network isolation
+  </text>
+  <text x="70" y="523" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Resource limits enforcement
+  </text>
+  <text x="70" y="538" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Clean promotion procedures
+  </text>
+  
+  <text x="400" y="490" fill="#ffffff" font-family="Arial, sans-serif" font-size="12" font-weight="bold">
+    Audit & Transparency:
+  </text>
+  <text x="400" y="508" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Immutable decision trail
+  </text>
+  <text x="400" y="523" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • User-visible governance
+  </text>
+  <text x="400" y="538" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Cryptographic integrity
+  </text>
+</svg> 

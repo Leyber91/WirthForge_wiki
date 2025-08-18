@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="layer1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ff6b6b;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ff8e8e;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="layer2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffd93d;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ffe66d;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="layer3" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#6bcf7f;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#96e6a1;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="layer4" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4d96ff;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#74b3ff;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="layer5" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#9966ff;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#b999ff;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="800" height="600" fill="#0a0a0a"/>
+  
+  <!-- Title -->
+  <text x="400" y="40" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="24" font-weight="bold">
+    WF-FND-003: 5-Layer Architecture
+  </text>
+  
+  <!-- Layer 5: User Experience -->
+  <rect x="50" y="80" width="700" height="80" fill="url(#layer5)" rx="10"/>
+  <text x="70" y="110" fill="#ffffff" font-family="Arial, sans-serif" font-size="16" font-weight="bold">
+    Layer 5: User Experience
+  </text>
+  <text x="70" y="130" fill="#ffffff" font-family="Arial, sans-serif" font-size="12">
+    Lightning Strikes • Council Formation • Resonance Fields • Interactive UI
+  </text>
+  <text x="70" y="145" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">
+    Progressive disclosure • Energy visualization • User paths (Forge/Scholar/Sage)
+  </text>
+  
+  <!-- Layer 4: Transport -->
+  <rect x="50" y="180" width="700" height="80" fill="url(#layer4)" rx="10"/>
+  <text x="70" y="210" fill="#ffffff" font-family="Arial, sans-serif" font-size="16" font-weight="bold">
+    Layer 4: Transport
+  </text>
+  <text x="70" y="230" fill="#ffffff" font-family="Arial, sans-serif" font-size="12">
+    WebSocket Protocol • Real-time Events • State Synchronization
+  </text>
+  <text x="70" y="245" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">
+    60Hz event streaming • Privacy-preserving transport • Local-first architecture
+  </text>
+  
+  <!-- Layer 3: DECIPHER (Central) -->
+  <rect x="50" y="280" width="700" height="80" fill="url(#layer3)" rx="10"/>
+  <text x="70" y="310" fill="#ffffff" font-family="Arial, sans-serif" font-size="16" font-weight="bold">
+    Layer 3: DECIPHER (Central Compiler)
+  </text>
+  <text x="70" y="330" fill="#ffffff" font-family="Arial, sans-serif" font-size="12">
+    Token-to-Energy Conversion • 60Hz Frame Loop • Pattern Detection
+  </text>
+  <text x="70" y="345" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">
+    Real-time energy calculation • Interference/resonance detection • Event emission
+  </text>
+  
+  <!-- Layer 2: Model Compute -->
+  <rect x="50" y="380" width="700" height="80" fill="url(#layer2)" rx="10"/>
+  <text x="70" y="410" fill="#ffffff" font-family="Arial, sans-serif" font-size="16" font-weight="bold">
+    Layer 2: Model Compute
+  </text>
+  <text x="70" y="430" fill="#ffffff" font-family="Arial, sans-serif" font-size="12">
+    Ollama Integration • Local AI Models • Token Streaming
+  </text>
+  <text x="70" y="445" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">
+    Multi-model coordination • Council formation • Performance adaptation
+  </text>
+  
+  <!-- Layer 1: System Runtime -->
+  <rect x="50" y="480" width="700" height="80" fill="url(#layer1)" rx="10"/>
+  <text x="70" y="510" fill="#ffffff" font-family="Arial, sans-serif" font-size="16" font-weight="bold">
+    Layer 1: System Runtime
+  </text>
+  <text x="70" y="530" fill="#ffffff" font-family="Arial, sans-serif" font-size="12">
+    Service Management • Health Monitoring • State Storage
+  </text>
+  <text x="70" y="545" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">
+    Local-first storage • Boot sequence • Error recovery • System telemetry
+  </text>
+  
+  <!-- Energy Flow Arrows -->
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#ffffff" />
+    </marker>
+  </defs>
+  
+  <!-- Vertical energy flow -->
+  <line x1="760" y1="550" x2="760" y2="90" stroke="#ffffff" stroke-width="3" marker-end="url(#arrowhead)"/>
+  <text x="770" y="320" fill="#ffffff" font-family="Arial, sans-serif" font-size="12" font-weight="bold" transform="rotate(-90 770 320)">
+    Energy Flow
+  </text>
+</svg> 

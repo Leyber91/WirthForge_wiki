@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 1000 700" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="metaGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#9966ff;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#b999ff;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="fndGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#ff6b6b;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ff8e8e;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="techGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#ffd93d;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ffe66d;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="uxGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#6bcf7f;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#96e6a1;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="bizGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#4d96ff;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#74b3ff;stop-opacity:1" />
+    </linearGradient>
+    <marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#ffffff" />
+    </marker>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1000" height="700" fill="#0a0a0a"/>
+  
+  <!-- Title -->
+  <text x="500" y="30" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="20" font-weight="bold">
+    WF-META-001: Documentation Flow & Asset Generation
+  </text>
+  
+  <!-- META Layer (Top) -->
+  <rect x="400" y="70" width="200" height="60" fill="url(#metaGrad)" rx="8"/>
+  <text x="500" y="95" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="14" font-weight="bold">
+    WF-META-001
+  </text>
+  <text x="500" y="110" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="12">
+    Master Guide (Beacon)
+  </text>
+  <text x="500" y="125" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">
+    P0 Priority
+  </text>
+  
+  <!-- Foundation Layer -->
+  <rect x="50" y="180" width="900" height="80" fill="url(#fndGrad)" rx="8"/>
+  <text x="500" y="205" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="16" font-weight="bold">
+    FOUNDATION (WF-FND-001 → WF-FND-006)
+  </text>
+  <text x="500" y="225" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="12">
+    Vision • Energy • Layers • DECIPHER • Orchestration • Governance
+  </text>
+  <text x="500" y="245" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">
+    P0 Priority: Core principles and architecture foundations
+  </text>
+  
+  <!-- Technical Layer -->
+  <rect x="50" y="300" width="900" height="80" fill="url(#techGrad)" rx="8"/>
+  <text x="500" y="325" text-anchor="middle" fill="#000000" font-family="Arial, sans-serif" font-size="16" font-weight="bold">
+    TECHNICAL (WF-TECH-001 → WF-TECH-010)
+  </text>
+  <text x="500" y="345" text-anchor="middle" fill="#000000" font-family="Arial, sans-serif" font-size="12">
+    Runtime • AI Integration • WebSockets • Storage • Security • Testing • Plugins
+  </text>
+  <text x="500" y="365" text-anchor="middle" fill="#000000" font-family="Arial, sans-serif" font-size="10">
+    P0-P1 Priority: System implementation and infrastructure
+  </text>
+  
+  <!-- User Experience Layer -->
+  <rect x="50" y="420" width="900" height="80" fill="url(#uxGrad)" rx="8"/>
+  <text x="500" y="445" text-anchor="middle" fill="#000000" font-family="Arial, sans-serif" font-size="16" font-weight="bold">
+    USER EXPERIENCE (WF-UX-001 → WF-UX-010)
+  </text>
+  <text x="500" y="465" text-anchor="middle" fill="#000000" font-family="Arial, sans-serif" font-size="12">
+    Lightning • Council • Architecture • Adaptive • Resonance • Visualization • Components
+  </text>
+  <text x="500" y="485" text-anchor="middle" fill="#000000" font-family="Arial, sans-serif" font-size="10">
+    P0-P1 Priority: Experience layers and interaction patterns
+  </text>
+  
+  <!-- Business Layer -->
+  <rect x="50" y="540" width="900" height="80" fill="url(#bizGrad)" rx="8"/>
+  <text x="500" y="565" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="16" font-weight="bold">
+    BUSINESS & OPERATIONS (WF-BIZ-001 → WF-OPS-003)
+  </text>
+  <text x="500" y="585" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="12">
+    Monetization • Licensing • Packaging • Support • Data Export
+  </text>
+  <text x="500" y="605" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">
+    P0-P2 Priority: Business models and operational procedures
+  </text>
+  
+  <!-- Dependency Arrows -->
+  <line x1="500" y1="135" x2="500" y2="175" stroke="#ffffff" stroke-width="3" marker-end="url(#arrow)"/>
+  <line x1="500" y1="265" x2="500" y2="295" stroke="#ffffff" stroke-width="3" marker-end="url(#arrow)"/>
+  <line x1="500" y1="385" x2="500" y2="415" stroke="#ffffff" stroke-width="3" marker-end="url(#arrow)"/>
+  <line x1="500" y1="505" x2="500" y2="535" stroke="#ffffff" stroke-width="3" marker-end="url(#arrow)"/>
+  
+  <!-- Asset Categories Sidebar -->
+  <rect x="20" y="650" width="960" height="40" fill="#1a1a1a" rx="5" stroke="#333333" stroke-width="1"/>
+  <text x="30" y="670" fill="#ffffff" font-family="Arial, sans-serif" font-size="12" font-weight="bold">
+    Asset Categories:
+  </text>
+  <text x="150" y="670" fill="#9966ff" font-family="Arial, sans-serif" font-size="11">
+    Diagrams
+  </text>
+  <text x="220" y="670" fill="#ffd93d" font-family="Arial, sans-serif" font-size="11">
+    Schemas
+  </text>
+  <text x="280" y="670" fill="#6bcf7f" font-family="Arial, sans-serif" font-size="11">
+    Code
+  </text>
+  <text x="320" y="670" fill="#ff6b6b" font-family="Arial, sans-serif" font-size="11">
+    Tests
+  </text>
+  <text x="360" y="670" fill="#4d96ff" font-family="Arial, sans-serif" font-size="11">
+    UI Tokens
+  </text>
+  <text x="440" y="670" fill="#ff9f40" font-family="Arial, sans-serif" font-size="11">
+    Documentation
+  </text>
+  <text x="550" y="670" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Universal Template • SemVer Changelogs • Dependency Matrix • Generation Tasks
+  </text>
+  
+  <!-- Sequential Flow Indicators -->
+  <text x="80" y="50" fill="#ffffff" font-family="Arial, sans-serif" font-size="11" font-weight="bold">
+    Sequential Generation Order:
+  </text>
+  <text x="80" y="65" fill="#9966ff" font-family="Arial, sans-serif" font-size="10">
+    1. META → 2. FOUNDATION → 3. TECHNICAL → 4. UX → 5. BUSINESS
+  </text>
+  
+  <!-- Key Principles -->
+  <rect x="650" y="70" width="320" height="100" fill="#1a1a1a" rx="5" stroke="#333333" stroke-width="1"/>
+  <text x="670" y="90" fill="#ffffff" font-family="Arial, sans-serif" font-size="12" font-weight="bold">
+    Core Constraints:
+  </text>
+  <text x="670" y="105" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">
+    • Energy Truth: ≤16.67ms frame budgets
+  </text>
+  <text x="670" y="118" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">
+    • Local-First: No Docker dependencies
+  </text>
+  <text x="670" y="131" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">
+    • Sequential: No gaps in document IDs
+  </text>
+  <text x="670" y="144" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">
+    • Dependencies: P0 before P1
+  </text>
+  <text x="670" y="157" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">
+    • Template Adherence: Universal structure
+  </text>
+</svg> 
