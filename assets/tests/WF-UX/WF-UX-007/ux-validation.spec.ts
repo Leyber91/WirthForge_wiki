@@ -9,7 +9,7 @@
 import { describe, it, expect, beforeEach, afterEach, jest } from '@jest/globals';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { axe, toHaveNoViolations } from 'jest-axe';
-import ErrorBoundary from '../../../assets/code/WF-UX-007/error-boundary.tsx';
+import ErrorBoundary from '../../../code/WF-UX-007/error-boundary.tsx';
 import React from 'react';
 
 // Extend Jest matchers

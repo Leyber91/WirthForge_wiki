@@ -7,9 +7,9 @@
  */
 
 import { describe, it, expect, beforeEach, afterEach, jest } from '@jest/globals';
-import { RecoveryManager } from '../../../assets/code/WF-UX-007/recovery-manager';
-import { NetworkWatchdog } from '../../../assets/code/WF-UX-007/network-watchdog';
-import { BackupRestoreUtility } from '../../../assets/code/WF-UX-007/backup-restore';
+import { RecoveryManager } from '../../../code/WF-UX-007/recovery-manager';
+import { NetworkWatchdog } from '../../../code/WF-UX-007/network-watchdog';
+import { BackupRestoreUtility } from '../../../code/WF-UX-007/backup-restore';
 
 // Mock external dependencies
 jest.mock('ws');
