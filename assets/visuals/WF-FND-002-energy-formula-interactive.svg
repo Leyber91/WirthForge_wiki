@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 1400 1000" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Energy gradients for different components -->
+    <linearGradient id="velocityGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#ff6b6b;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ff8e8e;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="certaintyGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#4d96ff;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#74b3ff;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="frictionGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#6bcf7f;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#96e6a1;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="finalEnergyGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#ffd93d;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ffe66d;stop-opacity:1" />
+    </linearGradient>
+    
+    <!-- Animated energy pulse -->
+    <radialGradient id="energyPulse" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:0.8" />
+      <stop offset="100%" style="stop-color:#ffff00;stop-opacity:0.2" />
+    </radialGradient>
+    
+    <!-- Arrow marker -->
+    <marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#ffffff" />
+    </marker>
+    
+    <!-- Glow effect -->
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge> 
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1400" height="1000" fill="#0a0a0a"/>
+  
+  <!-- Title -->
+  <text x="700" y="30" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="26" font-weight="bold">
+    WF-FND-002: Energy Formula E(t) = w₁·v(t) + w₂·c(t) + w₃·f(t)
+  </text>
+  <text x="700" y="55" text-anchor="middle" fill="#cccccc" font-family="Arial, sans-serif" font-size="16">
+    Real-time Token-to-Energy Conversion with WVMP Metrics
+  </text>
+  
+  <!-- Formula Components Section -->
+  <rect x="50" y="80" width="1300" height="200" fill="#1a1a1a" rx="15" stroke="#333333" stroke-width="2"/>
+  <text x="700" y="110" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="18" font-weight="bold">
+    Energy Components Breakdown
+  </text>
+  
+  <!-- Velocity Component (v_t) -->
+  <rect x="80" y="130" width="280" height="140" fill="url(#velocityGrad)" rx="10"/>
+  <text x="220" y="155" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="16" font-weight="bold">
+    v(t) = Velocity (Cadence)
+  </text>
+  <text x="220" y="175" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="12">
+    Weight: w₁ = 0.5 (default)
+  </text>
+  
+  <!-- Velocity formula details -->
+  <rect x="90" y="185" width="260" height="75" fill="#1a1a1a" rx="5"/>
+  <text x="220" y="205" text-anchor="middle" fill="#ff6b6b" font-family="monospace" font-size="11">
+    TPS_t = tokens/second (1s window)
+  </text>
+  <text x="220" y="220" text-anchor="middle" fill="#ffffff" font-family="monospace" font-size="10">
+    v_t = clamp((TPS_t - 0) / (20 - 0), 0, 1)
+  </text>
+  <text x="220" y="235" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="9">
+    Maps token throughput to [0,1]
+  </text>
+  <text x="220" y="250" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="9">
+    WVMP: token.inter_arrival_ms
+  </text>
+  
+  <!-- Certainty Component (c_t) -->
+  <rect x="400" y="130" width="280" height="140" fill="url(#certaintyGrad)" rx="10"/>
+  <text x="540" y="155" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="16" font-weight="bold">
+    c(t) = Certainty
+  </text>
+  <text x="540" y="175" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="12">
+    Weight: w₂ = 0.3 (when available)
+  </text>
+  
+  <!-- Certainty formula details -->
+  <rect x="410" y="185" width="260" height="75" fill="#1a1a1a" rx="5"/>
+  <text x="540" y="205" text-anchor="middle" fill="#4d96ff" font-family="monospace" font-size="11">
+    H(P_t) = -Σ p_i log p_i (entropy)
+  </text>
+  <text x="540" y="220" text-anchor="middle" fill="#ffffff" font-family="monospace" font-size="10">
+    c_t = 1 - (H(P_t) / log K)
+  </text>
+  <text x="540" y="235" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="9">
+    Higher = more concentrated probability
+  </text>
+  <text x="540" y="250" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="9">
+    WVMP: prob.top_k (if available)
+  </text>
+  
+  <!-- Friction Component (f_t) -->
+  <rect x="720" y="130" width="280" height="140" fill="url(#frictionGrad)" rx="10"/>
+  <text x="860" y="155" text-anchor="middle" fill="#000000" font-family="Arial, sans-serif" font-size="16" font-weight="bold">
+    f(t) = Friction (Anti-stall)
+  </text>
+  <text x="860" y="175" text-anchor="middle" fill="#000000" font-family="Arial, sans-serif" font-size="12">
+    Weight: w₃ = 0.2 (default)
+  </text>
+  
+  <!-- Friction formula details -->
+  <rect x="730" y="185" width="260" height="75" fill="#1a1a1a" rx="5"/>
+  <text x="860" y="205" text-anchor="middle" fill="#6bcf7f" font-family="monospace" font-size="11">
+    Δt_t = inter-arrival time (ms)
+  </text>
+  <text x="860" y="220" text-anchor="middle" fill="#ffffff" font-family="monospace" font-size="10">
+    s_t = clamp((Δt_t - 400) / (1500 - 400), 0, 1)
+  </text>
+  <text x="860" y="235" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="9">
+    f_t = 1 - s_t (anti-stall pressure)
+  </text>
+  <text x="860" y="250" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="9">
+    WVMP: timing.stall_pressure
+  </text>
+  
+  <!-- Final Energy Calculation -->
+  <rect x="1040" y="130" width="280" height="140" fill="url(#finalEnergyGrad)" rx="10"/>
+  <text x="1180" y="155" text-anchor="middle" fill="#000000" font-family="Arial, sans-serif" font-size="16" font-weight="bold">
+    E(t) = Final Energy
+  </text>
+  <text x="1180" y="175" text-anchor="middle" fill="#000000" font-family="Arial, sans-serif" font-size="12">
+    Range: [0, 1] with EMA smoothing
+  </text>
+  
+  <!-- Final energy formula -->
+  <rect x="1050" y="185" width="260" height="75" fill="#1a1a1a" rx="5"/>
+  <text x="1180" y="205" text-anchor="middle" fill="#ffd93d" font-family="monospace" font-size="10">
+    E_base(t) = 0.5·v_t + 0.3·c_t + 0.2·f_t
+  </text>
+  <text x="1180" y="220" text-anchor="middle" fill="#ffffff" font-family="monospace" font-size="10">
+    E(t) = α·E_base(t) + (1-α)·E(t-1)
+  </text>
+  <text x="1180" y="235" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="9">
+    α = 0.35 (smoothing factor)
+  </text>
+  <text x="1180" y="250" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="9">
+    WVMP: energy.normalized
+  </text>
+  
+  <!-- Real-time Visualization Section -->
+  <rect x="50" y="300" width="1300" height="300" fill="#1a1a1a" rx="15" stroke="#333333" stroke-width="2"/>
+  <text x="700" y="330" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="18" font-weight="bold">
+    Real-time Energy Visualization (60Hz Frame Target)
+  </text>
+  
+  <!-- Live Energy Meter -->
+  <g transform="translate(100, 350)">
+    <text x="150" y="20" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="14" font-weight="bold">
+      Energy Level E(t)
+    </text>
+    
+    <!-- Energy bar background -->
+    <rect x="20" y="30" width="260" height="30" fill="#2a2a2a" stroke="#666666" stroke-width="1" rx="15"/>
+    
+    <!-- Animated energy bar -->
+    <rect x="22" y="32" width="256" height="26" fill="url(#finalEnergyGrad)" rx="13">
+      <animate attributeName="width" values="50;200;120;256;80;200" dur="8s" repeatCount="indefinite"/>
+    </rect>
+    
+    <!-- Energy value display -->
+    <text x="150" y="50" text-anchor="middle" fill="#000000" font-family="monospace" font-size="12" font-weight="bold">
+      E(t) = 0.73
+    </text>
+    <text x="150" y="80" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+      Current energy state
+    </text>
+  </g>
+  
+  <!-- Component Contributions -->
+  <g transform="translate(450, 350)">
+    <text x="150" y="20" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="14" font-weight="bold">
+      Component Contributions
+    </text>
+    
+    <!-- Velocity contribution -->
+    <rect x="0" y="30" width="80" height="20" fill="url(#velocityGrad)" rx="3"/>
+    <text x="85" y="45" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">v(t) = 0.85</text>
+    
+    <!-- Certainty contribution -->
+    <rect x="0" y="55" width="60" height="20" fill="url(#certaintyGrad)" rx="3"/>
+    <text x="65" y="70" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">c(t) = 0.62</text>
+    
+    <!-- Friction contribution -->
+    <rect x="0" y="80" width="70" height="20" fill="url(#frictionGrad)" rx="3"/>
+    <text x="75" y="95" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">f(t) = 0.78</text>
+    
+    <!-- Real-time indicators -->
+    <circle cx="280" cy="40" r="5" fill="#ff6b6b">
+      <animate attributeName="r" values="3;7;3" dur="1.2s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="280" cy="65" r="5" fill="#4d96ff">
+      <animate attributeName="r" values="3;7;3" dur="1.5s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="280" cy="90" r="5" fill="#6bcf7f">
+      <animate attributeName="r" values="3;7;3" dur="1.8s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+  
+  <!-- Token Stream Visualization -->
+  <g transform="translate(800, 350)">
+    <text x="150" y="20" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="14" font-weight="bold">
+      Token Stream (Live)
+    </text>
+    
+    <!-- Token flow path -->
+    <path d="M 20 50 Q 150 30 280 50" stroke="#ffd93d" stroke-width="3" fill="none"/>
+    
+    <!-- Animated tokens -->
+    <circle cx="20" cy="50" r="4" fill="#ffffff">
+      <animateMotion dur="2s" repeatCount="indefinite">
+        <mpath href="#tokenPath"/>
+      </animateMotion>
+    </circle>
+    
+    <circle cx="20" cy="50" r="3" fill="#ffff00">
+      <animateMotion dur="2.2s" repeatCount="indefinite" begin="0.3s">
+        <mpath href="#tokenPath"/>
+      </animateMotion>
+    </circle>
+    
+    <circle cx="20" cy="50" r="3.5" fill="#ffe66d">
+      <animateMotion dur="1.8s" repeatCount="indefinite" begin="0.6s">
+        <mpath href="#tokenPath"/>
+      </animateMotion>
+    </circle>
+    
+    <!-- Hidden path for animation -->
+    <path id="tokenPath" d="M 20 50 Q 150 30 280 50" opacity="0"/>
+    
+    <!-- TPS indicator -->
+    <text x="150" y="80" text-anchor="middle" fill="#ffffff" font-family="monospace" font-size="11">
+      TPS: 18.3 tokens/sec
+    </text>
+    <text x="150" y="95" text-anchor="middle" fill="#cccccc" font-family="Arial, sans-serif" font-size="9">
+      Real-time throughput
+    </text>
+  </g>
+  
+  <!-- State Machine Visualization -->
+  <rect x="50" y="620" width="1300" height="180" fill="#1a1a1a" rx="15" stroke="#333333" stroke-width="2"/>
+  <text x="700" y="650" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="18" font-weight="bold">
+    Energy State Machine (Session Lifecycle)
+  </text>
+  
+  <!-- State transitions -->
+  <g transform="translate(100, 670)">
+    <!-- IDLE state -->
+    <rect x="0" y="0" width="100" height="40" fill="#666666" rx="5"/>
+    <text x="50" y="25" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="12" font-weight="bold">IDLE</text>
+    
+    <!-- CHARGING state -->
+    <rect x="150" y="0" width="100" height="40" fill="#ffd93d" rx="5"/>
+    <text x="200" y="25" text-anchor="middle" fill="#000000" font-family="Arial, sans-serif" font-size="12" font-weight="bold">CHARGING</text>
+    
+    <!-- FLOWING state -->
+    <rect x="300" y="0" width="100" height="40" fill="#6bcf7f" rx="5"/>
+    <text x="350" y="25" text-anchor="middle" fill="#000000" font-family="Arial, sans-serif" font-size="12" font-weight="bold">FLOWING</text>
+    
+    <!-- STALLED state -->
+    <rect x="450" y="0" width="100" height="40" fill="#ff6b6b" rx="5"/>
+    <text x="500" y="25" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="12" font-weight="bold">STALLED</text>
+    
+    <!-- COMPLETE state -->
+    <rect x="600" y="0" width="100" height="40" fill="#9966ff" rx="5"/>
+    <text x="650" y="25" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="12" font-weight="bold">COMPLETE</text>
+    
+    <!-- Transition arrows -->
+    <line x1="105" y1="20" x2="145" y2="20" stroke="#ffffff" stroke-width="2" marker-end="url(#arrow)"/>
+    <line x1="255" y1="20" x2="295" y2="20" stroke="#ffffff" stroke-width="2" marker-end="url(#arrow)"/>
+    <line x1="405" y1="20" x2="445" y2="20" stroke="#ffffff" stroke-width="2" marker-end="url(#arrow)"/>
+    <line x1="555" y1="20" x2="595" y2="20" stroke="#ffffff" stroke-width="2" marker-end="url(#arrow)"/>
+    
+    <!-- State descriptions -->
+    <text x="50" y="60" text-anchor="middle" fill="#cccccc" font-family="Arial, sans-serif" font-size="9">E(t)=0</text>
+    <text x="200" y="60" text-anchor="middle" fill="#cccccc" font-family="Arial, sans-serif" font-size="9">E(t)↑</text>
+    <text x="350" y="60" text-anchor="middle" fill="#cccccc" font-family="Arial, sans-serif" font-size="9">E(t)≈1</text>
+    <text x="500" y="60" text-anchor="middle" fill="#cccccc" font-family="Arial, sans-serif" font-size="9">E(t)↓</text>
+    <text x="650" y="60" text-anchor="middle" fill="#cccccc" font-family="Arial, sans-serif" font-size="9">E(t)→0</text>
+  </g>
+  
+  <!-- Graceful Degradation -->
+  <g transform="translate(850, 670)">
+    <text x="200" y="20" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="14" font-weight="bold">
+      Graceful Degradation
+    </text>
+    <text x="20" y="40" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+      • No logprobs: w₁'=0.7, w₃'=0.3 (velocity + friction only)
+    </text>
+    <text x="20" y="55" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+      • Stall protection: E(t) decays with 700ms half-life
+    </text>
+    <text x="20" y="70" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+      • Hardware adaptation: TPS_max scales with tier (5/20/50)
+    </text>
+  </g>
+  
+  <!-- WVMP Compliance -->
+  <rect x="50" y="820" width="1300" height="120" fill="#1a1a1a" rx="8" stroke="#333333" stroke-width="1"/>
+  <text x="700" y="845" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="16" font-weight="bold">
+    WVMP v0.1 Compliance & Evidence Mode
+  </text>
+  <text x="70" y="870" fill="#ffffff" font-family="Arial, sans-serif" font-size="12">
+    • Every visual element maps to named WVMP metrics with units • Hover reveals source data (e.g., token.inter_arrival_ms, prob.entropy) 
+  </text>
+  <text x="70" y="885" fill="#ffffff" font-family="Arial, sans-serif" font-size="12">
+    • Raw traces exportable for replay and analysis • No mind-reading claims - only computational visualization • Reality is magical enough
+  </text>
+  <text x="70" y="900" fill="#ffffff" font-family="Arial, sans-serif" font-size="12">
+    • Performance: 60Hz frame budget (16.67ms), Local-only processing, Hardware tier adaptation (Low/Mid/High)
+  </text>
+  <text x="70" y="915" fill="#ffffff" font-family="Arial, sans-serif" font-size="12">
+    • Energy Truth: E(t) ∈ [0,1] represents measurable computational state, not artificial consciousness simulation
+  </text>
+</svg>
