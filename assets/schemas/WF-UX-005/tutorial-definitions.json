@@ -1,0 +1,570 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "WF-UX-005 Tutorial Definition Schema",
+  "description": "Comprehensive schema for defining interactive tutorials in WIRTHFORGE onboarding system",
+  "type": "object",
+  "properties": {
+    "tutorialId": {
+      "type": "string",
+      "pattern": "^[a-z0-9_]+$",
+      "description": "Unique identifier for the tutorial",
+      "examples": ["level1_intro", "level2_multimodel", "level3_structures"]
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Semantic version of tutorial content",
+      "examples": ["1.0.0", "1.2.3"]
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100,
+          "description": "Human-readable tutorial title",
+          "examples": ["Level 1: Lightning Basics", "Multi-Model Coordination"]
+        },
+        "description": {
+          "type": "string",
+          "minLength": 10,
+          "maxLength": 500,
+          "description": "Detailed tutorial description and learning objectives"
+        },
+        "level": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5,
+          "description": "WIRTHFORGE progression level (1-5)"
+        },
+        "estimatedDuration": {
+          "type": "integer",
+          "minimum": 30,
+          "maximum": 1800,
+          "description": "Estimated completion time in seconds"
+        },
+        "difficulty": {
+          "type": "string",
+          "enum": ["beginner", "intermediate", "advanced", "expert"],
+          "description": "Tutorial difficulty level"
+        },
+        "prerequisites": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z0-9_]+$"
+          },
+          "description": "Required completed tutorials before this one"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["onboarding", "core", "advanced", "optional", "troubleshooting", "community"]
+          },
+          "description": "Tutorial categorization tags"
+        }
+      },
+      "required": ["title", "description", "level", "estimatedDuration", "difficulty"],
+      "additionalProperties": false
+    },
+    "adaptations": {
+      "type": "object",
+      "description": "Hardware tier and accessibility adaptations",
+      "properties": {
+        "lowTier": {
+          "type": "object",
+          "properties": {
+            "simplifiedVisuals": {
+              "type": "boolean",
+              "description": "Use simplified visual effects for low-end hardware"
+            },
+            "reducedSteps": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Steps to skip or simplify for low-tier devices"
+            },
+            "alternativeContent": {
+              "type": "object",
+              "description": "Alternative content for low-tier experience"
+            }
+          }
+        },
+        "accessibility": {
+          "type": "object",
+          "properties": {
+            "screenReaderOptimized": {
+              "type": "boolean",
+              "description": "Tutorial optimized for screen readers"
+            },
+            "keyboardNavigation": {
+              "type": "boolean",
+              "description": "Full keyboard navigation support"
+            },
+            "highContrast": {
+              "type": "boolean",
+              "description": "High contrast mode compatibility"
+            },
+            "reducedMotion": {
+              "type": "boolean",
+              "description": "Reduced motion alternative available"
+            }
+          }
+        }
+      }
+    },
+    "steps": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 20,
+      "items": {
+        "type": "object",
+        "properties": {
+          "stepId": {
+            "type": "string",
+            "pattern": "^[a-z0-9_]+$",
+            "description": "Unique step identifier within tutorial"
+          },
+          "order": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Step execution order"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["instruction", "interaction", "observation", "validation", "feedback"],
+            "description": "Type of tutorial step"
+          },
+          "content": {
+            "type": "object",
+            "properties": {
+              "title": {
+                "type": "string",
+                "maxLength": 100,
+                "description": "Step title or heading"
+              },
+              "instruction": {
+                "type": "string",
+                "maxLength": 500,
+                "description": "Main instructional text"
+              },
+              "hint": {
+                "type": "string",
+                "maxLength": 200,
+                "description": "Optional hint or tip"
+              },
+              "visualCue": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": ["highlight", "arrow", "pulse", "outline", "none"]
+                  },
+                  "target": {
+                    "type": "string",
+                    "description": "CSS selector or element ID to highlight"
+                  },
+                  "position": {
+                    "type": "string",
+                    "enum": ["top", "bottom", "left", "right", "center"]
+                  }
+                }
+              }
+            },
+            "required": ["instruction"]
+          },
+          "interaction": {
+            "type": "object",
+            "properties": {
+              "required": {
+                "type": "boolean",
+                "description": "Whether user interaction is required to proceed"
+              },
+              "type": {
+                "type": "string",
+                "enum": ["click", "input", "drag", "select", "wait", "observe"],
+                "description": "Expected interaction type"
+              },
+              "target": {
+                "type": "string",
+                "description": "Target element for interaction"
+              },
+              "expectedValue": {
+                "type": "string",
+                "description": "Expected input value or action result"
+              },
+              "validation": {
+                "type": "object",
+                "properties": {
+                  "method": {
+                    "type": "string",
+                    "enum": ["exact", "contains", "regex", "custom", "event"]
+                  },
+                  "criteria": {
+                    "type": "string",
+                    "description": "Validation criteria or pattern"
+                  },
+                  "errorMessage": {
+                    "type": "string",
+                    "description": "Message shown on validation failure"
+                  }
+                }
+              }
+            }
+          },
+          "triggers": {
+            "type": "object",
+            "properties": {
+              "onStart": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "action": {
+                      "type": "string",
+                      "enum": ["highlight", "focus", "scroll", "animate", "sound", "announce"]
+                    },
+                    "target": { "type": "string" },
+                    "parameters": { "type": "object" }
+                  }
+                }
+              },
+              "onComplete": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "action": {
+                      "type": "string",
+                      "enum": ["unhighlight", "next", "reward", "save", "announce"]
+                    },
+                    "target": { "type": "string" },
+                    "parameters": { "type": "object" }
+                  }
+                }
+              },
+              "onError": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "action": {
+                      "type": "string",
+                      "enum": ["hint", "retry", "skip", "help", "reset"]
+                    },
+                    "parameters": { "type": "object" }
+                  }
+                }
+              }
+            }
+          },
+          "timing": {
+            "type": "object",
+            "properties": {
+              "autoAdvance": {
+                "type": "boolean",
+                "description": "Automatically advance after completion"
+              },
+              "delay": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "Delay before auto-advance in milliseconds"
+              },
+              "timeout": {
+                "type": "integer",
+                "minimum": 1000,
+                "description": "Step timeout in milliseconds"
+              },
+              "retryLimit": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 10,
+                "description": "Maximum retry attempts"
+              }
+            }
+          }
+        },
+        "required": ["stepId", "order", "type", "content"],
+        "additionalProperties": false
+      }
+    },
+    "completion": {
+      "type": "object",
+      "properties": {
+        "criteria": {
+          "type": "string",
+          "enum": ["all_steps", "required_steps", "custom"],
+          "description": "Tutorial completion criteria"
+        },
+        "customCriteria": {
+          "type": "object",
+          "description": "Custom completion logic for complex tutorials"
+        },
+        "rewards": {
+          "type": "object",
+          "properties": {
+            "achievements": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": { "type": "string" },
+                  "name": { "type": "string" },
+                  "description": { "type": "string" },
+                  "icon": { "type": "string" },
+                  "rarity": {
+                    "type": "string",
+                    "enum": ["common", "uncommon", "rare", "epic", "legendary"]
+                  }
+                }
+              }
+            },
+            "unlocks": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": ["level", "feature", "tutorial", "content"]
+                  },
+                  "id": { "type": "string" },
+                  "name": { "type": "string" }
+                }
+              }
+            },
+            "experience": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Experience points awarded"
+            }
+          }
+        },
+        "feedback": {
+          "type": "object",
+          "properties": {
+            "successMessage": {
+              "type": "string",
+              "description": "Message shown on successful completion"
+            },
+            "celebrationAnimation": {
+              "type": "string",
+              "enum": ["confetti", "lightning", "energy_burst", "none"]
+            },
+            "nextSteps": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "action": { "type": "string" },
+                  "label": { "type": "string" },
+                  "target": { "type": "string" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "required": ["criteria", "rewards", "feedback"]
+    },
+    "analytics": {
+      "type": "object",
+      "properties": {
+        "trackingEvents": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "tutorial_started",
+              "step_completed",
+              "step_skipped",
+              "step_failed",
+              "hint_requested",
+              "tutorial_completed",
+              "tutorial_abandoned",
+              "retry_attempted",
+              "help_accessed"
+            ]
+          }
+        },
+        "customMetrics": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "type": {
+                "type": "string",
+                "enum": ["counter", "timer", "gauge", "histogram"]
+              },
+              "description": { "type": "string" }
+            }
+          }
+        },
+        "abTestVariants": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "variantId": { "type": "string" },
+              "description": { "type": "string" },
+              "weight": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "modifications": { "type": "object" }
+            }
+          }
+        }
+      }
+    }
+  },
+  "required": ["tutorialId", "version", "metadata", "steps", "completion"],
+  "additionalProperties": false,
+  "examples": [
+    {
+      "tutorialId": "level1_intro",
+      "version": "1.0.0",
+      "metadata": {
+        "title": "Level 1: Lightning Basics",
+        "description": "Learn how to interact with AI and understand energy visualization through lightning effects",
+        "level": 1,
+        "estimatedDuration": 300,
+        "difficulty": "beginner",
+        "prerequisites": [],
+        "tags": ["onboarding", "core"]
+      },
+      "adaptations": {
+        "lowTier": {
+          "simplifiedVisuals": true,
+          "reducedSteps": ["advanced_settings"]
+        },
+        "accessibility": {
+          "screenReaderOptimized": true,
+          "keyboardNavigation": true,
+          "highContrast": true,
+          "reducedMotion": true
+        }
+      },
+      "steps": [
+        {
+          "stepId": "welcome",
+          "order": 1,
+          "type": "instruction",
+          "content": {
+            "title": "Welcome to WIRTHFORGE",
+            "instruction": "You're about to experience AI like never before. Let's start with your first interaction.",
+            "hint": "Follow the guided steps to learn the basics"
+          },
+          "timing": {
+            "autoAdvance": true,
+            "delay": 3000
+          }
+        },
+        {
+          "stepId": "first_prompt",
+          "order": 2,
+          "type": "interaction",
+          "content": {
+            "title": "Your First AI Interaction",
+            "instruction": "Type 'Hello, WIRTHFORGE!' in the input field and press Enter",
+            "hint": "This will trigger your first lightning visualization",
+            "visualCue": {
+              "type": "highlight",
+              "target": "#prompt-input",
+              "position": "bottom"
+            }
+          },
+          "interaction": {
+            "required": true,
+            "type": "input",
+            "target": "#prompt-input",
+            "validation": {
+              "method": "event",
+              "criteria": "ai_response_received",
+              "errorMessage": "Try typing a message and pressing Enter"
+            }
+          },
+          "triggers": {
+            "onComplete": [
+              {
+                "action": "announce",
+                "parameters": {
+                  "message": "Great! Watch the lightning visualization appear"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "stepId": "observe_lightning",
+          "order": 3,
+          "type": "observation",
+          "content": {
+            "title": "Energy Visualization",
+            "instruction": "Watch the lightning bolt appear - this shows your AI thinking in real-time!",
+            "hint": "The speed and intensity reflect the AI's processing"
+          },
+          "timing": {
+            "autoAdvance": true,
+            "delay": 5000
+          }
+        }
+      ],
+      "completion": {
+        "criteria": "all_steps",
+        "rewards": {
+          "achievements": [
+            {
+              "id": "lightning_striker",
+              "name": "Lightning Striker",
+              "description": "Completed your first AI interaction",
+              "icon": "⚡",
+              "rarity": "common"
+            }
+          ],
+          "unlocks": [
+            {
+              "type": "level",
+              "id": "level2",
+              "name": "Level 2: Streams"
+            }
+          ],
+          "experience": 100
+        },
+        "feedback": {
+          "successMessage": "Congratulations! You've mastered the basics of WIRTHFORGE energy visualization.",
+          "celebrationAnimation": "lightning",
+          "nextSteps": [
+            {
+              "action": "start_tutorial",
+              "label": "Continue to Level 2",
+              "target": "level2_intro"
+            },
+            {
+              "action": "enter_app",
+              "label": "Explore on Your Own",
+              "target": "main_app"
+            }
+          ]
+        }
+      },
+      "analytics": {
+        "trackingEvents": [
+          "tutorial_started",
+          "step_completed",
+          "tutorial_completed"
+        ],
+        "customMetrics": [
+          {
+            "name": "lightning_observation_time",
+            "type": "timer",
+            "description": "Time spent observing lightning visualization"
+          }
+        ]
+      }
+    }
+  ]
+}

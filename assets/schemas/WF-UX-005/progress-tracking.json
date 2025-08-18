@@ -1,0 +1,712 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "WF-UX-005 Progress Tracking Schema",
+  "description": "Schema for tracking user progress through WIRTHFORGE onboarding and tutorial system",
+  "type": "object",
+  "properties": {
+    "userId": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9_-]+$",
+      "description": "Unique identifier for the user (local or anonymous)",
+      "examples": ["local_user", "user_12345", "anonymous_abc123"]
+    },
+    "profileVersion": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Version of the progress tracking schema",
+      "examples": ["1.0.0"]
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Timestamp when progress tracking started"
+    },
+    "lastUpdated": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Timestamp of last progress update"
+    },
+    "userProfile": {
+      "type": "object",
+      "properties": {
+        "currentLevel": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5,
+          "description": "Current WIRTHFORGE progression level"
+        },
+        "experiencePoints": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Total experience points earned"
+        },
+        "performanceTier": {
+          "type": "string",
+          "enum": ["low", "mid", "high"],
+          "description": "Hardware performance tier"
+        },
+        "preferences": {
+          "type": "object",
+          "properties": {
+            "tutorialPacing": {
+              "type": "string",
+              "enum": ["slow", "normal", "fast"],
+              "description": "Preferred tutorial pacing"
+            },
+            "visualComplexity": {
+              "type": "string",
+              "enum": ["minimal", "standard", "enhanced"],
+              "description": "Preferred visual complexity level"
+            },
+            "helpFrequency": {
+              "type": "string",
+              "enum": ["minimal", "normal", "frequent"],
+              "description": "Frequency of help prompts"
+            },
+            "accessibilityMode": {
+              "type": "boolean",
+              "description": "Accessibility features enabled"
+            },
+            "reducedMotion": {
+              "type": "boolean",
+              "description": "Reduced motion preference"
+            }
+          }
+        },
+        "achievements": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "achievementId": {
+                "type": "string",
+                "description": "Unique achievement identifier"
+              },
+              "name": {
+                "type": "string",
+                "description": "Achievement display name"
+              },
+              "earnedAt": {
+                "type": "string",
+                "format": "date-time",
+                "description": "Timestamp when achievement was earned"
+              },
+              "category": {
+                "type": "string",
+                "enum": ["tutorial", "exploration", "mastery", "community", "special"],
+                "description": "Achievement category"
+              }
+            },
+            "required": ["achievementId", "name", "earnedAt"]
+          }
+        }
+      },
+      "required": ["currentLevel", "experiencePoints", "performanceTier"]
+    },
+    "tutorialProgress": {
+      "type": "object",
+      "patternProperties": {
+        "^[a-z0-9_]+$": {
+          "type": "object",
+          "properties": {
+            "tutorialId": {
+              "type": "string",
+              "description": "Tutorial identifier"
+            },
+            "status": {
+              "type": "string",
+              "enum": ["not_started", "in_progress", "completed", "skipped", "abandoned"],
+              "description": "Current tutorial status"
+            },
+            "startedAt": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Timestamp when tutorial was started"
+            },
+            "completedAt": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Timestamp when tutorial was completed"
+            },
+            "lastAccessedAt": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Timestamp of last access"
+            },
+            "totalTimeSpent": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Total time spent in tutorial (seconds)"
+            },
+            "completionPercentage": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100,
+              "description": "Percentage of tutorial completed"
+            },
+            "stepsCompleted": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "List of completed step IDs"
+            },
+            "currentStep": {
+              "type": "string",
+              "description": "Current step ID if in progress"
+            },
+            "stepProgress": {
+              "type": "object",
+              "patternProperties": {
+                "^[a-z0-9_]+$": {
+                  "type": "object",
+                  "properties": {
+                    "stepId": {
+                      "type": "string",
+                      "description": "Step identifier"
+                    },
+                    "status": {
+                      "type": "string",
+                      "enum": ["not_started", "in_progress", "completed", "skipped", "failed"],
+                      "description": "Step completion status"
+                    },
+                    "startedAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "description": "Step start timestamp"
+                    },
+                    "completedAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "description": "Step completion timestamp"
+                    },
+                    "timeSpent": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "description": "Time spent on step (seconds)"
+                    },
+                    "attempts": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "description": "Number of attempts made"
+                    },
+                    "hintsUsed": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "description": "Number of hints requested"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "timestamp": {
+                            "type": "string",
+                            "format": "date-time"
+                          },
+                          "errorType": {
+                            "type": "string",
+                            "enum": ["validation_failed", "timeout", "system_error", "user_error"]
+                          },
+                          "errorMessage": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "required": ["stepId", "status"]
+                }
+              }
+            },
+            "knowledgeChecks": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "checkId": {
+                    "type": "string",
+                    "description": "Knowledge check identifier"
+                  },
+                  "question": {
+                    "type": "string",
+                    "description": "Question asked"
+                  },
+                  "userAnswer": {
+                    "type": "string",
+                    "description": "User's answer"
+                  },
+                  "correctAnswer": {
+                    "type": "string",
+                    "description": "Correct answer"
+                  },
+                  "isCorrect": {
+                    "type": "boolean",
+                    "description": "Whether answer was correct"
+                  },
+                  "timestamp": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "When check was performed"
+                  }
+                },
+                "required": ["checkId", "question", "userAnswer", "isCorrect", "timestamp"]
+              }
+            },
+            "feedback": {
+              "type": "object",
+              "properties": {
+                "rating": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 10,
+                  "description": "User rating of tutorial (1-10)"
+                },
+                "comments": {
+                  "type": "string",
+                  "maxLength": 1000,
+                  "description": "User feedback comments"
+                },
+                "difficulty": {
+                  "type": "string",
+                  "enum": ["too_easy", "just_right", "too_hard"],
+                  "description": "Perceived difficulty level"
+                },
+                "pacing": {
+                  "type": "string",
+                  "enum": ["too_slow", "just_right", "too_fast"],
+                  "description": "Perceived pacing"
+                },
+                "submittedAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "description": "Feedback submission timestamp"
+                }
+              }
+            }
+          },
+          "required": ["tutorialId", "status"]
+        }
+      }
+    },
+    "learningMetrics": {
+      "type": "object",
+      "properties": {
+        "totalTutorialsStarted": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Total number of tutorials started"
+        },
+        "totalTutorialsCompleted": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Total number of tutorials completed"
+        },
+        "completionRate": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Overall tutorial completion rate"
+        },
+        "averageCompletionTime": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Average tutorial completion time (seconds)"
+        },
+        "helpRequestFrequency": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Average help requests per tutorial"
+        },
+        "knowledgeRetentionScore": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Knowledge retention percentage"
+        },
+        "skillDemonstrationScore": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Skill demonstration success rate"
+        },
+        "engagementScore": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Overall engagement score"
+        },
+        "dropOffPoints": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "tutorialId": {
+                "type": "string",
+                "description": "Tutorial where drop-off occurred"
+              },
+              "stepId": {
+                "type": "string",
+                "description": "Step where user dropped off"
+              },
+              "timestamp": {
+                "type": "string",
+                "format": "date-time",
+                "description": "When drop-off occurred"
+              },
+              "reason": {
+                "type": "string",
+                "enum": ["timeout", "user_exit", "error", "skip", "unknown"],
+                "description": "Reason for drop-off"
+              }
+            },
+            "required": ["tutorialId", "stepId", "timestamp"]
+          }
+        }
+      }
+    },
+    "featureUsage": {
+      "type": "object",
+      "properties": {
+        "postTutorialUsage": {
+          "type": "object",
+          "patternProperties": {
+            "^[a-z0-9_]+$": {
+              "type": "object",
+              "properties": {
+                "featureId": {
+                  "type": "string",
+                  "description": "Feature identifier"
+                },
+                "firstUsed": {
+                  "type": "string",
+                  "format": "date-time",
+                  "description": "First use after tutorial"
+                },
+                "usageCount": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "description": "Number of times used"
+                },
+                "lastUsed": {
+                  "type": "string",
+                  "format": "date-time",
+                  "description": "Most recent usage"
+                },
+                "proficiencyLevel": {
+                  "type": "string",
+                  "enum": ["novice", "intermediate", "advanced", "expert"],
+                  "description": "Estimated proficiency level"
+                }
+              },
+              "required": ["featureId", "usageCount"]
+            }
+          }
+        },
+        "helpSystemUsage": {
+          "type": "object",
+          "properties": {
+            "totalHelpRequests": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Total help requests made"
+            },
+            "helpTopicsAccessed": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "topicId": {
+                    "type": "string",
+                    "description": "Help topic identifier"
+                  },
+                  "accessCount": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "description": "Number of times accessed"
+                  },
+                  "lastAccessed": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Last access timestamp"
+                  }
+                }
+              }
+            },
+            "videoTutorialsWatched": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "videoId": {
+                    "type": "string",
+                    "description": "Video tutorial identifier"
+                  },
+                  "watchTime": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "description": "Total watch time (seconds)"
+                  },
+                  "completionPercentage": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 100,
+                    "description": "Percentage of video watched"
+                  },
+                  "lastWatched": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Last watch timestamp"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "analyticsData": {
+      "type": "object",
+      "properties": {
+        "sessionData": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "sessionId": {
+                "type": "string",
+                "description": "Unique session identifier"
+              },
+              "startTime": {
+                "type": "string",
+                "format": "date-time",
+                "description": "Session start time"
+              },
+              "endTime": {
+                "type": "string",
+                "format": "date-time",
+                "description": "Session end time"
+              },
+              "duration": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "Session duration (seconds)"
+              },
+              "tutorialsAccessed": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Tutorials accessed during session"
+              },
+              "eventsLogged": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "Number of events logged"
+              }
+            },
+            "required": ["sessionId", "startTime", "duration"]
+          }
+        },
+        "abTestAssignments": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "testId": {
+                "type": "string",
+                "description": "A/B test identifier"
+              },
+              "variant": {
+                "type": "string",
+                "description": "Assigned variant"
+              },
+              "assignedAt": {
+                "type": "string",
+                "format": "date-time",
+                "description": "Assignment timestamp"
+              },
+              "completed": {
+                "type": "boolean",
+                "description": "Whether test was completed"
+              }
+            },
+            "required": ["testId", "variant", "assignedAt"]
+          }
+        },
+        "customEvents": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "eventName": {
+                "type": "string",
+                "description": "Custom event name"
+              },
+              "timestamp": {
+                "type": "string",
+                "format": "date-time",
+                "description": "Event timestamp"
+              },
+              "properties": {
+                "type": "object",
+                "description": "Event properties"
+              }
+            },
+            "required": ["eventName", "timestamp"]
+          }
+        }
+      }
+    }
+  },
+  "required": ["userId", "profileVersion", "createdAt", "userProfile", "tutorialProgress", "learningMetrics"],
+  "additionalProperties": false,
+  "examples": [
+    {
+      "userId": "local_user_001",
+      "profileVersion": "1.0.0",
+      "createdAt": "2025-08-18T14:00:00Z",
+      "lastUpdated": "2025-08-18T14:15:30Z",
+      "userProfile": {
+        "currentLevel": 2,
+        "experiencePoints": 250,
+        "performanceTier": "mid",
+        "preferences": {
+          "tutorialPacing": "normal",
+          "visualComplexity": "standard",
+          "helpFrequency": "normal",
+          "accessibilityMode": false,
+          "reducedMotion": false
+        },
+        "achievements": [
+          {
+            "achievementId": "lightning_striker",
+            "name": "Lightning Striker",
+            "earnedAt": "2025-08-18T14:05:00Z",
+            "category": "tutorial"
+          },
+          {
+            "achievementId": "council_member",
+            "name": "Council Member",
+            "earnedAt": "2025-08-18T14:15:00Z",
+            "category": "tutorial"
+          }
+        ]
+      },
+      "tutorialProgress": {
+        "level1_intro": {
+          "tutorialId": "level1_intro",
+          "status": "completed",
+          "startedAt": "2025-08-18T14:00:30Z",
+          "completedAt": "2025-08-18T14:05:00Z",
+          "lastAccessedAt": "2025-08-18T14:05:00Z",
+          "totalTimeSpent": 270,
+          "completionPercentage": 100,
+          "stepsCompleted": ["welcome", "first_prompt", "observe_lightning", "adjust_settings"],
+          "stepProgress": {
+            "first_prompt": {
+              "stepId": "first_prompt",
+              "status": "completed",
+              "startedAt": "2025-08-18T14:01:00Z",
+              "completedAt": "2025-08-18T14:02:30Z",
+              "timeSpent": 90,
+              "attempts": 1,
+              "hintsUsed": 0,
+              "errors": []
+            }
+          },
+          "knowledgeChecks": [
+            {
+              "checkId": "lightning_understanding",
+              "question": "What does the lightning visualization represent?",
+              "userAnswer": "AI thinking in real-time",
+              "correctAnswer": "Real-time AI processing and response generation",
+              "isCorrect": true,
+              "timestamp": "2025-08-18T14:04:30Z"
+            }
+          ],
+          "feedback": {
+            "rating": 9,
+            "comments": "Great introduction, very intuitive!",
+            "difficulty": "just_right",
+            "pacing": "just_right",
+            "submittedAt": "2025-08-18T14:05:30Z"
+          }
+        },
+        "level2_intro": {
+          "tutorialId": "level2_intro",
+          "status": "in_progress",
+          "startedAt": "2025-08-18T14:06:00Z",
+          "lastAccessedAt": "2025-08-18T14:15:30Z",
+          "totalTimeSpent": 570,
+          "completionPercentage": 60,
+          "stepsCompleted": ["multi_model_intro", "second_model_setup"],
+          "currentStep": "interference_demo"
+        }
+      },
+      "learningMetrics": {
+        "totalTutorialsStarted": 2,
+        "totalTutorialsCompleted": 1,
+        "completionRate": 0.5,
+        "averageCompletionTime": 270,
+        "helpRequestFrequency": 0.5,
+        "knowledgeRetentionScore": 85,
+        "skillDemonstrationScore": 90,
+        "engagementScore": 88,
+        "dropOffPoints": []
+      },
+      "featureUsage": {
+        "postTutorialUsage": {
+          "prompt_input": {
+            "featureId": "prompt_input",
+            "firstUsed": "2025-08-18T14:05:30Z",
+            "usageCount": 5,
+            "lastUsed": "2025-08-18T14:15:00Z",
+            "proficiencyLevel": "intermediate"
+          }
+        },
+        "helpSystemUsage": {
+          "totalHelpRequests": 1,
+          "helpTopicsAccessed": [
+            {
+              "topicId": "lightning_explanation",
+              "accessCount": 1,
+              "lastAccessed": "2025-08-18T14:03:00Z"
+            }
+          ],
+          "videoTutorialsWatched": []
+        }
+      },
+      "analyticsData": {
+        "sessionData": [
+          {
+            "sessionId": "session_001",
+            "startTime": "2025-08-18T14:00:00Z",
+            "endTime": "2025-08-18T14:15:30Z",
+            "duration": 930,
+            "tutorialsAccessed": ["level1_intro", "level2_intro"],
+            "eventsLogged": 15
+          }
+        ],
+        "abTestAssignments": [
+          {
+            "testId": "onboarding_flow_v2",
+            "variant": "variant_a",
+            "assignedAt": "2025-08-18T14:00:00Z",
+            "completed": false
+          }
+        ],
+        "customEvents": [
+          {
+            "eventName": "lightning_visual_attention",
+            "timestamp": "2025-08-18T14:02:45Z",
+            "properties": {
+              "duration": 5000,
+              "interaction": "observed"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

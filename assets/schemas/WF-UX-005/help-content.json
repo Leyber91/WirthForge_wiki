@@ -1,0 +1,242 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "WF-UX-005 Help Content Schema",
+  "description": "Schema for defining contextual help, tooltips, FAQs, and educational content in WIRTHFORGE",
+  "type": "object",
+  "properties": {
+    "contentId": {
+      "type": "string",
+      "pattern": "^[a-z0-9_]+$",
+      "description": "Unique identifier for the help content collection"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Semantic version of help content"
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "language": {
+          "type": "string",
+          "pattern": "^[a-z]{2}(-[A-Z]{2})?$"
+        },
+        "lastUpdated": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "offlineAvailable": { "type": "boolean" }
+      },
+      "required": ["title", "language", "offlineAvailable"]
+    },
+    "contextualHelp": {
+      "type": "object",
+      "properties": {
+        "tooltips": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string" },
+              "trigger": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": ["hover", "click", "focus", "delay", "condition"]
+                  },
+                  "target": { "type": "string" },
+                  "delay": { "type": "integer", "minimum": 0 }
+                }
+              },
+              "content": {
+                "type": "object",
+                "properties": {
+                  "title": { "type": "string", "maxLength": 100 },
+                  "text": { "type": "string", "maxLength": 300 },
+                  "icon": { "type": "string" }
+                }
+              },
+              "display": {
+                "type": "object",
+                "properties": {
+                  "position": {
+                    "type": "string",
+                    "enum": ["top", "bottom", "left", "right", "auto"]
+                  },
+                  "theme": {
+                    "type": "string",
+                    "enum": ["light", "dark", "system", "energy"]
+                  }
+                }
+              }
+            },
+            "required": ["id", "trigger", "content"]
+          }
+        }
+      }
+    },
+    "faqContent": {
+      "type": "object",
+      "properties": {
+        "categories": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "categoryId": { "type": "string" },
+              "name": { "type": "string" },
+              "description": { "type": "string" },
+              "order": { "type": "integer" }
+            }
+          }
+        },
+        "questions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "questionId": { "type": "string" },
+              "categoryId": { "type": "string" },
+              "question": { "type": "string" },
+              "answer": { "type": "string" },
+              "keywords": {
+                "type": "array",
+                "items": { "type": "string" }
+              },
+              "difficulty": {
+                "type": "string",
+                "enum": ["basic", "intermediate", "advanced"]
+              }
+            },
+            "required": ["questionId", "categoryId", "question", "answer"]
+          }
+        }
+      }
+    },
+    "videoTutorials": {
+      "type": "object",
+      "properties": {
+        "tutorials": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "videoId": { "type": "string" },
+              "title": { "type": "string" },
+              "description": { "type": "string" },
+              "duration": { "type": "integer", "minimum": 1 },
+              "level": { "type": "integer", "minimum": 1, "maximum": 5 },
+              "sources": {
+                "type": "object",
+                "properties": {
+                  "local": { "type": "string" },
+                  "online": { "type": "string" },
+                  "generated": {
+                    "type": "object",
+                    "properties": {
+                      "prompt": { "type": "string" },
+                      "service": {
+                        "type": "string",
+                        "enum": ["sora", "runway", "custom"]
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "required": ["videoId", "title", "duration", "level"]
+          }
+        }
+      }
+    },
+    "troubleshooting": {
+      "type": "object",
+      "properties": {
+        "commonIssues": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "issueId": { "type": "string" },
+              "title": { "type": "string" },
+              "symptoms": {
+                "type": "array",
+                "items": { "type": "string" }
+              },
+              "solutions": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "title": { "type": "string" },
+                    "steps": {
+                      "type": "array",
+                      "items": { "type": "string" }
+                    },
+                    "difficulty": {
+                      "type": "string",
+                      "enum": ["easy", "medium", "hard"]
+                    }
+                  }
+                }
+              }
+            },
+            "required": ["issueId", "title", "symptoms", "solutions"]
+          }
+        }
+      }
+    }
+  },
+  "required": ["contentId", "version", "metadata"],
+  "examples": [
+    {
+      "contentId": "wirthforge_help_v1",
+      "version": "1.0.0",
+      "metadata": {
+        "title": "WIRTHFORGE Help System",
+        "language": "en-US",
+        "offlineAvailable": true
+      },
+      "contextualHelp": {
+        "tooltips": [
+          {
+            "id": "energy_meter_help",
+            "trigger": {
+              "type": "hover",
+              "target": "#energy-meter",
+              "delay": 1000
+            },
+            "content": {
+              "title": "Energy Meter",
+              "text": "Shows real-time AI processing intensity",
+              "icon": "⚡"
+            }
+          }
+        ]
+      },
+      "faqContent": {
+        "categories": [
+          {
+            "categoryId": "getting_started",
+            "name": "Getting Started",
+            "description": "Basic WIRTHFORGE questions",
+            "order": 1
+          }
+        ],
+        "questions": [
+          {
+            "questionId": "what_is_lightning",
+            "categoryId": "getting_started",
+            "question": "What does lightning represent?",
+            "answer": "Lightning shows AI thinking in real-time",
+            "keywords": ["lightning", "visualization", "AI"],
+            "difficulty": "basic"
+          }
+        ]
+      }
+    }
+  ]
+}
