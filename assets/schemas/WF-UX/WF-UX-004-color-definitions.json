@@ -1,0 +1,350 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "WIRTHFORGE Accessible Color Definitions",
+  "description": "Schema defining accessible color tokens, contrast requirements, and color vision adaptations",
+  "type": "object",
+  "properties": {
+    "colorTokens": {
+      "type": "object",
+      "description": "Base color tokens with accessibility metadata",
+      "patternProperties": {
+        "^[a-zA-Z0-9_.-]+$": {
+          "type": "object",
+          "properties": {
+            "hex": { "type": "string", "pattern": "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$" },
+            "rgb": {
+              "type": "object",
+              "properties": {
+                "r": { "type": "integer", "minimum": 0, "maximum": 255 },
+                "g": { "type": "integer", "minimum": 0, "maximum": 255 },
+                "b": { "type": "integer", "minimum": 0, "maximum": 255 }
+              },
+              "required": ["r", "g", "b"]
+            },
+            "hsl": {
+              "type": "object",
+              "properties": {
+                "h": { "type": "number", "minimum": 0, "maximum": 360 },
+                "s": { "type": "number", "minimum": 0, "maximum": 100 },
+                "l": { "type": "number", "minimum": 0, "maximum": 100 }
+              },
+              "required": ["h", "s", "l"]
+            },
+            "role": { 
+              "type": "string", 
+              "enum": [
+                "text-primary",
+                "text-secondary", 
+                "text-inverse",
+                "background-primary",
+                "background-secondary",
+                "background-overlay",
+                "accent-primary",
+                "accent-secondary",
+                "energy-lightning",
+                "energy-particle",
+                "energy-wave-constructive",
+                "energy-wave-destructive",
+                "energy-resonance",
+                "status-success",
+                "status-warning",
+                "status-error",
+                "status-info",
+                "border-primary",
+                "border-secondary",
+                "focus-indicator"
+              ]
+            },
+            "usage": { "type": "string", "description": "Intended usage context" },
+            "contrastRequirements": {
+              "type": "object",
+              "properties": {
+                "minRatio": { "type": "number", "minimum": 1.0, "maximum": 21.0 },
+                "wcagLevel": { "type": "string", "enum": ["AA", "AAA"] },
+                "textSize": { "type": "string", "enum": ["normal", "large"] },
+                "validBackgrounds": { "type": "array", "items": { "type": "string" } }
+              },
+              "required": ["minRatio", "wcagLevel", "textSize"]
+            },
+            "accessibility": {
+              "type": "object",
+              "properties": {
+                "colorBlindSafe": { "type": "boolean", "default": false },
+                "highContrastAlternative": { "type": "string", "pattern": "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$" },
+                "semanticMeaning": { "type": "string", "description": "Non-color indicator of meaning" }
+              }
+            }
+          },
+          "required": ["hex", "rgb", "hsl", "role", "contrastRequirements", "accessibility"]
+        }
+      }
+    },
+    "colorVisionProfiles": {
+      "type": "object",
+      "description": "Color adaptations for different types of color vision",
+      "properties": {
+        "deuteranopia": {
+          "type": "object",
+          "description": "Red-green color blindness (most common)",
+          "properties": {
+            "transformMatrix": {
+              "type": "array",
+              "items": {
+                "type": "array",
+                "items": { "type": "number" },
+                "minItems": 3,
+                "maxItems": 3
+              },
+              "minItems": 3,
+              "maxItems": 3
+            },
+            "alternativePalette": {
+              "type": "object",
+              "patternProperties": {
+                "^[a-zA-Z0-9_.-]+$": { "type": "string", "pattern": "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$" }
+              }
+            },
+            "testPatterns": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "original": { "type": "string", "pattern": "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$" },
+                  "simulated": { "type": "string", "pattern": "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$" },
+                  "alternative": { "type": "string", "pattern": "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$" }
+                },
+                "required": ["original", "simulated", "alternative"]
+              }
+            }
+          },
+          "required": ["transformMatrix", "alternativePalette"]
+        },
+        "protanopia": {
+          "type": "object",
+          "description": "Red color blindness",
+          "properties": {
+            "transformMatrix": {
+              "type": "array",
+              "items": {
+                "type": "array",
+                "items": { "type": "number" },
+                "minItems": 3,
+                "maxItems": 3
+              },
+              "minItems": 3,
+              "maxItems": 3
+            },
+            "alternativePalette": {
+              "type": "object",
+              "patternProperties": {
+                "^[a-zA-Z0-9_.-]+$": { "type": "string", "pattern": "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$" }
+              }
+            }
+          },
+          "required": ["transformMatrix", "alternativePalette"]
+        },
+        "tritanopia": {
+          "type": "object",
+          "description": "Blue-yellow color blindness",
+          "properties": {
+            "transformMatrix": {
+              "type": "array",
+              "items": {
+                "type": "array",
+                "items": { "type": "number" },
+                "minItems": 3,
+                "maxItems": 3
+              },
+              "minItems": 3,
+              "maxItems": 3
+            },
+            "alternativePalette": {
+              "type": "object",
+              "patternProperties": {
+                "^[a-zA-Z0-9_.-]+$": { "type": "string", "pattern": "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$" }
+              }
+            }
+          },
+          "required": ["transformMatrix", "alternativePalette"]
+        },
+        "achromatopsia": {
+          "type": "object",
+          "description": "Complete color blindness (monochrome)",
+          "properties": {
+            "grayscalePalette": {
+              "type": "object",
+              "patternProperties": {
+                "^[a-zA-Z0-9_.-]+$": { "type": "string", "pattern": "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$" }
+              }
+            },
+            "patternAlternatives": {
+              "type": "object",
+              "description": "Pattern-based alternatives for color coding",
+              "patternProperties": {
+                "^[a-zA-Z0-9_.-]+$": {
+                  "type": "object",
+                  "properties": {
+                    "pattern": { "type": "string", "enum": ["solid", "dots", "stripes", "crosshatch", "diagonal"] },
+                    "density": { "type": "string", "enum": ["light", "medium", "heavy"] },
+                    "direction": { "type": "string", "enum": ["horizontal", "vertical", "diagonal-left", "diagonal-right"] }
+                  },
+                  "required": ["pattern"]
+                }
+              }
+            }
+          },
+          "required": ["grayscalePalette", "patternAlternatives"]
+        }
+      },
+      "required": ["deuteranopia", "protanopia", "tritanopia", "achromatopsia"]
+    },
+    "contrastValidation": {
+      "type": "object",
+      "description": "Contrast validation rules and thresholds",
+      "properties": {
+        "wcagAA": {
+          "type": "object",
+          "properties": {
+            "normalText": { "type": "number", "minimum": 4.5, "default": 4.5 },
+            "largeText": { "type": "number", "minimum": 3.0, "default": 3.0 },
+            "uiComponents": { "type": "number", "minimum": 3.0, "default": 3.0 },
+            "graphicalObjects": { "type": "number", "minimum": 3.0, "default": 3.0 }
+          },
+          "required": ["normalText", "largeText", "uiComponents", "graphicalObjects"]
+        },
+        "wcagAAA": {
+          "type": "object",
+          "properties": {
+            "normalText": { "type": "number", "minimum": 7.0, "default": 7.0 },
+            "largeText": { "type": "number", "minimum": 4.5, "default": 4.5 }
+          },
+          "required": ["normalText", "largeText"]
+        },
+        "customThresholds": {
+          "type": "object",
+          "properties": {
+            "energyVisualization": { "type": "number", "minimum": 3.0, "default": 4.5 },
+            "focusIndicators": { "type": "number", "minimum": 3.0, "default": 4.5 },
+            "statusIndicators": { "type": "number", "minimum": 4.5, "default": 7.0 }
+          }
+        }
+      },
+      "required": ["wcagAA", "wcagAAA"]
+    },
+    "highContrastMode": {
+      "type": "object",
+      "description": "High contrast mode specifications",
+      "properties": {
+        "enabled": { "type": "boolean", "default": false },
+        "respectSystemPreference": { "type": "boolean", "default": true },
+        "contrastRatio": { "type": "number", "minimum": 7.0, "default": 14.0 },
+        "colorPalette": {
+          "type": "object",
+          "properties": {
+            "background": { "type": "string", "default": "#000000" },
+            "foreground": { "type": "string", "default": "#FFFFFF" },
+            "accent": { "type": "string", "default": "#FFFF00" },
+            "success": { "type": "string", "default": "#00FF00" },
+            "warning": { "type": "string", "default": "#FFFF00" },
+            "error": { "type": "string", "default": "#FF0000" },
+            "info": { "type": "string", "default": "#00FFFF" }
+          },
+          "required": ["background", "foreground", "accent", "success", "warning", "error", "info"]
+        },
+        "borderEnhancement": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean", "default": true },
+            "width": { "type": "string", "default": "2px" },
+            "style": { "type": "string", "enum": ["solid", "dashed", "dotted"], "default": "solid" }
+          }
+        }
+      },
+      "required": ["enabled", "respectSystemPreference", "contrastRatio", "colorPalette"]
+    },
+    "energyVisualizationColors": {
+      "type": "object",
+      "description": "Specific color definitions for energy visualization effects",
+      "properties": {
+        "lightning": {
+          "type": "object",
+          "properties": {
+            "primary": { "type": "string", "default": "#4A90E2" },
+            "secondary": { "type": "string", "default": "#7ED321" },
+            "intensity": { "type": "string", "default": "#FFFFFF" },
+            "fade": { "type": "string", "default": "#1A4A7A" },
+            "highContrast": { "type": "string", "default": "#FFFF00" },
+            "reducedMotion": { "type": "string", "default": "#4A90E2" }
+          },
+          "required": ["primary", "secondary", "intensity", "fade", "highContrast", "reducedMotion"]
+        },
+        "particles": {
+          "type": "object",
+          "properties": {
+            "model1": { "type": "string", "default": "#4A90E2" },
+            "model2": { "type": "string", "default": "#7ED321" },
+            "model3": { "type": "string", "default": "#F5A623" },
+            "model4": { "type": "string", "default": "#D0021B" },
+            "collaboration": { "type": "string", "default": "#9013FE" },
+            "highContrast": { "type": "array", "items": { "type": "string" }, "default": ["#FFFFFF", "#FFFF00", "#00FFFF", "#FF00FF"] }
+          },
+          "required": ["model1", "model2", "model3", "model4", "collaboration", "highContrast"]
+        },
+        "waves": {
+          "type": "object",
+          "properties": {
+            "constructive": { "type": "string", "default": "#00FF88" },
+            "destructive": { "type": "string", "default": "#FF4444" },
+            "neutral": { "type": "string", "default": "#4488FF" },
+            "interference": { "type": "string", "default": "#FFFFFF" },
+            "highContrast": {
+              "type": "object",
+              "properties": {
+                "constructive": { "type": "string", "default": "#00FF00" },
+                "destructive": { "type": "string", "default": "#FF0000" },
+                "neutral": { "type": "string", "default": "#FFFFFF" }
+              },
+              "required": ["constructive", "destructive", "neutral"]
+            }
+          },
+          "required": ["constructive", "destructive", "neutral", "interference", "highContrast"]
+        },
+        "resonance": {
+          "type": "object",
+          "properties": {
+            "spectrum": {
+              "type": "array",
+              "items": { "type": "string" },
+              "default": ["#4A90E2", "#7ED321", "#F5A623", "#D0021B", "#9013FE", "#50E3C2", "#B8E986", "#F8E71C"]
+            },
+            "harmonic": { "type": "string", "default": "#FFFFFF" },
+            "field": { "type": "string", "default": "#9013FE" },
+            "highContrast": {
+              "type": "array",
+              "items": { "type": "string" },
+              "default": ["#FFFFFF", "#FFFF00", "#00FFFF", "#FF00FF"]
+            }
+          },
+          "required": ["spectrum", "harmonic", "field", "highContrast"]
+        }
+      },
+      "required": ["lightning", "particles", "waves", "resonance"]
+    },
+    "validationRules": {
+      "type": "array",
+      "description": "Automated validation rules for color accessibility",
+      "items": {
+        "type": "object",
+        "properties": {
+          "rule": { "type": "string", "description": "Rule identifier" },
+          "description": { "type": "string", "description": "Human-readable rule description" },
+          "severity": { "type": "string", "enum": ["error", "warning", "info"], "default": "error" },
+          "validator": { "type": "string", "description": "Validation function name" },
+          "parameters": { "type": "object", "description": "Rule-specific parameters" }
+        },
+        "required": ["rule", "description", "severity", "validator"]
+      }
+    }
+  },
+  "required": ["colorTokens", "colorVisionProfiles", "contrastValidation", "highContrastMode", "energyVisualizationColors", "validationRules"]
+}

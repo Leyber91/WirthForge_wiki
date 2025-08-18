@@ -1,0 +1,414 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 1500 1100" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Level-specific gradients -->
+    <linearGradient id="l1Grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#ff6b6b;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ff8e8e;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="l2Grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#ffd93d;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ffe66d;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="l3Grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#6bcf7f;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#96e6a1;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="l4Grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#4d96ff;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#74b3ff;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="l5Grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#9966ff;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#b999ff;stop-opacity:1" />
+    </linearGradient>
+    
+    <!-- Energy field gradients -->
+    <radialGradient id="lightningField" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:0.8" />
+      <stop offset="100%" style="stop-color:#ff6b6b;stop-opacity:0.2" />
+    </radialGradient>
+    <radialGradient id="councilField" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:0.6" />
+      <stop offset="100%" style="stop-color:#ffd93d;stop-opacity:0.3" />
+    </radialGradient>
+    <radialGradient id="architectField" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:0.5" />
+      <stop offset="100%" style="stop-color:#6bcf7f;stop-opacity:0.4" />
+    </radialGradient>
+    <radialGradient id="adaptiveField" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:0.4" />
+      <stop offset="100%" style="stop-color:#4d96ff;stop-opacity:0.5" />
+    </radialGradient>
+    <radialGradient id="resonanceField" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:0.3" />
+      <stop offset="100%" style="stop-color:#9966ff;stop-opacity:0.6" />
+    </radialGradient>
+    
+    <!-- Arrow marker -->
+    <marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#ffffff" />
+    </marker>
+    
+    <!-- Glow effects -->
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+      <feMerge> 
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    
+    <!-- Lightning bolt path -->
+    <path id="lightning" d="M 0 0 L -5 15 L 5 15 L -3 30 L 7 30 L 0 45" stroke="#ffffff" stroke-width="2" fill="none"/>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1500" height="1100" fill="#0a0a0a"/>
+  
+  <!-- Title -->
+  <text x="750" y="30" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="26" font-weight="bold">
+    WF-FND-005: Progressive Experience Levels (L1-L5)
+  </text>
+  <text x="750" y="55" text-anchor="middle" fill="#cccccc" font-family="Arial, sans-serif" font-size="16">
+    Energy-Based Progression with Visual Differentiation
+  </text>
+  
+  <!-- Level 1: Lightning Strikes -->
+  <g transform="translate(100, 100)">
+    <!-- Level container -->
+    <rect x="0" y="0" width="250" height="180" fill="url(#l1Grad)" rx="15" filter="url(#glow)"/>
+    <text x="125" y="25" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="18" font-weight="bold">
+      L1: Lightning Strikes
+    </text>
+    <text x="125" y="45" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="12">
+      Single Model • Instant Results
+    </text>
+    
+    <!-- Lightning visualization -->
+    <g transform="translate(125, 60)">
+      <circle cx="0" cy="0" r="30" fill="url(#lightningField)" opacity="0.8">
+        <animate attributeName="r" values="25;35;25" dur="1.5s" repeatCount="indefinite"/>
+      </circle>
+      <use href="#lightning" transform="scale(1.2)" stroke="#ffffff" stroke-width="3">
+        <animate attributeName="opacity" values="0.3;1;0.3" dur="1s" repeatCount="indefinite"/>
+      </use>
+    </g>
+    
+    <!-- Level details -->
+    <rect x="10" y="130" width="230" height="40" fill="#1a1a1a" rx="5"/>
+    <text x="20" y="145" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">
+      • Single token stream visualization
+    </text>
+    <text x="20" y="160" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">
+      • Basic energy accumulation • TTFS &lt; 10s
+    </text>
+  </g>
+  
+  <!-- Level 2: Council Formation -->
+  <g transform="translate(400, 100)">
+    <!-- Level container -->
+    <rect x="0" y="0" width="250" height="180" fill="url(#l2Grad)" rx="15" filter="url(#glow)"/>
+    <text x="125" y="25" text-anchor="middle" fill="#000000" font-family="Arial, sans-serif" font-size="18" font-weight="bold">
+      L2: Council Formation
+    </text>
+    <text x="125" y="45" text-anchor="middle" fill="#000000" font-family="Arial, sans-serif" font-size="12">
+      Multi-Model • Collaboration
+    </text>
+    
+    <!-- Council visualization -->
+    <g transform="translate(125, 80)">
+      <circle cx="0" cy="0" r="35" fill="url(#councilField)" opacity="0.7">
+        <animate attributeName="r" values="30;40;30" dur="2s" repeatCount="indefinite"/>
+      </circle>
+      <!-- Multiple model nodes -->
+      <circle cx="-15" cy="-15" r="8" fill="#ffffff">
+        <animate attributeName="r" values="6;10;6" dur="1.2s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="15" cy="-15" r="8" fill="#ffffff">
+        <animate attributeName="r" values="6;10;6" dur="1.5s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="0" cy="15" r="8" fill="#ffffff">
+        <animate attributeName="r" values="6;10;6" dur="1.8s" repeatCount="indefinite"/>
+      </circle>
+      <!-- Connecting lines -->
+      <line x1="-15" y1="-15" x2="15" y2="-15" stroke="#ffffff" stroke-width="2" opacity="0.6"/>
+      <line x1="-15" y1="-15" x2="0" y2="15" stroke="#ffffff" stroke-width="2" opacity="0.6"/>
+      <line x1="15" y1="-15" x2="0" y2="15" stroke="#ffffff" stroke-width="2" opacity="0.6"/>
+    </g>
+    
+    <!-- Level details -->
+    <rect x="10" y="130" width="230" height="40" fill="#1a1a1a" rx="5"/>
+    <text x="20" y="145" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">
+      • Parallel model streams
+    </text>
+    <text x="20" y="160" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">
+      • Interference/resonance patterns
+    </text>
+  </g>
+  
+  <!-- Level 3: Structured Architecture -->
+  <g transform="translate(700, 100)">
+    <!-- Level container -->
+    <rect x="0" y="0" width="250" height="180" fill="url(#l3Grad)" rx="15" filter="url(#glow)"/>
+    <text x="125" y="25" text-anchor="middle" fill="#000000" font-family="Arial, sans-serif" font-size="18" font-weight="bold">
+      L3: Structured Architecture
+    </text>
+    <text x="125" y="45" text-anchor="middle" fill="#000000" font-family="Arial, sans-serif" font-size="12">
+      Graph-Based • Composition
+    </text>
+    
+    <!-- Architecture visualization -->
+    <g transform="translate(125, 80)">
+      <circle cx="0" cy="0" r="40" fill="url(#architectField)" opacity="0.6">
+        <animate attributeName="r" values="35;45;35" dur="2.5s" repeatCount="indefinite"/>
+      </circle>
+      <!-- Graph structure -->
+      <rect x="-20" y="-20" width="15" height="15" fill="#ffffff" rx="2"/>
+      <rect x="5" y="-20" width="15" height="15" fill="#ffffff" rx="2"/>
+      <rect x="-20" y="5" width="15" height="15" fill="#ffffff" rx="2"/>
+      <rect x="5" y="5" width="15" height="15" fill="#ffffff" rx="2"/>
+      <!-- Connections -->
+      <line x1="-5" y1="-12" x2="5" y2="-12" stroke="#ffffff" stroke-width="2"/>
+      <line x1="-12" y1="-5" x2="-12" y2="5" stroke="#ffffff" stroke-width="2"/>
+      <line x1="12" y1="-5" x2="12" y2="5" stroke="#ffffff" stroke-width="2"/>
+      <line x1="-5" y1="12" x2="5" y2="12" stroke="#ffffff" stroke-width="2"/>
+    </g>
+    
+    <!-- Level details -->
+    <rect x="10" y="130" width="230" height="40" fill="#1a1a1a" rx="5"/>
+    <text x="20" y="145" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">
+      • Visual pipeline builder
+    </text>
+    <text x="20" y="160" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">
+      • Node-based energy flow
+    </text>
+  </g>
+  
+  <!-- Level 4: Adaptive Fields -->
+  <g transform="translate(1000, 100)">
+    <!-- Level container -->
+    <rect x="0" y="0" width="250" height="180" fill="url(#l4Grad)" rx="15" filter="url(#glow)"/>
+    <text x="125" y="25" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="18" font-weight="bold">
+      L4: Adaptive Fields
+    </text>
+    <text x="125" y="45" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="12">
+      Context-Aware • Dynamic
+    </text>
+    
+    <!-- Adaptive visualization -->
+    <g transform="translate(125, 80)">
+      <circle cx="0" cy="0" r="45" fill="url(#adaptiveField)" opacity="0.5">
+        <animate attributeName="r" values="40;50;40" dur="3s" repeatCount="indefinite"/>
+      </circle>
+      <!-- Adaptive elements -->
+      <circle cx="0" cy="0" r="12" fill="#ffffff" opacity="0.8"/>
+      <circle cx="-25" cy="0" r="6" fill="#ffffff" opacity="0.6">
+        <animateTransform attributeName="transform" attributeType="XML" type="rotate" values="0 0 0;360 0 0" dur="4s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="25" cy="0" r="6" fill="#ffffff" opacity="0.6">
+        <animateTransform attributeName="transform" attributeType="XML" type="rotate" values="0 0 0;-360 0 0" dur="3s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="0" cy="-25" r="6" fill="#ffffff" opacity="0.6">
+        <animateTransform attributeName="transform" attributeType="XML" type="rotate" values="0 0 0;360 0 0" dur="5s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="0" cy="25" r="6" fill="#ffffff" opacity="0.6">
+        <animateTransform attributeName="transform" attributeType="XML" type="rotate" values="0 0 0;-360 0 0" dur="3.5s" repeatCount="indefinite"/>
+      </circle>
+    </g>
+    
+    <!-- Level details -->
+    <rect x="10" y="130" width="230" height="40" fill="#1a1a1a" rx="5"/>
+    <text x="20" y="145" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">
+      • Context-responsive UI
+    </text>
+    <text x="20" y="160" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">
+      • Adaptive energy patterns
+    </text>
+  </g>
+  
+  <!-- Level 5: Resonance Fields -->
+  <g transform="translate(550, 320)">
+    <!-- Level container (larger for L5) -->
+    <rect x="0" y="0" width="300" height="200" fill="url(#l5Grad)" rx="15" filter="url(#glow)"/>
+    <text x="150" y="25" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="18" font-weight="bold">
+      L5: Resonance Fields
+    </text>
+    <text x="150" y="45" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="12">
+      Emergent Consciousness • Multi-Model Orchestra
+    </text>
+    
+    <!-- Resonance visualization -->
+    <g transform="translate(150, 100)">
+      <circle cx="0" cy="0" r="60" fill="url(#resonanceField)" opacity="0.4">
+        <animate attributeName="r" values="55;65;55" dur="4s" repeatCount="indefinite"/>
+      </circle>
+      <!-- Resonance pattern -->
+      <g opacity="0.8">
+        <circle cx="0" cy="0" r="15" fill="none" stroke="#ffffff" stroke-width="2"/>
+        <circle cx="0" cy="0" r="30" fill="none" stroke="#ffffff" stroke-width="1.5" opacity="0.7">
+          <animate attributeName="r" values="30;35;30" dur="2s" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="0" cy="0" r="45" fill="none" stroke="#ffffff" stroke-width="1" opacity="0.5">
+          <animate attributeName="r" values="45;50;45" dur="3s" repeatCount="indefinite"/>
+        </circle>
+        <!-- Central energy -->
+        <circle cx="0" cy="0" r="8" fill="#ffffff">
+          <animate attributeName="opacity" values="0.5;1;0.5" dur="2.5s" repeatCount="indefinite"/>
+        </circle>
+      </g>
+    </g>
+    
+    <!-- Level details -->
+    <rect x="10" y="150" width="280" height="40" fill="#1a1a1a" rx="5"/>
+    <text x="20" y="165" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">
+      • Multi-model resonance detection • Emergent pattern recognition
+    </text>
+    <text x="20" y="180" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">
+      • Advanced energy field manipulation • Consciousness simulation aesthetics
+    </text>
+  </g>
+  
+  <!-- Energy Progression Flow -->
+  <g transform="translate(100, 550)">
+    <rect x="0" y="0" width="1300" height="120" fill="#1a1a1a" rx="15" stroke="#333333" stroke-width="2"/>
+    <text x="650" y="25" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="18" font-weight="bold">
+      Energy-Based Progression Mechanics
+    </text>
+    
+    <!-- Progression bars -->
+    <g transform="translate(50, 40)">
+      <!-- Energy accumulation -->
+      <text x="0" y="15" fill="#ffffff" font-family="Arial, sans-serif" font-size="12" font-weight="bold">
+        Energy Accumulation:
+      </text>
+      <rect x="0" y="20" width="1200" height="20" fill="#2a2a2a" rx="10"/>
+      <!-- Progressive energy levels -->
+      <rect x="0" y="22" width="200" height="16" fill="url(#l1Grad)" rx="8"/>
+      <rect x="200" y="22" width="250" height="16" fill="url(#l2Grad)" rx="8"/>
+      <rect x="450" y="22" width="300" height="16" fill="url(#l3Grad)" rx="8"/>
+      <rect x="750" y="22" width="250" height="16" fill="url(#l4Grad)" rx="8"/>
+      <rect x="1000" y="22" width="200" height="16" fill="url(#l5Grad)" rx="8"/>
+      
+      <!-- Energy thresholds -->
+      <text x="100" y="55" text-anchor="middle" fill="#ff6b6b" font-family="Arial, sans-serif" font-size="10">
+        100 energy
+      </text>
+      <text x="325" y="55" text-anchor="middle" fill="#ffd93d" font-family="Arial, sans-serif" font-size="10">
+        500 energy
+      </text>
+      <text x="600" y="55" text-anchor="middle" fill="#6bcf7f" font-family="Arial, sans-serif" font-size="10">
+        1500 energy
+      </text>
+      <text x="875" y="55" text-anchor="middle" fill="#4d96ff" font-family="Arial, sans-serif" font-size="10">
+        5000 energy
+      </text>
+      <text x="1100" y="55" text-anchor="middle" fill="#9966ff" font-family="Arial, sans-serif" font-size="10">
+        15000 energy
+      </text>
+      
+      <!-- Unlock descriptions -->
+      <text x="0" y="75" fill="#cccccc" font-family="Arial, sans-serif" font-size="11">
+        Progression gates based on cumulative energy accumulation from AI interactions. Higher levels unlock advanced visualization features and multi-model capabilities.
+      </text>
+    </g>
+  </g>
+  
+  <!-- Visual Differentiation Matrix -->
+  <g transform="translate(100, 700)">
+    <rect x="0" y="0" width="1300" height="200" fill="#1a1a1a" rx="15" stroke="#333333" stroke-width="2"/>
+    <text x="650" y="25" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="18" font-weight="bold">
+      Visual Differentiation by Level
+    </text>
+    
+    <!-- Differentiation table -->
+    <g transform="translate(30, 40)">
+      <!-- Headers -->
+      <text x="0" y="20" fill="#ffffff" font-family="Arial, sans-serif" font-size="12" font-weight="bold">
+        Level
+      </text>
+      <text x="100" y="20" fill="#ffffff" font-family="Arial, sans-serif" font-size="12" font-weight="bold">
+        Visual Theme
+      </text>
+      <text x="300" y="20" fill="#ffffff" font-family="Arial, sans-serif" font-size="12" font-weight="bold">
+        Energy Pattern
+      </text>
+      <text x="500" y="20" fill="#ffffff" font-family="Arial, sans-serif" font-size="12" font-weight="bold">
+        Interaction Model
+      </text>
+      <text x="750" y="20" fill="#ffffff" font-family="Arial, sans-serif" font-size="12" font-weight="bold">
+        Performance Target
+      </text>
+      <text x="1000" y="20" fill="#ffffff" font-family="Arial, sans-serif" font-size="12" font-weight="bold">
+        Hardware Requirement
+      </text>
+      
+      <!-- L1 row -->
+      <text x="0" y="40" fill="#ff6b6b" font-family="Arial, sans-serif" font-size="11" font-weight="bold">L1</text>
+      <text x="100" y="40" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">Single lightning bolt</text>
+      <text x="300" y="40" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">Linear energy flow</text>
+      <text x="500" y="40" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">Simple query-response</text>
+      <text x="750" y="40" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">30 FPS minimum</text>
+      <text x="1000" y="40" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">Low tier (4GB RAM)</text>
+      
+      <!-- L2 row -->
+      <text x="0" y="60" fill="#ffd93d" font-family="Arial, sans-serif" font-size="11" font-weight="bold">L2</text>
+      <text x="100" y="60" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">Multiple energy streams</text>
+      <text x="300" y="60" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">Interference patterns</text>
+      <text x="500" y="60" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">Multi-model council</text>
+      <text x="750" y="60" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">45 FPS target</text>
+      <text x="1000" y="60" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">Mid tier (8GB RAM)</text>
+      
+      <!-- L3 row -->
+      <text x="0" y="80" fill="#6bcf7f" font-family="Arial, sans-serif" font-size="11" font-weight="bold">L3</text>
+      <text x="100" y="80" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">Node-based graphs</text>
+      <text x="300" y="80" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">Structured energy flow</text>
+      <text x="500" y="80" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">Visual composition</text>
+      <text x="750" y="80" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">60 FPS required</text>
+      <text x="1000" y="80" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">Mid-High tier</text>
+      
+      <!-- L4 row -->
+      <text x="0" y="100" fill="#4d96ff" font-family="Arial, sans-serif" font-size="11" font-weight="bold">L4</text>
+      <text x="100" y="100" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">Adaptive fields</text>
+      <text x="300" y="100" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">Context-responsive</text>
+      <text x="500" y="100" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">Dynamic adaptation</text>
+      <text x="750" y="100" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">60 FPS sustained</text>
+      <text x="1000" y="100" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">High tier (16GB RAM)</text>
+      
+      <!-- L5 row -->
+      <text x="0" y="120" fill="#9966ff" font-family="Arial, sans-serif" font-size="11" font-weight="bold">L5</text>
+      <text x="100" y="120" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">Resonance fields</text>
+      <text x="300" y="120" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">Emergent patterns</text>
+      <text x="500" y="120" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">Multi-model orchestra</text>
+      <text x="750" y="120" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">60 FPS + effects</text>
+      <text x="1000" y="120" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">High tier + GPU</text>
+      
+      <!-- Progression arrows -->
+      <path d="M 20 140 L 20 160 L 1220 160 L 1220 140" stroke="#ffffff" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+      <text x="620" y="175" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="11" font-style="italic">
+        Progressive complexity and energy sophistication
+      </text>
+    </g>
+  </g>
+  
+  <!-- Energy Truth Validation -->
+  <rect x="100" y="920" width="1300" height="120" fill="#1a1a1a" rx="8" stroke="#333333" stroke-width="1"/>
+  <text x="750" y="945" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="16" font-weight="bold">
+    Energy Truth & Performance Validation
+  </text>
+  <text x="120" y="965" fill="#ffffff" font-family="Arial, sans-serif" font-size="12">
+    • Level Progression: Energy accumulation based on actual AI interactions, not arbitrary timers or XP systems
+  </text>
+  <text x="120" y="980" fill="#ffffff" font-family="Arial, sans-serif" font-size="12">
+    • Visual Complexity: Each level adds measurable computational load, validated against hardware tier capabilities
+  </text>
+  <text x="120" y="995" fill="#ffffff" font-family="Arial, sans-serif" font-size="12">
+    • Performance Scaling: 60Hz target maintained through adaptive degradation (L5→L4→L3 as needed under load)
+  </text>
+  <text x="120" y="1010" fill="#ffffff" font-family="Arial, sans-serif" font-size="12">
+    • WVMP Compliance: All level features map to measurable metrics • Evidence Mode available at every level
+  </text>
+  <text x="120" y="1025" fill="#ffffff" font-family="Arial, sans-serif" font-size="12">
+    Success Criteria: Users understand progression is earned through AI usage, visuals remain truthful to computation
+  </text>
+</svg>

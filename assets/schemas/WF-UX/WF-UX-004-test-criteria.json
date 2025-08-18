@@ -1,0 +1,347 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "WIRTHFORGE Accessibility Test Criteria",
+  "description": "Schema defining acceptance criteria, test thresholds, and validation requirements for accessibility compliance",
+  "type": "object",
+  "properties": {
+    "complianceThresholds": {
+      "type": "object",
+      "description": "Minimum thresholds for accessibility compliance",
+      "properties": {
+        "wcagViolations": {
+          "type": "object",
+          "properties": {
+            "levelA": { "type": "integer", "minimum": 0, "default": 0 },
+            "levelAA": { "type": "integer", "minimum": 0, "default": 0 },
+            "levelAAA": { "type": "integer", "minimum": 0, "default": 0 }
+          },
+          "required": ["levelA", "levelAA", "levelAAA"]
+        },
+        "contrastRatios": {
+          "type": "object",
+          "properties": {
+            "normalText": { "type": "number", "minimum": 4.5, "default": 4.5 },
+            "largeText": { "type": "number", "minimum": 3.0, "default": 3.0 },
+            "uiComponents": { "type": "number", "minimum": 3.0, "default": 3.0 },
+            "focusIndicators": { "type": "number", "minimum": 3.0, "default": 4.5 },
+            "energyVisualization": { "type": "number", "minimum": 3.0, "default": 4.5 }
+          },
+          "required": ["normalText", "largeText", "uiComponents", "focusIndicators", "energyVisualization"]
+        },
+        "keyboardNavigation": {
+          "type": "object",
+          "properties": {
+            "coveragePercentage": { "type": "number", "minimum": 95, "maximum": 100, "default": 100 },
+            "maxTabStops": { "type": "integer", "minimum": 1, "default": 50 },
+            "focusTrapsRequired": { "type": "boolean", "default": true },
+            "skipLinksRequired": { "type": "boolean", "default": true }
+          },
+          "required": ["coveragePercentage", "maxTabStops", "focusTrapsRequired", "skipLinksRequired"]
+        },
+        "screenReaderCompatibility": {
+          "type": "object",
+          "properties": {
+            "nvdaCompatible": { "type": "boolean", "default": true },
+            "jawsCompatible": { "type": "boolean", "default": true },
+            "voiceOverCompatible": { "type": "boolean", "default": true },
+            "orcaCompatible": { "type": "boolean", "default": true },
+            "liveRegionSupport": { "type": "boolean", "default": true },
+            "ariaLabelSupport": { "type": "boolean", "default": true }
+          },
+          "required": ["nvdaCompatible", "jawsCompatible", "voiceOverCompatible", "orcaCompatible", "liveRegionSupport", "ariaLabelSupport"]
+        },
+        "performanceWithA11y": {
+          "type": "object",
+          "properties": {
+            "minFrameRate": { "type": "number", "minimum": 30, "default": 60 },
+            "maxFrameTime": { "type": "number", "minimum": 16.67, "default": 16.67 },
+            "memoryOverheadMax": { "type": "number", "minimum": 0, "default": 10 },
+            "loadTimeMax": { "type": "number", "minimum": 0, "default": 3000 }
+          },
+          "required": ["minFrameRate", "maxFrameTime", "memoryOverheadMax", "loadTimeMax"]
+        },
+        "motionSensitivity": {
+          "type": "object",
+          "properties": {
+            "maxFlashRate": { "type": "number", "minimum": 0, "maximum": 3, "default": 3 },
+            "reducedMotionSupport": { "type": "boolean", "default": true },
+            "staticAlternatives": { "type": "boolean", "default": true },
+            "userControlRequired": { "type": "boolean", "default": true }
+          },
+          "required": ["maxFlashRate", "reducedMotionSupport", "staticAlternatives", "userControlRequired"]
+        }
+      },
+      "required": ["wcagViolations", "contrastRatios", "keyboardNavigation", "screenReaderCompatibility", "performanceWithA11y", "motionSensitivity"]
+    },
+    "testCategories": {
+      "type": "array",
+      "description": "Categories of accessibility tests to be performed",
+      "items": {
+        "type": "object",
+        "properties": {
+          "category": { 
+            "type": "string", 
+            "enum": [
+              "automated-unit",
+              "automated-integration", 
+              "automated-e2e",
+              "manual-keyboard",
+              "manual-screen-reader",
+              "manual-voice-control",
+              "manual-switch-control",
+              "performance-a11y",
+              "user-acceptance",
+              "compliance-audit"
+            ]
+          },
+          "description": { "type": "string" },
+          "required": { "type": "boolean", "default": true },
+          "frequency": { "type": "string", "enum": ["every-commit", "daily", "weekly", "release"], "default": "every-commit" },
+          "tools": { "type": "array", "items": { "type": "string" } },
+          "passingCriteria": { "type": "string" },
+          "timeoutMinutes": { "type": "integer", "minimum": 1, "default": 30 }
+        },
+        "required": ["category", "description", "required", "passingCriteria"]
+      }
+    },
+    "automatedTestTools": {
+      "type": "object",
+      "description": "Configuration for automated accessibility testing tools",
+      "properties": {
+        "axeCore": {
+          "type": "object",
+          "properties": {
+            "version": { "type": "string", "default": "latest" },
+            "rules": {
+              "type": "object",
+              "properties": {
+                "enabled": { "type": "array", "items": { "type": "string" } },
+                "disabled": { "type": "array", "items": { "type": "string" } },
+                "tags": { "type": "array", "items": { "type": "string" }, "default": ["wcag2a", "wcag2aa"] }
+              }
+            },
+            "timeout": { "type": "integer", "minimum": 1000, "default": 30000 },
+            "retries": { "type": "integer", "minimum": 0, "default": 3 }
+          },
+          "required": ["version", "rules", "timeout"]
+        },
+        "jestAxe": {
+          "type": "object",
+          "properties": {
+            "globalConfig": { "type": "object" },
+            "componentConfig": { "type": "object" },
+            "customMatchers": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "lighthouse": {
+          "type": "object",
+          "properties": {
+            "categories": { "type": "array", "items": { "type": "string" }, "default": ["accessibility", "performance"] },
+            "minScore": { "type": "number", "minimum": 0, "maximum": 100, "default": 95 },
+            "device": { "type": "string", "enum": ["mobile", "desktop"], "default": "desktop" }
+          },
+          "required": ["categories", "minScore"]
+        },
+        "playwright": {
+          "type": "object",
+          "properties": {
+            "browsers": { "type": "array", "items": { "type": "string" }, "default": ["chromium", "firefox", "webkit"] },
+            "viewports": { "type": "array", "items": { "type": "object" } },
+            "timeout": { "type": "integer", "minimum": 1000, "default": 60000 }
+          }
+        }
+      },
+      "required": ["axeCore", "jestAxe", "lighthouse", "playwright"]
+    },
+    "manualTestProcedures": {
+      "type": "array",
+      "description": "Manual testing procedures and checklists",
+      "items": {
+        "type": "object",
+        "properties": {
+          "procedure": { "type": "string" },
+          "description": { "type": "string" },
+          "steps": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "step": { "type": "integer", "minimum": 1 },
+                "action": { "type": "string" },
+                "expectedResult": { "type": "string" },
+                "passCriteria": { "type": "string" },
+                "notes": { "type": "string" }
+              },
+              "required": ["step", "action", "expectedResult", "passCriteria"]
+            }
+          },
+          "assistiveTechnology": { "type": "array", "items": { "type": "string" } },
+          "estimatedTimeMinutes": { "type": "integer", "minimum": 1 },
+          "skillLevel": { "type": "string", "enum": ["beginner", "intermediate", "expert"], "default": "intermediate" }
+        },
+        "required": ["procedure", "description", "steps", "estimatedTimeMinutes"]
+      }
+    },
+    "userAcceptanceCriteria": {
+      "type": "object",
+      "description": "User acceptance testing criteria with disabled users",
+      "properties": {
+        "participantRequirements": {
+          "type": "object",
+          "properties": {
+            "minParticipants": { "type": "integer", "minimum": 3, "default": 5 },
+            "disabilityTypes": {
+              "type": "array",
+              "items": { 
+                "type": "string", 
+                "enum": [
+                  "visual-impairment",
+                  "hearing-impairment", 
+                  "motor-impairment",
+                  "cognitive-impairment",
+                  "multiple-disabilities"
+                ]
+              },
+              "minItems": 3
+            },
+            "assistiveTechExperience": { "type": "string", "enum": ["beginner", "intermediate", "expert"], "default": "intermediate" },
+            "platformExperience": { "type": "string", "enum": ["none", "basic", "intermediate", "advanced"], "default": "basic" }
+          },
+          "required": ["minParticipants", "disabilityTypes"]
+        },
+        "testScenarios": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "scenario": { "type": "string" },
+              "description": { "type": "string" },
+              "tasks": { "type": "array", "items": { "type": "string" } },
+              "successCriteria": { "type": "array", "items": { "type": "string" } },
+              "timeLimit": { "type": "integer", "minimum": 1 },
+              "assistanceAllowed": { "type": "boolean", "default": false }
+            },
+            "required": ["scenario", "description", "tasks", "successCriteria"]
+          }
+        },
+        "satisfactionMetrics": {
+          "type": "object",
+          "properties": {
+            "minSatisfactionScore": { "type": "number", "minimum": 1, "maximum": 10, "default": 7 },
+            "maxTaskFailureRate": { "type": "number", "minimum": 0, "maximum": 1, "default": 0.2 },
+            "maxAverageTaskTime": { "type": "integer", "minimum": 1, "default": 300 },
+            "minEfficiencyScore": { "type": "number", "minimum": 0, "maximum": 1, "default": 0.8 }
+          },
+          "required": ["minSatisfactionScore", "maxTaskFailureRate", "maxAverageTaskTime", "minEfficiencyScore"]
+        }
+      },
+      "required": ["participantRequirements", "testScenarios", "satisfactionMetrics"]
+    },
+    "reportingRequirements": {
+      "type": "object",
+      "description": "Requirements for accessibility test reporting",
+      "properties": {
+        "reportFormats": {
+          "type": "array",
+          "items": { "type": "string", "enum": ["json", "html", "pdf", "csv"] },
+          "default": ["json", "html"]
+        },
+        "includeScreenshots": { "type": "boolean", "default": true },
+        "includeVideoRecordings": { "type": "boolean", "default": false },
+        "detailLevel": { "type": "string", "enum": ["summary", "detailed", "verbose"], "default": "detailed" },
+        "retentionDays": { "type": "integer", "minimum": 30, "default": 365 },
+        "distributionList": { "type": "array", "items": { "type": "string" } },
+        "escalationThresholds": {
+          "type": "object",
+          "properties": {
+            "criticalViolations": { "type": "integer", "minimum": 0, "default": 0 },
+            "majorViolations": { "type": "integer", "minimum": 0, "default": 5 },
+            "performanceDegradation": { "type": "number", "minimum": 0, "maximum": 1, "default": 0.1 }
+          }
+        }
+      },
+      "required": ["reportFormats", "includeScreenshots", "detailLevel", "retentionDays"]
+    },
+    "continuousMonitoring": {
+      "type": "object",
+      "description": "Continuous accessibility monitoring configuration",
+      "properties": {
+        "realTimeMonitoring": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean", "default": true },
+            "samplingRate": { "type": "number", "minimum": 0, "maximum": 1, "default": 0.1 },
+            "alertThresholds": {
+              "type": "object",
+              "properties": {
+                "violationIncrease": { "type": "number", "minimum": 0, "default": 0.05 },
+                "performanceDecrease": { "type": "number", "minimum": 0, "default": 0.1 },
+                "userComplaintRate": { "type": "number", "minimum": 0, "default": 0.02 }
+              }
+            }
+          },
+          "required": ["enabled", "samplingRate", "alertThresholds"]
+        },
+        "periodicAudits": {
+          "type": "object",
+          "properties": {
+            "frequency": { "type": "string", "enum": ["weekly", "monthly", "quarterly"], "default": "monthly" },
+            "scope": { "type": "string", "enum": ["full", "incremental", "targeted"], "default": "incremental" },
+            "automatedOnly": { "type": "boolean", "default": false }
+          },
+          "required": ["frequency", "scope"]
+        },
+        "trendAnalysis": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean", "default": true },
+            "lookbackDays": { "type": "integer", "minimum": 7, "default": 90 },
+            "trendThresholds": {
+              "type": "object",
+              "properties": {
+                "improvementRate": { "type": "number", "minimum": 0, "default": 0.05 },
+                "regressionRate": { "type": "number", "minimum": 0, "default": 0.02 }
+              }
+            }
+          },
+          "required": ["enabled", "lookbackDays", "trendThresholds"]
+        }
+      },
+      "required": ["realTimeMonitoring", "periodicAudits", "trendAnalysis"]
+    },
+    "exemptionCriteria": {
+      "type": "object",
+      "description": "Criteria for accessibility requirement exemptions",
+      "properties": {
+        "allowedExemptions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "category": { "type": "string" },
+              "justification": { "type": "string" },
+              "alternativeProvided": { "type": "boolean", "default": true },
+              "temporaryOnly": { "type": "boolean", "default": true },
+              "maxDurationDays": { "type": "integer", "minimum": 1, "default": 90 },
+              "approvalRequired": { "type": "boolean", "default": true },
+              "reviewFrequency": { "type": "string", "enum": ["weekly", "monthly", "quarterly"], "default": "monthly" }
+            },
+            "required": ["category", "justification", "alternativeProvided", "approvalRequired"]
+          }
+        },
+        "approvalProcess": {
+          "type": "object",
+          "properties": {
+            "requiredApprovers": { "type": "array", "items": { "type": "string" } },
+            "documentationRequired": { "type": "boolean", "default": true },
+            "publicDisclosure": { "type": "boolean", "default": false },
+            "remediationPlan": { "type": "boolean", "default": true }
+          },
+          "required": ["requiredApprovers", "documentationRequired", "remediationPlan"]
+        }
+      },
+      "required": ["allowedExemptions", "approvalProcess"]
+    }
+  },
+  "required": ["complianceThresholds", "testCategories", "automatedTestTools", "manualTestProcedures", "userAcceptanceCriteria", "reportingRequirements", "continuousMonitoring", "exemptionCriteria"]
+}

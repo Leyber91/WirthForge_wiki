@@ -1,0 +1,260 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "WIRTHFORGE ARIA Specifications for Energy Visualization",
+  "description": "Schema defining ARIA roles, properties, and live region configurations for accessible energy visualization",
+  "type": "object",
+  "properties": {
+    "liveRegions": {
+      "type": "object",
+      "description": "Configuration for ARIA live regions",
+      "properties": {
+        "energyUpdates": {
+          "type": "object",
+          "properties": {
+            "politeness": { "type": "string", "enum": ["off", "polite", "assertive"], "default": "polite" },
+            "atomic": { "type": "boolean", "default": false },
+            "relevant": { "type": "string", "enum": ["additions", "removals", "text", "all"], "default": "text" },
+            "throttleMs": { "type": "integer", "minimum": 500, "maximum": 5000, "default": 1000 }
+          },
+          "required": ["politeness", "atomic", "relevant", "throttleMs"]
+        },
+        "statusMessages": {
+          "type": "object",
+          "properties": {
+            "politeness": { "type": "string", "enum": ["off", "polite", "assertive"], "default": "assertive" },
+            "atomic": { "type": "boolean", "default": true },
+            "relevant": { "type": "string", "enum": ["additions", "removals", "text", "all"], "default": "additions" },
+            "throttleMs": { "type": "integer", "minimum": 100, "maximum": 2000, "default": 500 }
+          },
+          "required": ["politeness", "atomic", "relevant", "throttleMs"]
+        },
+        "errorAnnouncements": {
+          "type": "object",
+          "properties": {
+            "politeness": { "type": "string", "enum": ["off", "polite", "assertive"], "default": "assertive" },
+            "atomic": { "type": "boolean", "default": true },
+            "relevant": { "type": "string", "enum": ["additions", "removals", "text", "all"], "default": "all" },
+            "throttleMs": { "type": "integer", "minimum": 0, "maximum": 1000, "default": 0 }
+          },
+          "required": ["politeness", "atomic", "relevant", "throttleMs"]
+        }
+      },
+      "required": ["energyUpdates", "statusMessages", "errorAnnouncements"]
+    },
+    "energyEvents": {
+      "type": "array",
+      "description": "Energy visualization events that trigger screen reader announcements",
+      "items": {
+        "type": "object",
+        "properties": {
+          "event": { 
+            "type": "string", 
+            "enum": [
+              "energy-level-change",
+              "model-activation",
+              "model-deactivation", 
+              "lightning-strike",
+              "particle-stream-start",
+              "particle-stream-end",
+              "wave-interference",
+              "resonance-achieved",
+              "resonance-lost",
+              "performance-warning",
+              "system-error"
+            ]
+          },
+          "messageTemplate": { 
+            "type": "string", 
+            "description": "i18n template with placeholders like {energyLevel}, {modelId}, {tps}"
+          },
+          "priority": { "type": "string", "enum": ["low", "medium", "high"], "default": "medium" },
+          "throttleMs": { "type": "integer", "minimum": 0, "maximum": 10000, "default": 1000 },
+          "conditions": {
+            "type": "object",
+            "properties": {
+              "minEnergyLevel": { "type": "number", "minimum": 0, "maximum": 1 },
+              "maxEnergyLevel": { "type": "number", "minimum": 0, "maximum": 1 },
+              "requiredModels": { "type": "array", "items": { "type": "string" } },
+              "userPreferences": { "type": "array", "items": { "type": "string" } }
+            }
+          }
+        },
+        "required": ["event", "messageTemplate", "priority"]
+      }
+    },
+    "componentRoles": {
+      "type": "object",
+      "description": "ARIA roles and properties for UI components",
+      "properties": {
+        "energyVisualization": {
+          "type": "object",
+          "properties": {
+            "role": { "type": "string", "enum": ["img", "application", "region"], "default": "img" },
+            "ariaLabel": { "type": "string", "default": "Energy visualization display" },
+            "ariaDescribedBy": { "type": "string" },
+            "ariaLive": { "type": "string", "enum": ["off", "polite", "assertive"], "default": "polite" },
+            "tabIndex": { "type": "integer", "enum": [-1, 0], "default": 0 }
+          },
+          "required": ["role", "ariaLabel"]
+        },
+        "controlPanel": {
+          "type": "object",
+          "properties": {
+            "role": { "type": "string", "enum": ["toolbar", "group", "region"], "default": "toolbar" },
+            "ariaLabel": { "type": "string", "default": "Energy visualization controls" },
+            "ariaOrientation": { "type": "string", "enum": ["horizontal", "vertical"], "default": "horizontal" }
+          },
+          "required": ["role", "ariaLabel"]
+        },
+        "energySlider": {
+          "type": "object",
+          "properties": {
+            "role": { "type": "string", "const": "slider" },
+            "ariaLabel": { "type": "string", "default": "Energy level" },
+            "ariaValueMin": { "type": "number", "default": 0 },
+            "ariaValueMax": { "type": "number", "default": 100 },
+            "ariaValueNow": { "type": "number" },
+            "ariaValueText": { "type": "string" },
+            "ariaOrientation": { "type": "string", "enum": ["horizontal", "vertical"], "default": "horizontal" }
+          },
+          "required": ["role", "ariaLabel", "ariaValueMin", "ariaValueMax"]
+        },
+        "modelToggle": {
+          "type": "object",
+          "properties": {
+            "role": { "type": "string", "enum": ["button", "switch"], "default": "switch" },
+            "ariaLabel": { "type": "string" },
+            "ariaPressed": { "type": "boolean" },
+            "ariaChecked": { "type": "boolean" },
+            "ariaDescribedBy": { "type": "string" }
+          },
+          "required": ["role", "ariaLabel"]
+        },
+        "statusIndicator": {
+          "type": "object",
+          "properties": {
+            "role": { "type": "string", "enum": ["status", "alert", "log"], "default": "status" },
+            "ariaLabel": { "type": "string" },
+            "ariaLive": { "type": "string", "enum": ["off", "polite", "assertive"], "default": "polite" },
+            "ariaAtomic": { "type": "boolean", "default": true }
+          },
+          "required": ["role", "ariaLabel"]
+        }
+      },
+      "required": ["energyVisualization", "controlPanel", "energySlider", "modelToggle", "statusIndicator"]
+    },
+    "keyboardShortcuts": {
+      "type": "array",
+      "description": "Keyboard shortcuts for accessibility",
+      "items": {
+        "type": "object",
+        "properties": {
+          "key": { "type": "string", "description": "Key combination like 'Ctrl+E' or 'Space'" },
+          "action": { "type": "string", "description": "Action identifier" },
+          "description": { "type": "string", "description": "Human-readable description" },
+          "scope": { "type": "string", "enum": ["global", "component", "modal"], "default": "component" },
+          "preventDefault": { "type": "boolean", "default": true },
+          "ariaKeyShortcuts": { "type": "string", "description": "ARIA key shortcuts attribute value" }
+        },
+        "required": ["key", "action", "description"]
+      }
+    },
+    "focusManagement": {
+      "type": "object",
+      "description": "Focus management specifications",
+      "properties": {
+        "focusIndicators": {
+          "type": "object",
+          "properties": {
+            "outlineWidth": { "type": "string", "default": "2px" },
+            "outlineStyle": { "type": "string", "enum": ["solid", "dashed", "dotted"], "default": "solid" },
+            "outlineColor": { "type": "string", "default": "#005fcc" },
+            "outlineOffset": { "type": "string", "default": "2px" },
+            "borderRadius": { "type": "string", "default": "4px" }
+          },
+          "required": ["outlineWidth", "outlineStyle", "outlineColor"]
+        },
+        "skipLinks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "text": { "type": "string" },
+              "href": { "type": "string" },
+              "position": { "type": "integer", "minimum": 1 }
+            },
+            "required": ["text", "href", "position"]
+          }
+        },
+        "focusTrapping": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean", "default": true },
+            "returnFocus": { "type": "boolean", "default": true },
+            "initialFocus": { "type": "string", "enum": ["first", "last", "specified"], "default": "first" },
+            "escapeDeactivates": { "type": "boolean", "default": true }
+          }
+        }
+      },
+      "required": ["focusIndicators", "skipLinks", "focusTrapping"]
+    },
+    "screenReaderOptimizations": {
+      "type": "object",
+      "description": "Screen reader specific optimizations",
+      "properties": {
+        "verbosityLevels": {
+          "type": "object",
+          "properties": {
+            "minimal": {
+              "type": "object",
+              "properties": {
+                "includeEnergyLevel": { "type": "boolean", "default": true },
+                "includeModelCount": { "type": "boolean", "default": true },
+                "includeEffectDetails": { "type": "boolean", "default": false },
+                "includePerformanceMetrics": { "type": "boolean", "default": false }
+              }
+            },
+            "standard": {
+              "type": "object",
+              "properties": {
+                "includeEnergyLevel": { "type": "boolean", "default": true },
+                "includeModelCount": { "type": "boolean", "default": true },
+                "includeEffectDetails": { "type": "boolean", "default": true },
+                "includePerformanceMetrics": { "type": "boolean", "default": false }
+              }
+            },
+            "verbose": {
+              "type": "object",
+              "properties": {
+                "includeEnergyLevel": { "type": "boolean", "default": true },
+                "includeModelCount": { "type": "boolean", "default": true },
+                "includeEffectDetails": { "type": "boolean", "default": true },
+                "includePerformanceMetrics": { "type": "boolean", "default": true }
+              }
+            }
+          },
+          "required": ["minimal", "standard", "verbose"]
+        },
+        "speechRate": {
+          "type": "object",
+          "properties": {
+            "min": { "type": "number", "minimum": 0.1, "maximum": 2.0, "default": 0.5 },
+            "max": { "type": "number", "minimum": 0.1, "maximum": 2.0, "default": 2.0 },
+            "default": { "type": "number", "minimum": 0.1, "maximum": 2.0, "default": 1.0 }
+          },
+          "required": ["min", "max", "default"]
+        },
+        "punctuationHandling": {
+          "type": "object",
+          "properties": {
+            "removeExcessivePunctuation": { "type": "boolean", "default": true },
+            "expandAbbreviations": { "type": "boolean", "default": true },
+            "normalizeNumbers": { "type": "boolean", "default": true }
+          }
+        }
+      },
+      "required": ["verbosityLevels", "speechRate", "punctuationHandling"]
+    }
+  },
+  "required": ["liveRegions", "energyEvents", "componentRoles", "keyboardShortcuts", "focusManagement", "screenReaderOptimizations"]
+}
