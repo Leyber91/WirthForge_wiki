@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 1200 900" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Layer-specific gradients matching the 5-layer system -->
+    <linearGradient id="layer1Grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#ff6b6b;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ff8e8e;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="layer2Grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#ffd93d;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ffe66d;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="layer3Grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#6bcf7f;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#96e6a1;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="layer4Grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#4d96ff;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#74b3ff;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="layer5Grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#9966ff;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#b999ff;stop-opacity:1" />
+    </linearGradient>
+    
+    <!-- Arrow markers -->
+    <marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#ffffff" />
+    </marker>
+    
+    <!-- Glow effect -->
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge> 
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1200" height="900" fill="#0a0a0a"/>
+  
+  <!-- Title -->
+  <text x="600" y="30" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="24" font-weight="bold">
+    WF-FND-003: Corrected 5-Layer Architecture
+  </text>
+  <text x="600" y="55" text-anchor="middle" fill="#cccccc" font-family="Arial, sans-serif" font-size="16">
+    Local-First AI Platform with Energy-Truth Visualization
+  </text>
+  
+  <!-- Layer 5: User Experience (Top) -->
+  <rect x="100" y="80" width="1000" height="120" fill="url(#layer5Grad)" rx="15" filter="url(#glow)"/>
+  <text x="150" y="110" fill="#ffffff" font-family="Arial, sans-serif" font-size="18" font-weight="bold">
+    Layer 5: User Experience & Visualization
+  </text>
+  <text x="150" y="130" fill="#ffffff" font-family="Arial, sans-serif" font-size="14">
+    Progressive Levels • Three Doors • Energy Visualization • Interactive UI
+  </text>
+  <text x="150" y="150" fill="#ffffff" font-family="Arial, sans-serif" font-size="12">
+    • L1: Lightning Strikes (single model) • L2: Council Formation (multi-model) • L3: Architecture Mode (graph-based)
+  </text>
+  <text x="150" y="165" fill="#ffffff" font-family="Arial, sans-serif" font-size="12">
+    • L4: Adaptive Fields (context-aware) • L5: Resonance Fields (emergent) • Three Doors: Forge/Scholar/Sage paths
+  </text>
+  <text x="150" y="180" fill="#ffffff" font-family="Arial, sans-serif" font-size="12">
+    • React/Three.js frontend • 60 FPS energy visualization • WebGL particle systems • Progressive disclosure
+  </text>
+  
+  <!-- Layer 4: Transport (Second) -->
+  <rect x="100" y="220" width="1000" height="120" fill="url(#layer4Grad)" rx="15"/>
+  <text x="150" y="250" fill="#ffffff" font-family="Arial, sans-serif" font-size="18" font-weight="bold">
+    Layer 4: Transport & Communication
+  </text>
+  <text x="150" y="270" fill="#ffffff" font-family="Arial, sans-serif" font-size="14">
+    WebSocket Protocol • Real-time Events • State Synchronization
+  </text>
+  <text x="150" y="290" fill="#ffffff" font-family="Arial, sans-serif" font-size="12">
+    • WebSocket Secure (WSS) for real-time communication • Energy event streaming at 60Hz target
+  </text>
+  <text x="150" y="305" fill="#ffffff" font-family="Arial, sans-serif" font-size="12">
+    • Privacy-preserving transport (no raw content) • Local-only WebSocket server • Session state sync
+  </text>
+  <text x="150" y="320" fill="#ffffff" font-family="Arial, sans-serif" font-size="12">
+    • WVMP v0.1 event schema • Backpressure handling • Connection health monitoring
+  </text>
+  
+  <!-- Layer 3: DECIPHER (Central - Highlighted) -->
+  <rect x="100" y="360" width="1000" height="120" fill="url(#layer3Grad)" rx="15" stroke="#ffffff" stroke-width="3" filter="url(#glow)"/>
+  <text x="150" y="390" fill="#000000" font-family="Arial, sans-serif" font-size="18" font-weight="bold">
+    Layer 3: DECIPHER (Central Compiler)
+  </text>
+  <text x="150" y="410" fill="#000000" font-family="Arial, sans-serif" font-size="14">
+    Token-to-Energy Conversion • 60Hz Frame Loop • Pattern Detection
+  </text>
+  <text x="150" y="430" fill="#000000" font-family="Arial, sans-serif" font-size="12">
+    • Energy formula E(t) = w₁·v(t) + w₂·c(t) + w₃·f(t) • Real-time energy calculation &lt; 1ms
+  </text>
+  <text x="150" y="445" fill="#000000" font-family="Arial, sans-serif" font-size="12">
+    • Interference/resonance pattern detection • 16.67ms frame budget enforcement • EMA smoothing
+  </text>
+  <text x="150" y="460" fill="#000000" font-family="Arial, sans-serif" font-size="12">
+    • State machine (IDLE→CHARGING→FLOWING→STALLED→COMPLETE) • Multi-model coordination logic
+  </text>
+  
+  <!-- Layer 2: Model Compute (Fourth) -->
+  <rect x="100" y="500" width="1000" height="120" fill="url(#layer2Grad)" rx="15"/>
+  <text x="150" y="530" fill="#000000" font-family="Arial, sans-serif" font-size="18" font-weight="bold">
+    Layer 2: Model Compute & AI Integration
+  </text>
+  <text x="150" y="550" fill="#000000" font-family="Arial, sans-serif" font-size="14">
+    Ollama Integration • Local AI Models • Token Streaming
+  </text>
+  <text x="150" y="570" fill="#000000" font-family="Arial, sans-serif" font-size="12">
+    • Ollama API integration for local model execution • Token stream processing with timing capture
+  </text>
+  <text x="150" y="585" fill="#000000" font-family="Arial, sans-serif" font-size="12">
+    • Multi-model coordination (Council formation) • Top-K probability extraction when available
+  </text>
+  <text x="150" y="600" fill="#000000" font-family="Arial, sans-serif" font-size="12">
+    • Model switching &lt; 500ms • Performance adaptation by hardware tier • Graceful degradation
+  </text>
+  
+  <!-- Layer 1: System Runtime (Bottom) -->
+  <rect x="100" y="640" width="1000" height="120" fill="url(#layer1Grad)" rx="15"/>
+  <text x="150" y="670" fill="#ffffff" font-family="Arial, sans-serif" font-size="18" font-weight="bold">
+    Layer 1: System Runtime & Infrastructure
+  </text>
+  <text x="150" y="690" fill="#ffffff" font-family="Arial, sans-serif" font-size="14">
+    Service Management • Health Monitoring • State Storage
+  </text>
+  <text x="150" y="710" fill="#ffffff" font-family="Arial, sans-serif" font-size="12">
+    • SQLite local-first database • Event sourcing with audit trails • Automated service startup
+  </text>
+  <text x="150" y="725" fill="#ffffff" font-family="Arial, sans-serif" font-size="12">
+    • Health monitoring & error recovery • Resource management & cleanup • Security sandboxing
+  </text>
+  <text x="150" y="740" fill="#ffffff" font-family="Arial, sans-serif" font-size="12">
+    • Boot sequence orchestration • Hardware tier detection • System telemetry collection
+  </text>
+  
+  <!-- Data Flow Arrows -->
+  <!-- User Experience to Transport -->
+  <line x1="600" y1="205" x2="600" y2="215" stroke="#ffffff" stroke-width="4" marker-end="url(#arrow)"/>
+  <text x="620" y="210" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">User Interactions</text>
+  
+  <!-- Transport to DECIPHER -->
+  <line x1="600" y1="345" x2="600" y2="355" stroke="#ffffff" stroke-width="4" marker-end="url(#arrow)"/>
+  <text x="620" y="350" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">Event Stream</text>
+  
+  <!-- DECIPHER to Model Compute -->
+  <line x1="600" y1="485" x2="600" y2="495" stroke="#ffffff" stroke-width="4" marker-end="url(#arrow)"/>
+  <text x="620" y="490" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">Model Requests</text>
+  
+  <!-- Model Compute to System Runtime -->
+  <line x1="600" y1="625" x2="600" y2="635" stroke="#ffffff" font-family="Arial, sans-serif" stroke-width="4" marker-end="url(#arrow)"/>
+  <text x="620" y="630" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">System Calls</text>
+  
+  <!-- Upward flow arrows (right side) -->
+  <line x1="900" y1="740" x2="900" y2="605" stroke="#6bcf7f" stroke-width="3" marker-end="url(#arrow)"/>
+  <text x="910" y="675" fill="#6bcf7f" font-family="Arial, sans-serif" font-size="11">Token Stream</text>
+  
+  <line x1="920" y1="605" x2="920" y2="465" stroke="#4d96ff" stroke-width="3" marker-end="url(#arrow)"/>
+  <text x="930" y="535" fill="#4d96ff" font-family="Arial, sans-serif" font-size="11">Energy Events</text>
+  
+  <line x1="940" y1="465" x2="940" y2="325" stroke="#9966ff" stroke-width="3" marker-end="url(#arrow)"/>
+  <text x="950" y="395" fill="#9966ff" font-family="Arial, sans-serif" font-size="11">Visual Updates</text>
+  
+  <line x1="960" y1="325" x2="960" y2="185" stroke="#ffffff" stroke-width="3" marker-end="url(#arrow)"/>
+  <text x="970" y="255" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">UI Rendering</text>
+  
+  <!-- Architecture Validation -->
+  <rect x="100" y="780" width="1000" height="100" fill="#1a1a1a" rx="8" stroke="#333333" stroke-width="1"/>
+  <text x="600" y="805" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="16" font-weight="bold">
+    Architecture Validation & Alignment
+  </text>
+  <text x="120" y="825" fill="#ffffff" font-family="Arial, sans-serif" font-size="12">
+    • Corrected Layer Order: This diagram matches WF-FND-003 specification (L1=Runtime, L2=Compute, L3=DECIPHER, L4=Transport, L5=UX)
+  </text>
+  <text x="120" y="840" fill="#ffffff" font-family="Arial, sans-serif" font-size="12">
+    • Energy Flow: Bidirectional data flow preserves energy truth from token generation through visualization
+  </text>
+  <text x="120" y="855" fill="#ffffff" font-family="Arial, sans-serif" font-size="12">
+    • Performance: Each layer maintains 60Hz target through budget allocation and graceful degradation
+  </text>
+  <text x="120" y="870" fill="#ffffff" font-family="Arial, sans-serif" font-size="12">
+    • Local-First: All layers operate without external dependencies • WVMP compliance maintained throughout stack
+  </text>
+</svg>
