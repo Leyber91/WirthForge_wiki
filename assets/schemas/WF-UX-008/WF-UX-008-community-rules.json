@@ -1,0 +1,829 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://wirthforge.org/schemas/ux-008/community-rules.json",
+  "title": "WF-UX-008 Community Rules Schema",
+  "description": "Community guidelines, moderation rules, and governance schema for WIRTHFORGE social features",
+  "version": "1.0.0",
+  "type": "object",
+  "definitions": {
+    "CommunityGuideline": {
+      "type": "object",
+      "description": "Individual community guideline or rule",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique guideline identifier"
+        },
+        "title": {
+          "type": "string",
+          "description": "Guideline title"
+        },
+        "description": {
+          "type": "string",
+          "description": "Detailed guideline description"
+        },
+        "category": {
+          "type": "string",
+          "enum": ["respect", "privacy", "content", "participation", "technical", "safety"],
+          "description": "Guideline category"
+        },
+        "severity": {
+          "type": "string",
+          "enum": ["info", "warning", "violation", "serious"],
+          "description": "Violation severity level"
+        },
+        "enforcement": {
+          "type": "string",
+          "enum": ["community", "automated", "manual", "hybrid"],
+          "description": "How guideline is enforced"
+        },
+        "consequences": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["warning", "energy_penalty", "temporary_restriction", "content_removal", "account_suspension"]
+          },
+          "description": "Possible consequences for violations"
+        },
+        "examples": {
+          "type": "object",
+          "properties": {
+            "allowed": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Examples of allowed behavior"
+            },
+            "prohibited": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Examples of prohibited behavior"
+            }
+          }
+        },
+        "createdDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "lastUpdated": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "active": {
+          "type": "boolean",
+          "default": true
+        }
+      },
+      "required": ["id", "title", "description", "category", "severity", "enforcement", "consequences"],
+      "additionalProperties": false
+    },
+    "ModerationAction": {
+      "type": "object",
+      "description": "Moderation action definition",
+      "properties": {
+        "actionId": {
+          "type": "string",
+          "description": "Unique action identifier"
+        },
+        "type": {
+          "type": "string",
+          "enum": ["warning", "content_flag", "content_removal", "energy_penalty", "temporary_restriction", "account_suspension", "community_service"],
+          "description": "Type of moderation action"
+        },
+        "severity": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10,
+          "description": "Action severity (1=minor, 10=severe)"
+        },
+        "automated": {
+          "type": "boolean",
+          "description": "Whether action can be automated"
+        },
+        "appealable": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether action can be appealed"
+        },
+        "duration": {
+          "type": "object",
+          "properties": {
+            "temporary": {
+              "type": "boolean",
+              "description": "Whether action is temporary"
+            },
+            "durationHours": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Duration in hours for temporary actions"
+            },
+            "escalationThreshold": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Number of violations before escalation"
+            }
+          }
+        },
+        "requirements": {
+          "type": "object",
+          "properties": {
+            "moderatorLevel": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 10,
+              "description": "Minimum moderator level required"
+            },
+            "communityConsensus": {
+              "type": "boolean",
+              "default": false,
+              "description": "Whether community consensus is required"
+            },
+            "evidenceRequired": {
+              "type": "boolean",
+              "default": true,
+              "description": "Whether evidence is required"
+            }
+          }
+        }
+      },
+      "required": ["actionId", "type", "severity", "automated", "appealable"],
+      "additionalProperties": false
+    },
+    "ReputationSystem": {
+      "type": "object",
+      "description": "Community reputation and trust system",
+      "properties": {
+        "levels": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "level": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 10
+              },
+              "name": {
+                "type": "string",
+                "description": "Level name"
+              },
+              "description": {
+                "type": "string",
+                "description": "Level description"
+              },
+              "requirements": {
+                "type": "object",
+                "properties": {
+                  "energyPoints": {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  "communityContributions": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "timeActive": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "description": "Days active in community"
+                  },
+                  "positiveRatings": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "mentorshipHours": {
+                    "type": "number",
+                    "minimum": 0
+                  }
+                }
+              },
+              "privileges": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": ["basic_participation", "content_creation", "peer_moderation", "mentorship", "challenge_creation", "community_governance"]
+                }
+              },
+              "moderationPowers": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": ["flag_content", "warn_users", "remove_content", "temporary_restrictions", "appeal_review"]
+                }
+              }
+            },
+            "required": ["level", "name", "description", "requirements", "privileges"]
+          }
+        },
+        "scoring": {
+          "type": "object",
+          "properties": {
+            "positiveActions": {
+              "type": "object",
+              "properties": {
+                "helpful_answer": {
+                  "type": "number",
+                  "default": 10
+                },
+                "quality_content": {
+                  "type": "number",
+                  "default": 15
+                },
+                "mentorship_session": {
+                  "type": "number",
+                  "default": 25
+                },
+                "community_contribution": {
+                  "type": "number",
+                  "default": 20
+                },
+                "positive_feedback": {
+                  "type": "number",
+                  "default": 5
+                }
+              }
+            },
+            "negativeActions": {
+              "type": "object",
+              "properties": {
+                "guideline_violation": {
+                  "type": "number",
+                  "default": -20
+                },
+                "spam_content": {
+                  "type": "number",
+                  "default": -15
+                },
+                "harassment": {
+                  "type": "number",
+                  "default": -50
+                },
+                "false_reporting": {
+                  "type": "number",
+                  "default": -10
+                },
+                "negative_feedback": {
+                  "type": "number",
+                  "default": -5
+                }
+              }
+            }
+          }
+        }
+      },
+      "required": ["levels", "scoring"],
+      "additionalProperties": false
+    },
+    "ContentModerationRules": {
+      "type": "object",
+      "description": "Rules for content moderation",
+      "properties": {
+        "contentTypes": {
+          "type": "object",
+          "properties": {
+            "questions": {
+              "type": "object",
+              "properties": {
+                "maxLength": {
+                  "type": "integer",
+                  "default": 1000
+                },
+                "requiresApproval": {
+                  "type": "boolean",
+                  "default": false
+                },
+                "allowAnonymous": {
+                  "type": "boolean",
+                  "default": true
+                },
+                "autoModerationEnabled": {
+                  "type": "boolean",
+                  "default": true
+                }
+              }
+            },
+            "answers": {
+              "type": "object",
+              "properties": {
+                "maxLength": {
+                  "type": "integer",
+                  "default": 5000
+                },
+                "requiresApproval": {
+                  "type": "boolean",
+                  "default": false
+                },
+                "allowAnonymous": {
+                  "type": "boolean",
+                  "default": true
+                },
+                "autoModerationEnabled": {
+                  "type": "boolean",
+                  "default": true
+                }
+              }
+            },
+            "tutorials": {
+              "type": "object",
+              "properties": {
+                "maxLength": {
+                  "type": "integer",
+                  "default": 10000
+                },
+                "requiresApproval": {
+                  "type": "boolean",
+                  "default": true
+                },
+                "allowAnonymous": {
+                  "type": "boolean",
+                  "default": false
+                },
+                "autoModerationEnabled": {
+                  "type": "boolean",
+                  "default": true
+                }
+              }
+            },
+            "discussions": {
+              "type": "object",
+              "properties": {
+                "maxLength": {
+                  "type": "integer",
+                  "default": 2000
+                },
+                "requiresApproval": {
+                  "type": "boolean",
+                  "default": false
+                },
+                "allowAnonymous": {
+                  "type": "boolean",
+                  "default": true
+                },
+                "autoModerationEnabled": {
+                  "type": "boolean",
+                  "default": true
+                }
+              }
+            }
+          }
+        },
+        "automatedModeration": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "default": true
+            },
+            "sensitivityLevel": {
+              "type": "string",
+              "enum": ["low", "medium", "high"],
+              "default": "medium"
+            },
+            "filters": {
+              "type": "object",
+              "properties": {
+                "profanityFilter": {
+                  "type": "boolean",
+                  "default": true
+                },
+                "spamDetection": {
+                  "type": "boolean",
+                  "default": true
+                },
+                "personalInfoDetection": {
+                  "type": "boolean",
+                  "default": true
+                },
+                "toxicityDetection": {
+                  "type": "boolean",
+                  "default": true
+                },
+                "duplicateContentDetection": {
+                  "type": "boolean",
+                  "default": true
+                }
+              }
+            },
+            "actions": {
+              "type": "object",
+              "properties": {
+                "flagForReview": {
+                  "type": "boolean",
+                  "default": true
+                },
+                "autoRemove": {
+                  "type": "boolean",
+                  "default": false
+                },
+                "requireHumanReview": {
+                  "type": "boolean",
+                  "default": true
+                },
+                "notifyAuthor": {
+                  "type": "boolean",
+                  "default": true
+                }
+              }
+            }
+          }
+        },
+        "reportingSystem": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "default": true
+            },
+            "anonymousReporting": {
+              "type": "boolean",
+              "default": true
+            },
+            "reportCategories": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": ["spam", "harassment", "inappropriate_content", "privacy_violation", "misinformation", "off_topic", "other"]
+              }
+            },
+            "escalationThreshold": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 3,
+              "description": "Number of reports before escalation"
+            },
+            "reviewTimeframe": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 24,
+              "description": "Hours to review reported content"
+            }
+          }
+        }
+      },
+      "required": ["contentTypes", "automatedModeration", "reportingSystem"],
+      "additionalProperties": false
+    },
+    "CommunityGovernance": {
+      "type": "object",
+      "description": "Community governance and decision-making rules",
+      "properties": {
+        "decisionMaking": {
+          "type": "object",
+          "properties": {
+            "votingSystem": {
+              "type": "string",
+              "enum": ["simple_majority", "consensus", "weighted_voting", "expert_panel"],
+              "default": "consensus"
+            },
+            "quorumRequirement": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "default": 0.1,
+              "description": "Minimum participation rate for valid decisions"
+            },
+            "votingPeriod": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 7,
+              "description": "Days for voting period"
+            },
+            "eligibilityRequirements": {
+              "type": "object",
+              "properties": {
+                "minimumLevel": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "default": 2
+                },
+                "minimumReputation": {
+                  "type": "number",
+                  "minimum": 0,
+                  "default": 100
+                },
+                "activeParticipation": {
+                  "type": "boolean",
+                  "default": true
+                }
+              }
+            }
+          }
+        },
+        "proposalSystem": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "default": true
+            },
+            "proposalTypes": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": ["guideline_change", "feature_request", "moderation_policy", "community_event", "governance_change"]
+              }
+            },
+            "sponsorshipRequired": {
+              "type": "boolean",
+              "default": true,
+              "description": "Whether proposals need community sponsors"
+            },
+            "minimumSponsors": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 3
+            },
+            "discussionPeriod": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 3,
+              "description": "Days for proposal discussion"
+            }
+          }
+        },
+        "appealProcess": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "default": true
+            },
+            "appealTimeframe": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 7,
+              "description": "Days to submit appeal"
+            },
+            "reviewBoard": {
+              "type": "string",
+              "enum": ["community_jury", "expert_panel", "elected_representatives"],
+              "default": "community_jury"
+            },
+            "anonymousAppeals": {
+              "type": "boolean",
+              "default": true
+            },
+            "evidenceRequired": {
+              "type": "boolean",
+              "default": true
+            }
+          }
+        }
+      },
+      "required": ["decisionMaking", "proposalSystem", "appealProcess"],
+      "additionalProperties": false
+    }
+  },
+  "properties": {
+    "guidelines": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/CommunityGuideline"
+      },
+      "description": "Community guidelines and rules"
+    },
+    "moderationActions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ModerationAction"
+      },
+      "description": "Available moderation actions"
+    },
+    "reputationSystem": {
+      "$ref": "#/definitions/ReputationSystem"
+    },
+    "contentModeration": {
+      "$ref": "#/definitions/ContentModerationRules"
+    },
+    "governance": {
+      "$ref": "#/definitions/CommunityGovernance"
+    },
+    "lastUpdated": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "version": {
+      "type": "string",
+      "description": "Community rules version"
+    }
+  },
+  "required": ["guidelines", "moderationActions", "reputationSystem", "contentModeration", "governance", "lastUpdated", "version"],
+  "additionalProperties": false,
+  "examples": [
+    {
+      "guidelines": [
+        {
+          "id": "respect_others",
+          "title": "Respect All Community Members",
+          "description": "Treat all community members with respect and courtesy. Personal attacks, harassment, and discriminatory language are not tolerated.",
+          "category": "respect",
+          "severity": "serious",
+          "enforcement": "hybrid",
+          "consequences": ["warning", "energy_penalty", "temporary_restriction"],
+          "examples": {
+            "allowed": [
+              "I disagree with your approach, but I understand your perspective",
+              "Could you help me understand this better?",
+              "Thank you for sharing your experience"
+            ],
+            "prohibited": [
+              "Personal attacks or insults",
+              "Discriminatory language",
+              "Harassment or bullying"
+            ]
+          },
+          "createdDate": "2025-01-27T10:00:00Z",
+          "lastUpdated": "2025-01-27T10:00:00Z",
+          "active": true
+        },
+        {
+          "id": "privacy_first",
+          "title": "Respect Privacy and Consent",
+          "description": "Never share personal information without explicit consent. Respect others' privacy choices and data boundaries.",
+          "category": "privacy",
+          "severity": "serious",
+          "enforcement": "automated",
+          "consequences": ["warning", "content_removal", "temporary_restriction"],
+          "examples": {
+            "allowed": [
+              "Sharing anonymized performance metrics",
+              "Discussing general techniques and approaches",
+              "Asking for consent before sharing any personal data"
+            ],
+            "prohibited": [
+              "Sharing personal information without consent",
+              "Attempting to identify anonymous users",
+              "Pressuring others to share private data"
+            ]
+          },
+          "createdDate": "2025-01-27T10:00:00Z",
+          "lastUpdated": "2025-01-27T10:00:00Z",
+          "active": true
+        }
+      ],
+      "moderationActions": [
+        {
+          "actionId": "friendly_warning",
+          "type": "warning",
+          "severity": 2,
+          "automated": true,
+          "appealable": true,
+          "duration": {
+            "temporary": false
+          },
+          "requirements": {
+            "moderatorLevel": 1,
+            "communityConsensus": false,
+            "evidenceRequired": true
+          }
+        },
+        {
+          "actionId": "content_removal",
+          "type": "content_removal",
+          "severity": 5,
+          "automated": false,
+          "appealable": true,
+          "duration": {
+            "temporary": false
+          },
+          "requirements": {
+            "moderatorLevel": 3,
+            "communityConsensus": false,
+            "evidenceRequired": true
+          }
+        }
+      ],
+      "reputationSystem": {
+        "levels": [
+          {
+            "level": 0,
+            "name": "Newcomer",
+            "description": "New community member learning the ropes",
+            "requirements": {
+              "energyPoints": 0,
+              "communityContributions": 0,
+              "timeActive": 0,
+              "positiveRatings": 0,
+              "mentorshipHours": 0
+            },
+            "privileges": ["basic_participation"],
+            "moderationPowers": []
+          },
+          {
+            "level": 1,
+            "name": "Apprentice",
+            "description": "Active community member with basic privileges",
+            "requirements": {
+              "energyPoints": 100,
+              "communityContributions": 5,
+              "timeActive": 7,
+              "positiveRatings": 3,
+              "mentorshipHours": 0
+            },
+            "privileges": ["basic_participation", "content_creation"],
+            "moderationPowers": ["flag_content"]
+          }
+        ],
+        "scoring": {
+          "positiveActions": {
+            "helpful_answer": 10,
+            "quality_content": 15,
+            "mentorship_session": 25,
+            "community_contribution": 20,
+            "positive_feedback": 5
+          },
+          "negativeActions": {
+            "guideline_violation": -20,
+            "spam_content": -15,
+            "harassment": -50,
+            "false_reporting": -10,
+            "negative_feedback": -5
+          }
+        }
+      },
+      "contentModeration": {
+        "contentTypes": {
+          "questions": {
+            "maxLength": 1000,
+            "requiresApproval": false,
+            "allowAnonymous": true,
+            "autoModerationEnabled": true
+          },
+          "answers": {
+            "maxLength": 5000,
+            "requiresApproval": false,
+            "allowAnonymous": true,
+            "autoModerationEnabled": true
+          },
+          "tutorials": {
+            "maxLength": 10000,
+            "requiresApproval": true,
+            "allowAnonymous": false,
+            "autoModerationEnabled": true
+          },
+          "discussions": {
+            "maxLength": 2000,
+            "requiresApproval": false,
+            "allowAnonymous": true,
+            "autoModerationEnabled": true
+          }
+        },
+        "automatedModeration": {
+          "enabled": true,
+          "sensitivityLevel": "medium",
+          "filters": {
+            "profanityFilter": true,
+            "spamDetection": true,
+            "personalInfoDetection": true,
+            "toxicityDetection": true,
+            "duplicateContentDetection": true
+          },
+          "actions": {
+            "flagForReview": true,
+            "autoRemove": false,
+            "requireHumanReview": true,
+            "notifyAuthor": true
+          }
+        },
+        "reportingSystem": {
+          "enabled": true,
+          "anonymousReporting": true,
+          "reportCategories": ["spam", "harassment", "inappropriate_content", "privacy_violation", "misinformation", "off_topic", "other"],
+          "escalationThreshold": 3,
+          "reviewTimeframe": 24
+        }
+      },
+      "governance": {
+        "decisionMaking": {
+          "votingSystem": "consensus",
+          "quorumRequirement": 0.1,
+          "votingPeriod": 7,
+          "eligibilityRequirements": {
+            "minimumLevel": 2,
+            "minimumReputation": 100,
+            "activeParticipation": true
+          }
+        },
+        "proposalSystem": {
+          "enabled": true,
+          "proposalTypes": ["guideline_change", "feature_request", "moderation_policy", "community_event", "governance_change"],
+          "sponsorshipRequired": true,
+          "minimumSponsors": 3,
+          "discussionPeriod": 3
+        },
+        "appealProcess": {
+          "enabled": true,
+          "appealTimeframe": 7,
+          "reviewBoard": "community_jury",
+          "anonymousAppeals": true,
+          "evidenceRequired": true
+        }
+      },
+      "lastUpdated": "2025-01-27T10:00:00Z",
+      "version": "1.0.0"
+    }
+  ]
+}

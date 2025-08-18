@@ -1,0 +1,653 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://wirthforge.org/schemas/ux-008/social-data-models.json",
+  "title": "WF-UX-008 Social Data Models Schema",
+  "description": "Comprehensive schema defining social data structures for WIRTHFORGE community features",
+  "version": "1.0.0",
+  "type": "object",
+  "definitions": {
+    "UserProfile": {
+      "type": "object",
+      "description": "Local user profile with optional social features",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "Local unique identifier (never shared)",
+          "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$"
+        },
+        "alias": {
+          "type": "string",
+          "description": "Optional community display name",
+          "minLength": 3,
+          "maxLength": 32,
+          "pattern": "^[a-zA-Z0-9_-]+$"
+        },
+        "level": {
+          "type": "integer",
+          "description": "User progression level from WF-UX-002",
+          "minimum": 0,
+          "maximum": 10
+        },
+        "paths": {
+          "type": "array",
+          "description": "Three Paths specialization",
+          "items": {
+            "type": "string",
+            "enum": ["forge", "scholar", "sage"]
+          },
+          "uniqueItems": true,
+          "maxItems": 3
+        },
+        "energyTotal": {
+          "type": "number",
+          "description": "Total energy units earned",
+          "minimum": 0
+        },
+        "joinDate": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Local account creation date"
+        },
+        "socialSettings": {
+          "$ref": "#/definitions/SocialSettings"
+        },
+        "achievements": {
+          "type": "array",
+          "description": "User achievements from gamification system",
+          "items": {
+            "$ref": "#/definitions/Achievement"
+          }
+        },
+        "mentorshipStatus": {
+          "$ref": "#/definitions/MentorshipStatus"
+        }
+      },
+      "required": ["userId", "level", "energyTotal", "joinDate", "socialSettings"],
+      "additionalProperties": false
+    },
+    "SocialSettings": {
+      "type": "object",
+      "description": "User's social feature preferences",
+      "properties": {
+        "participationLevel": {
+          "type": "string",
+          "enum": ["anonymous", "pseudonymous", "identified"],
+          "default": "anonymous",
+          "description": "Level of identity disclosure"
+        },
+        "sharingEnabled": {
+          "type": "boolean",
+          "default": false,
+          "description": "Allow achievement sharing"
+        },
+        "challengesEnabled": {
+          "type": "boolean",
+          "default": false,
+          "description": "Participate in community challenges"
+        },
+        "mentorshipEnabled": {
+          "type": "boolean",
+          "default": false,
+          "description": "Enable mentorship features"
+        },
+        "externalIntegrations": {
+          "type": "object",
+          "properties": {
+            "discord": {
+              "type": "boolean",
+              "default": false
+            },
+            "twitch": {
+              "type": "boolean",
+              "default": false
+            },
+            "reddit": {
+              "type": "boolean",
+              "default": false
+            },
+            "twitter": {
+              "type": "boolean",
+              "default": false
+            }
+          },
+          "additionalProperties": false
+        },
+        "privacyLevel": {
+          "type": "string",
+          "enum": ["minimal", "standard", "enhanced"],
+          "default": "enhanced",
+          "description": "Data sharing privacy level"
+        }
+      },
+      "required": ["participationLevel", "sharingEnabled", "challengesEnabled", "mentorshipEnabled", "privacyLevel"],
+      "additionalProperties": false
+    },
+    "Achievement": {
+      "type": "object",
+      "description": "User achievement record",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Achievement identifier"
+        },
+        "name": {
+          "type": "string",
+          "description": "Achievement display name"
+        },
+        "description": {
+          "type": "string",
+          "description": "Achievement description"
+        },
+        "category": {
+          "type": "string",
+          "enum": ["progression", "efficiency", "collaboration", "creation", "exploration"],
+          "description": "Achievement category"
+        },
+        "level": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10,
+          "description": "Achievement difficulty level"
+        },
+        "energyReward": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Energy units awarded"
+        },
+        "earnedDate": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When achievement was earned"
+        },
+        "shared": {
+          "type": "boolean",
+          "default": false,
+          "description": "Whether achievement was shared"
+        },
+        "shareHistory": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ShareRecord"
+          }
+        }
+      },
+      "required": ["id", "name", "description", "category", "level", "energyReward", "earnedDate"],
+      "additionalProperties": false
+    },
+    "ShareRecord": {
+      "type": "object",
+      "description": "Record of data sharing action",
+      "properties": {
+        "shareId": {
+          "type": "string",
+          "description": "Unique share identifier"
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When sharing occurred"
+        },
+        "platform": {
+          "type": "string",
+          "enum": ["community", "discord", "twitch", "reddit", "twitter"],
+          "description": "Platform shared to"
+        },
+        "dataType": {
+          "type": "string",
+          "enum": ["achievement", "challenge_result", "content", "profile"],
+          "description": "Type of data shared"
+        },
+        "anonymized": {
+          "type": "boolean",
+          "description": "Whether data was anonymized"
+        },
+        "revoked": {
+          "type": "boolean",
+          "default": false,
+          "description": "Whether share was revoked"
+        },
+        "revokedDate": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When share was revoked"
+        }
+      },
+      "required": ["shareId", "timestamp", "platform", "dataType", "anonymized"],
+      "additionalProperties": false
+    },
+    "Challenge": {
+      "type": "object",
+      "description": "Community challenge definition",
+      "properties": {
+        "challengeId": {
+          "type": "string",
+          "description": "Unique challenge identifier"
+        },
+        "title": {
+          "type": "string",
+          "description": "Challenge display title"
+        },
+        "description": {
+          "type": "string",
+          "description": "Challenge description and rules"
+        },
+        "category": {
+          "type": "string",
+          "enum": ["speed", "efficiency", "creativity", "collaboration", "exploration"],
+          "description": "Challenge category"
+        },
+        "pathFocus": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["forge", "scholar", "sage"]
+          },
+          "description": "Which paths this challenge targets"
+        },
+        "type": {
+          "type": "string",
+          "enum": ["personal_best", "community_goal", "head_to_head"],
+          "description": "Challenge type"
+        },
+        "startDate": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Challenge start time"
+        },
+        "endDate": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Challenge end time"
+        },
+        "metrics": {
+          "type": "object",
+          "description": "Challenge success metrics",
+          "properties": {
+            "primaryMetric": {
+              "type": "string",
+              "enum": ["energy_efficiency", "speed", "accuracy", "creativity_score", "collaboration_points"]
+            },
+            "targetValue": {
+              "type": "number",
+              "description": "Target value for success"
+            },
+            "unit": {
+              "type": "string",
+              "description": "Metric unit (e.g., 'EU/hour', 'seconds', 'percentage')"
+            }
+          },
+          "required": ["primaryMetric", "targetValue", "unit"]
+        },
+        "rewards": {
+          "type": "object",
+          "properties": {
+            "energyReward": {
+              "type": "number",
+              "minimum": 0
+            },
+            "badge": {
+              "type": "string",
+              "description": "Special badge for completion"
+            },
+            "title": {
+              "type": "string",
+              "description": "Special title for winners"
+            }
+          }
+        },
+        "participation": {
+          "$ref": "#/definitions/ChallengeParticipation"
+        }
+      },
+      "required": ["challengeId", "title", "description", "category", "type", "startDate", "endDate", "metrics"],
+      "additionalProperties": false
+    },
+    "ChallengeParticipation": {
+      "type": "object",
+      "description": "User's participation in a challenge",
+      "properties": {
+        "participantId": {
+          "type": "string",
+          "description": "Anonymous participant identifier"
+        },
+        "joinedDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["registered", "in_progress", "completed", "abandoned"],
+          "description": "Participation status"
+        },
+        "result": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "number",
+              "description": "Achieved metric value"
+            },
+            "timestamp": {
+              "type": "string",
+              "format": "date-time",
+              "description": "When result was achieved"
+            },
+            "verified": {
+              "type": "boolean",
+              "description": "Whether result was locally verified"
+            },
+            "rank": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Ranking in challenge"
+            }
+          }
+        },
+        "anonymous": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether participation is anonymous"
+        }
+      },
+      "required": ["participantId", "joinedDate", "status", "anonymous"],
+      "additionalProperties": false
+    },
+    "MentorshipStatus": {
+      "type": "object",
+      "description": "User's mentorship involvement",
+      "properties": {
+        "isMentor": {
+          "type": "boolean",
+          "default": false,
+          "description": "Whether user is available as mentor"
+        },
+        "isMentee": {
+          "type": "boolean",
+          "default": false,
+          "description": "Whether user is seeking mentorship"
+        },
+        "expertise": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["energy_optimization", "model_orchestration", "plugin_development", "visualization", "ethics", "consciousness_exploration"]
+          },
+          "description": "Areas of expertise for mentoring"
+        },
+        "interests": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["energy_optimization", "model_orchestration", "plugin_development", "visualization", "ethics", "consciousness_exploration"]
+          },
+          "description": "Areas of interest for learning"
+        },
+        "activeMentorships": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MentorshipRelation"
+          }
+        },
+        "mentorshipHistory": {
+          "type": "object",
+          "properties": {
+            "totalMentored": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "totalMentorships": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "averageRating": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 5
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "MentorshipRelation": {
+      "type": "object",
+      "description": "Active mentorship relationship",
+      "properties": {
+        "relationId": {
+          "type": "string",
+          "description": "Unique relationship identifier"
+        },
+        "role": {
+          "type": "string",
+          "enum": ["mentor", "mentee"],
+          "description": "User's role in this relationship"
+        },
+        "partnerId": {
+          "type": "string",
+          "description": "Anonymous identifier of partner"
+        },
+        "startDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "focus": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["energy_optimization", "model_orchestration", "plugin_development", "visualization", "ethics", "consciousness_exploration"]
+          }
+        },
+        "status": {
+          "type": "string",
+          "enum": ["active", "paused", "completed"],
+          "default": "active"
+        },
+        "communicationPreference": {
+          "type": "string",
+          "enum": ["in_app", "scheduled_sessions", "as_needed"],
+          "default": "in_app"
+        },
+        "permissions": {
+          "type": "object",
+          "properties": {
+            "shareProgress": {
+              "type": "boolean",
+              "default": false
+            },
+            "shareSettings": {
+              "type": "boolean",
+              "default": false
+            },
+            "shareAchievements": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        }
+      },
+      "required": ["relationId", "role", "partnerId", "startDate", "focus"],
+      "additionalProperties": false
+    },
+    "CommunityContent": {
+      "type": "object",
+      "description": "User-generated community content",
+      "properties": {
+        "contentId": {
+          "type": "string",
+          "description": "Unique content identifier"
+        },
+        "type": {
+          "type": "string",
+          "enum": ["question", "answer", "tutorial", "showcase", "discussion"],
+          "description": "Content type"
+        },
+        "title": {
+          "type": "string",
+          "maxLength": 200,
+          "description": "Content title"
+        },
+        "body": {
+          "type": "string",
+          "maxLength": 10000,
+          "description": "Content body"
+        },
+        "authorId": {
+          "type": "string",
+          "description": "Anonymous author identifier"
+        },
+        "category": {
+          "type": "string",
+          "enum": ["general", "forge", "scholar", "sage", "technical", "community"],
+          "description": "Content category"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "maxLength": 50
+          },
+          "maxItems": 10,
+          "description": "Content tags"
+        },
+        "createdDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "modifiedDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["draft", "published", "moderated", "archived"],
+          "default": "draft"
+        },
+        "engagement": {
+          "type": "object",
+          "properties": {
+            "views": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "upvotes": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "downvotes": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "replies": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "energyAwarded": {
+              "type": "number",
+              "minimum": 0
+            }
+          }
+        },
+        "moderation": {
+          "type": "object",
+          "properties": {
+            "flagged": {
+              "type": "boolean",
+              "default": false
+            },
+            "flagCount": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "moderatedBy": {
+              "type": "string",
+              "description": "Anonymous moderator ID"
+            },
+            "moderationDate": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "moderationReason": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "required": ["contentId", "type", "title", "body", "authorId", "category", "createdDate", "status"],
+      "additionalProperties": false
+    }
+  },
+  "properties": {
+    "userProfile": {
+      "$ref": "#/definitions/UserProfile"
+    },
+    "challenges": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Challenge"
+      }
+    },
+    "communityContent": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/CommunityContent"
+      }
+    }
+  },
+  "examples": [
+    {
+      "userProfile": {
+        "userId": "550e8400-e29b-41d4-a716-446655440000",
+        "alias": "EnergyExplorer",
+        "level": 3,
+        "paths": ["sage", "scholar"],
+        "energyTotal": 15750.5,
+        "joinDate": "2025-01-15T10:30:00Z",
+        "socialSettings": {
+          "participationLevel": "pseudonymous",
+          "sharingEnabled": true,
+          "challengesEnabled": true,
+          "mentorshipEnabled": false,
+          "externalIntegrations": {
+            "discord": true,
+            "twitch": false,
+            "reddit": false,
+            "twitter": false
+          },
+          "privacyLevel": "standard"
+        },
+        "achievements": [
+          {
+            "id": "first_level",
+            "name": "First Steps",
+            "description": "Reached Level 1",
+            "category": "progression",
+            "level": 1,
+            "energyReward": 100,
+            "earnedDate": "2025-01-15T12:00:00Z",
+            "shared": true,
+            "shareHistory": [
+              {
+                "shareId": "share_001",
+                "timestamp": "2025-01-15T12:05:00Z",
+                "platform": "community",
+                "dataType": "achievement",
+                "anonymized": true,
+                "revoked": false
+              }
+            ]
+          }
+        ],
+        "mentorshipStatus": {
+          "isMentor": false,
+          "isMentee": true,
+          "interests": ["consciousness_exploration", "ethics"],
+          "activeMentorships": [],
+          "mentorshipHistory": {
+            "totalMentored": 0,
+            "totalMentorships": 0,
+            "averageRating": 0
+          }
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,664 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://wirthforge.org/schemas/ux-008/privacy-settings.json",
+  "title": "WF-UX-008 Privacy Settings Schema",
+  "description": "Comprehensive privacy configuration schema for WIRTHFORGE social features",
+  "version": "1.0.0",
+  "type": "object",
+  "definitions": {
+    "PrivacyLevel": {
+      "type": "string",
+      "enum": ["minimal", "standard", "enhanced", "maximum"],
+      "description": "Overall privacy protection level"
+    },
+    "ConsentStatus": {
+      "type": "string",
+      "enum": ["granted", "denied", "pending", "revoked"],
+      "description": "User consent status for data sharing"
+    },
+    "DataSharingScope": {
+      "type": "string",
+      "enum": ["none", "anonymous", "pseudonymous", "identified"],
+      "description": "Level of identity disclosure in shared data"
+    },
+    "GlobalPrivacySettings": {
+      "type": "object",
+      "description": "Master privacy configuration",
+      "properties": {
+        "privacyLevel": {
+          "$ref": "#/definitions/PrivacyLevel",
+          "default": "enhanced"
+        },
+        "dataMinimization": {
+          "type": "boolean",
+          "default": true,
+          "description": "Use minimal data for all operations"
+        },
+        "explicitConsentRequired": {
+          "type": "boolean",
+          "default": true,
+          "description": "Require explicit consent for all data sharing"
+        },
+        "automaticDataDeletion": {
+          "type": "boolean",
+          "default": false,
+          "description": "Automatically delete old shared data"
+        },
+        "dataRetentionDays": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 365,
+          "default": 90,
+          "description": "Days to retain shared data"
+        },
+        "allowAnalytics": {
+          "type": "boolean",
+          "default": false,
+          "description": "Allow anonymous usage analytics"
+        },
+        "allowTelemetry": {
+          "type": "boolean",
+          "default": false,
+          "description": "Allow technical telemetry data"
+        }
+      },
+      "required": ["privacyLevel", "dataMinimization", "explicitConsentRequired"],
+      "additionalProperties": false
+    },
+    "IdentitySettings": {
+      "type": "object",
+      "description": "Identity disclosure preferences",
+      "properties": {
+        "defaultParticipationLevel": {
+          "$ref": "#/definitions/DataSharingScope",
+          "default": "anonymous"
+        },
+        "allowPseudonymousMode": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable pseudonymous participation"
+        },
+        "allowIdentifiedMode": {
+          "type": "boolean",
+          "default": false,
+          "description": "Allow identified participation"
+        },
+        "aliasSettings": {
+          "type": "object",
+          "properties": {
+            "allowCustomAlias": {
+              "type": "boolean",
+              "default": true
+            },
+            "aliasChangeFrequency": {
+              "type": "string",
+              "enum": ["never", "monthly", "weekly", "daily"],
+              "default": "monthly"
+            },
+            "generateRandomAlias": {
+              "type": "boolean",
+              "default": true,
+              "description": "Auto-generate random aliases"
+            }
+          }
+        },
+        "profileVisibility": {
+          "type": "object",
+          "properties": {
+            "showLevel": {
+              "type": "boolean",
+              "default": false
+            },
+            "showPaths": {
+              "type": "boolean",
+              "default": false
+            },
+            "showAchievements": {
+              "type": "boolean",
+              "default": false
+            },
+            "showEnergyStats": {
+              "type": "boolean",
+              "default": false
+            },
+            "showJoinDate": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        }
+      },
+      "required": ["defaultParticipationLevel"],
+      "additionalProperties": false
+    },
+    "SharingSettings": {
+      "type": "object",
+      "description": "Data sharing preferences",
+      "properties": {
+        "achievementSharing": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "default": false
+            },
+            "autoShare": {
+              "type": "boolean",
+              "default": false,
+              "description": "Automatically share achievements"
+            },
+            "shareScope": {
+              "$ref": "#/definitions/DataSharingScope",
+              "default": "anonymous"
+            },
+            "platforms": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": ["community", "discord", "twitch", "reddit", "twitter"]
+              },
+              "default": ["community"]
+            },
+            "includeStats": {
+              "type": "boolean",
+              "default": true,
+              "description": "Include energy/performance stats"
+            },
+            "includeTimestamp": {
+              "type": "boolean",
+              "default": false,
+              "description": "Include achievement timestamp"
+            }
+          }
+        },
+        "challengeParticipation": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "default": false
+            },
+            "shareResults": {
+              "type": "boolean",
+              "default": false,
+              "description": "Share challenge results"
+            },
+            "shareScope": {
+              "$ref": "#/definitions/DataSharingScope",
+              "default": "anonymous"
+            },
+            "allowLeaderboards": {
+              "type": "boolean",
+              "default": false,
+              "description": "Appear on public leaderboards"
+            },
+            "allowRealTimeUpdates": {
+              "type": "boolean",
+              "default": false,
+              "description": "Share real-time progress during challenges"
+            }
+          }
+        },
+        "contentSharing": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "default": false
+            },
+            "allowQuestions": {
+              "type": "boolean",
+              "default": false,
+              "description": "Allow posting questions"
+            },
+            "allowAnswers": {
+              "type": "boolean",
+              "default": false,
+              "description": "Allow posting answers"
+            },
+            "allowTutorials": {
+              "type": "boolean",
+              "default": false,
+              "description": "Allow creating tutorials"
+            },
+            "shareScope": {
+              "$ref": "#/definitions/DataSharingScope",
+              "default": "pseudonymous"
+            },
+            "moderationConsent": {
+              "type": "boolean",
+              "default": true,
+              "description": "Allow community moderation of content"
+            }
+          }
+        },
+        "mentorshipSharing": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "default": false
+            },
+            "shareProgress": {
+              "type": "boolean",
+              "default": false,
+              "description": "Share progress with mentor/mentee"
+            },
+            "shareSettings": {
+              "type": "boolean",
+              "default": false,
+              "description": "Share configuration with mentor"
+            },
+            "shareAchievements": {
+              "type": "boolean",
+              "default": false,
+              "description": "Share achievements with mentor/mentee"
+            },
+            "allowDirectMessages": {
+              "type": "boolean",
+              "default": true,
+              "description": "Allow direct messaging"
+            },
+            "encryptMessages": {
+              "type": "boolean",
+              "default": true,
+              "description": "Encrypt all mentorship communications"
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "ExternalPlatformSettings": {
+      "type": "object",
+      "description": "External platform integration settings",
+      "properties": {
+        "discord": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "default": false
+            },
+            "shareAchievements": {
+              "type": "boolean",
+              "default": false
+            },
+            "shareChallenges": {
+              "type": "boolean",
+              "default": false
+            },
+            "allowBotCommands": {
+              "type": "boolean",
+              "default": false
+            },
+            "webhookUrl": {
+              "type": "string",
+              "format": "uri",
+              "description": "Discord webhook URL (encrypted)"
+            }
+          }
+        },
+        "twitch": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "default": false
+            },
+            "allowStreaming": {
+              "type": "boolean",
+              "default": false
+            },
+            "shareOverlays": {
+              "type": "boolean",
+              "default": false,
+              "description": "Share energy/challenge overlays"
+            },
+            "hideSensitiveData": {
+              "type": "boolean",
+              "default": true,
+              "description": "Hide prompts and personal data"
+            },
+            "streamKey": {
+              "type": "string",
+              "description": "Twitch stream key (encrypted)"
+            }
+          }
+        },
+        "reddit": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "default": false
+            },
+            "shareAchievements": {
+              "type": "boolean",
+              "default": false
+            },
+            "shareContent": {
+              "type": "boolean",
+              "default": false
+            },
+            "subreddits": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^r/[a-zA-Z0-9_]+$"
+              },
+              "description": "Allowed subreddits for sharing"
+            }
+          }
+        },
+        "twitter": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "default": false
+            },
+            "shareAchievements": {
+              "type": "boolean",
+              "default": false
+            },
+            "includeHashtags": {
+              "type": "boolean",
+              "default": true
+            },
+            "hashtags": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^#[a-zA-Z0-9_]+$"
+              },
+              "default": ["#WIRTHFORGE", "#LocalAI"]
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "DataControlSettings": {
+      "type": "object",
+      "description": "User data control preferences",
+      "properties": {
+        "dataExportSettings": {
+          "type": "object",
+          "properties": {
+            "allowExport": {
+              "type": "boolean",
+              "default": true
+            },
+            "exportFormat": {
+              "type": "string",
+              "enum": ["json", "csv", "xml"],
+              "default": "json"
+            },
+            "includeMetadata": {
+              "type": "boolean",
+              "default": true
+            },
+            "encryptExport": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        },
+        "dataDeletionSettings": {
+          "type": "object",
+          "properties": {
+            "allowDeletion": {
+              "type": "boolean",
+              "default": true
+            },
+            "confirmationRequired": {
+              "type": "boolean",
+              "default": true
+            },
+            "gracePeriodDays": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 30,
+              "default": 7,
+              "description": "Days before permanent deletion"
+            },
+            "deleteFromExternalPlatforms": {
+              "type": "boolean",
+              "default": true,
+              "description": "Attempt to delete from external platforms"
+            }
+          }
+        },
+        "auditSettings": {
+          "type": "object",
+          "properties": {
+            "enableAuditLog": {
+              "type": "boolean",
+              "default": true
+            },
+            "logDataAccess": {
+              "type": "boolean",
+              "default": true
+            },
+            "logDataSharing": {
+              "type": "boolean",
+              "default": true
+            },
+            "logConfigChanges": {
+              "type": "boolean",
+              "default": true
+            },
+            "auditRetentionDays": {
+              "type": "integer",
+              "minimum": 30,
+              "maximum": 365,
+              "default": 90
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "ConsentRecord": {
+      "type": "object",
+      "description": "Record of user consent for specific data sharing",
+      "properties": {
+        "consentId": {
+          "type": "string",
+          "description": "Unique consent identifier"
+        },
+        "dataType": {
+          "type": "string",
+          "enum": ["achievement", "challenge_result", "profile", "content", "mentorship_data"],
+          "description": "Type of data consent applies to"
+        },
+        "purpose": {
+          "type": "string",
+          "description": "Purpose of data sharing"
+        },
+        "scope": {
+          "$ref": "#/definitions/DataSharingScope"
+        },
+        "platforms": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["community", "discord", "twitch", "reddit", "twitter"]
+          }
+        },
+        "status": {
+          "$ref": "#/definitions/ConsentStatus"
+        },
+        "grantedDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "expiryDate": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When consent expires (optional)"
+        },
+        "revokedDate": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When consent was revoked"
+        },
+        "revokeReason": {
+          "type": "string",
+          "description": "Reason for revoking consent"
+        }
+      },
+      "required": ["consentId", "dataType", "purpose", "scope", "platforms", "status", "grantedDate"],
+      "additionalProperties": false
+    }
+  },
+  "properties": {
+    "globalSettings": {
+      "$ref": "#/definitions/GlobalPrivacySettings"
+    },
+    "identitySettings": {
+      "$ref": "#/definitions/IdentitySettings"
+    },
+    "sharingSettings": {
+      "$ref": "#/definitions/SharingSettings"
+    },
+    "externalPlatforms": {
+      "$ref": "#/definitions/ExternalPlatformSettings"
+    },
+    "dataControl": {
+      "$ref": "#/definitions/DataControlSettings"
+    },
+    "consentHistory": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ConsentRecord"
+      },
+      "description": "History of all consent decisions"
+    },
+    "lastUpdated": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When settings were last modified"
+    },
+    "settingsVersion": {
+      "type": "string",
+      "description": "Version of privacy settings schema"
+    }
+  },
+  "required": ["globalSettings", "identitySettings", "sharingSettings", "lastUpdated", "settingsVersion"],
+  "additionalProperties": false,
+  "examples": [
+    {
+      "globalSettings": {
+        "privacyLevel": "enhanced",
+        "dataMinimization": true,
+        "explicitConsentRequired": true,
+        "automaticDataDeletion": false,
+        "dataRetentionDays": 90,
+        "allowAnalytics": false,
+        "allowTelemetry": false
+      },
+      "identitySettings": {
+        "defaultParticipationLevel": "anonymous",
+        "allowPseudonymousMode": true,
+        "allowIdentifiedMode": false,
+        "aliasSettings": {
+          "allowCustomAlias": true,
+          "aliasChangeFrequency": "monthly",
+          "generateRandomAlias": true
+        },
+        "profileVisibility": {
+          "showLevel": false,
+          "showPaths": false,
+          "showAchievements": false,
+          "showEnergyStats": false,
+          "showJoinDate": false
+        }
+      },
+      "sharingSettings": {
+        "achievementSharing": {
+          "enabled": false,
+          "autoShare": false,
+          "shareScope": "anonymous",
+          "platforms": ["community"],
+          "includeStats": true,
+          "includeTimestamp": false
+        },
+        "challengeParticipation": {
+          "enabled": false,
+          "shareResults": false,
+          "shareScope": "anonymous",
+          "allowLeaderboards": false,
+          "allowRealTimeUpdates": false
+        },
+        "contentSharing": {
+          "enabled": false,
+          "allowQuestions": false,
+          "allowAnswers": false,
+          "allowTutorials": false,
+          "shareScope": "pseudonymous",
+          "moderationConsent": true
+        },
+        "mentorshipSharing": {
+          "enabled": false,
+          "shareProgress": false,
+          "shareSettings": false,
+          "shareAchievements": false,
+          "allowDirectMessages": true,
+          "encryptMessages": true
+        }
+      },
+      "externalPlatforms": {
+        "discord": {
+          "enabled": false,
+          "shareAchievements": false,
+          "shareChallenges": false,
+          "allowBotCommands": false
+        },
+        "twitch": {
+          "enabled": false,
+          "allowStreaming": false,
+          "shareOverlays": false,
+          "hideSensitiveData": true
+        },
+        "reddit": {
+          "enabled": false,
+          "shareAchievements": false,
+          "shareContent": false,
+          "subreddits": []
+        },
+        "twitter": {
+          "enabled": false,
+          "shareAchievements": false,
+          "includeHashtags": true,
+          "hashtags": ["#WIRTHFORGE", "#LocalAI"]
+        }
+      },
+      "dataControl": {
+        "dataExportSettings": {
+          "allowExport": true,
+          "exportFormat": "json",
+          "includeMetadata": true,
+          "encryptExport": false
+        },
+        "dataDeletionSettings": {
+          "allowDeletion": true,
+          "confirmationRequired": true,
+          "gracePeriodDays": 7,
+          "deleteFromExternalPlatforms": true
+        },
+        "auditSettings": {
+          "enableAuditLog": true,
+          "logDataAccess": true,
+          "logDataSharing": true,
+          "logConfigChanges": true,
+          "auditRetentionDays": 90
+        }
+      },
+      "consentHistory": [],
+      "lastUpdated": "2025-01-27T10:00:00Z",
+      "settingsVersion": "1.0.0"
+    }
+  ]
+}

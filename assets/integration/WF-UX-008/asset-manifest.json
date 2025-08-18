@@ -1,0 +1,309 @@
+{
+  "manifestVersion": "1.0.0",
+  "specificationId": "WF-UX-008",
+  "name": "Social Features & Community Integration",
+  "description": "Privacy-first social and community features for WIRTHFORGE platform",
+  "version": "1.0.0",
+  "type": "ux_specification",
+  "createdAt": "2024-08-19T01:06:00Z",
+  "lastModified": "2024-08-19T01:06:00Z",
+  "author": "WIRTHFORGE Development Team",
+  "status": "complete",
+  
+  "dependencies": {
+    "required": [
+      {
+        "id": "WF-UX-002",
+        "name": "Progressive Levels",
+        "version": ">=1.0.0",
+        "reason": "Achievement and progression system integration"
+      },
+      {
+        "id": "WF-FND-001",
+        "name": "Vision & Principles",
+        "version": ">=1.0.0",
+        "reason": "Core privacy and local-first principles"
+      },
+      {
+        "id": "WF-FND-006",
+        "name": "Governance",
+        "version": ">=1.0.0",
+        "reason": "Community governance and moderation policies"
+      },
+      {
+        "id": "WF-TECH-007",
+        "name": "Security & Privacy",
+        "version": ">=1.0.0",
+        "reason": "Privacy controls and data protection"
+      }
+    ],
+    "optional": [
+      {
+        "id": "WF-UX-001",
+        "name": "Core Interface",
+        "version": ">=1.0.0",
+        "reason": "UI component integration"
+      },
+      {
+        "id": "WF-TECH-008",
+        "name": "External Integrations",
+        "version": ">=1.0.0",
+        "reason": "Platform integrations (Discord, Reddit, etc.)"
+      }
+    ]
+  },
+
+  "assets": {
+    "diagrams": [
+      {
+        "path": "assets/diagrams/WF-UX-008/WF-UX-008-social-architecture.md",
+        "name": "Social Architecture Diagram",
+        "type": "mermaid_graph",
+        "description": "Overall social system architecture showing local-first design with optional network layer",
+        "size": "110 lines",
+        "lastModified": "2024-08-19T01:06:00Z"
+      },
+      {
+        "path": "assets/diagrams/WF-UX-008/WF-UX-008-privacy-flow.md",
+        "name": "Privacy Flow Diagram",
+        "type": "mermaid_sequence",
+        "description": "Privacy-preserving social interaction flows with consent management",
+        "size": "147 lines",
+        "lastModified": "2024-08-19T01:06:00Z"
+      },
+      {
+        "path": "assets/diagrams/WF-UX-008/WF-UX-008-community-structure.md",
+        "name": "Community Structure Diagram",
+        "type": "mermaid_graph",
+        "description": "Community features, user progression, and moderation systems",
+        "size": "142 lines",
+        "lastModified": "2024-08-19T01:06:00Z"
+      }
+    ],
+    
+    "schemas": [
+      {
+        "path": "assets/schemas/WF-UX-008/WF-UX-008-social-data-models.json",
+        "name": "Social Data Models Schema",
+        "type": "json_schema",
+        "description": "Data structures for user profiles, achievements, challenges, and community content",
+        "size": "506 lines",
+        "lastModified": "2024-08-19T01:06:00Z",
+        "validation": "JSON Schema Draft 2020-12"
+      },
+      {
+        "path": "assets/schemas/WF-UX-008/WF-UX-008-privacy-settings.json",
+        "name": "Privacy Settings Schema",
+        "type": "json_schema",
+        "description": "Privacy configuration including consent management and data controls",
+        "size": "408 lines",
+        "lastModified": "2024-08-19T01:06:00Z",
+        "validation": "JSON Schema Draft 2020-12"
+      },
+      {
+        "path": "assets/schemas/WF-UX-008/WF-UX-008-community-rules.json",
+        "name": "Community Rules Schema",
+        "type": "json_schema",
+        "description": "Community guidelines, moderation actions, and governance structures",
+        "size": "479 lines",
+        "lastModified": "2024-08-19T01:06:00Z",
+        "validation": "JSON Schema Draft 2020-12"
+      }
+    ],
+    
+    "code": [
+      {
+        "path": "assets/code/WF-UX-008/social-components.tsx",
+        "name": "Social Components",
+        "type": "react_typescript",
+        "description": "React components for achievements, challenges, privacy indicators, and social dashboard",
+        "size": "320 lines",
+        "lastModified": "2024-08-19T01:06:00Z",
+        "exports": ["AchievementCard", "ChallengeCard", "PrivacyStatusIndicator", "SocialDashboard", "ShareConfirmationModal"],
+        "dependencies": ["react", "eventemitter3"]
+      },
+      {
+        "path": "assets/code/WF-UX-008/privacy-controls.ts",
+        "name": "Privacy Controller",
+        "type": "typescript_class",
+        "description": "Privacy management system with consent workflows and data sanitization",
+        "size": "308 lines",
+        "lastModified": "2024-08-19T01:06:00Z",
+        "exports": ["PrivacyController"],
+        "dependencies": ["eventemitter3", "crypto"]
+      },
+      {
+        "path": "assets/code/WF-UX-008/sharing-utilities.ts",
+        "name": "Sharing Manager",
+        "type": "typescript_class",
+        "description": "Multi-platform sharing system with privacy-preserving data handling",
+        "size": "650+ lines",
+        "lastModified": "2024-08-19T01:06:00Z",
+        "exports": ["SharingManager", "DiscordIntegration", "TwitchIntegration", "RedditIntegration", "TwitterIntegration"],
+        "dependencies": ["eventemitter3", "./privacy-controls"]
+      },
+      {
+        "path": "assets/code/WF-UX-008/community-moderation.ts",
+        "name": "Moderation Manager",
+        "type": "typescript_class",
+        "description": "Lightweight community moderation with reputation system and content analysis",
+        "size": "800+ lines",
+        "lastModified": "2024-08-19T01:06:00Z",
+        "exports": ["ModerationManager", "ContentAnalyzer", "ReputationSystem"],
+        "dependencies": ["eventemitter3", "./privacy-controls"]
+      }
+    ],
+    
+    "tests": [
+      {
+        "path": "assets/tests/WF-UX-008/social-feature-tests.spec.ts",
+        "name": "Social Feature Tests",
+        "type": "jest_test_suite",
+        "description": "Comprehensive tests for social components and integration workflows",
+        "size": "600+ lines",
+        "lastModified": "2024-08-19T01:06:00Z",
+        "coverage": ["components", "privacy_integration", "sharing_workflows", "error_handling", "performance", "accessibility"],
+        "dependencies": ["@jest/globals", "@testing-library/react", "eventemitter3"]
+      },
+      {
+        "path": "assets/tests/WF-UX-008/privacy-validation.spec.ts",
+        "name": "Privacy Validation Tests",
+        "type": "jest_test_suite",
+        "description": "Privacy controls validation including data sanitization and consent management",
+        "size": "500+ lines",
+        "lastModified": "2024-08-19T01:06:00Z",
+        "coverage": ["data_sanitization", "anonymization", "consent_workflows", "audit_logging", "data_export", "data_deletion"],
+        "dependencies": ["@jest/globals", "../code/WF-UX-008/privacy-controls"]
+      },
+      {
+        "path": "assets/tests/WF-UX-008/community-moderation-tests.spec.ts",
+        "name": "Community Moderation Tests",
+        "type": "jest_test_suite",
+        "description": "Moderation system tests including content analysis and reputation management",
+        "size": "700+ lines",
+        "lastModified": "2024-08-19T01:06:00Z",
+        "coverage": ["content_analysis", "spam_detection", "reputation_system", "moderation_queue", "user_permissions", "performance"],
+        "dependencies": ["@jest/globals", "../code/WF-UX-008/community-moderation"]
+      }
+    ],
+    
+    "integration": [
+      {
+        "path": "assets/integration/WF-UX-008/integration-guide.md",
+        "name": "Integration Guide",
+        "type": "markdown_documentation",
+        "description": "Complete integration guide for implementing social features",
+        "size": "12308 bytes",
+        "lastModified": "2024-08-19T01:06:00Z"
+      }
+    ]
+  },
+
+  "features": {
+    "social_features": {
+      "achievements": {
+        "description": "Achievement system with privacy-aware sharing",
+        "privacy_level": "user_controlled",
+        "platforms": ["discord", "reddit", "twitter", "twitch"]
+      },
+      "challenges": {
+        "description": "Community challenges with progress tracking",
+        "privacy_level": "opt_in",
+        "collaboration": true
+      },
+      "mentorship": {
+        "description": "Peer mentorship and knowledge sharing",
+        "privacy_level": "explicit_consent",
+        "matching": "privacy_preserving"
+      }
+    },
+    "community_features": {
+      "moderation": {
+        "description": "Lightweight community moderation",
+        "approach": "user_empowerment",
+        "automation": "minimal"
+      },
+      "reputation": {
+        "description": "Trust-based reputation system",
+        "calculation": "contribution_based",
+        "transparency": "full"
+      },
+      "governance": {
+        "description": "Community self-governance",
+        "model": "distributed",
+        "participation": "voluntary"
+      }
+    },
+    "privacy_features": {
+      "anonymization": {
+        "description": "User data anonymization",
+        "levels": ["anonymous", "pseudonymous", "identified"],
+        "user_control": "full"
+      },
+      "consent_management": {
+        "description": "Explicit consent workflows",
+        "granularity": "per_action",
+        "revocation": "immediate"
+      },
+      "data_control": {
+        "description": "User data control and portability",
+        "export_formats": ["json", "csv", "xml"],
+        "deletion": "immediate_with_grace_period"
+      }
+    }
+  },
+
+  "technical_specifications": {
+    "architecture": "local_first_with_optional_network",
+    "privacy_by_design": true,
+    "offline_capable": true,
+    "platform_integrations": ["discord", "reddit", "twitter", "twitch"],
+    "data_formats": ["json", "csv", "xml"],
+    "encryption": "client_side",
+    "consent_model": "explicit_opt_in"
+  },
+
+  "integration_requirements": {
+    "complexity": "high",
+    "estimated_setup_time": "6-8 hours",
+    "privacy_compliance": "gdpr_ccpa_compatible",
+    "testing_priority": "critical",
+    "rollout_strategy": "gradual_with_user_consent",
+    "monitoring_required": ["privacy_events", "consent_changes", "data_operations"]
+  },
+
+  "quality_assurance": {
+    "test_coverage": {
+      "unit_tests": "95%+",
+      "integration_tests": "90%+",
+      "privacy_validation": "100%",
+      "accessibility": "wcag_2.1_aa"
+    },
+    "performance_requirements": {
+      "component_render": "<16ms",
+      "privacy_operations": "<100ms",
+      "data_export": "<5s",
+      "consent_workflow": "<200ms"
+    },
+    "security_validation": {
+      "data_sanitization": "comprehensive",
+      "consent_integrity": "cryptographic",
+      "audit_logging": "tamper_evident"
+    }
+  },
+
+  "deployment_considerations": {
+    "privacy_impact_assessment": "required",
+    "user_education": "comprehensive_onboarding",
+    "consent_migration": "existing_users_must_opt_in",
+    "rollback_plan": "data_preservation_with_feature_disable",
+    "monitoring": "privacy_events_and_user_satisfaction"
+  },
+
+  "maintenance": {
+    "update_frequency": "monthly_security_patches",
+    "privacy_policy_sync": "automatic",
+    "consent_renewal": "annual_or_on_policy_change",
+    "data_retention_cleanup": "automated_with_user_notification"
+  }
+}
