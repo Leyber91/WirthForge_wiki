@@ -1,0 +1,206 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "WIRTHFORGE Design Tokens Schema",
+  "description": "Complete design token system for WIRTHFORGE UI components",
+  "type": "object",
+  "properties": {
+    "colorPalettes": {
+      "type": "object",
+      "description": "Energy-themed color palettes mapping to computational states",
+      "properties": {
+        "lightning": {
+          "type": "object",
+          "description": "Golden yellow spectrum for token generation visualization",
+          "properties": {
+            "primary": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$", "default": "#fbbf24" },
+            "secondary": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$", "default": "#f59e0b" },
+            "tertiary": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$", "default": "#d97706" },
+            "glow": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$", "default": "#fef3c7" },
+            "shadow": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$", "default": "#92400e" }
+          },
+          "required": ["primary", "secondary", "tertiary", "glow", "shadow"]
+        },
+        "energyStream": {
+          "type": "object",
+          "description": "Blue spectrum for continuous token flow visualization",
+          "properties": {
+            "primary": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$", "default": "#60a5fa" },
+            "secondary": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$", "default": "#3b82f6" },
+            "tertiary": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$", "default": "#1d4ed8" },
+            "deep": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$", "default": "#1e40af" },
+            "flow": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$", "default": "#dbeafe" }
+          },
+          "required": ["primary", "secondary", "tertiary", "deep", "flow"]
+        },
+        "interference": {
+          "type": "object",
+          "description": "Purple/red spectrum for model interference patterns",
+          "properties": {
+            "constructive": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$", "default": "#a855f7" },
+            "destructive": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$", "default": "#ef4444" },
+            "neutral": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$", "default": "#6b7280" },
+            "harmonic": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$", "default": "#10b981" }
+          },
+          "required": ["constructive", "destructive", "neutral", "harmonic"]
+        },
+        "resonance": {
+          "type": "object",
+          "description": "Multi-color spectrum for celebration effects",
+          "properties": {
+            "aurora1": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$", "default": "#06ffa5" },
+            "aurora2": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$", "default": "#00d4ff" },
+            "aurora3": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$", "default": "#7c3aed" },
+            "aurora4": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$", "default": "#f59e0b" },
+            "celebration": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$", "default": "#fbbf24" }
+          },
+          "required": ["aurora1", "aurora2", "aurora3", "aurora4", "celebration"]
+        },
+        "system": {
+          "type": "object",
+          "description": "System UI colors for controls and text",
+          "properties": {
+            "background": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$", "default": "#0f172a" },
+            "surface": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$", "default": "#1e293b" },
+            "text": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$", "default": "#f8fafc" },
+            "textSecondary": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$", "default": "#cbd5e1" },
+            "border": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$", "default": "#334155" },
+            "accent": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$", "default": "#fbbf24" }
+          },
+          "required": ["background", "surface", "text", "textSecondary", "border", "accent"]
+        }
+      },
+      "required": ["lightning", "energyStream", "interference", "resonance", "system"]
+    },
+    "typography": {
+      "type": "object",
+      "description": "Typography system for technical and gamified content",
+      "properties": {
+        "families": {
+          "type": "object",
+          "properties": {
+            "monospace": { "type": "string", "default": "ui-monospace, SFMono-Regular, 'SF Mono', Monaco, Consolas, monospace" },
+            "sans": { "type": "string", "default": "ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif" },
+            "display": { "type": "string", "default": "'Inter', ui-sans-serif, system-ui, sans-serif" }
+          },
+          "required": ["monospace", "sans", "display"]
+        },
+        "sizes": {
+          "type": "object",
+          "properties": {
+            "xs": { "type": "string", "pattern": "^\\d+(\\.\\d+)?(rem|px)$", "default": "0.75rem" },
+            "sm": { "type": "string", "pattern": "^\\d+(\\.\\d+)?(rem|px)$", "default": "0.875rem" },
+            "base": { "type": "string", "pattern": "^\\d+(\\.\\d+)?(rem|px)$", "default": "1rem" },
+            "lg": { "type": "string", "pattern": "^\\d+(\\.\\d+)?(rem|px)$", "default": "1.125rem" },
+            "xl": { "type": "string", "pattern": "^\\d+(\\.\\d+)?(rem|px)$", "default": "1.25rem" },
+            "2xl": { "type": "string", "pattern": "^\\d+(\\.\\d+)?(rem|px)$", "default": "1.5rem" },
+            "3xl": { "type": "string", "pattern": "^\\d+(\\.\\d+)?(rem|px)$", "default": "1.875rem" }
+          },
+          "required": ["xs", "sm", "base", "lg", "xl", "2xl", "3xl"]
+        },
+        "weights": {
+          "type": "object",
+          "properties": {
+            "normal": { "type": "string", "pattern": "^[1-9]00$", "default": "400" },
+            "medium": { "type": "string", "pattern": "^[1-9]00$", "default": "500" },
+            "semibold": { "type": "string", "pattern": "^[1-9]00$", "default": "600" },
+            "bold": { "type": "string", "pattern": "^[1-9]00$", "default": "700" }
+          },
+          "required": ["normal", "medium", "semibold", "bold"]
+        }
+      },
+      "required": ["families", "sizes", "weights"]
+    },
+    "spacing": {
+      "type": "object",
+      "description": "Consistent spacing units for margins, padding, and gaps",
+      "properties": {
+        "xs": { "type": "string", "pattern": "^\\d+(\\.\\d+)?(rem|px)$", "default": "0.25rem" },
+        "sm": { "type": "string", "pattern": "^\\d+(\\.\\d+)?(rem|px)$", "default": "0.5rem" },
+        "md": { "type": "string", "pattern": "^\\d+(\\.\\d+)?(rem|px)$", "default": "1rem" },
+        "lg": { "type": "string", "pattern": "^\\d+(\\.\\d+)?(rem|px)$", "default": "1.5rem" },
+        "xl": { "type": "string", "pattern": "^\\d+(\\.\\d+)?(rem|px)$", "default": "2rem" },
+        "2xl": { "type": "string", "pattern": "^\\d+(\\.\\d+)?(rem|px)$", "default": "3rem" }
+      },
+      "required": ["xs", "sm", "md", "lg", "xl", "2xl"]
+    },
+    "animations": {
+      "type": "object",
+      "description": "Animation durations and easing curves for energy visualization",
+      "properties": {
+        "durations": {
+          "type": "object",
+          "properties": {
+            "fast": { "type": "string", "pattern": "^\\d+ms$", "default": "150ms" },
+            "normal": { "type": "string", "pattern": "^\\d+ms$", "default": "300ms" },
+            "slow": { "type": "string", "pattern": "^\\d+ms$", "default": "500ms" },
+            "energyPulse": { "type": "string", "pattern": "^\\d+ms$", "default": "100ms" },
+            "tokenFlow": { "type": "string", "pattern": "^\\d+ms$", "default": "200ms" }
+          },
+          "required": ["fast", "normal", "slow", "energyPulse", "tokenFlow"]
+        },
+        "easings": {
+          "type": "object",
+          "properties": {
+            "easeOut": { "type": "string", "default": "cubic-bezier(0, 0, 0.2, 1)" },
+            "easeIn": { "type": "string", "default": "cubic-bezier(0.4, 0, 1, 1)" },
+            "easeInOut": { "type": "string", "default": "cubic-bezier(0.4, 0, 0.2, 1)" },
+            "bounce": { "type": "string", "default": "cubic-bezier(0.68, -0.55, 0.265, 1.55)" },
+            "energyFlow": { "type": "string", "default": "cubic-bezier(0.25, 0.46, 0.45, 0.94)" }
+          },
+          "required": ["easeOut", "easeIn", "easeInOut", "bounce", "energyFlow"]
+        }
+      },
+      "required": ["durations", "easings"]
+    },
+    "accessibility": {
+      "type": "object",
+      "description": "Accessibility guidelines and WCAG 2.2 AA compliance settings",
+      "properties": {
+        "focusRings": {
+          "type": "object",
+          "properties": {
+            "color": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$", "default": "#fbbf24" },
+            "width": { "type": "string", "pattern": "^\\d+px$", "default": "2px" },
+            "style": { "type": "string", "enum": ["solid", "dashed", "dotted"], "default": "solid" },
+            "offset": { "type": "string", "pattern": "^\\d+px$", "default": "2px" }
+          },
+          "required": ["color", "width", "style", "offset"]
+        },
+        "contrastRatios": {
+          "type": "object",
+          "properties": {
+            "minimum": { "type": "string", "pattern": "^\\d+(\\.\\d+)?:1$", "default": "4.5:1" },
+            "enhanced": { "type": "string", "pattern": "^\\d+(\\.\\d+)?:1$", "default": "7:1" },
+            "textOnBackground": { "type": "string", "pattern": "^\\d+(\\.\\d+)?:1$", "default": "12.6:1" },
+            "textOnSurface": { "type": "string", "pattern": "^\\d+(\\.\\d+)?:1$", "default": "8.9:1" }
+          },
+          "required": ["minimum", "enhanced", "textOnBackground", "textOnSurface"]
+        },
+        "motionReduced": {
+          "type": "object",
+          "properties": {
+            "animationDuration": { "type": "string", "pattern": "^\\d+(\\.\\d+)?ms$", "default": "0.01ms" },
+            "transitionDuration": { "type": "string", "pattern": "^\\d+(\\.\\d+)?ms$", "default": "0.01ms" },
+            "staticAlternatives": { "type": "boolean", "default": true }
+          },
+          "required": ["animationDuration", "transitionDuration", "staticAlternatives"]
+        }
+      },
+      "required": ["focusRings", "contrastRatios", "motionReduced"]
+    },
+    "performance": {
+      "type": "object",
+      "description": "Performance budgets for 60Hz rendering",
+      "properties": {
+        "frameRate": { "type": "string", "pattern": "^\\d+fps$", "default": "60fps" },
+        "frameBudget": { "type": "string", "pattern": "^\\d+(\\.\\d+)?ms$", "default": "16.67ms" },
+        "maxAnimations": { "type": "integer", "minimum": 1, "maximum": 20, "default": 10 },
+        "gpuAcceleration": { "type": "boolean", "default": true },
+        "memoryLimit": { "type": "string", "pattern": "^\\d+MB$", "default": "100MB" },
+        "cpuThreshold": { "type": "string", "pattern": "^\\d+%$", "default": "5%" }
+      },
+      "required": ["frameRate", "frameBudget", "maxAnimations", "gpuAcceleration", "memoryLimit", "cpuThreshold"]
+    }
+  },
+  "required": ["colorPalettes", "typography", "spacing", "animations", "accessibility", "performance"]
+}

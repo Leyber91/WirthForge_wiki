@@ -1,0 +1,249 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "WIRTHFORGE Component Props Schema",
+  "description": "TypeScript prop definitions for WIRTHFORGE UI components",
+  "type": "object",
+  "definitions": {
+    "EnergyMetrics": {
+      "type": "object",
+      "properties": {
+        "tokensPerSecond": { "type": "number", "minimum": 0 },
+        "totalEnergy": { "type": "number", "minimum": 0 },
+        "energyLevel": { "type": "number", "minimum": 0, "maximum": 100 },
+        "efficiency": { "type": "number", "minimum": 0, "maximum": 1 }
+      },
+      "required": ["tokensPerSecond", "totalEnergy", "energyLevel", "efficiency"]
+    },
+    "VisualEffectProps": {
+      "type": "object",
+      "properties": {
+        "intensity": { "type": "number", "minimum": 0, "maximum": 1 },
+        "color": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
+        "duration": { "type": "number", "minimum": 0 },
+        "easing": { "type": "string" },
+        "reducedMotion": { "type": "boolean" }
+      },
+      "required": ["intensity", "color"]
+    },
+    "AccessibilityProps": {
+      "type": "object",
+      "properties": {
+        "ariaLabel": { "type": "string" },
+        "ariaDescribedBy": { "type": "string" },
+        "role": { "type": "string" },
+        "tabIndex": { "type": "integer" },
+        "focusable": { "type": "boolean" }
+      }
+    }
+  },
+  "properties": {
+    "LightningBoltVisualProps": {
+      "type": "object",
+      "properties": {
+        "tokenSpeed": { "type": "number", "minimum": 0, "description": "Tokens per second" },
+        "energyLevel": { "type": "number", "minimum": 0, "maximum": 100 },
+        "thickness": { "type": "number", "minimum": 1, "maximum": 10 },
+        "color": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
+        "animated": { "type": "boolean", "default": true },
+        "reducedMotion": { "type": "boolean", "default": false },
+        "width": { "type": "number", "minimum": 100 },
+        "height": { "type": "number", "minimum": 50 },
+        "accessibility": { "$ref": "#/definitions/AccessibilityProps" }
+      },
+      "required": ["tokenSpeed", "energyLevel", "width", "height"]
+    },
+    "EnergyStreamVisualProps": {
+      "type": "object",
+      "properties": {
+        "flowRate": { "type": "number", "minimum": 0 },
+        "particleCount": { "type": "integer", "minimum": 10, "maximum": 1000 },
+        "streamColor": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
+        "direction": { "type": "string", "enum": ["horizontal", "vertical", "diagonal"] },
+        "turbulence": { "type": "number", "minimum": 0, "maximum": 1 },
+        "opacity": { "type": "number", "minimum": 0, "maximum": 1 },
+        "performance": { 
+          "type": "object",
+          "properties": {
+            "gpuAccelerated": { "type": "boolean", "default": true },
+            "maxParticles": { "type": "integer", "minimum": 10, "maximum": 500 }
+          }
+        },
+        "accessibility": { "$ref": "#/definitions/AccessibilityProps" }
+      },
+      "required": ["flowRate", "particleCount", "streamColor"]
+    },
+    "InterferenceOverlayProps": {
+      "type": "object",
+      "properties": {
+        "models": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string" },
+              "position": { "type": "object", "properties": { "x": { "type": "number" }, "y": { "type": "number" } } },
+              "frequency": { "type": "number", "minimum": 0 },
+              "amplitude": { "type": "number", "minimum": 0 }
+            },
+            "required": ["id", "position", "frequency", "amplitude"]
+          },
+          "minItems": 2,
+          "maxItems": 6
+        },
+        "interferenceType": { "type": "string", "enum": ["constructive", "destructive", "mixed"] },
+        "visualMode": { "type": "string", "enum": ["ripples", "waves", "particles"] },
+        "intensity": { "type": "number", "minimum": 0, "maximum": 1 },
+        "colorMapping": {
+          "type": "object",
+          "properties": {
+            "constructive": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
+            "destructive": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
+            "neutral": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" }
+          }
+        },
+        "accessibility": { "$ref": "#/definitions/AccessibilityProps" }
+      },
+      "required": ["models", "interferenceType", "intensity"]
+    },
+    "MetricsPanelProps": {
+      "type": "object",
+      "properties": {
+        "metrics": { "$ref": "#/definitions/EnergyMetrics" },
+        "displayMode": { "type": "string", "enum": ["compact", "detailed", "minimal"] },
+        "refreshRate": { "type": "number", "minimum": 100, "maximum": 1000, "description": "Milliseconds" },
+        "showHistory": { "type": "boolean", "default": false },
+        "historyLength": { "type": "integer", "minimum": 10, "maximum": 1000 },
+        "thresholds": {
+          "type": "object",
+          "properties": {
+            "warning": { "type": "number", "minimum": 0, "maximum": 100 },
+            "critical": { "type": "number", "minimum": 0, "maximum": 100 }
+          }
+        },
+        "accessibility": { "$ref": "#/definitions/AccessibilityProps" }
+      },
+      "required": ["metrics", "displayMode"]
+    },
+    "ControlsPanelProps": {
+      "type": "object",
+      "properties": {
+        "actions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string" },
+              "label": { "type": "string" },
+              "type": { "type": "string", "enum": ["button", "toggle", "slider", "select"] },
+              "value": { "type": ["string", "number", "boolean"] },
+              "disabled": { "type": "boolean", "default": false },
+              "tooltip": { "type": "string" },
+              "shortcut": { "type": "string" }
+            },
+            "required": ["id", "label", "type"]
+          }
+        },
+        "layout": { "type": "string", "enum": ["vertical", "horizontal", "grid"] },
+        "size": { "type": "string", "enum": ["small", "medium", "large"] },
+        "onAction": { "type": "string", "description": "Callback function name" },
+        "accessibility": { "$ref": "#/definitions/AccessibilityProps" }
+      },
+      "required": ["actions", "layout"]
+    },
+    "TokenDisplayProps": {
+      "type": "object",
+      "properties": {
+        "tokens": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string" },
+              "text": { "type": "string" },
+              "timestamp": { "type": "number" },
+              "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+              "highlighted": { "type": "boolean", "default": false }
+            },
+            "required": ["id", "text", "timestamp"]
+          }
+        },
+        "streaming": { "type": "boolean", "default": false },
+        "typewriterEffect": { "type": "boolean", "default": true },
+        "typewriterSpeed": { "type": "number", "minimum": 10, "maximum": 200, "description": "Characters per second" },
+        "maxTokens": { "type": "integer", "minimum": 100, "maximum": 10000 },
+        "showTimestamps": { "type": "boolean", "default": false },
+        "fontSize": { "type": "string", "enum": ["small", "medium", "large"] },
+        "fontFamily": { "type": "string", "enum": ["monospace", "sans", "display"] },
+        "accessibility": { "$ref": "#/definitions/AccessibilityProps" }
+      },
+      "required": ["tokens"]
+    },
+    "EnergyMeterVisualProps": {
+      "type": "object",
+      "properties": {
+        "currentEnergy": { "type": "number", "minimum": 0 },
+        "maxEnergy": { "type": "number", "minimum": 1 },
+        "meterType": { "type": "string", "enum": ["bar", "circular", "wave", "lightning"] },
+        "showValue": { "type": "boolean", "default": true },
+        "showPercentage": { "type": "boolean", "default": true },
+        "animated": { "type": "boolean", "default": true },
+        "colorGradient": {
+          "type": "array",
+          "items": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
+          "minItems": 2,
+          "maxItems": 5
+        },
+        "size": { "type": "string", "enum": ["small", "medium", "large"] },
+        "orientation": { "type": "string", "enum": ["horizontal", "vertical"] },
+        "accessibility": { "$ref": "#/definitions/AccessibilityProps" }
+      },
+      "required": ["currentEnergy", "maxEnergy", "meterType"]
+    },
+    "NotificationPanelProps": {
+      "type": "object",
+      "properties": {
+        "notifications": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string" },
+              "type": { "type": "string", "enum": ["info", "success", "warning", "error"] },
+              "title": { "type": "string" },
+              "message": { "type": "string" },
+              "timestamp": { "type": "number" },
+              "persistent": { "type": "boolean", "default": false },
+              "actions": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "label": { "type": "string" },
+                    "action": { "type": "string" }
+                  },
+                  "required": ["label", "action"]
+                }
+              }
+            },
+            "required": ["id", "type", "title", "message", "timestamp"]
+          }
+        },
+        "maxNotifications": { "type": "integer", "minimum": 1, "maximum": 20, "default": 5 },
+        "autoHideDelay": { "type": "number", "minimum": 1000, "maximum": 10000, "description": "Milliseconds" },
+        "position": { "type": "string", "enum": ["top-right", "top-left", "bottom-right", "bottom-left"] },
+        "accessibility": { "$ref": "#/definitions/AccessibilityProps" }
+      },
+      "required": ["notifications"]
+    }
+  },
+  "required": [
+    "LightningBoltVisualProps",
+    "EnergyStreamVisualProps", 
+    "InterferenceOverlayProps",
+    "MetricsPanelProps",
+    "ControlsPanelProps",
+    "TokenDisplayProps",
+    "EnergyMeterVisualProps",
+    "NotificationPanelProps"
+  ]
+}

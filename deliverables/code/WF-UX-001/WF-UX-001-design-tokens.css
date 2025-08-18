@@ -1,0 +1,56 @@
+/**
+ * WF-UX-001 Design Tokens CSS Variables
+ * WIRTHFORGE UI Design System - CSS Custom Properties
+ */
+
+:root {
+  /* Lightning Palette */
+  --wf-color-lightning-primary: #fbbf24;
+  --wf-color-lightning-secondary: #f59e0b;
+  --wf-color-lightning-tertiary: #d97706;
+  --wf-color-lightning-glow: #fef3c7;
+  
+  /* Energy Stream Palette */
+  --wf-color-energy-stream-primary: #60a5fa;
+  --wf-color-energy-stream-secondary: #3b82f6;
+  --wf-color-energy-stream-tertiary: #1d4ed8;
+  --wf-color-energy-stream-flow: #dbeafe;
+  
+  /* System Colors */
+  --wf-color-system-background: #0f172a;
+  --wf-color-system-surface: #1e293b;
+  --wf-color-system-text: #f8fafc;
+  --wf-color-system-accent: #fbbf24;
+  
+  /* Typography */
+  --wf-font-family-monospace: ui-monospace, Monaco, Consolas, monospace;
+  --wf-font-family-sans: ui-sans-serif, system-ui, sans-serif;
+  --wf-font-size-base: 1rem;
+  --wf-font-size-lg: 1.125rem;
+  --wf-font-weight-normal: 400;
+  --wf-font-weight-bold: 700;
+  
+  /* Spacing */
+  --wf-spacing-xs: 0.25rem;
+  --wf-spacing-sm: 0.5rem;
+  --wf-spacing-md: 1rem;
+  --wf-spacing-lg: 1.5rem;
+  
+  /* Animations */
+  --wf-duration-fast: 150ms;
+  --wf-duration-normal: 300ms;
+  --wf-easing-ease-out: cubic-bezier(0, 0, 0.2, 1);
+  
+  /* Focus Ring */
+  --wf-focus-ring-color: #fbbf24;
+  --wf-focus-ring-width: 2px;
+  --wf-focus-ring-offset: 2px;
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --wf-duration-fast: 0.01ms;
+    --wf-duration-normal: 0.01ms;
+  }
+}
