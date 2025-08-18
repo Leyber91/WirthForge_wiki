@@ -1,0 +1,527 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "WF-UX-007 Recovery Plan Schema",
+  "description": "Standardized way to describe recovery strategies for different errors",
+  "type": "object",
+  "properties": {
+    "recoveryPlans": {
+      "type": "object",
+      "patternProperties": {
+        "^[A-Z]{3}_[0-9]{3}$": {
+          "type": "object",
+          "description": "Recovery plan for specific error code",
+          "properties": {
+            "errorCode": {
+              "type": "string",
+              "pattern": "^[A-Z]{3}_[0-9]{3}$"
+            },
+            "autoRetry": {
+              "type": "boolean",
+              "description": "Whether automatic retry is enabled"
+            },
+            "maxRetries": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 10,
+              "description": "Maximum number of automatic retry attempts"
+            },
+            "retryInterval": {
+              "type": "integer",
+              "minimum": 100,
+              "description": "Initial retry interval in milliseconds"
+            },
+            "backoffStrategy": {
+              "enum": ["linear", "exponential", "fixed"],
+              "description": "Retry backoff strategy"
+            },
+            "backoffMultiplier": {
+              "type": "number",
+              "minimum": 1.0,
+              "description": "Multiplier for exponential backoff"
+            },
+            "fallbackMode": {
+              "enum": ["none", "limitedUI", "offlineMode", "safeMode", "emergencyMode"],
+              "description": "Fallback mode to activate on recovery failure"
+            },
+            "userPrompt": {
+              "enum": ["none", "notification", "dialog", "modal", "emergency"],
+              "description": "Type of user prompt to display"
+            },
+            "preserveState": {
+              "type": "boolean",
+              "description": "Whether to preserve user state during recovery"
+            },
+            "backupRequired": {
+              "type": "boolean",
+              "description": "Whether to create backup before recovery"
+            },
+            "isolateComponent": {
+              "type": "boolean",
+              "description": "Whether to isolate failing component"
+            },
+            "restartRequired": {
+              "type": "boolean",
+              "description": "Whether component restart is required"
+            },
+            "escalationThreshold": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Number of failures before escalating to user"
+            },
+            "recoveryActions": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "action": {
+                    "enum": [
+                      "retry", "restart", "fallback", "isolate", "backup", 
+                      "restore", "cleanup", "notify", "escalate", "shutdown"
+                    ]
+                  },
+                  "target": {
+                    "type": "string",
+                    "description": "Target component or service for the action"
+                  },
+                  "parameters": {
+                    "type": "object",
+                    "description": "Action-specific parameters"
+                  },
+                  "timeout": {
+                    "type": "integer",
+                    "description": "Action timeout in milliseconds"
+                  },
+                  "onSuccess": {
+                    "type": "string",
+                    "description": "Next action on success"
+                  },
+                  "onFailure": {
+                    "type": "string",
+                    "description": "Next action on failure"
+                  }
+                },
+                "required": ["action"]
+              }
+            },
+            "userOptions": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "label": {
+                    "type": "string",
+                    "description": "User-facing option label"
+                  },
+                  "action": {
+                    "type": "string",
+                    "description": "Action to execute when selected"
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "Detailed description of the option"
+                  },
+                  "risk": {
+                    "enum": ["low", "medium", "high"],
+                    "description": "Risk level of the option"
+                  },
+                  "recommended": {
+                    "type": "boolean",
+                    "description": "Whether this option is recommended"
+                  }
+                },
+                "required": ["label", "action"]
+              }
+            },
+            "monitoring": {
+              "type": "object",
+              "properties": {
+                "healthCheck": {
+                  "type": "boolean",
+                  "description": "Enable health monitoring after recovery"
+                },
+                "healthCheckInterval": {
+                  "type": "integer",
+                  "description": "Health check interval in milliseconds"
+                },
+                "alertThreshold": {
+                  "type": "integer",
+                  "description": "Number of health check failures before alert"
+                },
+                "metrics": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Metrics to monitor post-recovery"
+                }
+              }
+            }
+          },
+          "required": ["errorCode", "autoRetry", "maxRetries", "recoveryActions"]
+        }
+      }
+    }
+  },
+  "definitions": {
+    "predefinedRecoveryPlans": {
+      "NET_001": {
+        "errorCode": "NET_001",
+        "autoRetry": true,
+        "maxRetries": 3,
+        "retryInterval": 2000,
+        "backoffStrategy": "exponential",
+        "backoffMultiplier": 2.0,
+        "fallbackMode": "none",
+        "userPrompt": "notification",
+        "preserveState": true,
+        "backupRequired": false,
+        "isolateComponent": false,
+        "restartRequired": false,
+        "escalationThreshold": 3,
+        "recoveryActions": [
+          {
+            "action": "retry",
+            "target": "networkConnection",
+            "timeout": 30000,
+            "onSuccess": "notify",
+            "onFailure": "escalate"
+          }
+        ],
+        "userOptions": [
+          {
+            "label": "Retry Connection",
+            "action": "manualRetry",
+            "description": "Attempt to reconnect to the service",
+            "risk": "low",
+            "recommended": true
+          },
+          {
+            "label": "Work Offline",
+            "action": "enableOfflineMode",
+            "description": "Continue with limited functionality",
+            "risk": "low",
+            "recommended": false
+          }
+        ],
+        "monitoring": {
+          "healthCheck": true,
+          "healthCheckInterval": 30000,
+          "alertThreshold": 2,
+          "metrics": ["connectionStatus", "responseTime"]
+        }
+      },
+      "AI_001": {
+        "errorCode": "AI_001",
+        "autoRetry": true,
+        "maxRetries": 2,
+        "retryInterval": 5000,
+        "backoffStrategy": "fixed",
+        "backoffMultiplier": 1.0,
+        "fallbackMode": "limitedUI",
+        "userPrompt": "dialog",
+        "preserveState": true,
+        "backupRequired": true,
+        "isolateComponent": true,
+        "restartRequired": true,
+        "escalationThreshold": 2,
+        "recoveryActions": [
+          {
+            "action": "backup",
+            "target": "userSession",
+            "timeout": 10000,
+            "onSuccess": "restart",
+            "onFailure": "escalate"
+          },
+          {
+            "action": "restart",
+            "target": "aiModel",
+            "timeout": 60000,
+            "onSuccess": "restore",
+            "onFailure": "fallback"
+          },
+          {
+            "action": "restore",
+            "target": "userSession",
+            "timeout": 15000,
+            "onSuccess": "notify",
+            "onFailure": "escalate"
+          }
+        ],
+        "userOptions": [
+          {
+            "label": "Restart AI Engine",
+            "action": "restartAI",
+            "description": "Restart the AI processing engine",
+            "risk": "medium",
+            "recommended": true
+          },
+          {
+            "label": "Use Fallback Mode",
+            "action": "enableFallback",
+            "description": "Continue with basic text processing",
+            "risk": "low",
+            "recommended": false
+          },
+          {
+            "label": "Export Session",
+            "action": "exportSession",
+            "description": "Save current work and restart later",
+            "risk": "low",
+            "recommended": false
+          }
+        ],
+        "monitoring": {
+          "healthCheck": true,
+          "healthCheckInterval": 60000,
+          "alertThreshold": 1,
+          "metrics": ["modelStatus", "memoryUsage", "responseTime"]
+        }
+      },
+      "PLG_002": {
+        "errorCode": "PLG_002",
+        "autoRetry": true,
+        "maxRetries": 2,
+        "retryInterval": 3000,
+        "backoffStrategy": "linear",
+        "backoffMultiplier": 1.0,
+        "fallbackMode": "none",
+        "userPrompt": "notification",
+        "preserveState": true,
+        "backupRequired": false,
+        "isolateComponent": true,
+        "restartRequired": true,
+        "escalationThreshold": 2,
+        "recoveryActions": [
+          {
+            "action": "isolate",
+            "target": "pluginSandbox",
+            "timeout": 5000,
+            "onSuccess": "restart",
+            "onFailure": "escalate"
+          },
+          {
+            "action": "restart",
+            "target": "plugin",
+            "parameters": {"cleanStart": true},
+            "timeout": 30000,
+            "onSuccess": "notify",
+            "onFailure": "fallback"
+          }
+        ],
+        "userOptions": [
+          {
+            "label": "Restart Plugin",
+            "action": "restartPlugin",
+            "description": "Restart the crashed plugin",
+            "risk": "low",
+            "recommended": true
+          },
+          {
+            "label": "Disable Plugin",
+            "action": "disablePlugin",
+            "description": "Disable the problematic plugin",
+            "risk": "low",
+            "recommended": false
+          },
+          {
+            "label": "Plugin Settings",
+            "action": "configurePlugin",
+            "description": "Adjust plugin configuration",
+            "risk": "medium",
+            "recommended": false
+          }
+        ],
+        "monitoring": {
+          "healthCheck": true,
+          "healthCheckInterval": 45000,
+          "alertThreshold": 2,
+          "metrics": ["pluginStatus", "resourceUsage", "errorRate"]
+        }
+      },
+      "DAT_002": {
+        "errorCode": "DAT_002",
+        "autoRetry": false,
+        "maxRetries": 0,
+        "retryInterval": 0,
+        "backoffStrategy": "fixed",
+        "backoffMultiplier": 1.0,
+        "fallbackMode": "safeMode",
+        "userPrompt": "modal",
+        "preserveState": false,
+        "backupRequired": true,
+        "isolateComponent": true,
+        "restartRequired": false,
+        "escalationThreshold": 1,
+        "recoveryActions": [
+          {
+            "action": "backup",
+            "target": "corruptedData",
+            "parameters": {"preserveCorrupted": true},
+            "timeout": 30000,
+            "onSuccess": "restore",
+            "onFailure": "escalate"
+          },
+          {
+            "action": "restore",
+            "target": "dataFromBackup",
+            "timeout": 45000,
+            "onSuccess": "notify",
+            "onFailure": "escalate"
+          }
+        ],
+        "userOptions": [
+          {
+            "label": "Restore from Backup",
+            "action": "restoreBackup",
+            "description": "Restore data from the most recent backup",
+            "risk": "medium",
+            "recommended": true
+          },
+          {
+            "label": "Manual Recovery",
+            "action": "manualRecovery",
+            "description": "Attempt manual data recovery",
+            "risk": "high",
+            "recommended": false
+          },
+          {
+            "label": "Reset to Defaults",
+            "action": "resetDefaults",
+            "description": "Reset to factory defaults (data loss)",
+            "risk": "high",
+            "recommended": false
+          }
+        ],
+        "monitoring": {
+          "healthCheck": true,
+          "healthCheckInterval": 120000,
+          "alertThreshold": 1,
+          "metrics": ["dataIntegrity", "checksumStatus", "backupHealth"]
+        }
+      },
+      "SYS_002": {
+        "errorCode": "SYS_002",
+        "autoRetry": false,
+        "maxRetries": 0,
+        "retryInterval": 0,
+        "backoffStrategy": "fixed",
+        "backoffMultiplier": 1.0,
+        "fallbackMode": "emergencyMode",
+        "userPrompt": "emergency",
+        "preserveState": true,
+        "backupRequired": true,
+        "isolateComponent": false,
+        "restartRequired": false,
+        "escalationThreshold": 1,
+        "recoveryActions": [
+          {
+            "action": "backup",
+            "target": "criticalData",
+            "timeout": 15000,
+            "onSuccess": "cleanup",
+            "onFailure": "shutdown"
+          },
+          {
+            "action": "cleanup",
+            "target": "memoryUsage",
+            "parameters": {"aggressive": true},
+            "timeout": 10000,
+            "onSuccess": "notify",
+            "onFailure": "shutdown"
+          }
+        ],
+        "userOptions": [
+          {
+            "label": "Emergency Save & Restart",
+            "action": "emergencyRestart",
+            "description": "Save critical data and restart application",
+            "risk": "medium",
+            "recommended": true
+          },
+          {
+            "label": "Force Cleanup",
+            "action": "forceCleanup",
+            "description": "Aggressively free memory (may lose data)",
+            "risk": "high",
+            "recommended": false
+          },
+          {
+            "label": "Safe Shutdown",
+            "action": "safeShutdown",
+            "description": "Safely close application",
+            "risk": "low",
+            "recommended": false
+          }
+        ],
+        "monitoring": {
+          "healthCheck": true,
+          "healthCheckInterval": 10000,
+          "alertThreshold": 1,
+          "metrics": ["memoryUsage", "systemHealth", "processCount"]
+        }
+      },
+      "UI_001": {
+        "errorCode": "UI_001",
+        "autoRetry": true,
+        "maxRetries": 2,
+        "retryInterval": 1000,
+        "backoffStrategy": "exponential",
+        "backoffMultiplier": 2.0,
+        "fallbackMode": "limitedUI",
+        "userPrompt": "notification",
+        "preserveState": true,
+        "backupRequired": false,
+        "isolateComponent": true,
+        "restartRequired": false,
+        "escalationThreshold": 2,
+        "recoveryActions": [
+          {
+            "action": "isolate",
+            "target": "failedComponent",
+            "timeout": 2000,
+            "onSuccess": "fallback",
+            "onFailure": "escalate"
+          },
+          {
+            "action": "fallback",
+            "target": "errorBoundary",
+            "parameters": {"showFallbackUI": true},
+            "timeout": 5000,
+            "onSuccess": "notify",
+            "onFailure": "escalate"
+          }
+        ],
+        "userOptions": [
+          {
+            "label": "Refresh Component",
+            "action": "refreshComponent",
+            "description": "Reload the failed component",
+            "risk": "low",
+            "recommended": true
+          },
+          {
+            "label": "Use Simple View",
+            "action": "enableSimpleView",
+            "description": "Switch to simplified interface",
+            "risk": "low",
+            "recommended": false
+          },
+          {
+            "label": "Report Issue",
+            "action": "reportIssue",
+            "description": "Report the rendering problem",
+            "risk": "low",
+            "recommended": false
+          }
+        ],
+        "monitoring": {
+          "healthCheck": true,
+          "healthCheckInterval": 30000,
+          "alertThreshold": 3,
+          "metrics": ["renderErrors", "componentHealth", "userInteractions"]
+        }
+      }
+    }
+  },
+  "required": ["recoveryPlans"]
+}

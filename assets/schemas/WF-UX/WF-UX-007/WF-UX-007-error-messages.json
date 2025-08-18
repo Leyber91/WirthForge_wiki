@@ -1,0 +1,506 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "WF-UX-007 User Message Schema",
+  "description": "User-facing error and status messages in localization-friendly format",
+  "type": "object",
+  "properties": {
+    "messages": {
+      "type": "object",
+      "patternProperties": {
+        "^[a-z]+\\.[a-z_]+\\.[a-z_]+$": {
+          "type": "object",
+          "description": "Localized message entry",
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "Unique message identifier"
+            },
+            "category": {
+              "enum": ["error", "warning", "info", "success", "status"],
+              "description": "Message category"
+            },
+            "severity": {
+              "enum": ["low", "medium", "high", "critical"],
+              "description": "Message severity level"
+            },
+            "defaultText": {
+              "type": "string",
+              "description": "Default English message text"
+            },
+            "shortText": {
+              "type": "string",
+              "description": "Abbreviated version for small displays"
+            },
+            "detailedText": {
+              "type": "string",
+              "description": "Extended explanation for help dialogs"
+            },
+            "actionText": {
+              "type": "string",
+              "description": "Suggested user action"
+            },
+            "placeholders": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "key": {"type": "string"},
+                  "type": {"enum": ["string", "number", "date", "duration"]},
+                  "description": {"type": "string"}
+                },
+                "required": ["key", "type"]
+              },
+              "description": "Dynamic placeholder variables"
+            },
+            "accessibility": {
+              "type": "object",
+              "properties": {
+                "announceViaScreenReader": {
+                  "type": "boolean",
+                  "description": "Whether to announce via assistive technology"
+                },
+                "ariaLabel": {
+                  "type": "string",
+                  "description": "ARIA label for accessibility"
+                },
+                "priority": {
+                  "enum": ["polite", "assertive", "off"],
+                  "description": "ARIA live region priority"
+                }
+              }
+            },
+            "ui": {
+              "type": "object",
+              "properties": {
+                "displayType": {
+                  "enum": ["toast", "dialog", "modal", "banner", "inline", "status"],
+                  "description": "UI presentation method"
+                },
+                "duration": {
+                  "type": "integer",
+                  "description": "Auto-dismiss duration in milliseconds"
+                },
+                "dismissible": {
+                  "type": "boolean",
+                  "description": "Whether user can dismiss the message"
+                },
+                "requiresConfirmation": {
+                  "type": "boolean",
+                  "description": "Whether user must acknowledge the message"
+                },
+                "icon": {
+                  "type": "string",
+                  "description": "Icon identifier for the message"
+                },
+                "color": {
+                  "enum": ["red", "orange", "yellow", "blue", "green", "gray"],
+                  "description": "Color theme for the message"
+                }
+              }
+            },
+            "localization": {
+              "type": "object",
+              "properties": {
+                "translatable": {
+                  "type": "boolean",
+                  "description": "Whether message can be translated"
+                },
+                "context": {
+                  "type": "string",
+                  "description": "Context for translators"
+                },
+                "maxLength": {
+                  "type": "integer",
+                  "description": "Maximum character length for translations"
+                }
+              }
+            }
+          },
+          "required": ["id", "category", "severity", "defaultText"]
+        }
+      }
+    }
+  },
+  "definitions": {
+    "predefinedMessages": {
+      "error.input.invalid_format": {
+        "id": "error.input.invalid_format",
+        "category": "error",
+        "severity": "medium",
+        "defaultText": "The format you entered is not valid. Please check and try again.",
+        "shortText": "Invalid format",
+        "detailedText": "The information you entered doesn't match the expected format. Please review the requirements and enter the information correctly.",
+        "actionText": "Please correct the format and try again",
+        "placeholders": [
+          {
+            "key": "fieldName",
+            "type": "string",
+            "description": "Name of the field with invalid format"
+          },
+          {
+            "key": "expectedFormat",
+            "type": "string",
+            "description": "Description of expected format"
+          }
+        ],
+        "accessibility": {
+          "announceViaScreenReader": true,
+          "ariaLabel": "Input format error",
+          "priority": "assertive"
+        },
+        "ui": {
+          "displayType": "inline",
+          "duration": 0,
+          "dismissible": true,
+          "requiresConfirmation": false,
+          "icon": "warning",
+          "color": "orange"
+        },
+        "localization": {
+          "translatable": true,
+          "context": "User input validation error",
+          "maxLength": 150
+        }
+      },
+      "error.network.websocket_disconnected": {
+        "id": "error.network.websocket_disconnected",
+        "category": "error",
+        "severity": "high",
+        "defaultText": "Connection lost. Attempting to reconnect...",
+        "shortText": "Connection lost",
+        "detailedText": "The connection to WIRTHFORGE has been interrupted. The system is automatically trying to reconnect. Your work is being preserved.",
+        "actionText": "Please wait while we reconnect, or click Retry to try again",
+        "placeholders": [
+          {
+            "key": "retryCount",
+            "type": "number",
+            "description": "Current retry attempt number"
+          },
+          {
+            "key": "maxRetries",
+            "type": "number",
+            "description": "Maximum retry attempts"
+          }
+        ],
+        "accessibility": {
+          "announceViaScreenReader": true,
+          "ariaLabel": "Connection lost, attempting reconnection",
+          "priority": "assertive"
+        },
+        "ui": {
+          "displayType": "banner",
+          "duration": 0,
+          "dismissible": false,
+          "requiresConfirmation": false,
+          "icon": "wifi-off",
+          "color": "orange"
+        },
+        "localization": {
+          "translatable": true,
+          "context": "Network connection error",
+          "maxLength": 200
+        }
+      },
+      "error.ai.model_crashed": {
+        "id": "error.ai.model_crashed",
+        "category": "error",
+        "severity": "critical",
+        "defaultText": "The AI engine encountered an error and needs to restart. Your conversation will be preserved.",
+        "shortText": "AI engine error",
+        "detailedText": "The AI processing engine has stopped unexpectedly. WIRTHFORGE is automatically restarting the engine and will restore your current session. This may take a moment.",
+        "actionText": "Please wait for the AI engine to restart, or click Restart to try again",
+        "placeholders": [
+          {
+            "key": "estimatedTime",
+            "type": "duration",
+            "description": "Estimated restart time"
+          }
+        ],
+        "accessibility": {
+          "announceViaScreenReader": true,
+          "ariaLabel": "AI engine error, restarting automatically",
+          "priority": "assertive"
+        },
+        "ui": {
+          "displayType": "dialog",
+          "duration": 0,
+          "dismissible": false,
+          "requiresConfirmation": false,
+          "icon": "cpu",
+          "color": "red"
+        },
+        "localization": {
+          "translatable": true,
+          "context": "AI system error message",
+          "maxLength": 250
+        }
+      },
+      "error.plugin.crashed": {
+        "id": "error.plugin.crashed",
+        "category": "error",
+        "severity": "medium",
+        "defaultText": "A plugin has stopped working and will be restarted automatically.",
+        "shortText": "Plugin error",
+        "detailedText": "The {pluginName} plugin encountered an error and has been safely isolated. WIRTHFORGE is restarting the plugin to restore functionality.",
+        "actionText": "The plugin will restart automatically, or you can disable it in settings",
+        "placeholders": [
+          {
+            "key": "pluginName",
+            "type": "string",
+            "description": "Name of the crashed plugin"
+          }
+        ],
+        "accessibility": {
+          "announceViaScreenReader": false,
+          "ariaLabel": "Plugin error notification",
+          "priority": "polite"
+        },
+        "ui": {
+          "displayType": "toast",
+          "duration": 8000,
+          "dismissible": true,
+          "requiresConfirmation": false,
+          "icon": "puzzle",
+          "color": "orange"
+        },
+        "localization": {
+          "translatable": true,
+          "context": "Plugin system error",
+          "maxLength": 180
+        }
+      },
+      "error.data.corruption_detected": {
+        "id": "error.data.corruption_detected",
+        "category": "error",
+        "severity": "critical",
+        "defaultText": "Data integrity issue detected. Restoring from backup to protect your information.",
+        "shortText": "Data issue detected",
+        "detailedText": "WIRTHFORGE has detected a potential data integrity problem and is automatically restoring from the most recent backup to ensure your information is safe and accurate.",
+        "actionText": "Please wait while we restore your data, or choose a different backup",
+        "placeholders": [
+          {
+            "key": "backupDate",
+            "type": "date",
+            "description": "Date of the backup being restored"
+          }
+        ],
+        "accessibility": {
+          "announceViaScreenReader": true,
+          "ariaLabel": "Data corruption detected, restoring from backup",
+          "priority": "assertive"
+        },
+        "ui": {
+          "displayType": "modal",
+          "duration": 0,
+          "dismissible": false,
+          "requiresConfirmation": true,
+          "icon": "shield-alert",
+          "color": "red"
+        },
+        "localization": {
+          "translatable": true,
+          "context": "Data integrity error",
+          "maxLength": 220
+        }
+      },
+      "error.system.memory_exhausted": {
+        "id": "error.system.memory_exhausted",
+        "category": "error",
+        "severity": "critical",
+        "defaultText": "System memory is critically low. Saving your work and optimizing performance.",
+        "shortText": "Memory critical",
+        "detailedText": "WIRTHFORGE is running low on available memory. The system is automatically saving your current work and freeing up resources to maintain stability.",
+        "actionText": "Please save any important work and consider restarting the application",
+        "placeholders": [
+          {
+            "key": "memoryUsage",
+            "type": "number",
+            "description": "Current memory usage percentage"
+          }
+        ],
+        "accessibility": {
+          "announceViaScreenReader": true,
+          "ariaLabel": "Critical memory warning, saving work automatically",
+          "priority": "assertive"
+        },
+        "ui": {
+          "displayType": "modal",
+          "duration": 0,
+          "dismissible": false,
+          "requiresConfirmation": true,
+          "icon": "alert-triangle",
+          "color": "red"
+        },
+        "localization": {
+          "translatable": true,
+          "context": "System resource warning",
+          "maxLength": 200
+        }
+      },
+      "error.ui.render_failed": {
+        "id": "error.ui.render_failed",
+        "category": "error",
+        "severity": "medium",
+        "defaultText": "A display component isn't working properly. Using simplified view instead.",
+        "shortText": "Display issue",
+        "detailedText": "One of the interface components encountered an error while loading. WIRTHFORGE has switched to a simplified view to maintain functionality.",
+        "actionText": "You can continue working normally, or refresh to try loading the full interface",
+        "placeholders": [
+          {
+            "key": "componentName",
+            "type": "string",
+            "description": "Name of the failed component"
+          }
+        ],
+        "accessibility": {
+          "announceViaScreenReader": false,
+          "ariaLabel": "Interface component error, using fallback",
+          "priority": "polite"
+        },
+        "ui": {
+          "displayType": "toast",
+          "duration": 6000,
+          "dismissible": true,
+          "requiresConfirmation": false,
+          "icon": "monitor",
+          "color": "yellow"
+        },
+        "localization": {
+          "translatable": true,
+          "context": "UI component error",
+          "maxLength": 160
+        }
+      },
+      "status.recovery.in_progress": {
+        "id": "status.recovery.in_progress",
+        "category": "status",
+        "severity": "medium",
+        "defaultText": "Recovering from error... Please wait.",
+        "shortText": "Recovering...",
+        "detailedText": "WIRTHFORGE is working to resolve the issue and restore normal operation. Your data and session are being preserved during this process.",
+        "actionText": "Please wait while the system recovers",
+        "placeholders": [
+          {
+            "key": "progress",
+            "type": "number",
+            "description": "Recovery progress percentage"
+          },
+          {
+            "key": "estimatedTime",
+            "type": "duration",
+            "description": "Estimated time remaining"
+          }
+        ],
+        "accessibility": {
+          "announceViaScreenReader": false,
+          "ariaLabel": "System recovery in progress",
+          "priority": "polite"
+        },
+        "ui": {
+          "displayType": "status",
+          "duration": 0,
+          "dismissible": false,
+          "requiresConfirmation": false,
+          "icon": "refresh-cw",
+          "color": "blue"
+        },
+        "localization": {
+          "translatable": true,
+          "context": "Recovery status message",
+          "maxLength": 120
+        }
+      },
+      "success.recovery.completed": {
+        "id": "success.recovery.completed",
+        "category": "success",
+        "severity": "low",
+        "defaultText": "Issue resolved. Everything is working normally again.",
+        "shortText": "Resolved",
+        "detailedText": "The system has successfully recovered from the error. All functionality has been restored and your session is intact.",
+        "actionText": "You can continue working normally",
+        "placeholders": [],
+        "accessibility": {
+          "announceViaScreenReader": true,
+          "ariaLabel": "System recovery completed successfully",
+          "priority": "polite"
+        },
+        "ui": {
+          "displayType": "toast",
+          "duration": 4000,
+          "dismissible": true,
+          "requiresConfirmation": false,
+          "icon": "check-circle",
+          "color": "green"
+        },
+        "localization": {
+          "translatable": true,
+          "context": "Recovery success message",
+          "maxLength": 100
+        }
+      },
+      "warning.degraded_mode": {
+        "id": "warning.degraded_mode",
+        "category": "warning",
+        "severity": "medium",
+        "defaultText": "Running in limited mode due to an issue. Some features may be unavailable.",
+        "shortText": "Limited mode",
+        "detailedText": "WIRTHFORGE is currently operating with reduced functionality to maintain stability. Core features remain available while the system works to resolve the issue.",
+        "actionText": "You can continue working with available features",
+        "placeholders": [
+          {
+            "key": "unavailableFeatures",
+            "type": "string",
+            "description": "List of unavailable features"
+          }
+        ],
+        "accessibility": {
+          "announceViaScreenReader": true,
+          "ariaLabel": "System running in limited mode",
+          "priority": "polite"
+        },
+        "ui": {
+          "displayType": "banner",
+          "duration": 0,
+          "dismissible": true,
+          "requiresConfirmation": false,
+          "icon": "alert-circle",
+          "color": "yellow"
+        },
+        "localization": {
+          "translatable": true,
+          "context": "Degraded mode warning",
+          "maxLength": 180
+        }
+      },
+      "info.offline_mode": {
+        "id": "info.offline_mode",
+        "category": "info",
+        "severity": "low",
+        "defaultText": "Working offline. Some features that require internet access are unavailable.",
+        "shortText": "Offline mode",
+        "detailedText": "WIRTHFORGE is currently working in offline mode. All core functionality remains available, but features requiring internet connectivity are temporarily disabled.",
+        "actionText": "Connect to the internet to restore full functionality",
+        "placeholders": [],
+        "accessibility": {
+          "announceViaScreenReader": false,
+          "ariaLabel": "Application in offline mode",
+          "priority": "polite"
+        },
+        "ui": {
+          "displayType": "status",
+          "duration": 0,
+          "dismissible": false,
+          "requiresConfirmation": false,
+          "icon": "wifi-off",
+          "color": "gray"
+        },
+        "localization": {
+          "translatable": true,
+          "context": "Offline mode notification",
+          "maxLength": 140
+        }
+      }
+    }
+  },
+  "required": ["messages"]
+}

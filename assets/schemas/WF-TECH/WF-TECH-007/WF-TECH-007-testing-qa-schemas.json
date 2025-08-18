@@ -1,0 +1,768 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "WIRTHFORGE Testing & QA Framework Schemas",
+  "description": "JSON Schema definitions for WF-TECH-007 Testing, Quality Assurance & Deployment",
+  "version": "1.0.0",
+  "definitions": {
+    "timestamp": {
+      "type": "integer",
+      "description": "Unix timestamp in milliseconds",
+      "minimum": 0
+    },
+    "testId": {
+      "type": "string",
+      "description": "Unique test identifier",
+      "pattern": "^[a-zA-Z0-9_-]+$"
+    },
+    "testStatus": {
+      "type": "string",
+      "enum": ["pending", "running", "passed", "failed", "skipped", "timeout"],
+      "description": "Test execution status"
+    },
+    "severity": {
+      "type": "string",
+      "enum": ["low", "medium", "high", "critical"],
+      "description": "Issue severity level"
+    },
+    "testType": {
+      "type": "string",
+      "enum": ["unit", "integration", "e2e", "performance", "security", "accessibility", "visual", "load"],
+      "description": "Type of test being executed"
+    },
+    "frameworkType": {
+      "type": "string",
+      "enum": ["pytest", "vitest", "playwright", "jest", "cypress", "k6"],
+      "description": "Testing framework used"
+    }
+  },
+  "oneOf": [
+    {
+      "$ref": "#/schemas/testSuite"
+    },
+    {
+      "$ref": "#/schemas/testCase"
+    },
+    {
+      "$ref": "#/schemas/testResult"
+    },
+    {
+      "$ref": "#/schemas/performanceMetrics"
+    },
+    {
+      "$ref": "#/schemas/qualityGate"
+    },
+    {
+      "$ref": "#/schemas/deploymentConfig"
+    },
+    {
+      "$ref": "#/schemas/cicdPipeline"
+    }
+  ],
+  "schemas": {
+    "testSuite": {
+      "type": "object",
+      "title": "Test Suite Configuration",
+      "description": "Definition of a test suite and its configuration",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Test suite name"
+        },
+        "description": {
+          "type": "string",
+          "description": "Test suite description"
+        },
+        "framework": {
+          "$ref": "#/definitions/frameworkType"
+        },
+        "type": {
+          "$ref": "#/definitions/testType"
+        },
+        "configuration": {
+          "type": "object",
+          "properties": {
+            "timeout": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Suite timeout in seconds"
+            },
+            "retries": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 5,
+              "description": "Number of retries on failure"
+            },
+            "parallel": {
+              "type": "boolean",
+              "description": "Whether tests run in parallel"
+            },
+            "workers": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 8,
+              "description": "Number of parallel workers"
+            },
+            "browser": {
+              "type": "string",
+              "enum": ["chromium", "firefox", "webkit", "chrome", "edge"],
+              "description": "Browser for UI tests"
+            },
+            "headless": {
+              "type": "boolean",
+              "default": true,
+              "description": "Run tests in headless mode"
+            }
+          },
+          "additionalProperties": false
+        },
+        "dependencies": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Test suite dependencies"
+        },
+        "testCases": {
+          "type": "array",
+          "items": {
+            "$ref": "#/schemas/testCase"
+          },
+          "description": "Test cases in this suite"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Test suite tags for filtering"
+        }
+      },
+      "required": ["name", "framework", "type", "testCases"],
+      "additionalProperties": false
+    },
+    "testCase": {
+      "type": "object",
+      "title": "Test Case Definition",
+      "description": "Individual test case specification",
+      "properties": {
+        "id": {
+          "$ref": "#/definitions/testId"
+        },
+        "name": {
+          "type": "string",
+          "description": "Test case name"
+        },
+        "description": {
+          "type": "string",
+          "description": "Test case description"
+        },
+        "type": {
+          "$ref": "#/definitions/testType"
+        },
+        "priority": {
+          "type": "string",
+          "enum": ["low", "medium", "high", "critical"],
+          "description": "Test priority level"
+        },
+        "preconditions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Required preconditions"
+        },
+        "steps": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "action": {
+                "type": "string",
+                "description": "Test step action"
+              },
+              "data": {
+                "type": "object",
+                "description": "Test data for this step",
+                "additionalProperties": true
+              },
+              "expected": {
+                "type": "string",
+                "description": "Expected result"
+              }
+            },
+            "required": ["action", "expected"],
+            "additionalProperties": false
+          },
+          "description": "Test execution steps"
+        },
+        "assertions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": ["equals", "contains", "matches", "greater_than", "less_than", "exists", "visible", "enabled"]
+              },
+              "target": {
+                "type": "string",
+                "description": "Target element or property"
+              },
+              "value": {
+                "description": "Expected value for comparison"
+              },
+              "timeout": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "Assertion timeout in milliseconds"
+              }
+            },
+            "required": ["type", "target"],
+            "additionalProperties": false
+          },
+          "description": "Test assertions"
+        },
+        "performance": {
+          "type": "object",
+          "properties": {
+            "maxDuration": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Maximum execution time in ms"
+            },
+            "memoryLimit": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Memory usage limit in MB"
+            },
+            "frameRate": {
+              "type": "number",
+              "minimum": 30,
+              "description": "Minimum required frame rate"
+            }
+          },
+          "additionalProperties": false
+        },
+        "energyRequirements": {
+          "type": "object",
+          "properties": {
+            "maxEnergyConsumption": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "Maximum energy consumption threshold"
+            },
+            "targetFrameRate": {
+              "type": "integer",
+              "minimum": 30,
+              "maximum": 120,
+              "description": "Target frame rate for energy validation"
+            },
+            "lightningStrikeValidation": {
+              "type": "boolean",
+              "description": "Whether to validate lightning strike events"
+            }
+          },
+          "additionalProperties": false
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Test case tags"
+        }
+      },
+      "required": ["id", "name", "type", "steps", "assertions"],
+      "additionalProperties": false
+    },
+    "testResult": {
+      "type": "object",
+      "title": "Test Execution Result",
+      "description": "Result of test execution with metrics and diagnostics",
+      "properties": {
+        "testId": {
+          "$ref": "#/definitions/testId"
+        },
+        "status": {
+          "$ref": "#/definitions/testStatus"
+        },
+        "startTime": {
+          "$ref": "#/definitions/timestamp"
+        },
+        "endTime": {
+          "$ref": "#/definitions/timestamp"
+        },
+        "duration": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Execution duration in milliseconds"
+        },
+        "framework": {
+          "$ref": "#/definitions/frameworkType"
+        },
+        "environment": {
+          "type": "object",
+          "properties": {
+            "os": {
+              "type": "string",
+              "description": "Operating system"
+            },
+            "browser": {
+              "type": "string",
+              "description": "Browser type and version"
+            },
+            "viewport": {
+              "type": "object",
+              "properties": {
+                "width": {"type": "integer"},
+                "height": {"type": "integer"}
+              }
+            },
+            "hardware": {
+              "type": "object",
+              "properties": {
+                "tier": {
+                  "type": "string",
+                  "enum": ["Low-Tier", "Mid-Tier", "High-Tier"]
+                },
+                "memory": {"type": "integer"},
+                "cpu": {"type": "string"}
+              }
+            }
+          },
+          "additionalProperties": false
+        },
+        "metrics": {
+          "type": "object",
+          "properties": {
+            "memoryUsage": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Peak memory usage in MB"
+            },
+            "cpuUsage": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100,
+              "description": "Average CPU usage percentage"
+            },
+            "frameRate": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Average frame rate"
+            },
+            "energyConsumption": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "Total energy consumed"
+            },
+            "networkRequests": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Number of network requests"
+            },
+            "errorCount": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Number of errors encountered"
+            }
+          },
+          "additionalProperties": false
+        },
+        "screenshots": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {"type": "string"},
+              "path": {"type": "string"},
+              "timestamp": {"$ref": "#/definitions/timestamp"}
+            },
+            "required": ["name", "path", "timestamp"]
+          },
+          "description": "Test screenshots for visual validation"
+        },
+        "logs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "level": {
+                "type": "string",
+                "enum": ["debug", "info", "warn", "error"]
+              },
+              "message": {"type": "string"},
+              "timestamp": {"$ref": "#/definitions/timestamp"},
+              "source": {"type": "string"}
+            },
+            "required": ["level", "message", "timestamp"]
+          },
+          "description": "Test execution logs"
+        },
+        "error": {
+          "type": "object",
+          "properties": {
+            "message": {"type": "string"},
+            "stack": {"type": "string"},
+            "code": {"type": "string"},
+            "line": {"type": "integer"}
+          },
+          "description": "Error details if test failed"
+        },
+        "coverage": {
+          "type": "object",
+          "properties": {
+            "statements": {"type": "number", "minimum": 0, "maximum": 100},
+            "branches": {"type": "number", "minimum": 0, "maximum": 100},
+            "functions": {"type": "number", "minimum": 0, "maximum": 100},
+            "lines": {"type": "number", "minimum": 0, "maximum": 100}
+          },
+          "description": "Code coverage metrics"
+        }
+      },
+      "required": ["testId", "status", "startTime", "endTime", "duration"],
+      "additionalProperties": false
+    },
+    "performanceMetrics": {
+      "type": "object",
+      "title": "Performance Metrics",
+      "description": "Comprehensive performance measurement data",
+      "properties": {
+        "testId": {
+          "$ref": "#/definitions/testId"
+        },
+        "timestamp": {
+          "$ref": "#/definitions/timestamp"
+        },
+        "metrics": {
+          "type": "object",
+          "properties": {
+            "frameRate": {
+              "type": "object",
+              "properties": {
+                "average": {"type": "number", "minimum": 0},
+                "minimum": {"type": "number", "minimum": 0},
+                "maximum": {"type": "number", "minimum": 0},
+                "p95": {"type": "number", "minimum": 0},
+                "target": {"type": "number", "minimum": 30}
+              },
+              "required": ["average", "minimum", "maximum", "target"]
+            },
+            "latency": {
+              "type": "object",
+              "properties": {
+                "ttft": {"type": "number", "minimum": 0, "description": "Time to first token (ms)"},
+                "tps": {"type": "number", "minimum": 0, "description": "Tokens per second"},
+                "responseTime": {"type": "number", "minimum": 0, "description": "API response time (ms)"},
+                "renderTime": {"type": "number", "minimum": 0, "description": "UI render time (ms)"}
+              },
+              "required": ["ttft", "tps", "responseTime"]
+            },
+            "memory": {
+              "type": "object",
+              "properties": {
+                "heapUsed": {"type": "number", "minimum": 0},
+                "heapTotal": {"type": "number", "minimum": 0},
+                "external": {"type": "number", "minimum": 0},
+                "peak": {"type": "number", "minimum": 0},
+                "limit": {"type": "number", "minimum": 0}
+              },
+              "required": ["heapUsed", "heapTotal", "peak"]
+            },
+            "energy": {
+              "type": "object",
+              "properties": {
+                "totalConsumption": {"type": "number", "minimum": 0, "maximum": 1},
+                "averageRate": {"type": "number", "minimum": 0, "maximum": 1},
+                "peakRate": {"type": "number", "minimum": 0, "maximum": 1},
+                "efficiency": {"type": "number", "minimum": 0, "maximum": 1}
+              },
+              "required": ["totalConsumption", "averageRate"]
+            },
+            "network": {
+              "type": "object",
+              "properties": {
+                "requests": {"type": "integer", "minimum": 0},
+                "bytesTransferred": {"type": "integer", "minimum": 0},
+                "connectionTime": {"type": "number", "minimum": 0},
+                "bandwidth": {"type": "number", "minimum": 0}
+              }
+            }
+          },
+          "required": ["frameRate", "latency", "memory", "energy"],
+          "additionalProperties": false
+        },
+        "thresholds": {
+          "type": "object",
+          "properties": {
+            "frameRateMin": {"type": "number", "minimum": 30},
+            "ttftMax": {"type": "number", "minimum": 0},
+            "memoryMax": {"type": "number", "minimum": 0},
+            "energyMax": {"type": "number", "minimum": 0, "maximum": 1}
+          },
+          "additionalProperties": false
+        },
+        "passed": {
+          "type": "boolean",
+          "description": "Whether all performance thresholds were met"
+        }
+      },
+      "required": ["testId", "timestamp", "metrics", "passed"],
+      "additionalProperties": false
+    },
+    "qualityGate": {
+      "type": "object",
+      "title": "Quality Gate Configuration",
+      "description": "Quality gate rules and thresholds for deployment",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Quality gate name"
+        },
+        "description": {
+          "type": "string",
+          "description": "Quality gate description"
+        },
+        "conditions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "metric": {
+                "type": "string",
+                "enum": ["test_coverage", "test_pass_rate", "performance_score", "security_score", "energy_efficiency", "frame_rate", "memory_usage"]
+              },
+              "operator": {
+                "type": "string",
+                "enum": ["greater_than", "greater_than_or_equal", "less_than", "less_than_or_equal", "equals"]
+              },
+              "threshold": {
+                "type": "number",
+                "description": "Threshold value for the condition"
+              },
+              "severity": {
+                "$ref": "#/definitions/severity"
+              }
+            },
+            "required": ["metric", "operator", "threshold", "severity"],
+            "additionalProperties": false
+          },
+          "minItems": 1,
+          "description": "Quality gate conditions"
+        },
+        "blockers": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["critical_test_failure", "security_vulnerability", "performance_regression", "energy_threshold_exceeded"]
+          },
+          "description": "Conditions that block deployment"
+        },
+        "warnings": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Conditions that generate warnings but don't block"
+        }
+      },
+      "required": ["name", "conditions"],
+      "additionalProperties": false
+    },
+    "deploymentConfig": {
+      "type": "object",
+      "title": "Deployment Configuration",
+      "description": "Configuration for deployment pipeline and environments",
+      "properties": {
+        "environment": {
+          "type": "string",
+          "enum": ["development", "staging", "production"],
+          "description": "Target deployment environment"
+        },
+        "strategy": {
+          "type": "string",
+          "enum": ["blue_green", "rolling", "canary", "immediate"],
+          "description": "Deployment strategy"
+        },
+        "requirements": {
+          "type": "object",
+          "properties": {
+            "minVersion": {
+              "type": "string",
+              "pattern": "^\\d+\\.\\d+\\.\\d+$",
+              "description": "Minimum required version"
+            },
+            "hardwareTier": {
+              "type": "string",
+              "enum": ["Low-Tier", "Mid-Tier", "High-Tier"],
+              "description": "Minimum hardware tier requirement"
+            },
+            "memoryMb": {
+              "type": "integer",
+              "minimum": 512,
+              "description": "Minimum memory requirement in MB"
+            },
+            "diskGb": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Minimum disk space requirement in GB"
+            }
+          },
+          "additionalProperties": false
+        },
+        "healthChecks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {"type": "string"},
+              "endpoint": {"type": "string", "format": "uri"},
+              "interval": {"type": "integer", "minimum": 1},
+              "timeout": {"type": "integer", "minimum": 1},
+              "retries": {"type": "integer", "minimum": 0}
+            },
+            "required": ["name", "endpoint", "interval"],
+            "additionalProperties": false
+          },
+          "description": "Health check configurations"
+        },
+        "rollback": {
+          "type": "object",
+          "properties": {
+            "enabled": {"type": "boolean", "default": true},
+            "triggerConditions": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": ["health_check_failure", "error_rate_threshold", "performance_degradation"]
+              }
+            },
+            "automaticTrigger": {"type": "boolean", "default": false}
+          },
+          "additionalProperties": false
+        }
+      },
+      "required": ["environment", "strategy"],
+      "additionalProperties": false
+    },
+    "cicdPipeline": {
+      "type": "object",
+      "title": "CI/CD Pipeline Configuration",
+      "description": "Continuous integration and deployment pipeline definition",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Pipeline name"
+        },
+        "triggers": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["push", "pull_request", "schedule", "manual", "tag"]
+          },
+          "description": "Pipeline trigger conditions"
+        },
+        "stages": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {"type": "string"},
+              "type": {
+                "type": "string",
+                "enum": ["build", "test", "security", "performance", "deploy", "verify"]
+              },
+              "parallel": {"type": "boolean", "default": false},
+              "continueOnError": {"type": "boolean", "default": false},
+              "timeout": {"type": "integer", "minimum": 1},
+              "dependencies": {
+                "type": "array",
+                "items": {"type": "string"}
+              },
+              "jobs": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "name": {"type": "string"},
+                    "command": {"type": "string"},
+                    "environment": {"type": "object"},
+                    "artifacts": {
+                      "type": "array",
+                      "items": {"type": "string"}
+                    }
+                  },
+                  "required": ["name", "command"]
+                }
+              }
+            },
+            "required": ["name", "type", "jobs"],
+            "additionalProperties": false
+          },
+          "description": "Pipeline stages"
+        },
+        "environment": {
+          "type": "object",
+          "description": "Global environment variables",
+          "additionalProperties": {"type": "string"}
+        },
+        "notifications": {
+          "type": "object",
+          "properties": {
+            "onSuccess": {"type": "array", "items": {"type": "string"}},
+            "onFailure": {"type": "array", "items": {"type": "string"}},
+            "channels": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": ["email", "slack", "webhook"]
+              }
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "required": ["name", "triggers", "stages"],
+      "additionalProperties": false
+    }
+  },
+  "error_codes": {
+    "TEST_TIMEOUT": {
+      "code": 408,
+      "message": "Test execution exceeded timeout limit",
+      "recoverable": true
+    },
+    "ASSERTION_FAILED": {
+      "code": 400,
+      "message": "Test assertion did not pass",
+      "recoverable": false
+    },
+    "ENVIRONMENT_SETUP_FAILED": {
+      "code": 500,
+      "message": "Failed to set up test environment",
+      "recoverable": true
+    },
+    "PERFORMANCE_THRESHOLD_EXCEEDED": {
+      "code": 422,
+      "message": "Performance metrics exceeded acceptable thresholds",
+      "recoverable": false
+    },
+    "QUALITY_GATE_BLOCKED": {
+      "code": 403,
+      "message": "Quality gate conditions not met, deployment blocked",
+      "recoverable": false
+    },
+    "ENERGY_VALIDATION_FAILED": {
+      "code": 422,
+      "message": "Energy consumption exceeded limits or validation failed",
+      "recoverable": false
+    },
+    "VISUAL_REGRESSION_DETECTED": {
+      "code": 422,
+      "message": "Visual regression detected in UI comparison",
+      "recoverable": false
+    }
+  }
+}

@@ -1,0 +1,478 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "WF-UX-007 Error Classification Schema",
+  "description": "Structured schema defining all error types, codes, and severity levels used in WIRTHFORGE",
+  "type": "object",
+  "properties": {
+    "errorCategories": {
+      "type": "object",
+      "properties": {
+        "userInput": {
+          "type": "object",
+          "description": "Errors related to user input validation and form handling",
+          "properties": {
+            "codes": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "code": {"type": "string"},
+                  "name": {"type": "string"},
+                  "severity": {"enum": ["info", "warning", "error", "critical"]},
+                  "userMessageKey": {"type": "string"},
+                  "autoRecoverable": {"type": "boolean"},
+                  "requiresUserAction": {"type": "boolean"}
+                },
+                "required": ["code", "name", "severity", "userMessageKey"]
+              }
+            }
+          }
+        },
+        "network": {
+          "type": "object",
+          "description": "Network connectivity and communication errors",
+          "properties": {
+            "codes": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "code": {"type": "string"},
+                  "name": {"type": "string"},
+                  "severity": {"enum": ["info", "warning", "error", "critical"]},
+                  "userMessageKey": {"type": "string"},
+                  "autoRecoverable": {"type": "boolean"},
+                  "maxRetries": {"type": "integer"},
+                  "retryInterval": {"type": "integer"}
+                },
+                "required": ["code", "name", "severity", "userMessageKey"]
+              }
+            }
+          }
+        },
+        "aiModel": {
+          "type": "object",
+          "description": "AI model processing and execution errors",
+          "properties": {
+            "codes": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "code": {"type": "string"},
+                  "name": {"type": "string"},
+                  "severity": {"enum": ["info", "warning", "error", "critical"]},
+                  "userMessageKey": {"type": "string"},
+                  "autoRecoverable": {"type": "boolean"},
+                  "fallbackAvailable": {"type": "boolean"},
+                  "requiresModelRestart": {"type": "boolean"}
+                },
+                "required": ["code", "name", "severity", "userMessageKey"]
+              }
+            }
+          }
+        },
+        "plugin": {
+          "type": "object",
+          "description": "Plugin execution and sandbox errors",
+          "properties": {
+            "codes": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "code": {"type": "string"},
+                  "name": {"type": "string"},
+                  "severity": {"enum": ["info", "warning", "error", "critical"]},
+                  "userMessageKey": {"type": "string"},
+                  "autoRecoverable": {"type": "boolean"},
+                  "sandboxIsolation": {"type": "boolean"},
+                  "requiresPluginRestart": {"type": "boolean"}
+                },
+                "required": ["code", "name", "severity", "userMessageKey"]
+              }
+            }
+          }
+        },
+        "dataStorage": {
+          "type": "object",
+          "description": "Data integrity and storage errors",
+          "properties": {
+            "codes": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "code": {"type": "string"},
+                  "name": {"type": "string"},
+                  "severity": {"enum": ["info", "warning", "error", "critical"]},
+                  "userMessageKey": {"type": "string"},
+                  "autoRecoverable": {"type": "boolean"},
+                  "backupRequired": {"type": "boolean"},
+                  "dataIntegrityRisk": {"type": "boolean"}
+                },
+                "required": ["code", "name", "severity", "userMessageKey"]
+              }
+            }
+          }
+        },
+        "systemResource": {
+          "type": "object",
+          "description": "System resource and performance errors",
+          "properties": {
+            "codes": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "code": {"type": "string"},
+                  "name": {"type": "string"},
+                  "severity": {"enum": ["info", "warning", "error", "critical"]},
+                  "userMessageKey": {"type": "string"},
+                  "autoRecoverable": {"type": "boolean"},
+                  "resourceType": {"enum": ["memory", "cpu", "disk", "gpu"]},
+                  "emergencyShutdown": {"type": "boolean"}
+                },
+                "required": ["code", "name", "severity", "userMessageKey"]
+              }
+            }
+          }
+        },
+        "uiComponent": {
+          "type": "object",
+          "description": "UI component rendering and interaction errors",
+          "properties": {
+            "codes": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "code": {"type": "string"},
+                  "name": {"type": "string"},
+                  "severity": {"enum": ["info", "warning", "error", "critical"]},
+                  "userMessageKey": {"type": "string"},
+                  "autoRecoverable": {"type": "boolean"},
+                  "fallbackComponent": {"type": "string"},
+                  "isolationRequired": {"type": "boolean"}
+                },
+                "required": ["code", "name", "severity", "userMessageKey"]
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "predefinedErrors": {
+      "userInput": [
+        {
+          "code": "USR_001",
+          "name": "Invalid Input Format",
+          "severity": "warning",
+          "userMessageKey": "error.input.invalid_format",
+          "autoRecoverable": false,
+          "requiresUserAction": true
+        },
+        {
+          "code": "USR_002",
+          "name": "Required Field Missing",
+          "severity": "error",
+          "userMessageKey": "error.input.required_missing",
+          "autoRecoverable": false,
+          "requiresUserAction": true
+        },
+        {
+          "code": "USR_003",
+          "name": "Input Length Exceeded",
+          "severity": "warning",
+          "userMessageKey": "error.input.length_exceeded",
+          "autoRecoverable": false,
+          "requiresUserAction": true
+        },
+        {
+          "code": "USR_004",
+          "name": "Unsupported Command",
+          "severity": "error",
+          "userMessageKey": "error.input.unsupported_command",
+          "autoRecoverable": false,
+          "requiresUserAction": true
+        }
+      ],
+      "network": [
+        {
+          "code": "NET_001",
+          "name": "Connection Timeout",
+          "severity": "warning",
+          "userMessageKey": "error.network.timeout",
+          "autoRecoverable": true,
+          "maxRetries": 3,
+          "retryInterval": 2000
+        },
+        {
+          "code": "NET_002",
+          "name": "WebSocket Disconnected",
+          "severity": "error",
+          "userMessageKey": "error.network.websocket_disconnected",
+          "autoRecoverable": true,
+          "maxRetries": 5,
+          "retryInterval": 1000
+        },
+        {
+          "code": "NET_003",
+          "name": "Service Unavailable",
+          "severity": "error",
+          "userMessageKey": "error.network.service_unavailable",
+          "autoRecoverable": true,
+          "maxRetries": 3,
+          "retryInterval": 5000
+        },
+        {
+          "code": "NET_004",
+          "name": "Network Interface Down",
+          "severity": "critical",
+          "userMessageKey": "error.network.interface_down",
+          "autoRecoverable": false,
+          "maxRetries": 0,
+          "retryInterval": 0
+        }
+      ],
+      "aiModel": [
+        {
+          "code": "AI_001",
+          "name": "Model Loading Failed",
+          "severity": "critical",
+          "userMessageKey": "error.ai.model_load_failed",
+          "autoRecoverable": true,
+          "fallbackAvailable": false,
+          "requiresModelRestart": true
+        },
+        {
+          "code": "AI_002",
+          "name": "Processing Timeout",
+          "severity": "warning",
+          "userMessageKey": "error.ai.processing_timeout",
+          "autoRecoverable": true,
+          "fallbackAvailable": true,
+          "requiresModelRestart": false
+        },
+        {
+          "code": "AI_003",
+          "name": "Model Crashed",
+          "severity": "error",
+          "userMessageKey": "error.ai.model_crashed",
+          "autoRecoverable": true,
+          "fallbackAvailable": false,
+          "requiresModelRestart": true
+        },
+        {
+          "code": "AI_004",
+          "name": "Invalid Model Response",
+          "severity": "warning",
+          "userMessageKey": "error.ai.invalid_response",
+          "autoRecoverable": true,
+          "fallbackAvailable": true,
+          "requiresModelRestart": false
+        },
+        {
+          "code": "AI_005",
+          "name": "Model Memory Exhausted",
+          "severity": "error",
+          "userMessageKey": "error.ai.memory_exhausted",
+          "autoRecoverable": true,
+          "fallbackAvailable": false,
+          "requiresModelRestart": true
+        }
+      ],
+      "plugin": [
+        {
+          "code": "PLG_001",
+          "name": "Plugin Load Failed",
+          "severity": "warning",
+          "userMessageKey": "error.plugin.load_failed",
+          "autoRecoverable": true,
+          "sandboxIsolation": true,
+          "requiresPluginRestart": true
+        },
+        {
+          "code": "PLG_002",
+          "name": "Plugin Crashed",
+          "severity": "error",
+          "userMessageKey": "error.plugin.crashed",
+          "autoRecoverable": true,
+          "sandboxIsolation": true,
+          "requiresPluginRestart": true
+        },
+        {
+          "code": "PLG_003",
+          "name": "Plugin Resource Exceeded",
+          "severity": "warning",
+          "userMessageKey": "error.plugin.resource_exceeded",
+          "autoRecoverable": true,
+          "sandboxIsolation": true,
+          "requiresPluginRestart": false
+        },
+        {
+          "code": "PLG_004",
+          "name": "Plugin Security Violation",
+          "severity": "critical",
+          "userMessageKey": "error.plugin.security_violation",
+          "autoRecoverable": false,
+          "sandboxIsolation": true,
+          "requiresPluginRestart": false
+        },
+        {
+          "code": "PLG_005",
+          "name": "Plugin API Mismatch",
+          "severity": "error",
+          "userMessageKey": "error.plugin.api_mismatch",
+          "autoRecoverable": false,
+          "sandboxIsolation": true,
+          "requiresPluginRestart": false
+        }
+      ],
+      "dataStorage": [
+        {
+          "code": "DAT_001",
+          "name": "File Not Found",
+          "severity": "error",
+          "userMessageKey": "error.data.file_not_found",
+          "autoRecoverable": true,
+          "backupRequired": false,
+          "dataIntegrityRisk": false
+        },
+        {
+          "code": "DAT_002",
+          "name": "Data Corruption Detected",
+          "severity": "critical",
+          "userMessageKey": "error.data.corruption_detected",
+          "autoRecoverable": true,
+          "backupRequired": true,
+          "dataIntegrityRisk": true
+        },
+        {
+          "code": "DAT_003",
+          "name": "Disk Space Full",
+          "severity": "error",
+          "userMessageKey": "error.data.disk_full",
+          "autoRecoverable": false,
+          "backupRequired": false,
+          "dataIntegrityRisk": false
+        },
+        {
+          "code": "DAT_004",
+          "name": "Backup Failed",
+          "severity": "warning",
+          "userMessageKey": "error.data.backup_failed",
+          "autoRecoverable": true,
+          "backupRequired": false,
+          "dataIntegrityRisk": true
+        },
+        {
+          "code": "DAT_005",
+          "name": "Checksum Mismatch",
+          "severity": "error",
+          "userMessageKey": "error.data.checksum_mismatch",
+          "autoRecoverable": true,
+          "backupRequired": true,
+          "dataIntegrityRisk": true
+        }
+      ],
+      "systemResource": [
+        {
+          "code": "SYS_001",
+          "name": "Memory Usage High",
+          "severity": "warning",
+          "userMessageKey": "error.system.memory_high",
+          "autoRecoverable": true,
+          "resourceType": "memory",
+          "emergencyShutdown": false
+        },
+        {
+          "code": "SYS_002",
+          "name": "Memory Exhausted",
+          "severity": "critical",
+          "userMessageKey": "error.system.memory_exhausted",
+          "autoRecoverable": true,
+          "resourceType": "memory",
+          "emergencyShutdown": true
+        },
+        {
+          "code": "SYS_003",
+          "name": "CPU Usage Critical",
+          "severity": "error",
+          "userMessageKey": "error.system.cpu_critical",
+          "autoRecoverable": true,
+          "resourceType": "cpu",
+          "emergencyShutdown": false
+        },
+        {
+          "code": "SYS_004",
+          "name": "GPU Memory Full",
+          "severity": "error",
+          "userMessageKey": "error.system.gpu_memory_full",
+          "autoRecoverable": true,
+          "resourceType": "gpu",
+          "emergencyShutdown": false
+        },
+        {
+          "code": "SYS_005",
+          "name": "Thermal Throttling",
+          "severity": "warning",
+          "userMessageKey": "error.system.thermal_throttling",
+          "autoRecoverable": true,
+          "resourceType": "cpu",
+          "emergencyShutdown": false
+        }
+      ],
+      "uiComponent": [
+        {
+          "code": "UI_001",
+          "name": "Component Render Failed",
+          "severity": "error",
+          "userMessageKey": "error.ui.render_failed",
+          "autoRecoverable": true,
+          "fallbackComponent": "ErrorBoundary",
+          "isolationRequired": true
+        },
+        {
+          "code": "UI_002",
+          "name": "Event Handler Error",
+          "severity": "warning",
+          "userMessageKey": "error.ui.event_handler_error",
+          "autoRecoverable": true,
+          "fallbackComponent": null,
+          "isolationRequired": false
+        },
+        {
+          "code": "UI_003",
+          "name": "State Update Failed",
+          "severity": "error",
+          "userMessageKey": "error.ui.state_update_failed",
+          "autoRecoverable": true,
+          "fallbackComponent": "StateFallback",
+          "isolationRequired": false
+        },
+        {
+          "code": "UI_004",
+          "name": "Animation System Failure",
+          "severity": "warning",
+          "userMessageKey": "error.ui.animation_failure",
+          "autoRecoverable": true,
+          "fallbackComponent": "StaticRenderer",
+          "isolationRequired": false
+        },
+        {
+          "code": "UI_005",
+          "name": "Critical UI Failure",
+          "severity": "critical",
+          "userMessageKey": "error.ui.critical_failure",
+          "autoRecoverable": false,
+          "fallbackComponent": "EmergencyUI",
+          "isolationRequired": true
+        }
+      ]
+    }
+  },
+  "required": ["errorCategories"]
+}
