@@ -1,0 +1,679 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "WIRTHFORGE Performance & Capacity Schemas",
+  "version": "1.0.0",
+  "description": "JSON schemas for performance metrics, hardware profiles, and configuration validation",
+  
+  "definitions": {
+    "hardware_profile": {
+      "type": "object",
+      "title": "Hardware Profile Schema",
+      "description": "Hardware configuration and capabilities",
+      "properties": {
+        "profile_id": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9_-]+$",
+          "description": "Unique identifier for hardware profile"
+        },
+        "tier": {
+          "type": "string",
+          "enum": ["low", "mid", "high"],
+          "description": "Hardware tier classification"
+        },
+        "cpu": {
+          "type": "object",
+          "properties": {
+            "cores": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 128,
+              "description": "Number of CPU cores"
+            },
+            "threads": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 256,
+              "description": "Number of CPU threads"
+            },
+            "base_frequency_ghz": {
+              "type": "number",
+              "minimum": 0.5,
+              "maximum": 10.0,
+              "description": "Base CPU frequency in GHz"
+            },
+            "boost_frequency_ghz": {
+              "type": "number",
+              "minimum": 0.5,
+              "maximum": 10.0,
+              "description": "Maximum boost frequency in GHz"
+            },
+            "architecture": {
+              "type": "string",
+              "enum": ["x86_64", "arm64", "other"],
+              "description": "CPU architecture"
+            }
+          },
+          "required": ["cores", "threads", "base_frequency_ghz"],
+          "additionalProperties": false
+        },
+        "memory": {
+          "type": "object",
+          "properties": {
+            "total_gb": {
+              "type": "number",
+              "minimum": 2,
+              "maximum": 1024,
+              "description": "Total system memory in GB"
+            },
+            "type": {
+              "type": "string",
+              "enum": ["DDR3", "DDR4", "DDR5", "LPDDR4", "LPDDR5", "other"],
+              "description": "Memory type"
+            },
+            "speed_mhz": {
+              "type": "integer",
+              "minimum": 800,
+              "maximum": 8000,
+              "description": "Memory speed in MHz"
+            },
+            "channels": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 8,
+              "description": "Number of memory channels"
+            }
+          },
+          "required": ["total_gb", "type"],
+          "additionalProperties": false
+        },
+        "gpu": {
+          "type": "object",
+          "properties": {
+            "present": {
+              "type": "boolean",
+              "description": "Whether dedicated GPU is present"
+            },
+            "type": {
+              "type": "string",
+              "enum": ["integrated", "dedicated", "none"],
+              "description": "GPU type"
+            },
+            "vram_gb": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 128,
+              "description": "GPU VRAM in GB"
+            },
+            "compute_units": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 10000,
+              "description": "Number of compute units/cores"
+            },
+            "memory_bandwidth_gbps": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 2000,
+              "description": "Memory bandwidth in GB/s"
+            },
+            "tensor_performance_tops": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1000,
+              "description": "Tensor performance in TOPS"
+            }
+          },
+          "required": ["present", "type"],
+          "additionalProperties": false
+        },
+        "storage": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": ["HDD", "SATA_SSD", "NVMe_SSD", "other"],
+              "description": "Storage type"
+            },
+            "capacity_gb": {
+              "type": "number",
+              "minimum": 10,
+              "maximum": 100000,
+              "description": "Storage capacity in GB"
+            },
+            "read_speed_mbps": {
+              "type": "number",
+              "minimum": 50,
+              "maximum": 10000,
+              "description": "Sequential read speed in MB/s"
+            },
+            "write_speed_mbps": {
+              "type": "number",
+              "minimum": 50,
+              "maximum": 10000,
+              "description": "Sequential write speed in MB/s"
+            }
+          },
+          "required": ["type", "capacity_gb"],
+          "additionalProperties": false
+        },
+        "performance_targets": {
+          "type": "object",
+          "properties": {
+            "target_tps": {
+              "type": "number",
+              "minimum": 1,
+              "maximum": 1000,
+              "description": "Target tokens per second"
+            },
+            "target_ttft_ms": {
+              "type": "number",
+              "minimum": 100,
+              "maximum": 10000,
+              "description": "Target time to first token in ms"
+            },
+            "target_fps": {
+              "type": "number",
+              "minimum": 15,
+              "maximum": 120,
+              "description": "Target UI frame rate"
+            },
+            "max_memory_usage_percent": {
+              "type": "number",
+              "minimum": 50,
+              "maximum": 95,
+              "description": "Maximum memory usage percentage"
+            }
+          },
+          "required": ["target_tps", "target_ttft_ms", "target_fps"],
+          "additionalProperties": false
+        }
+      },
+      "required": ["profile_id", "tier", "cpu", "memory", "gpu", "storage", "performance_targets"],
+      "additionalProperties": false
+    },
+    
+    "performance_metrics": {
+      "type": "object",
+      "title": "Performance Metrics Schema",
+      "description": "Real-time performance measurements",
+      "properties": {
+        "timestamp": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Measurement timestamp in ISO 8601 format"
+        },
+        "session_id": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9_-]+$",
+          "description": "Unique session identifier"
+        },
+        "system_metrics": {
+          "type": "object",
+          "properties": {
+            "cpu_utilization_percent": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100,
+              "description": "Overall CPU utilization percentage"
+            },
+            "cpu_temperature_celsius": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 150,
+              "description": "CPU temperature in Celsius"
+            },
+            "memory_used_percent": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100,
+              "description": "Memory usage percentage"
+            },
+            "memory_used_gb": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1024,
+              "description": "Memory used in GB"
+            },
+            "gpu_utilization_percent": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100,
+              "description": "GPU utilization percentage"
+            },
+            "gpu_memory_used_percent": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100,
+              "description": "GPU memory usage percentage"
+            },
+            "gpu_temperature_celsius": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 150,
+              "description": "GPU temperature in Celsius"
+            },
+            "disk_usage_percent": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100,
+              "description": "Disk usage percentage"
+            }
+          },
+          "required": ["cpu_utilization_percent", "memory_used_percent"],
+          "additionalProperties": false
+        },
+        "application_metrics": {
+          "type": "object",
+          "properties": {
+            "tokens_per_second": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1000,
+              "description": "Current token generation rate"
+            },
+            "time_to_first_token_ms": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 30000,
+              "description": "Time to first token in milliseconds"
+            },
+            "active_requests": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 1000,
+              "description": "Number of active inference requests"
+            },
+            "queue_length": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 10000,
+              "description": "Request queue length"
+            },
+            "frame_rate_fps": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 120,
+              "description": "UI frame rate in FPS"
+            },
+            "frame_time_ms": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1000,
+              "description": "Average frame time in milliseconds"
+            },
+            "websocket_latency_ms": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 5000,
+              "description": "WebSocket round-trip latency"
+            }
+          },
+          "required": ["tokens_per_second", "frame_rate_fps"],
+          "additionalProperties": false
+        },
+        "council_metrics": {
+          "type": "object",
+          "properties": {
+            "active_models": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 20,
+              "description": "Number of active models in council"
+            },
+            "synchronization_latency_ms": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 10000,
+              "description": "Council synchronization latency"
+            },
+            "consensus_time_ms": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 30000,
+              "description": "Time to reach consensus"
+            },
+            "efficiency_ratio": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "Council efficiency ratio (0-1)"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "required": ["timestamp", "session_id", "system_metrics", "application_metrics"],
+      "additionalProperties": false
+    },
+    
+    "alert_configuration": {
+      "type": "object",
+      "title": "Alert Configuration Schema",
+      "description": "Performance alert rules and thresholds",
+      "properties": {
+        "alert_id": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9_-]+$",
+          "description": "Unique alert identifier"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100,
+          "description": "Human-readable alert name"
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 500,
+          "description": "Alert description"
+        },
+        "metric_name": {
+          "type": "string",
+          "description": "Target metric name"
+        },
+        "condition": {
+          "type": "string",
+          "enum": ["greater_than", "less_than", "equals", "not_equals", "percentage_change"],
+          "description": "Alert condition type"
+        },
+        "threshold": {
+          "type": "number",
+          "description": "Alert threshold value"
+        },
+        "severity": {
+          "type": "string",
+          "enum": ["info", "warning", "critical"],
+          "description": "Alert severity level"
+        },
+        "duration_seconds": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 3600,
+          "description": "Duration threshold must be exceeded"
+        },
+        "cooldown_seconds": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 86400,
+          "description": "Cooldown period between alerts"
+        },
+        "enabled": {
+          "type": "boolean",
+          "description": "Whether alert is enabled"
+        },
+        "hardware_tiers": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["low", "mid", "high"]
+          },
+          "description": "Hardware tiers this alert applies to"
+        },
+        "actions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": ["notification", "webhook", "auto_recovery", "log"],
+                "description": "Action type"
+              },
+              "config": {
+                "type": "object",
+                "description": "Action-specific configuration"
+              }
+            },
+            "required": ["type"],
+            "additionalProperties": false
+          },
+          "description": "Actions to take when alert triggers"
+        }
+      },
+      "required": ["alert_id", "name", "metric_name", "condition", "threshold", "severity"],
+      "additionalProperties": false
+    },
+    
+    "capacity_plan": {
+      "type": "object",
+      "title": "Capacity Plan Schema",
+      "description": "Capacity planning configuration and projections",
+      "properties": {
+        "plan_id": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9_-]+$",
+          "description": "Unique capacity plan identifier"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Plan creation timestamp"
+        },
+        "hardware_profile_id": {
+          "type": "string",
+          "description": "Reference to hardware profile"
+        },
+        "current_capacity": {
+          "type": "object",
+          "properties": {
+            "max_concurrent_users": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "description": "Maximum concurrent users"
+            },
+            "max_tokens_per_second": {
+              "type": "number",
+              "minimum": 1,
+              "maximum": 1000,
+              "description": "Maximum token generation rate"
+            },
+            "max_council_size": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 20,
+              "description": "Maximum council size"
+            },
+            "memory_budget_gb": {
+              "type": "number",
+              "minimum": 1,
+              "maximum": 1024,
+              "description": "Allocated memory budget"
+            }
+          },
+          "required": ["max_concurrent_users", "max_tokens_per_second"],
+          "additionalProperties": false
+        },
+        "scaling_rules": {
+          "type": "object",
+          "properties": {
+            "scale_up_threshold": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "Resource utilization threshold for scaling up"
+            },
+            "scale_down_threshold": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "Resource utilization threshold for scaling down"
+            },
+            "scale_up_cooldown_seconds": {
+              "type": "integer",
+              "minimum": 30,
+              "maximum": 3600,
+              "description": "Cooldown period after scaling up"
+            },
+            "scale_down_cooldown_seconds": {
+              "type": "integer",
+              "minimum": 30,
+              "maximum": 3600,
+              "description": "Cooldown period after scaling down"
+            }
+          },
+          "required": ["scale_up_threshold", "scale_down_threshold"],
+          "additionalProperties": false
+        },
+        "projections": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "timeframe_days": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 365,
+                "description": "Projection timeframe in days"
+              },
+              "expected_growth_factor": {
+                "type": "number",
+                "minimum": 0.1,
+                "maximum": 10,
+                "description": "Expected growth multiplier"
+              },
+              "projected_capacity": {
+                "type": "object",
+                "properties": {
+                  "users": {
+                    "type": "integer",
+                    "minimum": 1
+                  },
+                  "tps": {
+                    "type": "number",
+                    "minimum": 1
+                  },
+                  "memory_gb": {
+                    "type": "number",
+                    "minimum": 1
+                  }
+                },
+                "required": ["users", "tps", "memory_gb"],
+                "additionalProperties": false
+              },
+              "confidence_level": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1,
+                "description": "Confidence level of projection (0-1)"
+              }
+            },
+            "required": ["timeframe_days", "expected_growth_factor", "projected_capacity"],
+            "additionalProperties": false
+          },
+          "description": "Capacity projections for different timeframes"
+        }
+      },
+      "required": ["plan_id", "created_at", "hardware_profile_id", "current_capacity", "scaling_rules"],
+      "additionalProperties": false
+    },
+    
+    "benchmark_result": {
+      "type": "object",
+      "title": "Benchmark Result Schema",
+      "description": "Performance benchmark test results",
+      "properties": {
+        "benchmark_id": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9_-]+$",
+          "description": "Unique benchmark identifier"
+        },
+        "test_name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100,
+          "description": "Benchmark test name"
+        },
+        "executed_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Benchmark execution timestamp"
+        },
+        "hardware_profile_id": {
+          "type": "string",
+          "description": "Hardware profile used for benchmark"
+        },
+        "test_duration_seconds": {
+          "type": "number",
+          "minimum": 1,
+          "maximum": 86400,
+          "description": "Total test duration"
+        },
+        "results": {
+          "type": "object",
+          "properties": {
+            "tokens_per_second": {
+              "type": "object",
+              "properties": {
+                "average": {"type": "number", "minimum": 0},
+                "minimum": {"type": "number", "minimum": 0},
+                "maximum": {"type": "number", "minimum": 0},
+                "percentile_95": {"type": "number", "minimum": 0}
+              },
+              "required": ["average", "minimum", "maximum"],
+              "additionalProperties": false
+            },
+            "latency_ms": {
+              "type": "object",
+              "properties": {
+                "average": {"type": "number", "minimum": 0},
+                "minimum": {"type": "number", "minimum": 0},
+                "maximum": {"type": "number", "minimum": 0},
+                "percentile_95": {"type": "number", "minimum": 0}
+              },
+              "required": ["average", "minimum", "maximum"],
+              "additionalProperties": false
+            },
+            "resource_usage": {
+              "type": "object",
+              "properties": {
+                "peak_cpu_percent": {"type": "number", "minimum": 0, "maximum": 100},
+                "peak_memory_percent": {"type": "number", "minimum": 0, "maximum": 100},
+                "peak_gpu_percent": {"type": "number", "minimum": 0, "maximum": 100},
+                "average_cpu_percent": {"type": "number", "minimum": 0, "maximum": 100},
+                "average_memory_percent": {"type": "number", "minimum": 0, "maximum": 100}
+              },
+              "additionalProperties": false
+            }
+          },
+          "required": ["tokens_per_second", "latency_ms", "resource_usage"],
+          "additionalProperties": false
+        },
+        "success": {
+          "type": "boolean",
+          "description": "Whether benchmark completed successfully"
+        },
+        "error_message": {
+          "type": "string",
+          "description": "Error message if benchmark failed"
+        },
+        "quality_gates": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "gate_name": {"type": "string"},
+              "passed": {"type": "boolean"},
+              "expected": {"type": "number"},
+              "actual": {"type": "number"},
+              "tolerance_percent": {"type": "number", "minimum": 0, "maximum": 100}
+            },
+            "required": ["gate_name", "passed", "expected", "actual"],
+            "additionalProperties": false
+          },
+          "description": "Quality gate validation results"
+        }
+      },
+      "required": ["benchmark_id", "test_name", "executed_at", "hardware_profile_id", "results", "success"],
+      "additionalProperties": false
+    }
+  },
+  
+  "oneOf": [
+    {"$ref": "#/definitions/hardware_profile"},
+    {"$ref": "#/definitions/performance_metrics"},
+    {"$ref": "#/definitions/alert_configuration"},
+    {"$ref": "#/definitions/capacity_plan"},
+    {"$ref": "#/definitions/benchmark_result"}
+  ]
+}
