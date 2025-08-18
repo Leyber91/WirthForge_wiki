@@ -1,0 +1,547 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "WIRTHFORGE Metrics Snapshot Schema",
+  "description": "Real-time metrics snapshot for WIRTHFORGE observability dashboard",
+  "version": "1.0.0",
+  "type": "object",
+  "definitions": {
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp with millisecond precision"
+    },
+    "uuid": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$",
+      "description": "UUID v4 identifier"
+    }
+  },
+  "properties": {
+    "snapshot_id": {
+      "$ref": "#/definitions/uuid",
+      "description": "Unique identifier for this snapshot"
+    },
+    "session_id": {
+      "$ref": "#/definitions/uuid",
+      "description": "Session identifier linking to current user session"
+    },
+    "timestamp": {
+      "$ref": "#/definitions/timestamp",
+      "description": "When this snapshot was captured"
+    },
+    "schema_version": {
+      "type": "string",
+      "const": "1.0.0",
+      "description": "Schema version for compatibility checking"
+    },
+    "collection_interval_ms": {
+      "type": "number",
+      "minimum": 100,
+      "maximum": 60000,
+      "description": "Interval between snapshots in milliseconds"
+    },
+    "frame_stability": {
+      "type": "object",
+      "description": "60Hz frame processing stability metrics",
+      "properties": {
+        "current_fps": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 120,
+          "description": "Current frames per second"
+        },
+        "average_fps": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 120,
+          "description": "Average FPS over measurement window"
+        },
+        "frame_drops_count": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Number of frames exceeding 16.67ms budget"
+        },
+        "frame_budget_violations": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Frames exceeding target budget in window"
+        },
+        "longest_frame_ms": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Longest frame processing time in window"
+        },
+        "frame_stability_score": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Overall stability score (100% = perfect 60Hz)"
+        },
+        "jitter_ms": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Frame timing variance (standard deviation)"
+        }
+      },
+      "required": ["current_fps", "average_fps", "frame_drops_count", "frame_stability_score"]
+    },
+    "latency": {
+      "type": "object",
+      "description": "End-to-end response latency metrics",
+      "properties": {
+        "current_latency_ms": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Most recent prompt-to-response latency"
+        },
+        "p50_latency_ms": {
+          "type": "number",
+          "minimum": 0,
+          "description": "50th percentile latency"
+        },
+        "p95_latency_ms": {
+          "type": "number",
+          "minimum": 0,
+          "description": "95th percentile latency (governance target: <2000ms)"
+        },
+        "p99_latency_ms": {
+          "type": "number",
+          "minimum": 0,
+          "description": "99th percentile latency"
+        },
+        "average_latency_ms": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Average latency over window"
+        },
+        "latency_trend": {
+          "type": "string",
+          "enum": ["improving", "stable", "degrading"],
+          "description": "Latency trend over recent measurements"
+        },
+        "breakdown": {
+          "type": "object",
+          "properties": {
+            "model_computation_ms": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Time spent in AI model computation"
+            },
+            "decipher_processing_ms": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Time spent in DECIPHER processing"
+            },
+            "ui_render_ms": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Time spent rendering in UI"
+            },
+            "network_latency_ms": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Local network/WebSocket latency"
+            }
+          }
+        }
+      },
+      "required": ["current_latency_ms", "p95_latency_ms", "average_latency_ms"]
+    },
+    "energy_fidelity": {
+      "type": "object",
+      "description": "Energy visualization truth and accuracy",
+      "properties": {
+        "fidelity_ratio": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Ratio of visualized to computed energy (1.0 = perfect)"
+        },
+        "fidelity_percentage": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Energy fidelity as percentage (target: >90%)"
+        },
+        "visual_energy_units": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Energy units displayed in visualization"
+        },
+        "computed_energy_units": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Actual energy units computed"
+        },
+        "particle_count": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Current number of energy particles rendered"
+        },
+        "token_to_particle_ratio": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Ratio of tokens to particles displayed"
+        },
+        "visual_lag_ms": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Lag between computation and visualization"
+        },
+        "coherence_score": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Overall energy visualization coherence"
+        }
+      },
+      "required": ["fidelity_ratio", "fidelity_percentage", "coherence_score"]
+    },
+    "error_counts": {
+      "type": "object",
+      "description": "System reliability and error tracking",
+      "properties": {
+        "total_errors": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Total errors in measurement window"
+        },
+        "errors_per_minute": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Error rate per minute"
+        },
+        "error_breakdown": {
+          "type": "object",
+          "properties": {
+            "critical_errors": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Critical system errors"
+            },
+            "plugin_errors": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Plugin-related errors"
+            },
+            "model_errors": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "AI model computation errors"
+            },
+            "ui_errors": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "User interface errors"
+            },
+            "network_errors": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Local network errors"
+            }
+          }
+        },
+        "uptime_percentage": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "System uptime percentage"
+        },
+        "last_error_timestamp": {
+          "$ref": "#/definitions/timestamp",
+          "description": "Timestamp of most recent error"
+        }
+      },
+      "required": ["total_errors", "errors_per_minute", "uptime_percentage"]
+    },
+    "progression_rate": {
+      "type": "object",
+      "description": "User progression and engagement metrics",
+      "properties": {
+        "current_level": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Current user level"
+        },
+        "experience_points": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Current experience points"
+        },
+        "levels_per_hour": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Progression rate in levels per hour"
+        },
+        "xp_per_minute": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Experience points gained per minute"
+        },
+        "session_duration_minutes": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Current session duration"
+        },
+        "progression_velocity": {
+          "type": "string",
+          "enum": ["too_slow", "optimal", "too_fast"],
+          "description": "Assessment of progression rate for balance"
+        },
+        "engagement_score": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Overall user engagement score"
+        }
+      },
+      "required": ["current_level", "experience_points", "progression_velocity"]
+    },
+    "resource_utilization": {
+      "type": "object",
+      "description": "System resource usage metrics",
+      "properties": {
+        "cpu_usage_percentage": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Current CPU utilization"
+        },
+        "memory_usage_mb": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Memory usage in megabytes"
+        },
+        "memory_usage_percentage": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Memory utilization percentage"
+        },
+        "gpu_usage_percentage": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "GPU utilization if available"
+        },
+        "disk_io_rate": {
+          "type": "object",
+          "properties": {
+            "read_mb_per_sec": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Disk read rate in MB/s"
+            },
+            "write_mb_per_sec": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Disk write rate in MB/s"
+            }
+          }
+        },
+        "network_io_rate": {
+          "type": "object",
+          "properties": {
+            "local_kb_per_sec": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Local network I/O rate in KB/s"
+            }
+          }
+        }
+      },
+      "required": ["cpu_usage_percentage", "memory_usage_mb", "memory_usage_percentage"]
+    },
+    "throughput": {
+      "type": "object",
+      "description": "System processing throughput metrics",
+      "properties": {
+        "tokens_per_second": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Token processing rate"
+        },
+        "prompts_per_minute": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Prompt processing rate"
+        },
+        "total_tokens_session": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Total tokens processed this session"
+        },
+        "total_prompts_session": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Total prompts processed this session"
+        },
+        "queue_depth": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Current processing queue depth"
+        },
+        "backpressure_events": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Number of backpressure events"
+        },
+        "throughput_trend": {
+          "type": "string",
+          "enum": ["increasing", "stable", "decreasing"],
+          "description": "Throughput trend over recent measurements"
+        }
+      },
+      "required": ["tokens_per_second", "prompts_per_minute"]
+    },
+    "active_alerts": {
+      "type": "array",
+      "description": "Currently active system alerts",
+      "items": {
+        "type": "object",
+        "properties": {
+          "alert_id": {
+            "$ref": "#/definitions/uuid",
+            "description": "Unique alert identifier"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["info", "warning", "critical"],
+            "description": "Alert severity level"
+          },
+          "metric": {
+            "type": "string",
+            "description": "Metric that triggered the alert"
+          },
+          "threshold": {
+            "type": "number",
+            "description": "Threshold value that was exceeded"
+          },
+          "current_value": {
+            "type": "number",
+            "description": "Current value of the metric"
+          },
+          "message": {
+            "type": "string",
+            "description": "Human-readable alert message"
+          },
+          "triggered_at": {
+            "$ref": "#/definitions/timestamp",
+            "description": "When the alert was first triggered"
+          },
+          "duration_ms": {
+            "type": "number",
+            "minimum": 0,
+            "description": "How long the condition has persisted"
+          },
+          "acknowledged": {
+            "type": "boolean",
+            "description": "Whether alert has been acknowledged by user"
+          },
+          "auto_resolvable": {
+            "type": "boolean",
+            "description": "Whether alert can auto-resolve when condition clears"
+          }
+        },
+        "required": ["alert_id", "type", "metric", "message", "triggered_at"]
+      }
+    },
+    "system_health": {
+      "type": "object",
+      "description": "Overall system health assessment",
+      "properties": {
+        "health_score": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Overall system health score (0-100)"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["excellent", "good", "warning", "critical"],
+          "description": "Overall system status"
+        },
+        "bottlenecks": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["cpu", "memory", "disk", "network", "model", "ui", "none"]
+          },
+          "description": "Identified system bottlenecks"
+        },
+        "recommendations": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "System optimization recommendations"
+        }
+      },
+      "required": ["health_score", "status"]
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Snapshot metadata and context",
+      "properties": {
+        "wirthforge_version": {
+          "type": "string",
+          "description": "WIRTHFORGE version that generated this snapshot"
+        },
+        "collector_version": {
+          "type": "string",
+          "description": "Metrics collector version"
+        },
+        "measurement_window_seconds": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Time window for aggregated metrics"
+        },
+        "sample_count": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Number of samples in aggregation window"
+        },
+        "system_info": {
+          "type": "object",
+          "properties": {
+            "os": {
+              "type": "string",
+              "description": "Operating system"
+            },
+            "cpu_cores": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Number of CPU cores"
+            },
+            "total_memory_mb": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Total system memory in MB"
+            },
+            "gpu_available": {
+              "type": "boolean",
+              "description": "Whether GPU acceleration is available"
+            }
+          }
+        }
+      },
+      "required": ["wirthforge_version", "measurement_window_seconds"]
+    }
+  },
+  "required": [
+    "snapshot_id",
+    "session_id", 
+    "timestamp",
+    "schema_version",
+    "frame_stability",
+    "latency",
+    "energy_fidelity",
+    "error_counts",
+    "progression_rate",
+    "resource_utilization",
+    "throughput",
+    "system_health",
+    "metadata"
+  ],
+  "additionalProperties": false
+}

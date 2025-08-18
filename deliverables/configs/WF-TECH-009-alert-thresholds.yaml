@@ -1,0 +1,523 @@
+# WF-TECH-009 Alert Thresholds Configuration
+# Configurable alert rules for WIRTHFORGE observability system
+# Based on WF-FND-006 governance requirements
+
+version: "1.0.0"
+schema_version: "1.0.0"
+
+# Global alert settings
+global_settings:
+  enabled: true
+  default_cooldown_seconds: 300  # 5 minutes between same alert types
+  max_alerts_per_minute: 10
+  alert_retention_days: 30
+  auto_acknowledge_timeout_minutes: 60
+
+# Frame rate and performance alerts
+frame_performance:
+  fps_critical:
+    enabled: true
+    threshold: 45.0  # FPS
+    operator: "less_than"
+    duration_seconds: 3
+    severity: "critical"
+    message: "Critical frame rate drop: {value} FPS (target: 60 FPS)"
+    cooldown_seconds: 60
+    auto_resolve: true
+    actions:
+      - "log_alert"
+      - "ui_notification"
+      - "trigger_adaptation"
+    adaptation_response:
+      - "reduce_visual_quality"
+      - "disable_non_essential_effects"
+
+  fps_warning:
+    enabled: true
+    threshold: 55.0  # FPS
+    operator: "less_than"
+    duration_seconds: 5
+    severity: "warning"
+    message: "Frame rate below target: {value} FPS (target: 60 FPS)"
+    cooldown_seconds: 120
+    auto_resolve: true
+    actions:
+      - "log_alert"
+      - "ui_notification"
+
+  frame_budget_violation:
+    enabled: true
+    threshold: 16.67  # milliseconds (60Hz budget)
+    operator: "greater_than"
+    duration_seconds: 0  # Immediate
+    severity: "warning"
+    message: "Frame budget exceeded: {value}ms (budget: 16.67ms)"
+    cooldown_seconds: 30
+    auto_resolve: true
+    actions:
+      - "log_alert"
+    # Only alert if multiple violations in short period
+    burst_threshold: 3
+    burst_window_seconds: 10
+
+  high_frame_jitter:
+    enabled: true
+    threshold: 5.0  # milliseconds standard deviation
+    operator: "greater_than"
+    duration_seconds: 10
+    severity: "warning"
+    message: "High frame timing jitter: {value}ms stddev"
+    cooldown_seconds: 300
+    auto_resolve: true
+    actions:
+      - "log_alert"
+      - "ui_notification"
+
+# Latency alerts based on WF-FND-006 governance targets
+latency_performance:
+  p95_latency_critical:
+    enabled: true
+    threshold: 2000.0  # milliseconds (governance requirement)
+    operator: "greater_than"
+    duration_seconds: 5
+    severity: "critical"
+    message: "P95 latency exceeded governance limit: {value}ms (limit: 2000ms)"
+    cooldown_seconds: 180
+    auto_resolve: true
+    actions:
+      - "log_alert"
+      - "ui_notification"
+      - "trigger_adaptation"
+    adaptation_response:
+      - "suggest_model_optimization"
+      - "enable_caching"
+
+  p95_latency_warning:
+    enabled: true
+    threshold: 1500.0  # milliseconds
+    operator: "greater_than"
+    duration_seconds: 10
+    severity: "warning"
+    message: "P95 latency approaching limit: {value}ms (limit: 2000ms)"
+    cooldown_seconds: 300
+    auto_resolve: true
+    actions:
+      - "log_alert"
+      - "ui_notification"
+
+  average_latency_high:
+    enabled: true
+    threshold: 1000.0  # milliseconds
+    operator: "greater_than"
+    duration_seconds: 30
+    severity: "warning"
+    message: "Average latency elevated: {value}ms"
+    cooldown_seconds: 600
+    auto_resolve: true
+    actions:
+      - "log_alert"
+
+  latency_trend_degrading:
+    enabled: true
+    threshold: -0.5  # Trend slope (negative = degrading)
+    operator: "less_than"
+    duration_seconds: 60
+    severity: "info"
+    message: "Latency trend degrading over time"
+    cooldown_seconds: 1800  # 30 minutes
+    auto_resolve: true
+    actions:
+      - "log_alert"
+
+# Energy fidelity alerts (WF-FND-002 energy truth requirements)
+energy_fidelity:
+  fidelity_critical:
+    enabled: true
+    threshold: 0.7  # 70% fidelity ratio
+    operator: "less_than"
+    duration_seconds: 5
+    severity: "critical"
+    message: "Energy fidelity critically low: {value}% (target: >90%)"
+    cooldown_seconds: 120
+    auto_resolve: true
+    actions:
+      - "log_alert"
+      - "ui_notification"
+      - "trigger_adaptation"
+    adaptation_response:
+      - "reduce_particle_count"
+      - "simplify_energy_effects"
+
+  fidelity_warning:
+    enabled: true
+    threshold: 0.8  # 80% fidelity ratio
+    operator: "less_than"
+    duration_seconds: 10
+    severity: "warning"
+    message: "Energy fidelity below target: {value}% (target: >90%)"
+    cooldown_seconds: 300
+    auto_resolve: true
+    actions:
+      - "log_alert"
+      - "ui_notification"
+
+  visual_lag_high:
+    enabled: true
+    threshold: 50.0  # milliseconds
+    operator: "greater_than"
+    duration_seconds: 5
+    severity: "warning"
+    message: "High visual lag: {value}ms between computation and display"
+    cooldown_seconds: 180
+    auto_resolve: true
+    actions:
+      - "log_alert"
+
+  coherence_score_low:
+    enabled: true
+    threshold: 80.0  # percentage
+    operator: "less_than"
+    duration_seconds: 15
+    severity: "warning"
+    message: "Energy coherence score low: {value}%"
+    cooldown_seconds: 600
+    auto_resolve: true
+    actions:
+      - "log_alert"
+
+# Error and reliability alerts
+system_reliability:
+  high_error_rate:
+    enabled: true
+    threshold: 10  # errors per minute
+    operator: "greater_than"
+    duration_seconds: 60
+    severity: "critical"
+    message: "High error rate: {value} errors/minute"
+    cooldown_seconds: 300
+    auto_resolve: true
+    actions:
+      - "log_alert"
+      - "ui_notification"
+      - "trigger_investigation"
+
+  critical_error_burst:
+    enabled: true
+    threshold: 3  # critical errors
+    operator: "greater_than"
+    duration_seconds: 60
+    severity: "critical"
+    message: "Multiple critical errors: {value} in last minute"
+    cooldown_seconds: 60
+    auto_resolve: false  # Requires manual investigation
+    actions:
+      - "log_alert"
+      - "ui_notification"
+      - "create_incident"
+
+  plugin_error_rate:
+    enabled: true
+    threshold: 5  # plugin errors per minute
+    operator: "greater_than"
+    duration_seconds: 120
+    severity: "warning"
+    message: "High plugin error rate: {value} errors/minute"
+    cooldown_seconds: 600
+    auto_resolve: true
+    actions:
+      - "log_alert"
+      - "suggest_plugin_review"
+
+  uptime_degradation:
+    enabled: true
+    threshold: 99.0  # percentage
+    operator: "less_than"
+    duration_seconds: 300
+    severity: "warning"
+    message: "System uptime below target: {value}% (target: >99%)"
+    cooldown_seconds: 1800
+    auto_resolve: true
+    actions:
+      - "log_alert"
+
+# Resource utilization alerts
+resource_usage:
+  cpu_usage_critical:
+    enabled: true
+    threshold: 95.0  # percentage
+    operator: "greater_than"
+    duration_seconds: 30
+    severity: "critical"
+    message: "Critical CPU usage: {value}% (sustained)"
+    cooldown_seconds: 300
+    auto_resolve: true
+    actions:
+      - "log_alert"
+      - "ui_notification"
+      - "trigger_adaptation"
+    adaptation_response:
+      - "reduce_processing_complexity"
+      - "suggest_resource_optimization"
+
+  cpu_usage_warning:
+    enabled: true
+    threshold: 85.0  # percentage
+    operator: "greater_than"
+    duration_seconds: 60
+    severity: "warning"
+    message: "High CPU usage: {value}% (sustained)"
+    cooldown_seconds: 600
+    auto_resolve: true
+    actions:
+      - "log_alert"
+      - "ui_notification"
+
+  memory_usage_critical:
+    enabled: true
+    threshold: 90.0  # percentage
+    operator: "greater_than"
+    duration_seconds: 15
+    severity: "critical"
+    message: "Critical memory usage: {value}%"
+    cooldown_seconds: 180
+    auto_resolve: true
+    actions:
+      - "log_alert"
+      - "ui_notification"
+      - "trigger_adaptation"
+    adaptation_response:
+      - "clear_caches"
+      - "reduce_memory_usage"
+
+  memory_usage_warning:
+    enabled: true
+    threshold: 80.0  # percentage
+    operator: "greater_than"
+    duration_seconds: 60
+    severity: "warning"
+    message: "High memory usage: {value}%"
+    cooldown_seconds: 600
+    auto_resolve: true
+    actions:
+      - "log_alert"
+
+  memory_leak_detected:
+    enabled: true
+    threshold: 10.0  # MB/minute growth rate
+    operator: "greater_than"
+    duration_seconds: 300
+    severity: "warning"
+    message: "Potential memory leak: {value} MB/min growth"
+    cooldown_seconds: 1800
+    auto_resolve: false
+    actions:
+      - "log_alert"
+      - "ui_notification"
+      - "create_investigation_task"
+
+# Progression and engagement alerts
+user_engagement:
+  progression_too_slow:
+    enabled: true
+    threshold: 0.1  # levels per hour
+    operator: "less_than"
+    duration_seconds: 1800  # 30 minutes
+    severity: "info"
+    message: "User progression very slow: {value} levels/hour"
+    cooldown_seconds: 3600
+    auto_resolve: true
+    actions:
+      - "log_alert"
+      - "suggest_difficulty_adjustment"
+
+  progression_too_fast:
+    enabled: true
+    threshold: 2.0  # levels per hour
+    operator: "greater_than"
+    duration_seconds: 600  # 10 minutes
+    severity: "info"
+    message: "User progression very fast: {value} levels/hour"
+    cooldown_seconds: 3600
+    auto_resolve: true
+    actions:
+      - "log_alert"
+      - "suggest_difficulty_increase"
+
+  engagement_score_low:
+    enabled: true
+    threshold: 30.0  # percentage
+    operator: "less_than"
+    duration_seconds: 900  # 15 minutes
+    severity: "info"
+    message: "Low engagement score: {value}%"
+    cooldown_seconds: 1800
+    auto_resolve: true
+    actions:
+      - "log_alert"
+      - "suggest_engagement_improvements"
+
+# Throughput alerts
+system_throughput:
+  tokens_per_second_low:
+    enabled: true
+    threshold: 20.0  # tokens/second
+    operator: "less_than"
+    duration_seconds: 120
+    severity: "warning"
+    message: "Low token processing rate: {value} tokens/second"
+    cooldown_seconds: 600
+    auto_resolve: true
+    actions:
+      - "log_alert"
+
+  queue_backpressure:
+    enabled: true
+    threshold: 10  # queue depth
+    operator: "greater_than"
+    duration_seconds: 30
+    severity: "warning"
+    message: "Processing queue backpressure: {value} items queued"
+    cooldown_seconds: 300
+    auto_resolve: true
+    actions:
+      - "log_alert"
+      - "trigger_adaptation"
+    adaptation_response:
+      - "increase_processing_priority"
+      - "optimize_queue_processing"
+
+# Plugin-specific alerts
+plugin_monitoring:
+  plugin_timeout:
+    enabled: true
+    threshold: 5000.0  # milliseconds
+    operator: "greater_than"
+    duration_seconds: 0
+    severity: "warning"
+    message: "Plugin timeout: {plugin_name} took {value}ms"
+    cooldown_seconds: 300
+    auto_resolve: true
+    actions:
+      - "log_alert"
+      - "plugin_performance_review"
+
+  plugin_crash:
+    enabled: true
+    threshold: 1  # crash count
+    operator: "greater_than_or_equal"
+    duration_seconds: 0
+    severity: "critical"
+    message: "Plugin crash detected: {plugin_name}"
+    cooldown_seconds: 60
+    auto_resolve: false
+    actions:
+      - "log_alert"
+      - "ui_notification"
+      - "disable_plugin"
+      - "create_incident"
+
+  plugin_resource_abuse:
+    enabled: true
+    threshold: 50.0  # percentage of system resources
+    operator: "greater_than"
+    duration_seconds: 120
+    severity: "warning"
+    message: "Plugin using excessive resources: {plugin_name} ({value}%)"
+    cooldown_seconds: 600
+    auto_resolve: true
+    actions:
+      - "log_alert"
+      - "throttle_plugin"
+
+# System health composite alerts
+system_health:
+  health_score_critical:
+    enabled: true
+    threshold: 30.0  # health score percentage
+    operator: "less_than"
+    duration_seconds: 60
+    severity: "critical"
+    message: "System health critically low: {value}%"
+    cooldown_seconds: 300
+    auto_resolve: true
+    actions:
+      - "log_alert"
+      - "ui_notification"
+      - "trigger_comprehensive_adaptation"
+
+  health_score_warning:
+    enabled: true
+    threshold: 60.0  # health score percentage
+    operator: "less_than"
+    duration_seconds: 180
+    severity: "warning"
+    message: "System health degraded: {value}%"
+    cooldown_seconds: 600
+    auto_resolve: true
+    actions:
+      - "log_alert"
+      - "ui_notification"
+
+  multiple_bottlenecks:
+    enabled: true
+    threshold: 2  # number of concurrent bottlenecks
+    operator: "greater_than_or_equal"
+    duration_seconds: 120
+    severity: "warning"
+    message: "Multiple system bottlenecks detected: {bottlenecks}"
+    cooldown_seconds: 900
+    auto_resolve: true
+    actions:
+      - "log_alert"
+      - "comprehensive_performance_analysis"
+
+# Alert actions configuration
+actions:
+  log_alert:
+    enabled: true
+    destination: "alert_log"
+    format: "structured_json"
+    include_context: true
+
+  ui_notification:
+    enabled: true
+    display_duration_seconds: 30
+    allow_user_dismiss: true
+    priority_based_styling: true
+    sound_enabled: false  # Local-first, no external sounds
+
+  trigger_adaptation:
+    enabled: true
+    max_adaptations_per_hour: 10
+    require_user_consent: false  # For performance adaptations
+    log_adaptations: true
+
+  create_incident:
+    enabled: true
+    auto_assign: false
+    include_system_snapshot: true
+    retention_days: 90
+
+  suggest_optimization:
+    enabled: true
+    display_in_dashboard: true
+    auto_apply: false  # Always require user consent
+
+# User customization settings
+user_preferences:
+  allow_threshold_modification: true
+  allow_action_customization: true
+  allow_alert_disabling: true
+  require_confirmation_for_critical: true
+  notification_quiet_hours:
+    enabled: false
+    start_time: "22:00"
+    end_time: "08:00"
+
+# Privacy and data handling
+privacy_settings:
+  anonymize_alert_data: true
+  include_user_content: false  # Never include prompt/response content
+  local_only_storage: true
+  export_requires_consent: true
+  retention_policy_enforced: true

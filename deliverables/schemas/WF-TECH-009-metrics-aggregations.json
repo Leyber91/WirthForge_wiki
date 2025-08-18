@@ -1,0 +1,761 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "WIRTHFORGE Metrics Aggregations Schema",
+  "description": "Historical metrics aggregations for trend analysis and reporting",
+  "version": "1.0.0",
+  "type": "object",
+  "definitions": {
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp"
+    },
+    "uuid": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$"
+    },
+    "statistical_summary": {
+      "type": "object",
+      "properties": {
+        "min": {
+          "type": "number",
+          "description": "Minimum value in period"
+        },
+        "max": {
+          "type": "number", 
+          "description": "Maximum value in period"
+        },
+        "mean": {
+          "type": "number",
+          "description": "Average value"
+        },
+        "median": {
+          "type": "number",
+          "description": "Median value"
+        },
+        "p95": {
+          "type": "number",
+          "description": "95th percentile"
+        },
+        "p99": {
+          "type": "number",
+          "description": "99th percentile"
+        },
+        "stddev": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Standard deviation"
+        },
+        "sample_count": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Number of samples"
+        }
+      },
+      "required": ["min", "max", "mean", "sample_count"]
+    }
+  },
+  "properties": {
+    "aggregation_id": {
+      "$ref": "#/definitions/uuid",
+      "description": "Unique identifier for this aggregation"
+    },
+    "session_id": {
+      "$ref": "#/definitions/uuid",
+      "description": "Session this aggregation belongs to"
+    },
+    "period_start": {
+      "$ref": "#/definitions/timestamp",
+      "description": "Start of aggregation period"
+    },
+    "period_end": {
+      "$ref": "#/definitions/timestamp",
+      "description": "End of aggregation period"
+    },
+    "aggregation_type": {
+      "type": "string",
+      "enum": ["minute", "hour", "day", "session"],
+      "description": "Type of time-based aggregation"
+    },
+    "schema_version": {
+      "type": "string",
+      "const": "1.0.0"
+    },
+    "frame_stability_stats": {
+      "type": "object",
+      "description": "Frame rate and stability statistics",
+      "properties": {
+        "fps": {
+          "$ref": "#/definitions/statistical_summary",
+          "description": "Frames per second statistics"
+        },
+        "frame_time_ms": {
+          "$ref": "#/definitions/statistical_summary",
+          "description": "Frame processing time statistics"
+        },
+        "budget_violations": {
+          "type": "object",
+          "properties": {
+            "total_violations": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Total frames exceeding 16.67ms budget"
+            },
+            "violation_percentage": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100,
+              "description": "Percentage of frames that violated budget"
+            },
+            "worst_frame_ms": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Longest frame time in period"
+            }
+          },
+          "required": ["total_violations", "violation_percentage"]
+        },
+        "stability_score": {
+          "$ref": "#/definitions/statistical_summary",
+          "description": "Frame stability score over time"
+        }
+      },
+      "required": ["fps", "frame_time_ms", "budget_violations", "stability_score"]
+    },
+    "latency_stats": {
+      "type": "object",
+      "description": "Response latency statistics",
+      "properties": {
+        "end_to_end_ms": {
+          "$ref": "#/definitions/statistical_summary",
+          "description": "Complete prompt-to-response latency"
+        },
+        "component_breakdown": {
+          "type": "object",
+          "properties": {
+            "model_computation_ms": {
+              "$ref": "#/definitions/statistical_summary"
+            },
+            "decipher_processing_ms": {
+              "$ref": "#/definitions/statistical_summary"
+            },
+            "ui_render_ms": {
+              "$ref": "#/definitions/statistical_summary"
+            },
+            "network_latency_ms": {
+              "$ref": "#/definitions/statistical_summary"
+            }
+          }
+        },
+        "sla_compliance": {
+          "type": "object",
+          "properties": {
+            "target_p95_ms": {
+              "type": "number",
+              "description": "Target P95 latency (2000ms from governance)"
+            },
+            "actual_p95_ms": {
+              "type": "number",
+              "description": "Actual P95 latency achieved"
+            },
+            "compliance_percentage": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100,
+              "description": "Percentage of requests meeting SLA"
+            },
+            "violations_count": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Number of SLA violations"
+            }
+          },
+          "required": ["target_p95_ms", "actual_p95_ms", "compliance_percentage"]
+        }
+      },
+      "required": ["end_to_end_ms", "sla_compliance"]
+    },
+    "energy_fidelity_stats": {
+      "type": "object",
+      "description": "Energy visualization fidelity statistics",
+      "properties": {
+        "fidelity_ratio": {
+          "$ref": "#/definitions/statistical_summary",
+          "description": "Visual-to-computed energy ratio statistics"
+        },
+        "fidelity_percentage": {
+          "$ref": "#/definitions/statistical_summary",
+          "description": "Energy fidelity percentage statistics"
+        },
+        "particle_metrics": {
+          "type": "object",
+          "properties": {
+            "particle_count": {
+              "$ref": "#/definitions/statistical_summary"
+            },
+            "token_particle_ratio": {
+              "$ref": "#/definitions/statistical_summary"
+            }
+          }
+        },
+        "visual_lag_ms": {
+          "$ref": "#/definitions/statistical_summary",
+          "description": "Lag between computation and visualization"
+        },
+        "coherence_score": {
+          "$ref": "#/definitions/statistical_summary",
+          "description": "Energy visualization coherence"
+        },
+        "fidelity_events": {
+          "type": "object",
+          "properties": {
+            "low_fidelity_periods": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Number of periods with fidelity <80%"
+            },
+            "total_low_fidelity_duration_ms": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Total time with low fidelity"
+            },
+            "fidelity_recovery_time_ms": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Average time to recover from low fidelity"
+            }
+          }
+        }
+      },
+      "required": ["fidelity_ratio", "fidelity_percentage", "coherence_score"]
+    },
+    "error_stats": {
+      "type": "object",
+      "description": "Error and reliability statistics",
+      "properties": {
+        "total_errors": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Total errors in period"
+        },
+        "error_rate": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Errors per minute"
+        },
+        "error_breakdown": {
+          "type": "object",
+          "properties": {
+            "critical_errors": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "plugin_errors": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "model_errors": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "ui_errors": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "network_errors": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        },
+        "reliability_metrics": {
+          "type": "object",
+          "properties": {
+            "uptime_percentage": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100,
+              "description": "System uptime percentage"
+            },
+            "mtbf_minutes": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Mean time between failures"
+            },
+            "mttr_minutes": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Mean time to recovery"
+            },
+            "availability_score": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100,
+              "description": "Overall availability score"
+            }
+          },
+          "required": ["uptime_percentage", "availability_score"]
+        }
+      },
+      "required": ["total_errors", "error_rate", "reliability_metrics"]
+    },
+    "progression_stats": {
+      "type": "object",
+      "description": "User progression and engagement statistics",
+      "properties": {
+        "level_progression": {
+          "type": "object",
+          "properties": {
+            "starting_level": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "ending_level": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "levels_gained": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "levels_per_hour": {
+              "type": "number",
+              "minimum": 0
+            }
+          },
+          "required": ["starting_level", "ending_level", "levels_gained"]
+        },
+        "experience_points": {
+          "type": "object",
+          "properties": {
+            "total_xp_gained": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "xp_per_minute": {
+              "type": "number",
+              "minimum": 0
+            },
+            "xp_sources": {
+              "type": "object",
+              "properties": {
+                "prompt_completion": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "quality_bonus": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "streak_bonus": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "discovery_bonus": {
+                  "type": "integer",
+                  "minimum": 0
+                }
+              }
+            }
+          },
+          "required": ["total_xp_gained", "xp_per_minute"]
+        },
+        "engagement_metrics": {
+          "type": "object",
+          "properties": {
+            "session_duration_minutes": {
+              "type": "number",
+              "minimum": 0
+            },
+            "active_time_percentage": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "engagement_score": {
+              "$ref": "#/definitions/statistical_summary"
+            },
+            "progression_velocity": {
+              "type": "object",
+              "properties": {
+                "too_slow_periods": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "optimal_periods": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "too_fast_periods": {
+                  "type": "integer",
+                  "minimum": 0
+                }
+              }
+            }
+          },
+          "required": ["session_duration_minutes", "engagement_score"]
+        }
+      },
+      "required": ["level_progression", "experience_points", "engagement_metrics"]
+    },
+    "resource_utilization_stats": {
+      "type": "object",
+      "description": "System resource usage statistics",
+      "properties": {
+        "cpu_usage": {
+          "$ref": "#/definitions/statistical_summary",
+          "description": "CPU utilization percentage statistics"
+        },
+        "memory_usage": {
+          "type": "object",
+          "properties": {
+            "usage_mb": {
+              "$ref": "#/definitions/statistical_summary"
+            },
+            "usage_percentage": {
+              "$ref": "#/definitions/statistical_summary"
+            },
+            "peak_usage_mb": {
+              "type": "number",
+              "minimum": 0
+            },
+            "memory_leaks_detected": {
+              "type": "integer",
+              "minimum": 0
+            }
+          },
+          "required": ["usage_mb", "usage_percentage"]
+        },
+        "gpu_usage": {
+          "type": "object",
+          "properties": {
+            "usage_percentage": {
+              "$ref": "#/definitions/statistical_summary"
+            },
+            "memory_usage_mb": {
+              "$ref": "#/definitions/statistical_summary"
+            },
+            "gpu_available": {
+              "type": "boolean"
+            }
+          }
+        },
+        "io_stats": {
+          "type": "object",
+          "properties": {
+            "disk_read_mb": {
+              "type": "number",
+              "minimum": 0
+            },
+            "disk_write_mb": {
+              "type": "number",
+              "minimum": 0
+            },
+            "network_local_kb": {
+              "type": "number",
+              "minimum": 0
+            }
+          }
+        },
+        "resource_alerts": {
+          "type": "object",
+          "properties": {
+            "high_cpu_periods": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "high_memory_periods": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "resource_exhaustion_events": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        }
+      },
+      "required": ["cpu_usage", "memory_usage"]
+    },
+    "throughput_stats": {
+      "type": "object",
+      "description": "System processing throughput statistics",
+      "properties": {
+        "token_processing": {
+          "type": "object",
+          "properties": {
+            "tokens_per_second": {
+              "$ref": "#/definitions/statistical_summary"
+            },
+            "total_tokens": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "token_efficiency": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Tokens per unit of resource consumption"
+            }
+          },
+          "required": ["tokens_per_second", "total_tokens"]
+        },
+        "prompt_processing": {
+          "type": "object",
+          "properties": {
+            "prompts_per_minute": {
+              "$ref": "#/definitions/statistical_summary"
+            },
+            "total_prompts": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "prompt_complexity": {
+              "$ref": "#/definitions/statistical_summary",
+              "description": "Average prompt complexity score"
+            }
+          },
+          "required": ["prompts_per_minute", "total_prompts"]
+        },
+        "queue_metrics": {
+          "type": "object",
+          "properties": {
+            "queue_depth": {
+              "$ref": "#/definitions/statistical_summary"
+            },
+            "backpressure_events": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "queue_wait_time_ms": {
+              "$ref": "#/definitions/statistical_summary"
+            }
+          }
+        },
+        "throughput_trends": {
+          "type": "object",
+          "properties": {
+            "trend_direction": {
+              "type": "string",
+              "enum": ["increasing", "stable", "decreasing"]
+            },
+            "trend_strength": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "Strength of trend (0=no trend, 1=strong trend)"
+            },
+            "seasonal_patterns": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Detected seasonal patterns in throughput"
+            }
+          }
+        }
+      },
+      "required": ["token_processing", "prompt_processing"]
+    },
+    "alert_summary": {
+      "type": "object",
+      "description": "Summary of alerts during aggregation period",
+      "properties": {
+        "total_alerts": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "alert_breakdown": {
+          "type": "object",
+          "properties": {
+            "info_alerts": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "warning_alerts": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "critical_alerts": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        },
+        "most_frequent_alerts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "alert_type": {
+                "type": "string"
+              },
+              "count": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "average_duration_ms": {
+                "type": "number",
+                "minimum": 0
+              }
+            },
+            "required": ["alert_type", "count"]
+          }
+        },
+        "alert_resolution": {
+          "type": "object",
+          "properties": {
+            "auto_resolved": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "user_resolved": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "still_active": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "average_resolution_time_ms": {
+              "type": "number",
+              "minimum": 0
+            }
+          }
+        }
+      },
+      "required": ["total_alerts", "alert_breakdown"]
+    },
+    "system_health_summary": {
+      "type": "object",
+      "description": "Overall system health during period",
+      "properties": {
+        "health_score": {
+          "$ref": "#/definitions/statistical_summary",
+          "description": "System health score over time"
+        },
+        "status_distribution": {
+          "type": "object",
+          "properties": {
+            "excellent_percentage": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "good_percentage": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "warning_percentage": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "critical_percentage": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            }
+          }
+        },
+        "bottleneck_analysis": {
+          "type": "object",
+          "properties": {
+            "primary_bottlenecks": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": ["cpu", "memory", "disk", "network", "model", "ui"]
+              }
+            },
+            "bottleneck_duration_ms": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "number",
+                "minimum": 0
+              }
+            }
+          }
+        },
+        "performance_trends": {
+          "type": "object",
+          "properties": {
+            "overall_trend": {
+              "type": "string",
+              "enum": ["improving", "stable", "degrading"]
+            },
+            "trend_confidence": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          }
+        }
+      },
+      "required": ["health_score", "status_distribution"]
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "aggregation_method": {
+          "type": "string",
+          "enum": ["time_based", "event_based", "session_based"],
+          "description": "Method used for aggregation"
+        },
+        "data_quality": {
+          "type": "object",
+          "properties": {
+            "completeness_percentage": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "missing_data_periods": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "data_gaps_ms": {
+              "type": "number",
+              "minimum": 0
+            }
+          }
+        },
+        "computation_info": {
+          "type": "object",
+          "properties": {
+            "aggregated_at": {
+              "$ref": "#/definitions/timestamp"
+            },
+            "computation_time_ms": {
+              "type": "number",
+              "minimum": 0
+            },
+            "source_snapshots": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        }
+      },
+      "required": ["aggregation_method"]
+    }
+  },
+  "required": [
+    "aggregation_id",
+    "session_id",
+    "period_start", 
+    "period_end",
+    "aggregation_type",
+    "schema_version",
+    "frame_stability_stats",
+    "latency_stats",
+    "energy_fidelity_stats",
+    "error_stats",
+    "progression_stats",
+    "resource_utilization_stats",
+    "throughput_stats",
+    "system_health_summary",
+    "metadata"
+  ],
+  "additionalProperties": false
+}
