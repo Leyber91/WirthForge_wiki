@@ -1,0 +1,379 @@
+{
+  "document_id": "WF-TECH-010",
+  "version": "1.0.0",
+  "title": "Memory & VRAM Budget Allocation Strategies",
+  "last_updated": "2024-01-15",
+  "description": "Comprehensive memory and VRAM management policies for WIRTHFORGE performance optimization",
+  
+  "memory_budgeting": {
+    "low_tier": {
+      "total_ram_gb": 8,
+      "safety_factor": 0.8,
+      "usable_ram_gb": 6.4,
+      
+      "allocation_strategy": {
+        "model_weights": {
+          "percentage": 60,
+          "allocated_gb": 3.84,
+          "policy": "exclusive_single_model"
+        },
+        "runtime_data": {
+          "percentage": 20,
+          "allocated_gb": 1.28,
+          "includes": ["context_cache", "token_buffers", "session_state"]
+        },
+        "system_overhead": {
+          "percentage": 20,
+          "allocated_gb": 1.28,
+          "includes": ["os_reserve", "framework_overhead", "ui_memory"]
+        }
+      },
+      
+      "management_policies": {
+        "model_loading": "lazy_single",
+        "cache_policy": "minimal",
+        "garbage_collection": "aggressive",
+        "swap_usage": "disabled"
+      }
+    },
+    
+    "mid_tier": {
+      "total_ram_gb": 16,
+      "safety_factor": 0.85,
+      "usable_ram_gb": 13.6,
+      
+      "allocation_strategy": {
+        "model_weights": {
+          "percentage": 65,
+          "allocated_gb": 8.84,
+          "policy": "dual_model_support"
+        },
+        "runtime_data": {
+          "percentage": 20,
+          "allocated_gb": 2.72,
+          "includes": ["context_cache", "token_buffers", "session_state", "plugin_data"]
+        },
+        "system_overhead": {
+          "percentage": 15,
+          "allocated_gb": 2.04,
+          "includes": ["os_reserve", "framework_overhead", "ui_memory", "background_tasks"]
+        }
+      },
+      
+      "management_policies": {
+        "model_loading": "intelligent_caching",
+        "cache_policy": "balanced",
+        "garbage_collection": "scheduled",
+        "swap_usage": "limited"
+      }
+    },
+    
+    "high_tier": {
+      "total_ram_gb": 32,
+      "safety_factor": 0.9,
+      "usable_ram_gb": 28.8,
+      
+      "allocation_strategy": {
+        "model_weights": {
+          "percentage": 60,
+          "allocated_gb": 17.28,
+          "policy": "multi_model_council"
+        },
+        "runtime_data": {
+          "percentage": 25,
+          "allocated_gb": 7.2,
+          "includes": ["context_cache", "token_buffers", "session_state", "plugin_data", "analytics_cache"]
+        },
+        "system_overhead": {
+          "percentage": 15,
+          "allocated_gb": 4.32,
+          "includes": ["os_reserve", "framework_overhead", "ui_memory", "background_tasks", "monitoring"]
+        }
+      },
+      
+      "management_policies": {
+        "model_loading": "predictive_preloading",
+        "cache_policy": "aggressive",
+        "garbage_collection": "optimized",
+        "swap_usage": "strategic"
+      }
+    }
+  },
+  
+  "vram_budgeting": {
+    "integrated_gpu": {
+      "total_vram_mb": 512,
+      "safety_factor": 0.75,
+      "usable_vram_mb": 384,
+      
+      "allocation_strategy": {
+        "model_inference": {
+          "percentage": 70,
+          "allocated_mb": 269,
+          "max_model_size": "3B_quantized"
+        },
+        "ui_rendering": {
+          "percentage": 20,
+          "allocated_mb": 77,
+          "includes": ["framebuffers", "textures", "shaders"]
+        },
+        "system_reserve": {
+          "percentage": 10,
+          "allocated_mb": 38,
+          "includes": ["driver_overhead", "context_switching"]
+        }
+      }
+    },
+    
+    "dedicated_gpu_mid": {
+      "total_vram_gb": 8,
+      "safety_factor": 0.85,
+      "usable_vram_gb": 6.8,
+      
+      "allocation_strategy": {
+        "model_inference": {
+          "percentage": 75,
+          "allocated_gb": 5.1,
+          "max_models": 2,
+          "model_sizes": ["7B", "13B_single"]
+        },
+        "ui_rendering": {
+          "percentage": 15,
+          "allocated_gb": 1.02,
+          "includes": ["advanced_effects", "high_res_textures"]
+        },
+        "system_reserve": {
+          "percentage": 10,
+          "allocated_gb": 0.68,
+          "includes": ["driver_overhead", "context_switching", "memory_fragmentation"]
+        }
+      }
+    },
+    
+    "dedicated_gpu_high": {
+      "total_vram_gb": 24,
+      "safety_factor": 0.9,
+      "usable_vram_gb": 21.6,
+      
+      "allocation_strategy": {
+        "model_inference": {
+          "percentage": 80,
+          "allocated_gb": 17.28,
+          "max_models": 6,
+          "model_sizes": ["30B", "multiple_13B", "council_configuration"]
+        },
+        "ui_rendering": {
+          "percentage": 12,
+          "allocated_gb": 2.59,
+          "includes": ["ultra_effects", "4k_textures", "complex_shaders"]
+        },
+        "system_reserve": {
+          "percentage": 8,
+          "allocated_gb": 1.73,
+          "includes": ["driver_overhead", "multi_context", "memory_fragmentation"]
+        }
+      }
+    }
+  },
+  
+  "dynamic_allocation": {
+    "load_balancing": {
+      "cpu_gpu_hybrid": {
+        "trigger_conditions": [
+          "vram_utilization > 90%",
+          "gpu_temperature > 80C",
+          "model_size > vram_capacity"
+        ],
+        "fallback_strategy": "offload_to_cpu",
+        "performance_impact": 0.3
+      },
+      
+      "multi_gpu": {
+        "distribution_strategy": "model_sharding",
+        "load_balancing": "performance_based",
+        "synchronization_overhead": 0.05
+      }
+    },
+    
+    "adaptive_policies": {
+      "memory_pressure_response": {
+        "level_1": {
+          "threshold": "memory_usage > 80%",
+          "actions": ["clear_unused_cache", "compress_buffers"]
+        },
+        "level_2": {
+          "threshold": "memory_usage > 90%",
+          "actions": ["unload_inactive_models", "reduce_cache_size"]
+        },
+        "level_3": {
+          "threshold": "memory_usage > 95%",
+          "actions": ["emergency_cleanup", "force_garbage_collection"]
+        }
+      },
+      
+      "vram_pressure_response": {
+        "level_1": {
+          "threshold": "vram_usage > 85%",
+          "actions": ["reduce_model_precision", "clear_gpu_cache"]
+        },
+        "level_2": {
+          "threshold": "vram_usage > 92%",
+          "actions": ["offload_models_to_cpu", "reduce_concurrent_models"]
+        },
+        "level_3": {
+          "threshold": "vram_usage > 97%",
+          "actions": ["emergency_model_unload", "minimal_mode_activation"]
+        }
+      }
+    }
+  },
+  
+  "optimization_techniques": {
+    "quantization": {
+      "int8": {
+        "memory_reduction": 0.5,
+        "performance_impact": 0.1,
+        "quality_impact": 0.05,
+        "recommended_for": ["low_tier", "memory_constrained"]
+      },
+      "int4": {
+        "memory_reduction": 0.25,
+        "performance_impact": 0.15,
+        "quality_impact": 0.1,
+        "recommended_for": ["extreme_memory_pressure"]
+      },
+      "fp16": {
+        "memory_reduction": 0.5,
+        "performance_impact": -0.1,
+        "quality_impact": 0.02,
+        "recommended_for": ["gpu_inference", "mid_high_tier"]
+      }
+    },
+    
+    "model_compression": {
+      "pruning": {
+        "memory_reduction": 0.3,
+        "performance_impact": 0.05,
+        "quality_impact": 0.08,
+        "preprocessing_required": true
+      },
+      "distillation": {
+        "memory_reduction": 0.6,
+        "performance_impact": -0.2,
+        "quality_impact": 0.15,
+        "preprocessing_required": true
+      }
+    },
+    
+    "memory_mapping": {
+      "model_files": {
+        "technique": "mmap",
+        "benefits": ["reduced_load_time", "shared_memory"],
+        "limitations": ["io_dependent", "cache_pressure"]
+      },
+      "context_data": {
+        "technique": "virtual_memory",
+        "benefits": ["large_context_support", "memory_efficiency"],
+        "limitations": ["swap_risk", "latency_impact"]
+      }
+    }
+  },
+  
+  "monitoring_and_alerts": {
+    "memory_metrics": {
+      "tracked_values": [
+        "total_memory_usage",
+        "model_memory_usage",
+        "cache_memory_usage",
+        "free_memory_available",
+        "memory_fragmentation",
+        "garbage_collection_frequency"
+      ],
+      "sampling_frequency": "1_second",
+      "alert_thresholds": {
+        "warning": 85,
+        "critical": 95,
+        "emergency": 98
+      }
+    },
+    
+    "vram_metrics": {
+      "tracked_values": [
+        "total_vram_usage",
+        "model_vram_usage",
+        "rendering_vram_usage",
+        "free_vram_available",
+        "vram_fragmentation",
+        "gpu_memory_bandwidth"
+      ],
+      "sampling_frequency": "1_second",
+      "alert_thresholds": {
+        "warning": 90,
+        "critical": 96,
+        "emergency": 99
+      }
+    }
+  },
+  
+  "recovery_procedures": {
+    "memory_exhaustion": {
+      "detection": "allocation_failure || swap_thrashing",
+      "immediate_actions": [
+        "pause_new_allocations",
+        "force_garbage_collection",
+        "unload_least_recently_used_models"
+      ],
+      "recovery_steps": [
+        "identify_memory_leaks",
+        "restart_affected_components",
+        "reduce_memory_footprint"
+      ]
+    },
+    
+    "vram_exhaustion": {
+      "detection": "cuda_out_of_memory || allocation_failure",
+      "immediate_actions": [
+        "clear_gpu_cache",
+        "reduce_model_precision",
+        "offload_to_cpu"
+      ],
+      "recovery_steps": [
+        "restart_gpu_context",
+        "reload_models_with_reduced_precision",
+        "adjust_concurrent_model_limits"
+      ]
+    }
+  },
+  
+  "performance_profiles": {
+    "memory_optimized": {
+      "description": "Minimize memory usage at cost of some performance",
+      "settings": {
+        "aggressive_gc": true,
+        "minimal_caching": true,
+        "model_quantization": "int8",
+        "context_compression": true
+      }
+    },
+    
+    "balanced": {
+      "description": "Balance between memory usage and performance",
+      "settings": {
+        "scheduled_gc": true,
+        "moderate_caching": true,
+        "model_quantization": "fp16",
+        "context_compression": false
+      }
+    },
+    
+    "performance_optimized": {
+      "description": "Maximize performance with higher memory usage",
+      "settings": {
+        "lazy_gc": true,
+        "aggressive_caching": true,
+        "model_quantization": "fp32",
+        "preload_models": true
+      }
+    }
+  }
+}

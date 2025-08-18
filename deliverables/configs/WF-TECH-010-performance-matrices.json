@@ -1,0 +1,266 @@
+{
+  "document_id": "WF-TECH-010",
+  "version": "1.0.0",
+  "title": "Performance Matrices and Benchmarks per Hardware Tier",
+  "last_updated": "2024-01-15",
+  "description": "Comprehensive performance benchmarks and target metrics for WIRTHFORGE across hardware tiers",
+  
+  "performance_matrices": {
+    "low_tier": {
+      "tier_id": "LOW",
+      "baseline_metrics": {
+        "tokens_per_second": {
+          "target": 30,
+          "minimum": 20,
+          "maximum": 40,
+          "unit": "TPS",
+          "measurement_conditions": "Single 3B model, quantized, CPU-only"
+        },
+        "time_to_first_token": {
+          "target": 1.5,
+          "minimum": 1.0,
+          "maximum": 2.0,
+          "unit": "seconds",
+          "measurement_conditions": "Standard prompt, cold start"
+        },
+        "frame_rate": {
+          "target": 30,
+          "minimum": 25,
+          "maximum": 60,
+          "unit": "FPS",
+          "measurement_conditions": "Basic visual effects, simplified UI"
+        },
+        "memory_usage": {
+          "target": 6.4,
+          "minimum": 4.0,
+          "maximum": 8.0,
+          "unit": "GB",
+          "measurement_conditions": "Single model loaded, minimal cache"
+        },
+        "cpu_utilization": {
+          "target": 70,
+          "minimum": 50,
+          "maximum": 85,
+          "unit": "percent",
+          "measurement_conditions": "During active generation"
+        }
+      },
+      "stress_test_metrics": {
+        "sustained_generation": {
+          "duration_minutes": 10,
+          "tps_degradation_max": 15,
+          "memory_growth_max_mb": 100,
+          "frame_drops_max": 5
+        },
+        "burst_prompts": {
+          "concurrent_prompts": 1,
+          "queue_depth_max": 3,
+          "latency_increase_max": 50
+        }
+      }
+    },
+    
+    "mid_tier": {
+      "tier_id": "MID",
+      "baseline_metrics": {
+        "tokens_per_second": {
+          "target": 80,
+          "minimum": 60,
+          "maximum": 120,
+          "unit": "TPS",
+          "measurement_conditions": "Single 7B model, GPU-accelerated"
+        },
+        "time_to_first_token": {
+          "target": 1.0,
+          "minimum": 0.5,
+          "maximum": 1.5,
+          "unit": "seconds",
+          "measurement_conditions": "Standard prompt, warm model"
+        },
+        "frame_rate": {
+          "target": 60,
+          "minimum": 55,
+          "maximum": 60,
+          "unit": "FPS",
+          "measurement_conditions": "Full visual effects, standard UI"
+        },
+        "memory_usage": {
+          "target": 12.8,
+          "minimum": 8.0,
+          "maximum": 16.0,
+          "unit": "GB",
+          "measurement_conditions": "Two models loaded, standard cache"
+        },
+        "gpu_utilization": {
+          "target": 75,
+          "minimum": 60,
+          "maximum": 90,
+          "unit": "percent",
+          "measurement_conditions": "During active generation"
+        },
+        "vram_usage": {
+          "target": 8.0,
+          "minimum": 6.0,
+          "maximum": 10.0,
+          "unit": "GB",
+          "measurement_conditions": "Two 7B models loaded"
+        }
+      },
+      "parallel_processing": {
+        "concurrent_models": {
+          "target": 2,
+          "maximum": 3,
+          "combined_tps": 150,
+          "efficiency_ratio": 0.75
+        },
+        "council_mode": {
+          "models_active": 2,
+          "synchronization_overhead": 10,
+          "cross_model_latency": 50
+        }
+      },
+      "stress_test_metrics": {
+        "sustained_generation": {
+          "duration_minutes": 30,
+          "tps_degradation_max": 10,
+          "memory_growth_max_mb": 200,
+          "frame_drops_max": 2
+        },
+        "burst_prompts": {
+          "concurrent_prompts": 2,
+          "queue_depth_max": 5,
+          "latency_increase_max": 30
+        }
+      }
+    },
+    
+    "high_tier": {
+      "tier_id": "HIGH",
+      "baseline_metrics": {
+        "tokens_per_second": {
+          "target": 200,
+          "minimum": 150,
+          "maximum": 300,
+          "unit": "TPS",
+          "measurement_conditions": "Single 13B+ model or multiple models"
+        },
+        "time_to_first_token": {
+          "target": 0.5,
+          "minimum": 0.2,
+          "maximum": 1.0,
+          "unit": "seconds",
+          "measurement_conditions": "Large model, optimized inference"
+        },
+        "frame_rate": {
+          "target": 60,
+          "minimum": 58,
+          "maximum": 60,
+          "unit": "FPS",
+          "measurement_conditions": "Ultra visual effects, complex UI"
+        },
+        "memory_usage": {
+          "target": 25.6,
+          "minimum": 16.0,
+          "maximum": 32.0,
+          "unit": "GB",
+          "measurement_conditions": "Multiple large models, full cache"
+        },
+        "gpu_utilization": {
+          "target": 80,
+          "minimum": 70,
+          "maximum": 95,
+          "unit": "percent",
+          "measurement_conditions": "Multi-GPU, full council active"
+        },
+        "vram_usage": {
+          "target": 20.0,
+          "minimum": 16.0,
+          "maximum": 24.0,
+          "unit": "GB",
+          "measurement_conditions": "Full council of 6 models"
+        }
+      },
+      "parallel_processing": {
+        "concurrent_models": {
+          "target": 6,
+          "maximum": 8,
+          "combined_tps": 400,
+          "efficiency_ratio": 0.85
+        },
+        "council_mode": {
+          "models_active": 6,
+          "synchronization_overhead": 5,
+          "cross_model_latency": 20
+        },
+        "multi_gpu": {
+          "gpu_count": 2,
+          "load_balancing_efficiency": 0.9,
+          "memory_distribution": "balanced"
+        }
+      },
+      "stress_test_metrics": {
+        "sustained_generation": {
+          "duration_minutes": 60,
+          "tps_degradation_max": 5,
+          "memory_growth_max_mb": 500,
+          "frame_drops_max": 1
+        },
+        "burst_prompts": {
+          "concurrent_prompts": 6,
+          "queue_depth_max": 10,
+          "latency_increase_max": 20
+        }
+      }
+    }
+  },
+  
+  "benchmark_scenarios": {
+    "standard_prompt": {
+      "description": "Typical user prompt for code generation or analysis",
+      "input_tokens": 150,
+      "expected_output_tokens": 500,
+      "complexity": "medium"
+    },
+    "long_generation": {
+      "description": "Extended content generation like documentation",
+      "input_tokens": 200,
+      "expected_output_tokens": 2000,
+      "complexity": "high"
+    },
+    "rapid_fire": {
+      "description": "Quick successive prompts for interactive coding",
+      "input_tokens": 50,
+      "expected_output_tokens": 100,
+      "frequency": "5 per minute"
+    },
+    "council_debate": {
+      "description": "Multiple models collaborating on complex problem",
+      "input_tokens": 300,
+      "expected_output_tokens": 1500,
+      "models_involved": 3
+    }
+  },
+  
+  "quality_gates": {
+    "performance_regression": {
+      "tps_decrease_threshold": 15,
+      "latency_increase_threshold": 25,
+      "memory_increase_threshold": 20,
+      "frame_rate_decrease_threshold": 10
+    },
+    "stability_requirements": {
+      "crash_rate_max": 0.001,
+      "memory_leak_rate_max": "10MB/hour",
+      "error_rate_max": 0.01,
+      "recovery_time_max": 5
+    }
+  },
+  
+  "measurement_protocols": {
+    "warm_up_period": 60,
+    "measurement_duration": 300,
+    "sample_frequency": 1,
+    "statistical_confidence": 0.95,
+    "outlier_removal": "2_sigma"
+  }
+}

@@ -1,0 +1,205 @@
+# WF-TECH-010 Hardware Tier Classification Specifications
+# WIRTHFORGE Performance & Capacity - Hardware Tier Definitions
+
+version: "1.0.0"
+document_id: "WF-TECH-010"
+last_updated: "2024-01-15"
+
+# Hardware Tier Classification System
+# Defines Low/Mid/High tier specifications for WIRTHFORGE deployment
+
+hardware_tiers:
+  low_end:
+    tier_name: "Low-End (Baseline/CPU-Only)"
+    tier_id: "LOW"
+    description: "Modest CPU systems with integrated graphics, optimized for basic functionality"
+    
+    specifications:
+      cpu:
+        cores_min: 2
+        cores_max: 4
+        architecture: ["x86_64", "ARM64"]
+        base_clock_ghz: 2.0
+        boost_clock_ghz: 3.0
+        examples: ["Intel i3-8100", "AMD Ryzen 3 3200G", "Apple M1 (base)"]
+      
+      memory:
+        ram_gb_min: 8
+        ram_gb_max: 16
+        type: "DDR4/DDR5"
+        speed_mhz: 2400
+      
+      gpu:
+        type: "integrated"
+        vram_mb: 512
+        compute_units: 8
+        examples: ["Intel UHD 630", "AMD Vega 8", "Apple M1 GPU"]
+      
+      storage:
+        type: "HDD/SATA SSD"
+        speed_mbps: 150
+        capacity_gb: 256
+    
+    performance_targets:
+      tokens_per_second: 30
+      ttft_seconds: 1.5
+      frame_rate_fps: 30
+      memory_usage_percent: 80
+      cpu_utilization_percent: 70
+    
+    model_constraints:
+      max_parameters_b: 3
+      quantization_required: true
+      parallel_models: 1
+      context_length: 2048
+    
+    adaptive_behavior:
+      visual_effects: "simplified"
+      frame_rate_target: 30
+      background_tasks: "disabled"
+      memory_management: "aggressive"
+
+  mid_tier:
+    tier_name: "Mid-Tier (GPU-Enabled, Balanced)"
+    tier_id: "MID"
+    description: "Balanced systems with dedicated GPU, supporting full WIRTHFORGE experience"
+    
+    specifications:
+      cpu:
+        cores_min: 4
+        cores_max: 8
+        architecture: ["x86_64", "ARM64"]
+        base_clock_ghz: 2.5
+        boost_clock_ghz: 4.0
+        examples: ["Intel i5-10400", "AMD Ryzen 5 5600X", "Apple M1 Pro"]
+      
+      memory:
+        ram_gb_min: 16
+        ram_gb_max: 32
+        type: "DDR4/DDR5"
+        speed_mhz: 3200
+      
+      gpu:
+        type: "dedicated"
+        vram_gb_min: 6
+        vram_gb_max: 12
+        compute_units: 28
+        examples: ["RTX 3060", "RTX 4060", "RX 6600 XT", "Apple M1 Pro GPU"]
+      
+      storage:
+        type: "NVMe SSD"
+        speed_mbps: 3500
+        capacity_gb: 512
+    
+    performance_targets:
+      tokens_per_second: 80
+      ttft_seconds: 1.0
+      frame_rate_fps: 60
+      memory_usage_percent: 80
+      cpu_utilization_percent: 75
+    
+    model_constraints:
+      max_parameters_b: 13
+      quantization_optional: true
+      parallel_models: 3
+      context_length: 4096
+    
+    adaptive_behavior:
+      visual_effects: "full"
+      frame_rate_target: 60
+      background_tasks: "enabled"
+      memory_management: "balanced"
+
+  high_tier:
+    tier_name: "High-Tier (Power User/Multi-GPU)"
+    tier_id: "HIGH"
+    description: "High-end workstations with multiple GPUs, enabling full Council capabilities"
+    
+    specifications:
+      cpu:
+        cores_min: 8
+        cores_max: 32
+        architecture: ["x86_64", "ARM64"]
+        base_clock_ghz: 3.0
+        boost_clock_ghz: 5.0
+        examples: ["Intel i7-12700K", "AMD Ryzen 9 5900X", "Apple M1 Ultra"]
+      
+      memory:
+        ram_gb_min: 32
+        ram_gb_max: 128
+        type: "DDR4/DDR5"
+        speed_mhz: 3600
+      
+      gpu:
+        type: "high_end_multi"
+        vram_gb_min: 16
+        vram_gb_max: 80
+        compute_units: 84
+        examples: ["RTX 4080", "RTX 4090", "A6000", "Apple M1 Ultra GPU"]
+      
+      storage:
+        type: "NVMe SSD Gen4"
+        speed_mbps: 7000
+        capacity_gb: 1024
+    
+    performance_targets:
+      tokens_per_second: 200
+      ttft_seconds: 0.5
+      frame_rate_fps: 60
+      memory_usage_percent: 85
+      cpu_utilization_percent: 80
+    
+    model_constraints:
+      max_parameters_b: 70
+      quantization_optional: false
+      parallel_models: 6
+      context_length: 8192
+    
+    adaptive_behavior:
+      visual_effects: "ultra"
+      frame_rate_target: 60
+      background_tasks: "full"
+      memory_management: "performance"
+
+# Detection Algorithms
+tier_detection:
+  cpu_weight: 0.3
+  memory_weight: 0.25
+  gpu_weight: 0.35
+  storage_weight: 0.1
+  
+  scoring_thresholds:
+    low_tier_max: 40
+    mid_tier_max: 75
+    high_tier_min: 76
+
+# Auto-Configuration Rules
+auto_config:
+  low_tier:
+    model_size_limit_gb: 4
+    visual_quality: "basic"
+    logging_level: "error"
+    cache_size_mb: 512
+  
+  mid_tier:
+    model_size_limit_gb: 12
+    visual_quality: "standard"
+    logging_level: "info"
+    cache_size_mb: 2048
+  
+  high_tier:
+    model_size_limit_gb: 40
+    visual_quality: "ultra"
+    logging_level: "debug"
+    cache_size_mb: 8192
+
+# Performance Monitoring Thresholds
+monitoring_thresholds:
+  frame_rate_warning: 50
+  frame_rate_critical: 30
+  memory_warning: 85
+  memory_critical: 95
+  cpu_warning: 90
+  cpu_critical: 98
+  gpu_warning: 95
+  gpu_critical: 99

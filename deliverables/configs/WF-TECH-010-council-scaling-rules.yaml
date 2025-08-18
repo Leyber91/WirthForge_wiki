@@ -1,0 +1,279 @@
+# WF-TECH-010 Council Scaling Rules for Parallel Processing
+# WIRTHFORGE Performance & Capacity - Council Management Configuration
+
+version: "1.0.0"
+document_id: "WF-TECH-010"
+last_updated: "2024-01-15"
+description: "Defines Council scaling rules and parallel processing limits per hardware tier"
+
+# Council Composition & Limits per Tier
+council_limits:
+  low_tier:
+    tier_id: "LOW"
+    max_concurrent_models: 1
+    parallel_processing: false
+    queue_management: "serial"
+    
+    constraints:
+      memory_limit_gb: 8
+      cpu_cores_max: 4
+      model_size_limit_gb: 4
+      context_length_max: 2048
+    
+    behavior:
+      model_loading: "sequential_only"
+      resource_sharing: "none"
+      failover_strategy: "restart_single"
+      
+    performance_targets:
+      single_model_tps: 30
+      queue_depth_max: 3
+      response_time_sla: 5.0
+
+  mid_tier:
+    tier_id: "MID"
+    max_concurrent_models: 3
+    parallel_processing: true
+    queue_management: "parallel_limited"
+    
+    constraints:
+      memory_limit_gb: 32
+      gpu_vram_limit_gb: 12
+      model_size_limit_gb: 8
+      context_length_max: 4096
+    
+    behavior:
+      model_loading: "parallel_up_to_limit"
+      resource_sharing: "gpu_memory_aware"
+      failover_strategy: "graceful_degradation"
+      
+    performance_targets:
+      combined_tps: 150
+      individual_model_tps: 80
+      queue_depth_max: 6
+      response_time_sla: 3.0
+      
+    council_modes:
+      default: 2  # Standard 2-model council
+      enhanced: 3  # Enhanced 3-model council for complex tasks
+
+  high_tier:
+    tier_id: "HIGH"
+    max_concurrent_models: 6
+    parallel_processing: true
+    queue_management: "full_parallel"
+    
+    constraints:
+      memory_limit_gb: 128
+      gpu_vram_limit_gb: 80
+      model_size_limit_gb: 40
+      context_length_max: 8192
+    
+    behavior:
+      model_loading: "full_parallel"
+      resource_sharing: "multi_gpu_aware"
+      failover_strategy: "hot_standby"
+      
+    performance_targets:
+      combined_tps: 400
+      individual_model_tps: 100
+      queue_depth_max: 12
+      response_time_sla: 1.5
+      
+    council_modes:
+      standard: 4   # Standard 4-model council
+      enhanced: 6   # Full 6-model council for maximum capability
+      specialized: 8  # Specialized council with hot-swap capability
+
+# Parallel Scheduling Policies
+scheduling_policies:
+  round_robin:
+    description: "Equal time slicing for all active models"
+    use_cases: ["balanced_workload", "fair_resource_sharing"]
+    implementation:
+      time_slice_ms: 100
+      priority_adjustment: false
+      
+  priority_based:
+    description: "Priority-weighted scheduling based on model importance"
+    use_cases: ["specialized_tasks", "performance_critical"]
+    implementation:
+      priority_levels: 5
+      preemption_allowed: true
+      aging_factor: 0.1
+      
+  performance_adaptive:
+    description: "Dynamic scheduling based on real-time performance"
+    use_cases: ["mixed_workloads", "resource_optimization"]
+    implementation:
+      performance_window_ms: 1000
+      adaptation_threshold: 0.15
+      rebalance_frequency_ms: 5000
+
+# Resource Allocation Strategies
+resource_allocation:
+  memory_management:
+    low_tier:
+      strategy: "exclusive_allocation"
+      model_memory_limit: "80%"
+      cache_memory_limit: "15%"
+      system_reserve: "5%"
+      
+    mid_tier:
+      strategy: "shared_with_limits"
+      model_memory_limit: "70%"
+      cache_memory_limit: "20%"
+      system_reserve: "10%"
+      
+    high_tier:
+      strategy: "dynamic_allocation"
+      model_memory_limit: "60%"
+      cache_memory_limit: "25%"
+      system_reserve: "15%"
+
+  gpu_allocation:
+    single_gpu:
+      strategy: "time_multiplexed"
+      context_switching_overhead: 50  # milliseconds
+      memory_fragmentation_factor: 0.1
+      
+    multi_gpu:
+      strategy: "spatial_partitioning"
+      load_balancing: "performance_based"
+      cross_gpu_communication: "optimized"
+
+# Council Synchronization Rules
+synchronization:
+  lock_step_mode:
+    enabled: false  # Default to async for performance
+    trigger_conditions:
+      - "user_requests_synchronous"
+      - "analysis_requires_consensus"
+      - "debugging_mode_active"
+    
+    performance_impact:
+      throughput_reduction: 0.4  # 40% reduction expected
+      latency_increase: 0.6      # 60% increase expected
+      
+  asynchronous_mode:
+    enabled: true   # Default mode
+    coordination_method: "event_driven"
+    conflict_resolution: "last_writer_wins"
+    
+    performance_benefits:
+      throughput_multiplier: 0.85  # 85% of theoretical maximum
+      latency_reduction: 0.3       # 30% faster individual responses
+
+# Quality vs Quantity Heuristics
+scaling_heuristics:
+  model_addition_criteria:
+    performance_headroom: 0.3     # 30% resource headroom required
+    quality_improvement_min: 0.1  # 10% minimum quality improvement
+    latency_penalty_max: 0.25     # 25% maximum latency increase
+    
+  model_removal_criteria:
+    resource_pressure: 0.9        # Remove at 90% resource utilization
+    performance_degradation: 0.2  # Remove if 20% performance drop
+    error_rate_threshold: 0.05    # Remove if 5% error rate
+    
+  council_composition_rules:
+    diversity_requirement: true   # Require different model types
+    redundancy_limit: 2          # Maximum 2 similar models
+    specialization_bonus: 0.15   # 15% bonus for specialized models
+
+# Dynamic Council Adaptation
+adaptation_rules:
+  scale_up_triggers:
+    cpu_utilization_below: 50    # Scale up if CPU < 50%
+    gpu_utilization_below: 60    # Scale up if GPU < 60%
+    memory_available_above: 30   # Scale up if >30% memory free
+    sustained_duration_sec: 30   # Must be sustained for 30 seconds
+    
+  scale_down_triggers:
+    frame_rate_below: 50         # Scale down if FPS < 50
+    latency_above_target: 1.5    # Scale down if latency > 1.5x target
+    memory_pressure_above: 85    # Scale down if memory > 85%
+    sustained_duration_sec: 10   # Must be sustained for 10 seconds
+    
+  adaptation_policies:
+    conservative: 
+      scale_factor: 0.1          # 10% adjustments
+      cooldown_period_sec: 60    # 1 minute between changes
+      
+    aggressive:
+      scale_factor: 0.25         # 25% adjustments
+      cooldown_period_sec: 30    # 30 seconds between changes
+      
+    user_controlled:
+      auto_scaling: false        # Disable automatic scaling
+      notification_only: true    # Only notify user of recommendations
+
+# Thread Pool Management
+thread_management:
+  council_orchestrator:
+    thread_pool_size: 4
+    priority: "high"
+    cpu_affinity: "performance_cores"
+    
+  model_inference:
+    threads_per_model: 2
+    priority: "normal"
+    cpu_affinity: "any"
+    
+  background_tasks:
+    thread_pool_size: 2
+    priority: "low"
+    cpu_affinity: "efficiency_cores"
+
+# Performance Monitoring
+monitoring:
+  council_metrics:
+    - "individual_model_tps"
+    - "combined_throughput"
+    - "synchronization_overhead"
+    - "resource_utilization_per_model"
+    - "council_efficiency_ratio"
+    - "cross_model_latency"
+    
+  alert_thresholds:
+    council_efficiency_below: 0.7    # Alert if efficiency < 70%
+    model_failure_rate_above: 0.02   # Alert if failure rate > 2%
+    synchronization_delay_above: 100 # Alert if sync delay > 100ms
+    
+  performance_targets:
+    council_efficiency_target: 0.85  # Target 85% efficiency
+    individual_model_availability: 0.99  # 99% uptime per model
+    council_availability: 0.995      # 99.5% council uptime
+
+# Failover and Recovery
+failover_strategies:
+  model_failure:
+    detection_timeout_ms: 5000
+    recovery_attempts: 3
+    fallback_action: "remove_from_council"
+    
+  council_failure:
+    detection_criteria:
+      - "all_models_unresponsive"
+      - "resource_exhaustion"
+      - "critical_error_cascade"
+    recovery_action: "restart_with_minimal_council"
+    
+  graceful_degradation:
+    stages:
+      1: "reduce_visual_effects"
+      2: "disable_non_essential_models"
+      3: "switch_to_single_model"
+      4: "emergency_minimal_mode"
+
+# Integration Points
+integration:
+  with_tech_001: "system_runtime_coordination"
+  with_tech_002: "model_loading_integration"
+  with_tech_003: "websocket_event_streaming"
+  with_tech_009: "metrics_collection_integration"
+  
+  external_apis:
+    model_management: "/api/v1/council/models"
+    scaling_control: "/api/v1/council/scaling"
+    performance_metrics: "/api/v1/council/metrics"

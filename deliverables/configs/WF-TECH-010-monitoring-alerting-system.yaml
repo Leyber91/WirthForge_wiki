@@ -1,0 +1,456 @@
+# WF-TECH-010 Resource Monitoring & Alerting System Configuration
+# Version: 1.0.0
+# Last Updated: 2024-01-15
+
+monitoring_system:
+  name: "WIRTHFORGE Performance Monitor"
+  version: "1.0.0"
+  update_interval_ms: 100  # 10Hz monitoring frequency
+  retention_days: 90
+  
+  # Hardware tier detection and adaptive thresholds
+  hardware_detection:
+    auto_detect: true
+    override_tier: null  # null, "low", "mid", "high"
+    detection_methods:
+      - cpu_cores
+      - total_memory
+      - gpu_detection
+      - vram_capacity
+      - storage_type
+    
+    tier_classification:
+      low_tier:
+        cpu_cores: "< 6"
+        memory_gb: "< 12"
+        gpu_vram_gb: "< 4"
+        storage: "HDD or basic SSD"
+      
+      mid_tier:
+        cpu_cores: "6-12"
+        memory_gb: "12-24"
+        gpu_vram_gb: "4-12"
+        storage: "NVMe SSD"
+      
+      high_tier:
+        cpu_cores: "> 12"
+        memory_gb: "> 24"
+        gpu_vram_gb: "> 12"
+        storage: "High-speed NVMe"
+
+# Performance metrics collection
+metrics:
+  system_resources:
+    cpu:
+      metrics:
+        - utilization_percent
+        - temperature_celsius
+        - frequency_mhz
+        - core_utilization  # Per-core breakdown
+      thresholds:
+        low_tier:
+          warning: 75
+          critical: 90
+          temperature_warning: 80
+          temperature_critical: 95
+        mid_tier:
+          warning: 80
+          critical: 95
+          temperature_warning: 85
+          temperature_critical: 100
+        high_tier:
+          warning: 85
+          critical: 98
+          temperature_warning: 90
+          temperature_critical: 105
+    
+    memory:
+      metrics:
+        - used_percent
+        - available_gb
+        - swap_used_percent
+        - allocation_rate_mbps
+        - gc_frequency_hz
+      thresholds:
+        low_tier:
+          warning: 80
+          critical: 95
+          swap_warning: 10
+          swap_critical: 50
+        mid_tier:
+          warning: 85
+          critical: 95
+          swap_warning: 5
+          swap_critical: 25
+        high_tier:
+          warning: 90
+          critical: 98
+          swap_warning: 2
+          swap_critical: 10
+    
+    gpu:
+      metrics:
+        - utilization_percent
+        - memory_used_percent
+        - temperature_celsius
+        - power_draw_watts
+        - compute_units_active
+      thresholds:
+        low_tier:  # Integrated GPU
+          warning: 85
+          critical: 95
+          memory_warning: 90
+          memory_critical: 98
+          temperature_warning: 85
+          temperature_critical: 95
+        mid_tier:  # Dedicated GPU
+          warning: 90
+          critical: 98
+          memory_warning: 85
+          memory_critical: 95
+          temperature_warning: 80
+          temperature_critical: 90
+        high_tier:  # High-end GPU
+          warning: 95
+          critical: 99
+          memory_warning: 90
+          memory_critical: 98
+          temperature_warning: 85
+          temperature_critical: 95
+    
+    storage:
+      metrics:
+        - disk_usage_percent
+        - read_iops
+        - write_iops
+        - read_latency_ms
+        - write_latency_ms
+        - queue_depth
+      thresholds:
+        warning: 85
+        critical: 95
+        latency_warning_ms: 10
+        latency_critical_ms: 50
+        iops_degradation_threshold: 0.5  # 50% of baseline
+
+  # Application-specific performance metrics
+  application_performance:
+    inference:
+      metrics:
+        - tokens_per_second
+        - time_to_first_token_ms
+        - queue_length
+        - active_requests
+        - model_load_time_ms
+      thresholds:
+        low_tier:
+          tps_minimum: 15
+          ttft_maximum_ms: 2000
+          queue_warning: 3
+          queue_critical: 8
+        mid_tier:
+          tps_minimum: 40
+          ttft_maximum_ms: 1000
+          queue_warning: 5
+          queue_critical: 15
+        high_tier:
+          tps_minimum: 100
+          ttft_maximum_ms: 500
+          queue_warning: 10
+          queue_critical: 25
+    
+    council:
+      metrics:
+        - active_models
+        - synchronization_latency_ms
+        - council_efficiency_ratio
+        - consensus_time_ms
+        - model_switching_frequency
+      thresholds:
+        sync_latency_warning_ms: 100
+        sync_latency_critical_ms: 500
+        efficiency_warning: 0.6  # Below 60% efficiency
+        efficiency_critical: 0.4  # Below 40% efficiency
+        consensus_warning_ms: 2000
+        consensus_critical_ms: 5000
+    
+    web_ui:
+      metrics:
+        - frame_rate_fps
+        - frame_time_ms
+        - dom_update_frequency
+        - websocket_latency_ms
+        - memory_leaks_mb
+      thresholds:
+        fps_minimum: 30
+        fps_warning: 45
+        frame_time_warning_ms: 22  # >45 FPS
+        frame_time_critical_ms: 33  # >30 FPS
+        websocket_latency_warning_ms: 100
+        websocket_latency_critical_ms: 500
+        memory_leak_warning_mb: 50
+        memory_leak_critical_mb: 200
+
+# Alerting configuration
+alerting:
+  channels:
+    console:
+      enabled: true
+      min_severity: "warning"
+      format: "structured"
+    
+    file_log:
+      enabled: true
+      path: "./logs/performance_alerts.log"
+      min_severity: "info"
+      rotation_size_mb: 100
+      max_files: 10
+    
+    desktop_notification:
+      enabled: true
+      min_severity: "warning"
+      duration_ms: 5000
+    
+    webhook:
+      enabled: false  # Disabled by default for local-first
+      url: null
+      min_severity: "critical"
+      timeout_ms: 5000
+      retry_attempts: 3
+  
+  # Alert severity levels
+  severity_levels:
+    info:
+      color: "blue"
+      priority: 1
+      auto_dismiss_ms: 10000
+    
+    warning:
+      color: "yellow"
+      priority: 2
+      auto_dismiss_ms: 30000
+      escalation_after_count: 3
+    
+    critical:
+      color: "red"
+      priority: 3
+      auto_dismiss_ms: null  # Manual dismiss required
+      escalation_after_count: 1
+      immediate_notification: true
+  
+  # Alert rules and conditions
+  rules:
+    performance_degradation:
+      condition: "tps < baseline_tps * 0.7"
+      severity: "warning"
+      description: "Token generation performance degraded by >30%"
+      cooldown_minutes: 5
+      
+    memory_pressure:
+      condition: "memory_used_percent > threshold_warning"
+      severity: "warning"
+      description: "High memory usage detected"
+      cooldown_minutes: 2
+      
+    gpu_overheating:
+      condition: "gpu_temperature > temperature_critical"
+      severity: "critical"
+      description: "GPU temperature critical - throttling may occur"
+      cooldown_minutes: 1
+      immediate_action: "reduce_gpu_workload"
+    
+    frame_rate_drop:
+      condition: "frame_rate < 30"
+      severity: "warning"
+      description: "UI frame rate below acceptable threshold"
+      cooldown_minutes: 3
+      suggested_action: "reduce_ui_quality"
+    
+    council_inefficiency:
+      condition: "council_efficiency_ratio < 0.4"
+      severity: "critical"
+      description: "Council operating at very low efficiency"
+      cooldown_minutes: 5
+      suggested_action: "reduce_council_size"
+    
+    storage_space_low:
+      condition: "disk_usage_percent > 90"
+      severity: "warning"
+      description: "Low disk space - cleanup recommended"
+      cooldown_minutes: 60
+      suggested_action: "cleanup_old_data"
+
+# Automated response system
+automated_responses:
+  enabled: true
+  safety_mode: true  # Prevents aggressive actions
+  
+  actions:
+    reduce_gpu_workload:
+      trigger: "gpu_overheating"
+      description: "Temporarily reduce GPU utilization"
+      implementation: "scale_down_parallel_inference"
+      revert_after_minutes: 10
+      
+    reduce_ui_quality:
+      trigger: "frame_rate_drop"
+      description: "Lower UI quality settings"
+      implementation: "adaptive_quality_scaling"
+      revert_condition: "frame_rate > 45"
+      
+    reduce_council_size:
+      trigger: "council_inefficiency"
+      description: "Reduce active models in council"
+      implementation: "dynamic_council_scaling"
+      revert_condition: "efficiency_ratio > 0.7"
+      
+    cleanup_old_data:
+      trigger: "storage_space_low"
+      description: "Archive old session data"
+      implementation: "automated_data_archival"
+      max_cleanup_gb: 5
+      
+    emergency_throttle:
+      trigger: "system_overload"
+      description: "Emergency performance throttling"
+      implementation: "global_performance_limit"
+      throttle_percentage: 50
+      revert_after_minutes: 5
+
+# Performance baselines and adaptive thresholds
+baseline_management:
+  collection_period_hours: 24
+  baseline_update_frequency_days: 7
+  minimum_samples: 100
+  
+  adaptive_thresholds:
+    enabled: true
+    adjustment_factor: 0.1  # 10% adjustment per update
+    max_deviation_percent: 50  # Don't adjust beyond 50% of original
+    
+    metrics_to_adapt:
+      - tokens_per_second
+      - frame_rate_fps
+      - memory_usage_percent
+      - gpu_utilization_percent
+  
+  performance_trends:
+    track_degradation: true
+    degradation_threshold_percent: 15  # Alert if 15% degradation over time
+    trend_analysis_days: 30
+    seasonal_adjustment: true
+
+# Integration with other systems
+integrations:
+  performance_tuning:
+    auto_tune_enabled: false  # Manual approval required
+    tune_trigger_conditions:
+      - "consistent_performance_degradation"
+      - "hardware_capability_change"
+    
+  capacity_planning:
+    forecast_enabled: true
+    forecast_horizon_days: 30
+    growth_rate_calculation: "exponential_smoothing"
+    
+  regression_detection:
+    integration_enabled: true
+    baseline_comparison: true
+    statistical_significance: 0.95
+    
+  load_testing:
+    trigger_on_deployment: true
+    performance_gate_enforcement: true
+    rollback_on_regression: true
+
+# Dashboard and visualization
+dashboard:
+  enabled: true
+  update_frequency_ms: 1000
+  
+  widgets:
+    - type: "real_time_metrics"
+      metrics: ["cpu_utilization", "memory_usage", "gpu_utilization"]
+      chart_type: "line"
+      time_window_minutes: 10
+      
+    - type: "performance_summary"
+      metrics: ["tps", "frame_rate", "response_time"]
+      chart_type: "gauge"
+      
+    - type: "alert_history"
+      time_window_hours: 24
+      max_alerts: 50
+      
+    - type: "system_health"
+      components: ["inference_engine", "web_ui", "council", "storage"]
+      status_indicators: true
+      
+    - type: "capacity_forecast"
+      forecast_days: 7
+      confidence_interval: 0.95
+
+# Data retention and archival
+data_management:
+  retention_policy:
+    raw_metrics_days: 7
+    aggregated_hourly_days: 30
+    aggregated_daily_days: 365
+    alerts_days: 90
+    
+  compression:
+    enabled: true
+    algorithm: "gzip"
+    compression_ratio_target: 0.3
+    
+  export:
+    formats: ["json", "csv", "parquet"]
+    scheduled_exports: false
+    on_demand_exports: true
+    
+  privacy:
+    anonymize_user_data: true
+    exclude_sensitive_metrics: true
+    local_storage_only: true  # No cloud uploads
+
+# System health checks
+health_checks:
+  startup_checks:
+    - hardware_detection
+    - baseline_validation
+    - alert_system_test
+    - dashboard_connectivity
+    
+  periodic_checks:
+    interval_minutes: 15
+    checks:
+      - metric_collection_health
+      - alert_delivery_test
+      - storage_space_check
+      - performance_baseline_drift
+      
+  diagnostic_mode:
+    enabled_on_critical_alerts: true
+    extended_logging: true
+    performance_profiling: true
+    memory_dump_on_oom: true
+
+# Configuration validation
+validation:
+  schema_version: "1.0.0"
+  required_fields:
+    - monitoring_system.name
+    - metrics.system_resources
+    - alerting.channels
+    - baseline_management.collection_period_hours
+  
+  field_constraints:
+    update_interval_ms:
+      min: 50
+      max: 5000
+    retention_days:
+      min: 1
+      max: 365
+    threshold_values:
+      min: 0
+      max: 100
