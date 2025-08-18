@@ -1,0 +1,32 @@
+{
+  "version": "1.0.0",
+  "component": "WF-TECH-005",
+  "name": "WF TECH 005",
+  "type": "technical_framework",
+  "category": "technical",
+  "description": "Technical implementation and infrastructure",
+  "dependencies": {
+    "core": [],
+    "optional": []
+  },
+  "assets": {
+    "documentation": [
+      "changelog.md"
+    ],
+    "implementation": [
+      "assets/code/WF-TECH-005/"
+    ],
+    "schemas": [
+      "assets/schemas/WF-TECH-005/"
+    ],
+    "tests": [
+      "assets/tests/WF-TECH-005/"
+    ],
+    "integration": []
+  },
+  "integration": {
+    "complexity": "medium",
+    "setup_time": "1-2 hours",
+    "testing_priority": "medium"
+  }
+}

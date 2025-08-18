@@ -1,0 +1,32 @@
+{
+  "version": "1.0.0",
+  "component": "WF-BIZ-002",
+  "name": "WF BIZ 002",
+  "type": "business_framework",
+  "category": "business",
+  "description": "Business model and strategy",
+  "dependencies": {
+    "core": [],
+    "optional": []
+  },
+  "assets": {
+    "documentation": [
+      "changelog.md"
+    ],
+    "implementation": [
+      "assets/code/WF-BIZ-002/"
+    ],
+    "schemas": [
+      "assets/schemas/WF-BIZ-002/"
+    ],
+    "tests": [
+      "assets/tests/WF-BIZ-002/"
+    ],
+    "integration": []
+  },
+  "integration": {
+    "complexity": "medium",
+    "setup_time": "1-2 hours",
+    "testing_priority": "medium"
+  }
+}

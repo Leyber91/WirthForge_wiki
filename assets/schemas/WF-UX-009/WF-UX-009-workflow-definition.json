@@ -1,0 +1,710 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://wirthforge.org/schemas/WF-UX-009-workflow-definition.json",
+  "title": "WIRTHFORGE Advanced Workflow Definition",
+  "description": "Schema for defining advanced user workflows including multi-step processes, automation, and energy-aware execution",
+  "type": "object",
+  "required": ["id", "name", "version", "steps", "metadata"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^wf_[a-z0-9_]+$",
+      "description": "Unique workflow identifier with wf_ prefix"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100,
+      "description": "Human-readable workflow name"
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 500,
+      "description": "Detailed workflow description"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Semantic version (e.g., 1.0.0)"
+    },
+    "author": {
+      "type": "string",
+      "maxLength": 100,
+      "description": "Workflow creator"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z0-9_-]+$"
+      },
+      "maxItems": 10,
+      "description": "Workflow categorization tags"
+    },
+    "metadata": {
+      "type": "object",
+      "required": ["createdAt", "requiredLevel", "estimatedDuration"],
+      "properties": {
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Workflow creation timestamp"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Last modification timestamp"
+        },
+        "requiredLevel": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5,
+          "description": "Minimum user level required (4+ for advanced workflows)"
+        },
+        "estimatedDuration": {
+          "type": "string",
+          "pattern": "^PT\\d+[HMS]$",
+          "description": "ISO 8601 duration estimate (e.g., PT30M for 30 minutes)"
+        },
+        "energyBudget": {
+          "type": "object",
+          "properties": {
+            "estimatedEU": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Estimated Energy Units consumption"
+            },
+            "maxEU": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Maximum allowed Energy Units"
+            },
+            "priority": {
+              "type": "string",
+              "enum": ["low", "normal", "high", "critical"],
+              "default": "normal",
+              "description": "Execution priority level"
+            }
+          }
+        },
+        "dependencies": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["type", "name"],
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": ["plugin", "model", "dataset", "workflow"],
+                "description": "Dependency type"
+              },
+              "name": {
+                "type": "string",
+                "description": "Dependency identifier"
+              },
+              "version": {
+                "type": "string",
+                "description": "Required version or version range"
+              },
+              "optional": {
+                "type": "boolean",
+                "default": false,
+                "description": "Whether dependency is optional"
+              }
+            }
+          }
+        }
+      }
+    },
+    "configuration": {
+      "type": "object",
+      "properties": {
+        "parallel": {
+          "type": "boolean",
+          "default": false,
+          "description": "Allow parallel step execution where possible"
+        },
+        "retryPolicy": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "default": true
+            },
+            "maxRetries": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 5,
+              "default": 3
+            },
+            "backoffStrategy": {
+              "type": "string",
+              "enum": ["linear", "exponential", "fixed"],
+              "default": "exponential"
+            },
+            "retryDelay": {
+              "type": "string",
+              "pattern": "^PT\\d+[HMS]$",
+              "default": "PT5S",
+              "description": "Base retry delay"
+            }
+          }
+        },
+        "errorHandling": {
+          "type": "object",
+          "properties": {
+            "strategy": {
+              "type": "string",
+              "enum": ["abort", "continue", "skip", "prompt"],
+              "default": "prompt",
+              "description": "How to handle step failures"
+            },
+            "notifications": {
+              "type": "boolean",
+              "default": true,
+              "description": "Send error notifications to user"
+            }
+          }
+        },
+        "scheduling": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": ["immediate", "scheduled", "triggered", "manual"],
+              "default": "manual"
+            },
+            "schedule": {
+              "type": "string",
+              "description": "Cron expression for scheduled execution"
+            },
+            "triggers": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["event", "condition"],
+                "properties": {
+                  "event": {
+                    "type": "string",
+                    "description": "Event type to listen for"
+                  },
+                  "condition": {
+                    "type": "string",
+                    "description": "Condition expression"
+                  },
+                  "debounce": {
+                    "type": "string",
+                    "pattern": "^PT\\d+[HMS]$",
+                    "description": "Debounce delay"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "steps": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 50,
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "type"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^step_[a-z0-9_]+$",
+            "description": "Unique step identifier"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100,
+            "description": "Human-readable step name"
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 300,
+            "description": "Step description"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "prompt",
+              "transform",
+              "filter",
+              "aggregate",
+              "export",
+              "import",
+              "script",
+              "plugin",
+              "workflow",
+              "condition",
+              "loop",
+              "parallel",
+              "wait",
+              "notification"
+            ],
+            "description": "Step execution type"
+          },
+          "enabled": {
+            "type": "boolean",
+            "default": true,
+            "description": "Whether step is enabled"
+          },
+          "optional": {
+            "type": "boolean",
+            "default": false,
+            "description": "Whether step failure should abort workflow"
+          },
+          "timeout": {
+            "type": "string",
+            "pattern": "^PT\\d+[HMS]$",
+            "description": "Step execution timeout"
+          },
+          "dependencies": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^step_[a-z0-9_]+$"
+            },
+            "description": "Step IDs this step depends on"
+          },
+          "parameters": {
+            "type": "object",
+            "description": "Step-specific parameters",
+            "properties": {
+              "prompt": {
+                "type": "object",
+                "properties": {
+                  "template": {
+                    "type": "string",
+                    "description": "Prompt template with variables"
+                  },
+                  "variables": {
+                    "type": "object",
+                    "additionalProperties": {
+                      "type": ["string", "number", "boolean"]
+                    }
+                  },
+                  "model": {
+                    "type": "string",
+                    "description": "AI model to use"
+                  },
+                  "maxTokens": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 32000
+                  },
+                  "temperature": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 2
+                  }
+                }
+              },
+              "transform": {
+                "type": "object",
+                "properties": {
+                  "operation": {
+                    "type": "string",
+                    "enum": ["map", "reduce", "filter", "sort", "group", "join"]
+                  },
+                  "expression": {
+                    "type": "string",
+                    "description": "Transformation expression"
+                  },
+                  "outputFormat": {
+                    "type": "string",
+                    "enum": ["json", "csv", "xml", "text"]
+                  }
+                }
+              },
+              "script": {
+                "type": "object",
+                "properties": {
+                  "language": {
+                    "type": "string",
+                    "enum": ["python", "javascript", "shell"],
+                    "default": "python"
+                  },
+                  "code": {
+                    "type": "string",
+                    "description": "Script code to execute"
+                  },
+                  "environment": {
+                    "type": "object",
+                    "additionalProperties": {
+                      "type": "string"
+                    },
+                    "description": "Environment variables"
+                  },
+                  "workingDirectory": {
+                    "type": "string",
+                    "description": "Script working directory"
+                  }
+                }
+              },
+              "plugin": {
+                "type": "object",
+                "properties": {
+                  "pluginId": {
+                    "type": "string",
+                    "description": "Plugin identifier"
+                  },
+                  "function": {
+                    "type": "string",
+                    "description": "Plugin function to call"
+                  },
+                  "arguments": {
+                    "type": "object",
+                    "description": "Function arguments"
+                  }
+                }
+              },
+              "condition": {
+                "type": "object",
+                "properties": {
+                  "expression": {
+                    "type": "string",
+                    "description": "Boolean condition expression"
+                  },
+                  "trueSteps": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "pattern": "^step_[a-z0-9_]+$"
+                    }
+                  },
+                  "falseSteps": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "pattern": "^step_[a-z0-9_]+$"
+                    }
+                  }
+                }
+              },
+              "loop": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": ["for", "while", "forEach"]
+                  },
+                  "condition": {
+                    "type": "string",
+                    "description": "Loop condition"
+                  },
+                  "maxIterations": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 1000,
+                    "default": 100
+                  },
+                  "steps": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "pattern": "^step_[a-z0-9_]+$"
+                    }
+                  }
+                }
+              },
+              "wait": {
+                "type": "object",
+                "properties": {
+                  "duration": {
+                    "type": "string",
+                    "pattern": "^PT\\d+[HMS]$",
+                    "description": "Wait duration"
+                  },
+                  "condition": {
+                    "type": "string",
+                    "description": "Condition to wait for"
+                  }
+                }
+              }
+            }
+          },
+          "input": {
+            "type": "object",
+            "properties": {
+              "source": {
+                "type": "string",
+                "enum": ["previous", "parameter", "file", "variable", "constant"],
+                "description": "Input data source"
+              },
+              "path": {
+                "type": "string",
+                "description": "Data path or file path"
+              },
+              "format": {
+                "type": "string",
+                "enum": ["json", "csv", "xml", "text", "binary"]
+              },
+              "validation": {
+                "type": "object",
+                "properties": {
+                  "schema": {
+                    "type": "string",
+                    "description": "JSON schema for validation"
+                  },
+                  "required": {
+                    "type": "boolean",
+                    "default": true
+                  }
+                }
+              }
+            }
+          },
+          "output": {
+            "type": "object",
+            "properties": {
+              "destination": {
+                "type": "string",
+                "enum": ["next", "variable", "file", "return"],
+                "description": "Output destination"
+              },
+              "path": {
+                "type": "string",
+                "description": "Variable name or file path"
+              },
+              "format": {
+                "type": "string",
+                "enum": ["json", "csv", "xml", "text", "binary"]
+              },
+              "transform": {
+                "type": "string",
+                "description": "Output transformation expression"
+              }
+            }
+          },
+          "monitoring": {
+            "type": "object",
+            "properties": {
+              "energyTracking": {
+                "type": "boolean",
+                "default": true,
+                "description": "Track energy consumption for this step"
+              },
+              "progressReporting": {
+                "type": "boolean",
+                "default": true,
+                "description": "Report progress updates"
+              },
+              "logging": {
+                "type": "object",
+                "properties": {
+                  "level": {
+                    "type": "string",
+                    "enum": ["debug", "info", "warn", "error"],
+                    "default": "info"
+                  },
+                  "includeInput": {
+                    "type": "boolean",
+                    "default": false
+                  },
+                  "includeOutput": {
+                    "type": "boolean",
+                    "default": false
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "variables": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": ["string", "number", "boolean", "array", "object"]
+          },
+          "default": {
+            "description": "Default value"
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 200
+          },
+          "required": {
+            "type": "boolean",
+            "default": false
+          },
+          "validation": {
+            "type": "object",
+            "properties": {
+              "pattern": {
+                "type": "string",
+                "description": "Regex pattern for string validation"
+              },
+              "minimum": {
+                "type": "number",
+                "description": "Minimum value for numbers"
+              },
+              "maximum": {
+                "type": "number",
+                "description": "Maximum value for numbers"
+              },
+              "enum": {
+                "type": "array",
+                "description": "Allowed values"
+              }
+            }
+          }
+        }
+      },
+      "description": "Workflow variables and their definitions"
+    },
+    "outputs": {
+      "type": "object",
+      "properties": {
+        "results": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "source"],
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Output result name"
+              },
+              "description": {
+                "type": "string",
+                "maxLength": 200
+              },
+              "source": {
+                "type": "string",
+                "description": "Source step or variable"
+              },
+              "format": {
+                "type": "string",
+                "enum": ["json", "csv", "xml", "text", "binary"]
+              }
+            }
+          }
+        },
+        "artifacts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "path"],
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Artifact name"
+              },
+              "path": {
+                "type": "string",
+                "description": "File path for artifact"
+              },
+              "type": {
+                "type": "string",
+                "enum": ["file", "directory", "report", "visualization"]
+              },
+              "persistent": {
+                "type": "boolean",
+                "default": false,
+                "description": "Whether to keep artifact after workflow completion"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "additionalProperties": false,
+  "examples": [
+    {
+      "id": "wf_data_analysis_pipeline",
+      "name": "Data Analysis Pipeline",
+      "description": "Automated data processing and AI analysis workflow",
+      "version": "1.0.0",
+      "author": "power_user",
+      "tags": ["data", "analysis", "automation"],
+      "metadata": {
+        "createdAt": "2024-01-15T10:30:00Z",
+        "requiredLevel": 4,
+        "estimatedDuration": "PT15M",
+        "energyBudget": {
+          "estimatedEU": 500,
+          "maxEU": 1000,
+          "priority": "normal"
+        }
+      },
+      "configuration": {
+        "parallel": true,
+        "retryPolicy": {
+          "enabled": true,
+          "maxRetries": 2
+        },
+        "errorHandling": {
+          "strategy": "continue"
+        }
+      },
+      "steps": [
+        {
+          "id": "step_load_data",
+          "name": "Load Dataset",
+          "type": "import",
+          "parameters": {
+            "transform": {
+              "operation": "map",
+              "outputFormat": "json"
+            }
+          },
+          "input": {
+            "source": "file",
+            "path": "./data/input.csv",
+            "format": "csv"
+          },
+          "output": {
+            "destination": "variable",
+            "path": "dataset"
+          }
+        },
+        {
+          "id": "step_analyze",
+          "name": "AI Analysis",
+          "type": "prompt",
+          "dependencies": ["step_load_data"],
+          "parameters": {
+            "prompt": {
+              "template": "Analyze this dataset: {{dataset}}",
+              "model": "default",
+              "maxTokens": 1000
+            }
+          },
+          "input": {
+            "source": "variable",
+            "path": "dataset"
+          },
+          "output": {
+            "destination": "return"
+          }
+        }
+      ],
+      "variables": {
+        "dataset": {
+          "type": "object",
+          "description": "Loaded dataset"
+        }
+      },
+      "outputs": {
+        "results": [
+          {
+            "name": "analysis_result",
+            "source": "step_analyze",
+            "format": "json"
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "version": "1.0.0",
+  "component": "WF-OPS-001",
+  "name": "WF OPS 001",
+  "type": "operations_framework",
+  "category": "operations",
+  "description": "Operations and deployment",
+  "dependencies": {
+    "core": [],
+    "optional": []
+  },
+  "assets": {
+    "documentation": [
+      "changelog.md"
+    ],
+    "implementation": [
+      "assets/code/WF-OPS-001/"
+    ],
+    "schemas": [
+      "assets/schemas/WF-OPS-001/"
+    ],
+    "tests": [
+      "assets/tests/WF-OPS-001/"
+    ],
+    "integration": []
+  },
+  "integration": {
+    "complexity": "medium",
+    "setup_time": "1-2 hours",
+    "testing_priority": "medium"
+  }
+}

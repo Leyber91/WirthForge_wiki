@@ -1,0 +1,32 @@
+{
+  "version": "1.0.0",
+  "component": "WF-UX-002",
+  "name": "WF UX 002",
+  "type": "ux_framework",
+  "category": "user_experience",
+  "description": "User experience and interface design",
+  "dependencies": {
+    "core": [],
+    "optional": []
+  },
+  "assets": {
+    "documentation": [
+      "changelog.md"
+    ],
+    "implementation": [
+      "assets/code/WF-UX-002/"
+    ],
+    "schemas": [
+      "assets/schemas/WF-UX-002/"
+    ],
+    "tests": [
+      "assets/tests/WF-UX-002/"
+    ],
+    "integration": []
+  },
+  "integration": {
+    "complexity": "medium",
+    "setup_time": "1-2 hours",
+    "testing_priority": "medium"
+  }
+}

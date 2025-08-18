@@ -1,0 +1,32 @@
+{
+  "version": "1.0.0",
+  "component": "WF-META-002",
+  "name": "WF META 002",
+  "type": "meta_framework",
+  "category": "meta",
+  "description": "Meta-documentation and orchestration",
+  "dependencies": {
+    "core": [],
+    "optional": []
+  },
+  "assets": {
+    "documentation": [
+      "changelog.md"
+    ],
+    "implementation": [
+      "assets/code/WF-META-002/"
+    ],
+    "schemas": [
+      "assets/schemas/WF-META-002/"
+    ],
+    "tests": [
+      "assets/tests/WF-META-002/"
+    ],
+    "integration": []
+  },
+  "integration": {
+    "complexity": "medium",
+    "setup_time": "1-2 hours",
+    "testing_priority": "medium"
+  }
+}

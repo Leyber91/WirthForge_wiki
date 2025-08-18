@@ -1,0 +1,32 @@
+{
+  "version": "1.0.0",
+  "component": "WF-FND-001",
+  "name": "WF FND 001",
+  "type": "foundational_framework",
+  "category": "foundation",
+  "description": "Core foundational concepts and principles",
+  "dependencies": {
+    "core": [],
+    "optional": []
+  },
+  "assets": {
+    "documentation": [
+      "changelog.md"
+    ],
+    "implementation": [
+      "assets/code/WF-FND-001/"
+    ],
+    "schemas": [
+      "assets/schemas/WF-FND-001/"
+    ],
+    "tests": [
+      "assets/tests/WF-FND-001/"
+    ],
+    "integration": []
+  },
+  "integration": {
+    "complexity": "medium",
+    "setup_time": "1-2 hours",
+    "testing_priority": "medium"
+  }
+}

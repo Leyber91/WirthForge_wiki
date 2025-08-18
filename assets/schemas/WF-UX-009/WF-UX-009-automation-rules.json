@@ -1,0 +1,876 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://wirthforge.org/schemas/WF-UX-009-automation-rules.json",
+  "title": "WIRTHFORGE Automation Rules Schema",
+  "description": "Schema for defining automation triggers, conditions, and actions in advanced workflows",
+  "type": "object",
+  "required": ["id", "name", "version", "rules"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^ar_[a-z0-9_]+$",
+      "description": "Unique automation rule set identifier with ar_ prefix"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100,
+      "description": "Human-readable rule set name"
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 500,
+      "description": "Detailed description of automation purpose"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Semantic version (e.g., 1.0.0)"
+    },
+    "author": {
+      "type": "string",
+      "maxLength": 100,
+      "description": "Rule set creator"
+    },
+    "metadata": {
+      "type": "object",
+      "required": ["createdAt", "requiredLevel"],
+      "properties": {
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Rule set creation timestamp"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Last modification timestamp"
+        },
+        "requiredLevel": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5,
+          "description": "Minimum user level required (4+ for automation)"
+        },
+        "category": {
+          "type": "string",
+          "enum": ["productivity", "monitoring", "maintenance", "integration", "custom"],
+          "description": "Automation category"
+        },
+        "priority": {
+          "type": "string",
+          "enum": ["low", "normal", "high", "critical"],
+          "default": "normal",
+          "description": "Rule set execution priority"
+        }
+      }
+    },
+    "configuration": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether rule set is active"
+        },
+        "concurrent": {
+          "type": "boolean",
+          "default": false,
+          "description": "Allow concurrent rule execution"
+        },
+        "maxConcurrentRules": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10,
+          "default": 3,
+          "description": "Maximum concurrent rule executions"
+        },
+        "globalTimeout": {
+          "type": "string",
+          "pattern": "^PT\\d+[HMS]$",
+          "default": "PT5M",
+          "description": "Global timeout for rule execution"
+        },
+        "errorHandling": {
+          "type": "object",
+          "properties": {
+            "strategy": {
+              "type": "string",
+              "enum": ["abort", "continue", "retry", "notify"],
+              "default": "notify"
+            },
+            "maxRetries": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 5,
+              "default": 2
+            },
+            "retryDelay": {
+              "type": "string",
+              "pattern": "^PT\\d+[HMS]$",
+              "default": "PT30S"
+            }
+          }
+        },
+        "logging": {
+          "type": "object",
+          "properties": {
+            "level": {
+              "type": "string",
+              "enum": ["debug", "info", "warn", "error"],
+              "default": "info"
+            },
+            "includeContext": {
+              "type": "boolean",
+              "default": true
+            },
+            "maxLogSize": {
+              "type": "string",
+              "pattern": "^\\d+[KMG]B$",
+              "default": "10MB"
+            }
+          }
+        }
+      }
+    },
+    "rules": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 50,
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "trigger", "actions"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^rule_[a-z0-9_]+$",
+            "description": "Unique rule identifier"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100,
+            "description": "Human-readable rule name"
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 300,
+            "description": "Rule description"
+          },
+          "enabled": {
+            "type": "boolean",
+            "default": true,
+            "description": "Whether rule is active"
+          },
+          "priority": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10,
+            "default": 5,
+            "description": "Rule execution priority (1=highest, 10=lowest)"
+          },
+          "trigger": {
+            "type": "object",
+            "required": ["type"],
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "time",
+                  "interval",
+                  "event",
+                  "threshold",
+                  "file",
+                  "workflow",
+                  "user",
+                  "system",
+                  "composite"
+                ],
+                "description": "Trigger type"
+              },
+              "time": {
+                "type": "object",
+                "properties": {
+                  "schedule": {
+                    "type": "string",
+                    "description": "Cron expression for scheduled execution"
+                  },
+                  "timezone": {
+                    "type": "string",
+                    "default": "UTC",
+                    "description": "Timezone for schedule"
+                  },
+                  "oneTime": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Execute only once"
+                  },
+                  "startDate": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Schedule start date"
+                  },
+                  "endDate": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Schedule end date"
+                  }
+                }
+              },
+              "interval": {
+                "type": "object",
+                "properties": {
+                  "duration": {
+                    "type": "string",
+                    "pattern": "^PT\\d+[HMS]$",
+                    "description": "Interval duration (e.g., PT1H for 1 hour)"
+                  },
+                  "maxExecutions": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "description": "Maximum number of executions"
+                  },
+                  "jitter": {
+                    "type": "string",
+                    "pattern": "^PT\\d+[HMS]$",
+                    "description": "Random jitter to add to interval"
+                  }
+                }
+              },
+              "event": {
+                "type": "object",
+                "properties": {
+                  "source": {
+                    "type": "string",
+                    "enum": [
+                      "energy",
+                      "workflow",
+                      "user",
+                      "system",
+                      "plugin",
+                      "file",
+                      "network",
+                      "custom"
+                    ],
+                    "description": "Event source"
+                  },
+                  "eventType": {
+                    "type": "string",
+                    "description": "Specific event type to listen for"
+                  },
+                  "filter": {
+                    "type": "object",
+                    "additionalProperties": true,
+                    "description": "Event filter criteria"
+                  },
+                  "debounce": {
+                    "type": "string",
+                    "pattern": "^PT\\d+[HMS]$",
+                    "description": "Debounce delay to prevent rapid firing"
+                  },
+                  "throttle": {
+                    "type": "string",
+                    "pattern": "^PT\\d+[HMS]$",
+                    "description": "Throttle delay between executions"
+                  }
+                }
+              },
+              "threshold": {
+                "type": "object",
+                "properties": {
+                  "metric": {
+                    "type": "string",
+                    "description": "Metric to monitor (e.g., energy.current, cpu.usage)"
+                  },
+                  "operator": {
+                    "type": "string",
+                    "enum": ["gt", "gte", "lt", "lte", "eq", "ne", "between"],
+                    "description": "Comparison operator"
+                  },
+                  "value": {
+                    "type": ["number", "array"],
+                    "description": "Threshold value or range [min, max] for 'between'"
+                  },
+                  "duration": {
+                    "type": "string",
+                    "pattern": "^PT\\d+[HMS]$",
+                    "description": "How long condition must persist"
+                  },
+                  "hysteresis": {
+                    "type": "number",
+                    "minimum": 0,
+                    "description": "Hysteresis value to prevent oscillation"
+                  }
+                }
+              },
+              "file": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "type": "string",
+                    "description": "File or directory path to monitor"
+                  },
+                  "events": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": ["created", "modified", "deleted", "moved", "accessed"]
+                    },
+                    "default": ["created", "modified"]
+                  },
+                  "pattern": {
+                    "type": "string",
+                    "description": "File name pattern (glob or regex)"
+                  },
+                  "recursive": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Monitor subdirectories"
+                  }
+                }
+              },
+              "workflow": {
+                "type": "object",
+                "properties": {
+                  "workflowId": {
+                    "type": "string",
+                    "description": "Workflow to monitor"
+                  },
+                  "events": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": ["started", "completed", "failed", "paused", "resumed"]
+                    },
+                    "default": ["completed"]
+                  },
+                  "stepId": {
+                    "type": "string",
+                    "description": "Specific step to monitor (optional)"
+                  }
+                }
+              },
+              "composite": {
+                "type": "object",
+                "properties": {
+                  "operator": {
+                    "type": "string",
+                    "enum": ["and", "or", "not"],
+                    "description": "Logical operator for combining triggers"
+                  },
+                  "triggers": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/properties/rules/items/properties/trigger"
+                    },
+                    "minItems": 2,
+                    "description": "Sub-triggers to combine"
+                  },
+                  "timeout": {
+                    "type": "string",
+                    "pattern": "^PT\\d+[HMS]$",
+                    "description": "Timeout for composite trigger evaluation"
+                  }
+                }
+              }
+            }
+          },
+          "conditions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["type", "expression"],
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "enum": ["javascript", "jsonpath", "regex", "custom"],
+                  "description": "Condition evaluation type"
+                },
+                "expression": {
+                  "type": "string",
+                  "description": "Condition expression"
+                },
+                "description": {
+                  "type": "string",
+                  "maxLength": 200,
+                  "description": "Human-readable condition description"
+                },
+                "negate": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Negate the condition result"
+                }
+              }
+            },
+            "description": "Additional conditions that must be met"
+          },
+          "actions": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 20,
+            "items": {
+              "type": "object",
+              "required": ["type"],
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "workflow",
+                    "script",
+                    "notification",
+                    "email",
+                    "webhook",
+                    "file",
+                    "variable",
+                    "plugin",
+                    "system",
+                    "delay"
+                  ],
+                  "description": "Action type"
+                },
+                "enabled": {
+                  "type": "boolean",
+                  "default": true,
+                  "description": "Whether action is enabled"
+                },
+                "async": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Execute action asynchronously"
+                },
+                "timeout": {
+                  "type": "string",
+                  "pattern": "^PT\\d+[HMS]$",
+                  "description": "Action execution timeout"
+                },
+                "retryOnFailure": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Retry action on failure"
+                },
+                "workflow": {
+                  "type": "object",
+                  "properties": {
+                    "workflowId": {
+                      "type": "string",
+                      "description": "Workflow to execute"
+                    },
+                    "parameters": {
+                      "type": "object",
+                      "additionalProperties": true,
+                      "description": "Workflow parameters"
+                    },
+                    "waitForCompletion": {
+                      "type": "boolean",
+                      "default": false,
+                      "description": "Wait for workflow completion"
+                    }
+                  }
+                },
+                "script": {
+                  "type": "object",
+                  "properties": {
+                    "language": {
+                      "type": "string",
+                      "enum": ["python", "javascript", "shell"],
+                      "default": "python"
+                    },
+                    "code": {
+                      "type": "string",
+                      "description": "Script code to execute"
+                    },
+                    "file": {
+                      "type": "string",
+                      "description": "Script file path (alternative to inline code)"
+                    },
+                    "environment": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "description": "Environment variables"
+                    },
+                    "workingDirectory": {
+                      "type": "string",
+                      "description": "Script working directory"
+                    }
+                  }
+                },
+                "notification": {
+                  "type": "object",
+                  "properties": {
+                    "title": {
+                      "type": "string",
+                      "maxLength": 100,
+                      "description": "Notification title"
+                    },
+                    "message": {
+                      "type": "string",
+                      "maxLength": 500,
+                      "description": "Notification message"
+                    },
+                    "level": {
+                      "type": "string",
+                      "enum": ["info", "warning", "error", "success"],
+                      "default": "info"
+                    },
+                    "persistent": {
+                      "type": "boolean",
+                      "default": false,
+                      "description": "Keep notification until dismissed"
+                    },
+                    "sound": {
+                      "type": "boolean",
+                      "default": false,
+                      "description": "Play notification sound"
+                    }
+                  }
+                },
+                "email": {
+                  "type": "object",
+                  "properties": {
+                    "to": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "format": "email"
+                      },
+                      "description": "Email recipients"
+                    },
+                    "subject": {
+                      "type": "string",
+                      "maxLength": 200,
+                      "description": "Email subject"
+                    },
+                    "body": {
+                      "type": "string",
+                      "description": "Email body"
+                    },
+                    "html": {
+                      "type": "boolean",
+                      "default": false,
+                      "description": "Send as HTML email"
+                    },
+                    "attachments": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "File paths to attach"
+                    }
+                  }
+                },
+                "webhook": {
+                  "type": "object",
+                  "properties": {
+                    "url": {
+                      "type": "string",
+                      "format": "uri",
+                      "description": "Webhook URL (localhost only for security)"
+                    },
+                    "method": {
+                      "type": "string",
+                      "enum": ["GET", "POST", "PUT", "PATCH", "DELETE"],
+                      "default": "POST"
+                    },
+                    "headers": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "description": "HTTP headers"
+                    },
+                    "body": {
+                      "type": "object",
+                      "description": "Request body"
+                    },
+                    "timeout": {
+                      "type": "string",
+                      "pattern": "^PT\\d+[HMS]$",
+                      "default": "PT30S"
+                    }
+                  }
+                },
+                "file": {
+                  "type": "object",
+                  "properties": {
+                    "operation": {
+                      "type": "string",
+                      "enum": ["create", "append", "delete", "move", "copy"],
+                      "description": "File operation"
+                    },
+                    "path": {
+                      "type": "string",
+                      "description": "File path"
+                    },
+                    "content": {
+                      "type": "string",
+                      "description": "File content (for create/append)"
+                    },
+                    "destination": {
+                      "type": "string",
+                      "description": "Destination path (for move/copy)"
+                    },
+                    "backup": {
+                      "type": "boolean",
+                      "default": false,
+                      "description": "Create backup before operation"
+                    }
+                  }
+                },
+                "variable": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "description": "Variable name"
+                    },
+                    "value": {
+                      "description": "Variable value"
+                    },
+                    "scope": {
+                      "type": "string",
+                      "enum": ["global", "rule", "session"],
+                      "default": "rule"
+                    },
+                    "persistent": {
+                      "type": "boolean",
+                      "default": false,
+                      "description": "Persist variable across sessions"
+                    }
+                  }
+                },
+                "plugin": {
+                  "type": "object",
+                  "properties": {
+                    "pluginId": {
+                      "type": "string",
+                      "description": "Plugin identifier"
+                    },
+                    "function": {
+                      "type": "string",
+                      "description": "Plugin function to call"
+                    },
+                    "arguments": {
+                      "type": "object",
+                      "description": "Function arguments"
+                    }
+                  }
+                },
+                "system": {
+                  "type": "object",
+                  "properties": {
+                    "command": {
+                      "type": "string",
+                      "enum": [
+                        "restart_workflow",
+                        "pause_workflow",
+                        "resume_workflow",
+                        "clear_cache",
+                        "garbage_collect",
+                        "backup_data",
+                        "optimize_performance"
+                      ],
+                      "description": "System command to execute"
+                    },
+                    "parameters": {
+                      "type": "object",
+                      "description": "Command parameters"
+                    }
+                  }
+                },
+                "delay": {
+                  "type": "object",
+                  "properties": {
+                    "duration": {
+                      "type": "string",
+                      "pattern": "^PT\\d+[HMS]$",
+                      "description": "Delay duration"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "rateLimit": {
+            "type": "object",
+            "properties": {
+              "maxExecutions": {
+                "type": "integer",
+                "minimum": 1,
+                "description": "Maximum executions per time window"
+              },
+              "timeWindow": {
+                "type": "string",
+                "pattern": "^PT\\d+[HMS]$",
+                "description": "Time window for rate limiting"
+              },
+              "resetOnWindowEnd": {
+                "type": "boolean",
+                "default": true,
+                "description": "Reset counter at window end"
+              }
+            }
+          },
+          "monitoring": {
+            "type": "object",
+            "properties": {
+              "trackExecutions": {
+                "type": "boolean",
+                "default": true,
+                "description": "Track rule execution history"
+              },
+              "trackPerformance": {
+                "type": "boolean",
+                "default": true,
+                "description": "Track execution performance metrics"
+              },
+              "alertOnFailure": {
+                "type": "boolean",
+                "default": true,
+                "description": "Send alert on rule failure"
+              },
+              "maxHistorySize": {
+                "type": "integer",
+                "minimum": 10,
+                "maximum": 1000,
+                "default": 100,
+                "description": "Maximum execution history entries"
+              }
+            }
+          }
+        }
+      }
+    },
+    "variables": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": ["string", "number", "boolean", "array", "object"]
+          },
+          "default": {
+            "description": "Default value"
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 200
+          },
+          "scope": {
+            "type": "string",
+            "enum": ["global", "ruleset", "session"],
+            "default": "ruleset"
+          },
+          "persistent": {
+            "type": "boolean",
+            "default": false,
+            "description": "Persist across sessions"
+          }
+        }
+      },
+      "description": "Rule set variables and their definitions"
+    }
+  },
+  "additionalProperties": false,
+  "examples": [
+    {
+      "id": "ar_energy_monitoring",
+      "name": "Energy Monitoring Automation",
+      "description": "Monitor energy consumption and trigger actions based on thresholds",
+      "version": "1.0.0",
+      "author": "system_admin",
+      "metadata": {
+        "createdAt": "2024-01-15T10:30:00Z",
+        "requiredLevel": 4,
+        "category": "monitoring",
+        "priority": "high"
+      },
+      "configuration": {
+        "enabled": true,
+        "concurrent": false,
+        "errorHandling": {
+          "strategy": "notify",
+          "maxRetries": 2
+        }
+      },
+      "rules": [
+        {
+          "id": "rule_high_energy_alert",
+          "name": "High Energy Usage Alert",
+          "description": "Alert when energy usage exceeds threshold",
+          "trigger": {
+            "type": "threshold",
+            "threshold": {
+              "metric": "energy.current",
+              "operator": "gt",
+              "value": 1000,
+              "duration": "PT2M"
+            }
+          },
+          "actions": [
+            {
+              "type": "notification",
+              "notification": {
+                "title": "High Energy Usage",
+                "message": "Current energy usage: {{energy.current}} EU",
+                "level": "warning",
+                "persistent": true
+              }
+            },
+            {
+              "type": "workflow",
+              "workflow": {
+                "workflowId": "wf_energy_optimization",
+                "parameters": {
+                  "currentUsage": "{{energy.current}}"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "rule_daily_report",
+          "name": "Daily Energy Report",
+          "description": "Generate daily energy usage report",
+          "trigger": {
+            "type": "time",
+            "time": {
+              "schedule": "0 0 * * *",
+              "timezone": "UTC"
+            }
+          },
+          "actions": [
+            {
+              "type": "script",
+              "script": {
+                "language": "python",
+                "code": "generate_energy_report()"
+              }
+            },
+            {
+              "type": "file",
+              "file": {
+                "operation": "create",
+                "path": "./reports/energy_{{date}}.json",
+                "content": "{{report_data}}"
+              }
+            }
+          ]
+        }
+      ],
+      "variables": {
+        "energy_threshold": {
+          "type": "number",
+          "default": 1000,
+          "description": "Energy usage threshold for alerts"
+        },
+        "report_data": {
+          "type": "object",
+          "description": "Generated report data"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "version": "1.0.0",
+  "component": "WF-RD-001",
+  "name": "WF RD 001",
+  "type": "research_framework",
+  "category": "research",
+  "description": "Research and development",
+  "dependencies": {
+    "core": [],
+    "optional": []
+  },
+  "assets": {
+    "documentation": [
+      "changelog.md"
+    ],
+    "implementation": [
+      "assets/code/WF-RD-001/"
+    ],
+    "schemas": [
+      "assets/schemas/WF-RD-001/"
+    ],
+    "tests": [
+      "assets/tests/WF-RD-001/"
+    ],
+    "integration": []
+  },
+  "integration": {
+    "complexity": "medium",
+    "setup_time": "1-2 hours",
+    "testing_priority": "medium"
+  }
+}

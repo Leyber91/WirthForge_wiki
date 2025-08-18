@@ -1,0 +1,1002 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://wirthforge.org/schemas/WF-UX-009-integration-api.json",
+  "title": "WIRTHFORGE Integration API Specification",
+  "description": "OpenAPI-style schema for WIRTHFORGE local API endpoints and WebSocket events for external integration",
+  "type": "object",
+  "required": ["openapi", "info", "servers", "paths", "components"],
+  "properties": {
+    "openapi": {
+      "type": "string",
+      "const": "3.0.3",
+      "description": "OpenAPI specification version"
+    },
+    "info": {
+      "type": "object",
+      "required": ["title", "version"],
+      "properties": {
+        "title": {
+          "type": "string",
+          "const": "WIRTHFORGE Local API"
+        },
+        "description": {
+          "type": "string",
+          "const": "Local API for advanced workflow integration and external tool connectivity"
+        },
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$"
+        },
+        "contact": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "const": "WIRTHFORGE Development Team"
+            },
+            "url": {
+              "type": "string",
+              "const": "https://wirthforge.org"
+            }
+          }
+        },
+        "license": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "const": "MIT"
+            }
+          }
+        }
+      }
+    },
+    "servers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["url", "description"],
+        "properties": {
+          "url": {
+            "type": "string",
+            "pattern": "^http://localhost:\\d+$",
+            "description": "Local server URL (localhost only for security)"
+          },
+          "description": {
+            "type": "string",
+            "description": "Server description"
+          }
+        }
+      },
+      "minItems": 1,
+      "maxItems": 1
+    },
+    "paths": {
+      "type": "object",
+      "patternProperties": {
+        "^/": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "summary": {
+                "type": "string",
+                "description": "Endpoint summary"
+              },
+              "description": {
+                "type": "string",
+                "description": "Detailed endpoint description"
+              },
+              "operationId": {
+                "type": "string",
+                "description": "Unique operation identifier"
+              },
+              "tags": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Endpoint tags for organization"
+              },
+              "security": {
+                "type": "array",
+                "items": {
+                  "type": "object"
+                },
+                "description": "Security requirements"
+              },
+              "parameters": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Parameter"
+                },
+                "description": "Endpoint parameters"
+              },
+              "requestBody": {
+                "$ref": "#/components/schemas/RequestBody",
+                "description": "Request body specification"
+              },
+              "responses": {
+                "type": "object",
+                "patternProperties": {
+                  "^[1-5]\\d{2}$": {
+                    "$ref": "#/components/schemas/Response"
+                  }
+                },
+                "description": "Response specifications"
+              }
+            }
+          }
+        }
+      }
+    },
+    "components": {
+      "type": "object",
+      "properties": {
+        "schemas": {
+          "type": "object",
+          "properties": {
+            "Parameter": {
+              "type": "object",
+              "required": ["name", "in"],
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "Parameter name"
+                },
+                "in": {
+                  "type": "string",
+                  "enum": ["query", "header", "path", "cookie"],
+                  "description": "Parameter location"
+                },
+                "description": {
+                  "type": "string",
+                  "description": "Parameter description"
+                },
+                "required": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Whether parameter is required"
+                },
+                "schema": {
+                  "type": "object",
+                  "description": "Parameter schema"
+                }
+              }
+            },
+            "RequestBody": {
+              "type": "object",
+              "properties": {
+                "description": {
+                  "type": "string",
+                  "description": "Request body description"
+                },
+                "required": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Whether request body is required"
+                },
+                "content": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "object",
+                    "properties": {
+                      "schema": {
+                        "type": "object",
+                        "description": "Content schema"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "Response": {
+              "type": "object",
+              "required": ["description"],
+              "properties": {
+                "description": {
+                  "type": "string",
+                  "description": "Response description"
+                },
+                "headers": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "object",
+                    "properties": {
+                      "description": {
+                        "type": "string"
+                      },
+                      "schema": {
+                        "type": "object"
+                      }
+                    }
+                  }
+                },
+                "content": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "object",
+                    "properties": {
+                      "schema": {
+                        "type": "object",
+                        "description": "Response content schema"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "ApiResponse": {
+              "type": "object",
+              "required": ["success", "timestamp"],
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "description": "Whether the request was successful"
+                },
+                "timestamp": {
+                  "type": "string",
+                  "format": "date-time",
+                  "description": "Response timestamp"
+                },
+                "data": {
+                  "description": "Response data (varies by endpoint)"
+                },
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "description": "Error code"
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error message"
+                    },
+                    "details": {
+                      "type": "object",
+                      "description": "Additional error details"
+                    }
+                  },
+                  "description": "Error information (present when success=false)"
+                },
+                "meta": {
+                  "type": "object",
+                  "properties": {
+                    "requestId": {
+                      "type": "string",
+                      "description": "Unique request identifier"
+                    },
+                    "version": {
+                      "type": "string",
+                      "description": "API version"
+                    },
+                    "rateLimit": {
+                      "type": "object",
+                      "properties": {
+                        "remaining": {
+                          "type": "integer",
+                          "description": "Remaining requests in current window"
+                        },
+                        "resetTime": {
+                          "type": "string",
+                          "format": "date-time",
+                          "description": "Rate limit reset time"
+                        }
+                      }
+                    }
+                  },
+                  "description": "Response metadata"
+                }
+              }
+            },
+            "WorkflowDefinition": {
+              "$ref": "WF-UX-009-workflow-definition.json",
+              "description": "Workflow definition schema"
+            },
+            "AutomationRules": {
+              "$ref": "WF-UX-009-automation-rules.json",
+              "description": "Automation rules schema"
+            },
+            "PluginManifest": {
+              "$ref": "WF-UX-009-plugin-manifest.json",
+              "description": "Plugin manifest schema"
+            },
+            "EnergyMetrics": {
+              "type": "object",
+              "required": ["timestamp", "current", "total"],
+              "properties": {
+                "timestamp": {
+                  "type": "string",
+                  "format": "date-time",
+                  "description": "Metrics timestamp"
+                },
+                "current": {
+                  "type": "number",
+                  "minimum": 0,
+                  "description": "Current energy usage (EU/s)"
+                },
+                "total": {
+                  "type": "number",
+                  "minimum": 0,
+                  "description": "Total energy consumed (EU)"
+                },
+                "peak": {
+                  "type": "number",
+                  "minimum": 0,
+                  "description": "Peak energy usage in current session"
+                },
+                "average": {
+                  "type": "number",
+                  "minimum": 0,
+                  "description": "Average energy usage"
+                },
+                "breakdown": {
+                  "type": "object",
+                  "properties": {
+                    "ai": {
+                      "type": "number",
+                      "minimum": 0,
+                      "description": "AI processing energy"
+                    },
+                    "ui": {
+                      "type": "number",
+                      "minimum": 0,
+                      "description": "UI rendering energy"
+                    },
+                    "workflow": {
+                      "type": "number",
+                      "minimum": 0,
+                      "description": "Workflow execution energy"
+                    },
+                    "plugin": {
+                      "type": "number",
+                      "minimum": 0,
+                      "description": "Plugin execution energy"
+                    }
+                  }
+                }
+              }
+            },
+            "WorkflowExecution": {
+              "type": "object",
+              "required": ["id", "workflowId", "status", "startTime"],
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Execution ID"
+                },
+                "workflowId": {
+                  "type": "string",
+                  "description": "Workflow ID"
+                },
+                "status": {
+                  "type": "string",
+                  "enum": ["queued", "running", "paused", "completed", "failed", "cancelled"],
+                  "description": "Execution status"
+                },
+                "startTime": {
+                  "type": "string",
+                  "format": "date-time",
+                  "description": "Execution start time"
+                },
+                "endTime": {
+                  "type": "string",
+                  "format": "date-time",
+                  "description": "Execution end time"
+                },
+                "progress": {
+                  "type": "object",
+                  "properties": {
+                    "currentStep": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "description": "Current step index"
+                    },
+                    "totalSteps": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "description": "Total number of steps"
+                    },
+                    "percentage": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 100,
+                      "description": "Completion percentage"
+                    }
+                  }
+                },
+                "results": {
+                  "type": "object",
+                  "description": "Execution results"
+                },
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "step": {
+                      "type": "string",
+                      "description": "Step where error occurred"
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error message"
+                    },
+                    "details": {
+                      "type": "object",
+                      "description": "Error details"
+                    }
+                  }
+                },
+                "metrics": {
+                  "type": "object",
+                  "properties": {
+                    "duration": {
+                      "type": "string",
+                      "pattern": "^PT\\d+[HMS]$",
+                      "description": "Execution duration"
+                    },
+                    "energyUsed": {
+                      "type": "number",
+                      "minimum": 0,
+                      "description": "Energy consumed (EU)"
+                    },
+                    "stepsCompleted": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "description": "Number of completed steps"
+                    }
+                  }
+                }
+              }
+            },
+            "SystemStatus": {
+              "type": "object",
+              "required": ["status", "version", "uptime"],
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "enum": ["healthy", "degraded", "unhealthy"],
+                  "description": "Overall system status"
+                },
+                "version": {
+                  "type": "string",
+                  "description": "WIRTHFORGE version"
+                },
+                "uptime": {
+                  "type": "string",
+                  "pattern": "^PT\\d+[HMS]$",
+                  "description": "System uptime"
+                },
+                "components": {
+                  "type": "object",
+                  "properties": {
+                    "ai": {
+                      "type": "object",
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "enum": ["online", "offline", "error"]
+                        },
+                        "models": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    },
+                    "workflow": {
+                      "type": "object",
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "enum": ["online", "offline", "error"]
+                        },
+                        "activeExecutions": {
+                          "type": "integer",
+                          "minimum": 0
+                        }
+                      }
+                    },
+                    "plugins": {
+                      "type": "object",
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "enum": ["online", "offline", "error"]
+                        },
+                        "loaded": {
+                          "type": "integer",
+                          "minimum": 0
+                        },
+                        "active": {
+                          "type": "integer",
+                          "minimum": 0
+                        }
+                      }
+                    }
+                  }
+                },
+                "performance": {
+                  "type": "object",
+                  "properties": {
+                    "frameRate": {
+                      "type": "number",
+                      "minimum": 0,
+                      "description": "Current frame rate (FPS)"
+                    },
+                    "memoryUsage": {
+                      "type": "object",
+                      "properties": {
+                        "used": {
+                          "type": "string",
+                          "pattern": "^\\d+[KMG]B$"
+                        },
+                        "total": {
+                          "type": "string",
+                          "pattern": "^\\d+[KMG]B$"
+                        },
+                        "percentage": {
+                          "type": "number",
+                          "minimum": 0,
+                          "maximum": 100
+                        }
+                      }
+                    },
+                    "cpuUsage": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 100,
+                      "description": "CPU usage percentage"
+                    }
+                  }
+                }
+              }
+            },
+            "WebSocketEvent": {
+              "type": "object",
+              "required": ["type", "timestamp"],
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "energy.update",
+                    "workflow.started",
+                    "workflow.progress",
+                    "workflow.completed",
+                    "workflow.failed",
+                    "plugin.loaded",
+                    "plugin.unloaded",
+                    "system.status",
+                    "user.levelUp",
+                    "error.occurred"
+                  ],
+                  "description": "Event type"
+                },
+                "timestamp": {
+                  "type": "string",
+                  "format": "date-time",
+                  "description": "Event timestamp"
+                },
+                "source": {
+                  "type": "string",
+                  "description": "Event source component"
+                },
+                "data": {
+                  "type": "object",
+                  "description": "Event-specific data"
+                },
+                "metadata": {
+                  "type": "object",
+                  "properties": {
+                    "sessionId": {
+                      "type": "string",
+                      "description": "Session identifier"
+                    },
+                    "userId": {
+                      "type": "string",
+                      "description": "User identifier"
+                    },
+                    "correlationId": {
+                      "type": "string",
+                      "description": "Correlation identifier for related events"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "securitySchemes": {
+          "type": "object",
+          "properties": {
+            "ApiKeyAuth": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "const": "apiKey"
+                },
+                "in": {
+                  "type": "string",
+                  "const": "header"
+                },
+                "name": {
+                  "type": "string",
+                  "const": "X-API-Key"
+                },
+                "description": {
+                  "type": "string",
+                  "const": "API key for local authentication"
+                }
+              }
+            },
+            "BearerAuth": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "const": "http"
+                },
+                "scheme": {
+                  "type": "string",
+                  "const": "bearer"
+                },
+                "bearerFormat": {
+                  "type": "string",
+                  "const": "JWT"
+                },
+                "description": {
+                  "type": "string",
+                  "const": "JWT token for session authentication"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "security": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "ApiKeyAuth": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "BearerAuth": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "description": "Global security requirements"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Tag name"
+          },
+          "description": {
+            "type": "string",
+            "description": "Tag description"
+          }
+        }
+      },
+      "description": "API tags for organization"
+    }
+  },
+  "additionalProperties": false,
+  "examples": [
+    {
+      "openapi": "3.0.3",
+      "info": {
+        "title": "WIRTHFORGE Local API",
+        "description": "Local API for advanced workflow integration and external tool connectivity",
+        "version": "1.0.0",
+        "contact": {
+          "name": "WIRTHFORGE Development Team",
+          "url": "https://wirthforge.org"
+        },
+        "license": {
+          "name": "MIT"
+        }
+      },
+      "servers": [
+        {
+          "url": "http://localhost:8080",
+          "description": "Local development server"
+        }
+      ],
+      "paths": {
+        "/api/status": {
+          "get": {
+            "summary": "Get system status",
+            "description": "Returns current system status and health information",
+            "operationId": "getSystemStatus",
+            "tags": ["system"],
+            "responses": {
+              "200": {
+                "description": "System status retrieved successfully",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "allOf": [
+                        {"$ref": "#/components/schemas/ApiResponse"},
+                        {
+                          "properties": {
+                            "data": {
+                              "$ref": "#/components/schemas/SystemStatus"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "/api/workflows": {
+          "get": {
+            "summary": "List workflows",
+            "description": "Get list of available workflows",
+            "operationId": "listWorkflows",
+            "tags": ["workflows"],
+            "security": [{"ApiKeyAuth": []}],
+            "parameters": [
+              {
+                "name": "status",
+                "in": "query",
+                "description": "Filter by workflow status",
+                "schema": {
+                  "type": "string",
+                  "enum": ["active", "inactive", "all"]
+                }
+              },
+              {
+                "name": "limit",
+                "in": "query",
+                "description": "Maximum number of results",
+                "schema": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 100,
+                  "default": 20
+                }
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "Workflows retrieved successfully",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "allOf": [
+                        {"$ref": "#/components/schemas/ApiResponse"},
+                        {
+                          "properties": {
+                            "data": {
+                              "type": "array",
+                              "items": {
+                                "$ref": "#/components/schemas/WorkflowDefinition"
+                              }
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              },
+              "401": {
+                "description": "Unauthorized - API key required"
+              }
+            }
+          },
+          "post": {
+            "summary": "Create workflow",
+            "description": "Create a new workflow definition",
+            "operationId": "createWorkflow",
+            "tags": ["workflows"],
+            "security": [{"ApiKeyAuth": []}],
+            "requestBody": {
+              "required": true,
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/WorkflowDefinition"
+                  }
+                }
+              }
+            },
+            "responses": {
+              "201": {
+                "description": "Workflow created successfully",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "allOf": [
+                        {"$ref": "#/components/schemas/ApiResponse"},
+                        {
+                          "properties": {
+                            "data": {
+                              "$ref": "#/components/schemas/WorkflowDefinition"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              },
+              "400": {
+                "description": "Invalid workflow definition"
+              },
+              "401": {
+                "description": "Unauthorized - API key required"
+              }
+            }
+          }
+        },
+        "/api/workflows/{workflowId}/execute": {
+          "post": {
+            "summary": "Execute workflow",
+            "description": "Start execution of a specific workflow",
+            "operationId": "executeWorkflow",
+            "tags": ["workflows"],
+            "security": [{"ApiKeyAuth": []}],
+            "parameters": [
+              {
+                "name": "workflowId",
+                "in": "path",
+                "required": true,
+                "description": "Workflow identifier",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            ],
+            "requestBody": {
+              "description": "Workflow execution parameters",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "parameters": {
+                        "type": "object",
+                        "description": "Workflow input parameters"
+                      },
+                      "async": {
+                        "type": "boolean",
+                        "default": true,
+                        "description": "Execute asynchronously"
+                      },
+                      "priority": {
+                        "type": "string",
+                        "enum": ["low", "normal", "high"],
+                        "default": "normal"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "responses": {
+              "202": {
+                "description": "Workflow execution started",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "allOf": [
+                        {"$ref": "#/components/schemas/ApiResponse"},
+                        {
+                          "properties": {
+                            "data": {
+                              "$ref": "#/components/schemas/WorkflowExecution"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              },
+              "404": {
+                "description": "Workflow not found"
+              },
+              "409": {
+                "description": "Workflow already running"
+              }
+            }
+          }
+        },
+        "/api/energy": {
+          "get": {
+            "summary": "Get energy metrics",
+            "description": "Retrieve current energy consumption metrics",
+            "operationId": "getEnergyMetrics",
+            "tags": ["energy"],
+            "security": [{"ApiKeyAuth": []}],
+            "parameters": [
+              {
+                "name": "timeRange",
+                "in": "query",
+                "description": "Time range for metrics",
+                "schema": {
+                  "type": "string",
+                  "enum": ["1h", "6h", "24h", "7d"],
+                  "default": "1h"
+                }
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "Energy metrics retrieved successfully",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "allOf": [
+                        {"$ref": "#/components/schemas/ApiResponse"},
+                        {
+                          "properties": {
+                            "data": {
+                              "$ref": "#/components/schemas/EnergyMetrics"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "components": {
+        "securitySchemes": {
+          "ApiKeyAuth": {
+            "type": "apiKey",
+            "in": "header",
+            "name": "X-API-Key",
+            "description": "API key for local authentication"
+          }
+        }
+      },
+      "security": [
+        {"ApiKeyAuth": []}
+      ],
+      "tags": [
+        {
+          "name": "system",
+          "description": "System status and health endpoints"
+        },
+        {
+          "name": "workflows",
+          "description": "Workflow management endpoints"
+        },
+        {
+          "name": "energy",
+          "description": "Energy monitoring endpoints"
+        },
+        {
+          "name": "plugins",
+          "description": "Plugin management endpoints"
+        }
+      ]
+    }
+  ]
+}
