@@ -1,0 +1,50 @@
+graph TB
+    subgraph "Plugin Sandbox (WF-TECH-008)"
+        PLUGIN1[Plugin A<br/>Custom Module]
+        PLUGIN2[Plugin B<br/>Third-party]
+        PLUGIN3[Plugin C<br/>User-developed]
+    end
+    
+    subgraph "Metrics API"
+        PLUGIN_API[Plugin Metrics API<br/>Sandboxed Interface]
+        VALIDATOR[Metric Validator<br/>Schema Checking]
+        NAMESPACE[Namespace Manager<br/>Plugin Isolation]
+    end
+    
+    subgraph "Core Metrics System"
+        COLLECTOR[Metrics Collector<br/>Unified Aggregation]
+        STORAGE[Metrics Storage<br/>Tagged by Plugin]
+        DASHBOARD[Dashboard<br/>Plugin Metrics View]
+    end
+    
+    subgraph "Security & Governance"
+        MANIFEST[Plugin Manifest<br/>Declared Metrics]
+        PERMISSIONS[Permission System<br/>User Approval]
+        AUDIT[Audit Log<br/>Plugin Activity]
+    end
+    
+    PLUGIN1 --> PLUGIN_API
+    PLUGIN2 --> PLUGIN_API
+    PLUGIN3 --> PLUGIN_API
+    
+    PLUGIN_API --> VALIDATOR
+    VALIDATOR --> NAMESPACE
+    NAMESPACE --> COLLECTOR
+    
+    COLLECTOR --> STORAGE
+    STORAGE --> DASHBOARD
+    
+    MANIFEST --> PERMISSIONS
+    PERMISSIONS --> PLUGIN_API
+    PLUGIN_API --> AUDIT
+    
+    %% Styling
+    classDef plugin fill:#7c3aed,stroke:#a855f7,stroke-width:2px,color:#fff
+    classDef api fill:#059669,stroke:#10b981,stroke-width:2px,color:#fff
+    classDef core fill:#1e3a8a,stroke:#60a5fa,stroke-width:2px,color:#fff
+    classDef security fill:#7c2d12,stroke:#ea580c,stroke-width:2px,color:#fff
+    
+    class PLUGIN1,PLUGIN2,PLUGIN3 plugin
+    class PLUGIN_API,VALIDATOR,NAMESPACE api
+    class COLLECTOR,STORAGE,DASHBOARD core
+    class MANIFEST,PERMISSIONS,AUDIT security

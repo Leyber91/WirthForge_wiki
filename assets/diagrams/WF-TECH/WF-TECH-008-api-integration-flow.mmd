@@ -1,0 +1,52 @@
+sequenceDiagram
+    participant PLUGIN as Plugin Code
+    participant PROXY as Capability Proxy
+    participant PERM as Permission Manager
+    participant AUDIT as Audit Logger
+    participant CORE as WIRTHFORGE Core
+    participant ENERGY as Energy Service
+    
+    Note over PLUGIN,ENERGY: Plugin API Call Flow
+    
+    PLUGIN->>PROXY: Call WIRTHFORGE API
+    PROXY->>PERM: Check permissions
+    
+    alt Permission granted
+        PERM-->>PROXY: Permission OK
+        PROXY->>AUDIT: Log API call
+        PROXY->>CORE: Forward API request
+        
+        alt Energy-related API
+            CORE->>ENERGY: Process energy request
+            ENERGY->>ENERGY: Update energy state
+            ENERGY-->>CORE: Energy response
+        end
+        
+        CORE-->>PROXY: API response
+        PROXY->>AUDIT: Log response
+        PROXY-->>PLUGIN: Return result
+        
+    else Permission denied
+        PERM-->>PROXY: Permission denied
+        PROXY->>AUDIT: Log security violation
+        PROXY-->>PLUGIN: Throw SecurityError
+    end
+    
+    Note over PLUGIN,ENERGY: Resource Monitoring
+    
+    loop Continuous Monitoring
+        PROXY->>PROXY: Monitor resource usage
+        alt Resource limit exceeded
+            PROXY->>AUDIT: Log resource violation
+            PROXY->>PLUGIN: Throttle or terminate
+        end
+    end
+    
+    Note over PLUGIN,ENERGY: Event Publishing
+    
+    PLUGIN->>PROXY: Publish event
+    PROXY->>PERM: Check event permissions
+    PERM-->>PROXY: Permission OK
+    PROXY->>CORE: Forward event
+    CORE->>CORE: Broadcast to subscribers
+    PROXY->>AUDIT: Log event publication

@@ -1,0 +1,39 @@
+sequenceDiagram
+    participant MC as Metrics Collector
+    participant WS as WebSocket Server
+    participant UI as Dashboard UI
+    participant DB as Database
+    participant AL as Alert Engine
+    
+    Note over MC,AL: Real-time metrics streaming
+    
+    UI->>WS: Connect to metrics channel
+    WS->>UI: Connection established
+    
+    loop Every 1 second
+        MC->>WS: Current metrics snapshot
+        WS->>UI: Broadcast metrics update
+        UI->>UI: Update charts & gauges
+    end
+    
+    loop Alert checking
+        AL->>AL: Evaluate thresholds
+        alt Alert triggered
+            AL->>WS: Alert notification
+            WS->>UI: Alert message
+            UI->>UI: Show alert banner
+            AL->>DB: Log alert
+        end
+    end
+    
+    UI->>WS: Request historical data
+    WS->>DB: Query metrics history
+    DB->>WS: Return historical data
+    WS->>UI: Historical metrics
+    UI->>UI: Render historical charts
+    
+    Note over UI: User can export data
+    UI->>WS: Export request
+    WS->>DB: Generate export
+    DB->>WS: Export data
+    WS->>UI: Download link

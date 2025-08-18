@@ -1,0 +1,74 @@
+graph TB
+    subgraph "WIRTHFORGE Core System"
+        DECIPHER[DECIPHER Engine<br/>60Hz Processing Loop]
+        ENERGY[Energy Service<br/>Visual Truth System]
+        ORCHESTRATOR[Orchestrator<br/>Multi-Model Coordination]
+        PLUGINS[Plugin Modules<br/>Sandboxed Extensions]
+        UI[Web UI<br/>User Interface]
+    end
+    
+    subgraph "Metrics Collection Layer"
+        COLLECTOR[Metrics Collector<br/>Real-time Aggregation]
+        BUFFER[In-Memory Buffers<br/>Circular Queues]
+        ALERTS[Alert Engine<br/>Threshold Monitoring]
+    end
+    
+    subgraph "Local Storage (WF-TECH-004)"
+        DB[(SQLite Database<br/>Unified State & Metrics)]
+        SNAPSHOTS[metrics_snapshots]
+        TIMESERIES[metrics_timeseries]
+        ALERT_HISTORY[alert_history]
+        SESSIONS[sessions]
+    end
+    
+    subgraph "Web Dashboard"
+        WEBSOCKET[WebSocket Server<br/>Real-time Updates]
+        API[REST API<br/>Historical Data]
+        DASHBOARD[React Dashboard<br/>Visualization Components]
+    end
+    
+    subgraph "External Interfaces"
+        EXPORT[Data Export<br/>JSON/CSV]
+        BACKUP[Backup System<br/>Local-First]
+    end
+    
+    %% Data Flow Connections
+    DECIPHER --> COLLECTOR
+    ENERGY --> COLLECTOR
+    ORCHESTRATOR --> COLLECTOR
+    PLUGINS --> COLLECTOR
+    UI --> COLLECTOR
+    
+    COLLECTOR --> BUFFER
+    BUFFER --> ALERTS
+    COLLECTOR --> DB
+    
+    DB --> SNAPSHOTS
+    DB --> TIMESERIES
+    DB --> ALERT_HISTORY
+    DB --> SESSIONS
+    
+    COLLECTOR --> WEBSOCKET
+    DB --> API
+    WEBSOCKET --> DASHBOARD
+    API --> DASHBOARD
+    
+    DB --> EXPORT
+    DB --> BACKUP
+    
+    %% Alert feedback loop
+    ALERTS --> ORCHESTRATOR
+    ALERTS --> UI
+    
+    %% Styling
+    classDef coreSystem fill:#1e3a8a,stroke:#60a5fa,stroke-width:2px,color:#fff
+    classDef metricsLayer fill:#059669,stroke:#10b981,stroke-width:2px,color:#fff
+    classDef storage fill:#7c2d12,stroke:#ea580c,stroke-width:2px,color:#fff
+    classDef dashboard fill:#7c3aed,stroke:#a855f7,stroke-width:2px,color:#fff
+    classDef external fill:#374151,stroke:#6b7280,stroke-width:2px,color:#fff
+    
+    class DECIPHER,ENERGY,ORCHESTRATOR,PLUGINS,UI coreSystem
+    class COLLECTOR,BUFFER,ALERTS metricsLayer
+    class DB,SNAPSHOTS,TIMESERIES,ALERT_HISTORY,SESSIONS storage
+    class WEBSOCKET,API,DASHBOARD dashboard
+    class EXPORT,BACKUP external

@@ -1,0 +1,75 @@
+graph TB
+    subgraph "WIRTHFORGE Core System"
+        ORCHESTRATOR[Orchestrator Engine]
+        DECIPHER[DECIPHER Loop]
+        ENERGY_SVC[Energy Service]
+        WS_SERVER[WebSocket Server]
+    end
+    
+    subgraph "Plugin Management Layer"
+        PLUGIN_MGR[Plugin Manager]
+        REGISTRY[Plugin Registry]
+        LOADER[Plugin Loader]
+        LIFECYCLE[Lifecycle Manager]
+    end
+    
+    subgraph "Security Layer"
+        SANDBOX[Security Sandbox]
+        PERMISSION_MGR[Permission Manager]
+        RESOURCE_MONITOR[Resource Monitor]
+        API_GATEWAY[API Gateway]
+    end
+    
+    subgraph "Plugin Runtime Environment"
+        PYTHON_RUNTIME[Python Runtime]
+        TS_RUNTIME[TypeScript Runtime]
+        CAPABILITY_BROKER[Capability Broker]
+        EVENT_BUS[Event Bus]
+    end
+    
+    subgraph "External Systems"
+        MARKETPLACE[Plugin Marketplace]
+        FILE_SYSTEM[Local File System]
+        NETWORK[Network Services]
+    end
+    
+    %% Core system connections
+    ORCHESTRATOR -->|Coordinates| PLUGIN_MGR
+    DECIPHER -->|Requests capabilities| API_GATEWAY
+    ENERGY_SVC -->|Monitors plugin energy| RESOURCE_MONITOR
+    WS_SERVER -->|Broadcasts plugin events| EVENT_BUS
+    
+    %% Plugin management connections
+    PLUGIN_MGR -->|Manages| REGISTRY
+    PLUGIN_MGR -->|Controls| LOADER
+    PLUGIN_MGR -->|Orchestrates| LIFECYCLE
+    REGISTRY -->|Stores metadata| FILE_SYSTEM
+    
+    %% Security layer connections
+    LOADER -->|Loads into| SANDBOX
+    SANDBOX -->|Enforces| PERMISSION_MGR
+    SANDBOX -->|Monitors| RESOURCE_MONITOR
+    API_GATEWAY -->|Validates requests| PERMISSION_MGR
+    
+    %% Runtime environment connections
+    SANDBOX -->|Executes Python| PYTHON_RUNTIME
+    SANDBOX -->|Executes TypeScript| TS_RUNTIME
+    PYTHON_RUNTIME -->|Accesses capabilities| CAPABILITY_BROKER
+    TS_RUNTIME -->|Accesses capabilities| CAPABILITY_BROKER
+    CAPABILITY_BROKER -->|Publishes events| EVENT_BUS
+    
+    %% External connections
+    PLUGIN_MGR -->|Downloads from| MARKETPLACE
+    MARKETPLACE -->|Provides packages| NETWORK
+    
+    classDef core fill:#e1f5fe,stroke:#0277bd,stroke-width:2px
+    classDef management fill:#fff3e0,stroke:#ef6c00,stroke-width:2px
+    classDef security fill:#ffebee,stroke:#c62828,stroke-width:2px
+    classDef runtime fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
+    classDef external fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    
+    class ORCHESTRATOR,DECIPHER,ENERGY_SVC,WS_SERVER core
+    class PLUGIN_MGR,REGISTRY,LOADER,LIFECYCLE management
+    class SANDBOX,PERMISSION_MGR,RESOURCE_MONITOR,API_GATEWAY security
+    class PYTHON_RUNTIME,TS_RUNTIME,CAPABILITY_BROKER,EVENT_BUS runtime
+    class MARKETPLACE,FILE_SYSTEM,NETWORK external

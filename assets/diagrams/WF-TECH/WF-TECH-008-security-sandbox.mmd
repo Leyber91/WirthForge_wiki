@@ -1,0 +1,88 @@
+graph TB
+    subgraph "Host System"
+        HOST_OS[Host Operating System]
+        WIRTHFORGE_CORE[WIRTHFORGE Core]
+        PLUGIN_MGR[Plugin Manager]
+    end
+    
+    subgraph "Sandbox Environment"
+        subgraph "Process Isolation"
+            SANDBOX_PROC[Sandbox Process]
+            NAMESPACE[Linux Namespaces]
+            CGROUPS[Control Groups]
+        end
+        
+        subgraph "Runtime Environments"
+            PYTHON_VM[Python Virtual Machine]
+            NODE_VM[Node.js Runtime]
+            WASM_VM[WebAssembly Runtime]
+        end
+        
+        subgraph "Security Controls"
+            SECCOMP[Seccomp Filter]
+            APPARMOR[AppArmor Profile]
+            CAPABILITIES[Linux Capabilities]
+            RESOURCE_LIMITS[Resource Limits]
+        end
+        
+        subgraph "API Gateway"
+            CAPABILITY_PROXY[Capability Proxy]
+            PERMISSION_CHECK[Permission Checker]
+            AUDIT_LOGGER[Audit Logger]
+            RATE_LIMITER[Rate Limiter]
+        end
+    end
+    
+    subgraph "Plugin Code"
+        PLUGIN_A[Plugin A Code]
+        PLUGIN_B[Plugin B Code]
+        PLUGIN_C[Plugin C Code]
+    end
+    
+    %% Host to sandbox communication
+    WIRTHFORGE_CORE -->|IPC| CAPABILITY_PROXY
+    PLUGIN_MGR -->|Controls| SANDBOX_PROC
+    
+    %% Sandbox process isolation
+    SANDBOX_PROC -->|Isolates| NAMESPACE
+    SANDBOX_PROC -->|Limits| CGROUPS
+    NAMESPACE -->|Contains| PYTHON_VM
+    NAMESPACE -->|Contains| NODE_VM
+    NAMESPACE -->|Contains| WASM_VM
+    
+    %% Security enforcement
+    SANDBOX_PROC -->|Enforces| SECCOMP
+    SANDBOX_PROC -->|Applies| APPARMOR
+    SANDBOX_PROC -->|Drops| CAPABILITIES
+    CGROUPS -->|Enforces| RESOURCE_LIMITS
+    
+    %% Plugin execution
+    PYTHON_VM -->|Executes| PLUGIN_A
+    NODE_VM -->|Executes| PLUGIN_B
+    WASM_VM -->|Executes| PLUGIN_C
+    
+    %% API gateway controls
+    PLUGIN_A -->|Calls API| CAPABILITY_PROXY
+    PLUGIN_B -->|Calls API| CAPABILITY_PROXY
+    PLUGIN_C -->|Calls API| CAPABILITY_PROXY
+    
+    CAPABILITY_PROXY -->|Validates| PERMISSION_CHECK
+    CAPABILITY_PROXY -->|Logs| AUDIT_LOGGER
+    CAPABILITY_PROXY -->|Throttles| RATE_LIMITER
+    
+    %% Security boundaries
+    PERMISSION_CHECK -.->|Blocks unauthorized| PLUGIN_A
+    RATE_LIMITER -.->|Throttles excessive| PLUGIN_B
+    RESOURCE_LIMITS -.->|Kills resource hogs| PLUGIN_C
+    
+    classDef host fill:#e1f5fe,stroke:#0277bd,stroke-width:2px
+    classDef sandbox fill:#fff3e0,stroke:#ef6c00,stroke-width:2px
+    classDef security fill:#ffebee,stroke:#c62828,stroke-width:2px
+    classDef runtime fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
+    classDef plugin fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    
+    class HOST_OS,WIRTHFORGE_CORE,PLUGIN_MGR host
+    class SANDBOX_PROC,NAMESPACE,CGROUPS,CAPABILITY_PROXY sandbox
+    class SECCOMP,APPARMOR,CAPABILITIES,RESOURCE_LIMITS,PERMISSION_CHECK,AUDIT_LOGGER,RATE_LIMITER security
+    class PYTHON_VM,NODE_VM,WASM_VM runtime
+    class PLUGIN_A,PLUGIN_B,PLUGIN_C plugin

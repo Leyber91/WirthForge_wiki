@@ -1,0 +1,52 @@
+graph LR
+    subgraph "Data Sources"
+        RAW[Raw System Data<br/>Full Context]
+        USER[User Interactions<br/>Prompts & Responses]
+        SYSTEM[System Events<br/>Internal Operations]
+    end
+    
+    subgraph "Privacy Layer"
+        FILTER[Content Filter<br/>Remove Sensitive Data]
+        HASH[Hash Generator<br/>Anonymize Identifiers]
+        AGGREGATE[Aggregator<br/>Statistical Summary]
+    end
+    
+    subgraph "Metrics Storage"
+        CLEAN[Clean Metrics<br/>No PII/Content]
+        LOCAL[Local Database<br/>User-Controlled]
+        EXPORT[Optional Export<br/>User-Initiated]
+    end
+    
+    subgraph "Privacy Controls"
+        RETENTION[Retention Policy<br/>Auto-Cleanup]
+        ACCESS[Access Control<br/>Local-Only]
+        CONSENT[User Consent<br/>Export Approval]
+    end
+    
+    RAW --> FILTER
+    USER --> FILTER
+    SYSTEM --> FILTER
+    
+    FILTER --> HASH
+    FILTER --> AGGREGATE
+    
+    HASH --> CLEAN
+    AGGREGATE --> CLEAN
+    
+    CLEAN --> LOCAL
+    LOCAL --> EXPORT
+    
+    RETENTION --> LOCAL
+    ACCESS --> LOCAL
+    CONSENT --> EXPORT
+    
+    %% Styling
+    classDef data fill:#374151,stroke:#6b7280,stroke-width:2px,color:#fff
+    classDef privacy fill:#059669,stroke:#10b981,stroke-width:2px,color:#fff
+    classDef storage fill:#1e3a8a,stroke:#60a5fa,stroke-width:2px,color:#fff
+    classDef controls fill:#7c2d12,stroke:#ea580c,stroke-width:2px,color:#fff
+    
+    class RAW,USER,SYSTEM data
+    class FILTER,HASH,AGGREGATE privacy
+    class CLEAN,LOCAL,EXPORT storage
+    class RETENTION,ACCESS,CONSENT controls

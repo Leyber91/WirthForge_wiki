@@ -1,0 +1,81 @@
+graph TB
+    subgraph "Plugin Manager Components"
+        subgraph "Discovery & Registry"
+            DISCOVERY[Plugin Discovery]
+            REGISTRY[Plugin Registry]
+            METADATA[Metadata Parser]
+            VALIDATOR[Package Validator]
+        end
+        
+        subgraph "Installation & Lifecycle"
+            INSTALLER[Plugin Installer]
+            UNINSTALLER[Plugin Uninstaller]
+            UPDATER[Plugin Updater]
+            LIFECYCLE[Lifecycle Controller]
+        end
+        
+        subgraph "Runtime Management"
+            LOADER[Plugin Loader]
+            ACTIVATOR[Plugin Activator]
+            DEACTIVATOR[Plugin Deactivator]
+            MONITOR[Health Monitor]
+        end
+        
+        subgraph "Security & Isolation"
+            SANDBOX_MGR[Sandbox Manager]
+            PERMISSION_CTRL[Permission Controller]
+            RESOURCE_LIMITER[Resource Limiter]
+            AUDIT_LOG[Audit Logger]
+        end
+    end
+    
+    subgraph "External Interfaces"
+        CLI[Plugin CLI]
+        REST_API[REST API]
+        MARKETPLACE_API[Marketplace API]
+        FILE_STORE[Plugin Storage]
+    end
+    
+    %% Discovery flow
+    CLI -->|Triggers| DISCOVERY
+    DISCOVERY -->|Queries| MARKETPLACE_API
+    DISCOVERY -->|Validates| VALIDATOR
+    VALIDATOR -->|Parses| METADATA
+    METADATA -->|Registers| REGISTRY
+    
+    %% Installation flow
+    REGISTRY -->|Initiates| INSTALLER
+    INSTALLER -->|Downloads| MARKETPLACE_API
+    INSTALLER -->|Stores| FILE_STORE
+    INSTALLER -->|Updates| LIFECYCLE
+    
+    %% Runtime flow
+    LIFECYCLE -->|Loads| LOADER
+    LOADER -->|Activates| ACTIVATOR
+    ACTIVATOR -->|Creates| SANDBOX_MGR
+    SANDBOX_MGR -->|Enforces| PERMISSION_CTRL
+    SANDBOX_MGR -->|Limits| RESOURCE_LIMITER
+    
+    %% Monitoring flow
+    ACTIVATOR -->|Monitors| MONITOR
+    MONITOR -->|Reports to| AUDIT_LOG
+    RESOURCE_LIMITER -->|Logs violations| AUDIT_LOG
+    
+    %% Management operations
+    REST_API -->|Manages| LIFECYCLE
+    LIFECYCLE -->|Controls| UPDATER
+    LIFECYCLE -->|Controls| UNINSTALLER
+    UNINSTALLER -->|Deactivates| DEACTIVATOR
+    DEACTIVATOR -->|Cleans up| FILE_STORE
+    
+    classDef discovery fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
+    classDef lifecycle fill:#fff8e1,stroke:#f57c00,stroke-width:2px
+    classDef runtime fill:#e8f5e8,stroke:#388e3c,stroke-width:2px
+    classDef security fill:#fce4ec,stroke:#c2185b,stroke-width:2px
+    classDef external fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    
+    class DISCOVERY,REGISTRY,METADATA,VALIDATOR discovery
+    class INSTALLER,UNINSTALLER,UPDATER,LIFECYCLE lifecycle
+    class LOADER,ACTIVATOR,DEACTIVATOR,MONITOR runtime
+    class SANDBOX_MGR,PERMISSION_CTRL,RESOURCE_LIMITER,AUDIT_LOG security
+    class CLI,REST_API,MARKETPLACE_API,FILE_STORE external

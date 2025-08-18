@@ -1,0 +1,42 @@
+graph TB
+    subgraph "WIRTHFORGE System"
+        CORE[WIRTHFORGE Core]
+        PLUGIN_MGR[Plugin Manager]
+        SANDBOX[Security Sandbox]
+    end
+    
+    subgraph "External Actors"
+        DEV[Plugin Developer]
+        USER[End User]
+        MARKETPLACE[Plugin Marketplace]
+    end
+    
+    subgraph "Plugin Ecosystem"
+        PLUGIN_A[Plugin A]
+        PLUGIN_B[Plugin B]
+        PLUGIN_C[Plugin C]
+    end
+    
+    %% User interactions
+    USER -->|Uses plugins| CORE
+    DEV -->|Develops plugins| PLUGIN_A
+    DEV -->|Publishes to| MARKETPLACE
+    
+    %% System interactions
+    CORE -->|Manages| PLUGIN_MGR
+    PLUGIN_MGR -->|Isolates| SANDBOX
+    SANDBOX -->|Executes| PLUGIN_A
+    SANDBOX -->|Executes| PLUGIN_B
+    SANDBOX -->|Executes| PLUGIN_C
+    
+    %% Marketplace interactions
+    PLUGIN_MGR -->|Downloads from| MARKETPLACE
+    MARKETPLACE -->|Distributes| PLUGIN_A
+    
+    classDef system fill:#e1f5fe,stroke:#0277bd,stroke-width:2px
+    classDef external fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    classDef plugin fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
+    
+    class CORE,PLUGIN_MGR,SANDBOX system
+    class DEV,USER,MARKETPLACE external
+    class PLUGIN_A,PLUGIN_B,PLUGIN_C plugin

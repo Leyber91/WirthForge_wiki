@@ -1,0 +1,38 @@
+sequenceDiagram
+    participant D as DECIPHER Engine
+    participant E as Energy Service
+    participant O as Orchestrator
+    participant C as Metrics Collector
+    participant B as Buffer System
+    participant DB as SQLite Database
+    participant A as Alert Engine
+    participant WS as WebSocket
+    participant UI as Dashboard UI
+    
+    Note over D,UI: 60Hz Processing Cycle (16.67ms budget)
+    
+    loop Every Frame (16.67ms)
+        D->>C: Frame timing data
+        E->>C: Energy fidelity metrics
+        O->>C: Session/progression data
+        
+        C->>B: Store in circular buffers
+        
+        alt Every 1 second
+            C->>C: Calculate aggregations
+            C->>DB: Store metrics snapshot
+            C->>A: Check alert thresholds
+            
+            alt Alert triggered
+                A->>DB: Log alert
+                A->>WS: Send alert notification
+                A->>O: Trigger adaptation
+            end
+            
+            C->>WS: Send real-time metrics
+        end
+    end
+    
+    WS->>UI: Real-time updates
+    UI->>DB: Query historical data (via API)
+    DB->>UI: Return historical metrics

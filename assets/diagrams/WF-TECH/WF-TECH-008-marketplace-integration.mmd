@@ -1,0 +1,63 @@
+graph TB
+    subgraph "Plugin Marketplace"
+        MARKETPLACE_API[Marketplace API]
+        PACKAGE_STORE[Package Storage]
+        METADATA_DB[Metadata Database]
+        SIGNING_SVC[Package Signing Service]
+        REVIEW_SYS[Review System]
+    end
+    
+    subgraph "WIRTHFORGE Client"
+        PLUGIN_MGR[Plugin Manager]
+        PKG_VALIDATOR[Package Validator]
+        SIG_VERIFIER[Signature Verifier]
+        LOCAL_REGISTRY[Local Registry]
+        INSTALLER[Plugin Installer]
+    end
+    
+    subgraph "Developer Tools"
+        PLUGIN_CLI[Plugin CLI]
+        BUILD_TOOLS[Build Tools]
+        PUBLISHER[Package Publisher]
+        SIGNING_CLIENT[Signing Client]
+    end
+    
+    %% Publishing flow
+    PLUGIN_CLI -->|Build package| BUILD_TOOLS
+    BUILD_TOOLS -->|Sign package| SIGNING_CLIENT
+    SIGNING_CLIENT -->|Request signature| SIGNING_SVC
+    SIGNING_SVC -->|Return signed package| SIGNING_CLIENT
+    SIGNING_CLIENT -->|Publish| PUBLISHER
+    PUBLISHER -->|Upload| MARKETPLACE_API
+    MARKETPLACE_API -->|Store| PACKAGE_STORE
+    MARKETPLACE_API -->|Index| METADATA_DB
+    MARKETPLACE_API -->|Queue for review| REVIEW_SYS
+    
+    %% Discovery flow
+    PLUGIN_MGR -->|Search plugins| MARKETPLACE_API
+    MARKETPLACE_API -->|Query| METADATA_DB
+    METADATA_DB -->|Return results| MARKETPLACE_API
+    MARKETPLACE_API -->|Return metadata| PLUGIN_MGR
+    
+    %% Installation flow
+    PLUGIN_MGR -->|Download package| MARKETPLACE_API
+    MARKETPLACE_API -->|Serve package| PACKAGE_STORE
+    PACKAGE_STORE -->|Return package| PLUGIN_MGR
+    PLUGIN_MGR -->|Validate| PKG_VALIDATOR
+    PKG_VALIDATOR -->|Verify signature| SIG_VERIFIER
+    SIG_VERIFIER -->|Check against| SIGNING_SVC
+    
+    alt Validation successful
+        PKG_VALIDATOR -->|Install| INSTALLER
+        INSTALLER -->|Register| LOCAL_REGISTRY
+    else Validation failed
+        PKG_VALIDATOR -->|Reject| PLUGIN_MGR
+    end
+    
+    classDef marketplace fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
+    classDef client fill:#e8f5e8,stroke:#388e3c,stroke-width:2px
+    classDef developer fill:#fff8e1,stroke:#f57c00,stroke-width:2px
+    
+    class MARKETPLACE_API,PACKAGE_STORE,METADATA_DB,SIGNING_SVC,REVIEW_SYS marketplace
+    class PLUGIN_MGR,PKG_VALIDATOR,SIG_VERIFIER,LOCAL_REGISTRY,INSTALLER client
+    class PLUGIN_CLI,BUILD_TOOLS,PUBLISHER,SIGNING_CLIENT developer

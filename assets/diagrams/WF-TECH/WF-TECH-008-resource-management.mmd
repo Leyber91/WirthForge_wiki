@@ -1,0 +1,89 @@
+graph TB
+    subgraph "Resource Monitoring System"
+        subgraph "Metrics Collection"
+            CPU_MONITOR[CPU Monitor]
+            MEM_MONITOR[Memory Monitor]
+            IO_MONITOR[I/O Monitor]
+            NET_MONITOR[Network Monitor]
+            ENERGY_MONITOR[Energy Monitor]
+        end
+        
+        subgraph "Resource Controllers"
+            CPU_LIMITER[CPU Limiter]
+            MEM_LIMITER[Memory Limiter]
+            IO_LIMITER[I/O Limiter]
+            NET_LIMITER[Network Limiter]
+            ENERGY_BUDGET[Energy Budget]
+        end
+        
+        subgraph "Policy Engine"
+            POLICY_MGR[Policy Manager]
+            THRESHOLD_MGR[Threshold Manager]
+            ACTION_ENGINE[Action Engine]
+            ALERT_MGR[Alert Manager]
+        end
+    end
+    
+    subgraph "Plugin Sandboxes"
+        SANDBOX_A[Plugin A Sandbox]
+        SANDBOX_B[Plugin B Sandbox]
+        SANDBOX_C[Plugin C Sandbox]
+    end
+    
+    subgraph "WIRTHFORGE Core"
+        ORCHESTRATOR[Orchestrator]
+        ENERGY_SVC[Energy Service]
+        METRICS_SVC[Metrics Service]
+    end
+    
+    %% Monitoring connections
+    SANDBOX_A -->|Reports metrics| CPU_MONITOR
+    SANDBOX_A -->|Reports metrics| MEM_MONITOR
+    SANDBOX_A -->|Reports metrics| IO_MONITOR
+    SANDBOX_A -->|Reports metrics| NET_MONITOR
+    SANDBOX_A -->|Reports metrics| ENERGY_MONITOR
+    
+    SANDBOX_B -->|Reports metrics| CPU_MONITOR
+    SANDBOX_C -->|Reports metrics| CPU_MONITOR
+    
+    %% Resource control
+    CPU_LIMITER -->|Throttles| SANDBOX_A
+    MEM_LIMITER -->|Limits| SANDBOX_B
+    IO_LIMITER -->|Throttles| SANDBOX_C
+    NET_LIMITER -->|Blocks| SANDBOX_A
+    ENERGY_BUDGET -->|Suspends| SANDBOX_B
+    
+    %% Policy enforcement
+    CPU_MONITOR -->|Feeds data| POLICY_MGR
+    MEM_MONITOR -->|Feeds data| POLICY_MGR
+    IO_MONITOR -->|Feeds data| POLICY_MGR
+    NET_MONITOR -->|Feeds data| POLICY_MGR
+    ENERGY_MONITOR -->|Feeds data| POLICY_MGR
+    
+    POLICY_MGR -->|Configures| THRESHOLD_MGR
+    THRESHOLD_MGR -->|Triggers| ACTION_ENGINE
+    ACTION_ENGINE -->|Controls| CPU_LIMITER
+    ACTION_ENGINE -->|Controls| MEM_LIMITER
+    ACTION_ENGINE -->|Controls| IO_LIMITER
+    ACTION_ENGINE -->|Controls| NET_LIMITER
+    ACTION_ENGINE -->|Controls| ENERGY_BUDGET
+    
+    ACTION_ENGINE -->|Sends alerts| ALERT_MGR
+    ALERT_MGR -->|Notifies| ORCHESTRATOR
+    
+    %% Integration with core
+    ENERGY_MONITOR -->|Reports to| ENERGY_SVC
+    CPU_MONITOR -->|Reports to| METRICS_SVC
+    MEM_MONITOR -->|Reports to| METRICS_SVC
+    
+    classDef monitoring fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
+    classDef control fill:#ffebee,stroke:#c62828,stroke-width:2px
+    classDef policy fill:#fff8e1,stroke:#f57c00,stroke-width:2px
+    classDef sandbox fill:#e8f5e8,stroke:#388e3c,stroke-width:2px
+    classDef core fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    
+    class CPU_MONITOR,MEM_MONITOR,IO_MONITOR,NET_MONITOR,ENERGY_MONITOR monitoring
+    class CPU_LIMITER,MEM_LIMITER,IO_LIMITER,NET_LIMITER,ENERGY_BUDGET control
+    class POLICY_MGR,THRESHOLD_MGR,ACTION_ENGINE,ALERT_MGR policy
+    class SANDBOX_A,SANDBOX_B,SANDBOX_C sandbox
+    class ORCHESTRATOR,ENERGY_SVC,METRICS_SVC core

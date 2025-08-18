@@ -1,0 +1,54 @@
+graph TD
+    subgraph "60Hz Processing Loop"
+        FRAME_START[Frame Start<br/>Timestamp]
+        DECIPHER_PROC[DECIPHER Processing<br/>Token Generation]
+        ENERGY_RENDER[Energy Rendering<br/>Visual Updates]
+        UI_UPDATE[UI Update<br/>DOM Manipulation]
+        FRAME_END[Frame End<br/>Timestamp]
+    end
+    
+    subgraph "Performance Measurement"
+        TIMER[Frame Timer<br/>Delta Calculation]
+        BUDGET[Budget Monitor<br/>16.67ms Target]
+        PROFILER[Performance Profiler<br/>Component Breakdown]
+    end
+    
+    subgraph "Metrics Aggregation"
+        FPS_CALC[FPS Calculator<br/>Rolling Average]
+        STABILITY[Stability Score<br/>Variance Analysis]
+        BOTTLENECK[Bottleneck Detection<br/>Component Analysis]
+    end
+    
+    subgraph "Alert & Adaptation"
+        THRESHOLD[Performance Thresholds<br/>FPS < 55, Frame > 20ms]
+        ALERT_GEN[Alert Generation<br/>Performance Warnings]
+        AUTO_ADAPT[Auto-Adaptation<br/>Quality Reduction]
+    end
+    
+    FRAME_START --> TIMER
+    DECIPHER_PROC --> PROFILER
+    ENERGY_RENDER --> PROFILER
+    UI_UPDATE --> PROFILER
+    FRAME_END --> TIMER
+    
+    TIMER --> BUDGET
+    TIMER --> FPS_CALC
+    PROFILER --> BOTTLENECK
+    
+    FPS_CALC --> STABILITY
+    BUDGET --> THRESHOLD
+    STABILITY --> THRESHOLD
+    
+    THRESHOLD --> ALERT_GEN
+    THRESHOLD --> AUTO_ADAPT
+    
+    %% Styling
+    classDef processing fill:#1e3a8a,stroke:#60a5fa,stroke-width:2px,color:#fff
+    classDef measurement fill:#059669,stroke:#10b981,stroke-width:2px,color:#fff
+    classDef aggregation fill:#7c3aed,stroke:#a855f7,stroke-width:2px,color:#fff
+    classDef adaptation fill:#7c2d12,stroke:#ea580c,stroke-width:2px,color:#fff
+    
+    class FRAME_START,DECIPHER_PROC,ENERGY_RENDER,UI_UPDATE,FRAME_END processing
+    class TIMER,BUDGET,PROFILER measurement
+    class FPS_CALC,STABILITY,BOTTLENECK aggregation
+    class THRESHOLD,ALERT_GEN,AUTO_ADAPT adaptation

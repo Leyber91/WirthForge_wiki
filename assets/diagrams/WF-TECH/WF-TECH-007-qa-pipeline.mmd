@@ -1,0 +1,57 @@
+graph TD
+    A[Code Commit] --> B[Pre-commit Hooks]
+    B --> C{Lint & Format Check}
+    C -->|Pass| D[Unit Tests]
+    C -->|Fail| Z[Block Commit]
+    
+    D --> E{Unit Test Results}
+    E -->|Pass| F[Integration Tests]
+    E -->|Fail| Y[Fail Fast]
+    
+    F --> G{Integration Results}
+    G -->|Pass| H[Schema Regression]
+    G -->|Fail| Y
+    
+    H --> I{Schema Validation}
+    I -->|Pass| J[Performance Tests]
+    I -->|Fail| Y
+    
+    J --> K{Frame Budget Check}
+    K -->|Pass| L[Visual Truth Tests]
+    K -->|Fail| Y
+    
+    L --> M{Visual Validation}
+    M -->|Pass| N[E2E Journey Tests]
+    M -->|Fail| Y
+    
+    N --> O{Journey Results}
+    O -->|Pass| P[Golden Run Validation]
+    O -->|Fail| Y
+    
+    P --> Q{Regression Check}
+    Q -->|Pass| R[Accessibility Tests]
+    Q -->|Fail| Y
+    
+    R --> S{A11Y Compliance}
+    S -->|Pass| T[Deploy to Staging]
+    S -->|Fail| Y
+    
+    T --> U[Smoke Tests]
+    U --> V{Staging Health}
+    V -->|Pass| W[Production Deploy]
+    V -->|Fail| X[Rollback]
+    
+    W --> AA[Production Monitoring]
+    AA --> BB[Performance Metrics]
+    BB --> CC[Quality Gates]
+    
+    Y[Test Failure] --> DD[Generate Report]
+    DD --> EE[Notify Team]
+    EE --> FF[Block Pipeline]
+    
+    Z[Commit Blocked] --> GG[Fix Issues]
+    GG --> A
+    
+    X[Rollback] --> HH[Restore Previous]
+    HH --> II[Investigate]
+    II --> A

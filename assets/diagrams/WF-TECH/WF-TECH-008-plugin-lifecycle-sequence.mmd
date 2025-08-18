@@ -1,0 +1,67 @@
+sequenceDiagram
+    participant DEV as Plugin Developer
+    participant CLI as Plugin CLI
+    participant MGR as Plugin Manager
+    participant REG as Registry
+    participant SAND as Sandbox
+    participant CORE as WIRTHFORGE Core
+    
+    Note over DEV,CORE: Plugin Development & Installation
+    
+    DEV->>CLI: wirthforge plugin create my-plugin
+    CLI->>MGR: Initialize plugin project
+    MGR->>REG: Register development plugin
+    REG-->>CLI: Project template created
+    
+    Note over DEV,CORE: Plugin Development
+    DEV->>DEV: Develop plugin code
+    DEV->>CLI: wirthforge plugin validate
+    CLI->>MGR: Validate plugin package
+    MGR->>MGR: Check manifest, dependencies
+    MGR-->>CLI: Validation results
+    
+    Note over DEV,CORE: Plugin Installation
+    DEV->>CLI: wirthforge plugin install ./my-plugin
+    CLI->>MGR: Install plugin request
+    MGR->>REG: Check compatibility
+    REG-->>MGR: Compatibility confirmed
+    
+    MGR->>SAND: Create sandbox environment
+    SAND->>SAND: Initialize security context
+    SAND-->>MGR: Sandbox ready
+    
+    MGR->>MGR: Load plugin into sandbox
+    MGR->>REG: Register active plugin
+    MGR-->>CLI: Installation complete
+    
+    Note over DEV,CORE: Plugin Activation & Runtime
+    CORE->>MGR: Request plugin capability
+    MGR->>REG: Lookup plugin
+    REG-->>MGR: Plugin metadata
+    
+    MGR->>SAND: Execute plugin method
+    SAND->>SAND: Validate permissions
+    SAND->>SAND: Execute in isolated context
+    SAND-->>MGR: Execution result
+    MGR-->>CORE: Capability response
+    
+    Note over DEV,CORE: Plugin Monitoring
+    loop Health Monitoring
+        MGR->>SAND: Check plugin health
+        SAND-->>MGR: Health status
+        alt Plugin unhealthy
+            MGR->>SAND: Terminate plugin
+            MGR->>REG: Mark plugin inactive
+        end
+    end
+    
+    Note over DEV,CORE: Plugin Uninstallation
+    DEV->>CLI: wirthforge plugin uninstall my-plugin
+    CLI->>MGR: Uninstall request
+    MGR->>SAND: Deactivate plugin
+    SAND->>SAND: Clean up resources
+    SAND-->>MGR: Cleanup complete
+    
+    MGR->>REG: Unregister plugin
+    MGR->>MGR: Remove plugin files
+    MGR-->>CLI: Uninstallation complete

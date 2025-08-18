@@ -1,0 +1,56 @@
+graph TD
+    subgraph "Metrics Sources"
+        FRAME[Frame Rate<br/>Current FPS]
+        LATENCY[Latency<br/>P95 Response Time]
+        ENERGY[Energy Fidelity<br/>Visual-Compute Ratio]
+        ERRORS[Error Count<br/>System Failures]
+        RESOURCES[Resource Usage<br/>CPU/Memory]
+    end
+    
+    subgraph "Alert Engine"
+        THRESHOLDS[Threshold Config<br/>YAML/JSON Rules]
+        EVALUATOR[Condition Evaluator<br/>Real-time Checking]
+        STATE[Alert State Manager<br/>Active/Resolved]
+    end
+    
+    subgraph "Alert Actions"
+        LOG[Alert Logging<br/>Database Record]
+        NOTIFY[UI Notification<br/>Real-time Banner]
+        ADAPT[Auto-Adaptation<br/>System Response]
+        EXPORT[Alert Export<br/>Troubleshooting]
+    end
+    
+    subgraph "Feedback Loops"
+        ORCHESTRATOR_ADAPT[Orchestrator<br/>Performance Tuning]
+        UI_WARN[UI Warning<br/>User Notification]
+        SYSTEM_ADJUST[System Adjustment<br/>Resource Management]
+    end
+    
+    FRAME --> EVALUATOR
+    LATENCY --> EVALUATOR
+    ENERGY --> EVALUATOR
+    ERRORS --> EVALUATOR
+    RESOURCES --> EVALUATOR
+    
+    THRESHOLDS --> EVALUATOR
+    EVALUATOR --> STATE
+    
+    STATE --> LOG
+    STATE --> NOTIFY
+    STATE --> ADAPT
+    STATE --> EXPORT
+    
+    ADAPT --> ORCHESTRATOR_ADAPT
+    NOTIFY --> UI_WARN
+    ADAPT --> SYSTEM_ADJUST
+    
+    %% Styling
+    classDef metrics fill:#1e3a8a,stroke:#60a5fa,stroke-width:2px,color:#fff
+    classDef engine fill:#7c2d12,stroke:#ea580c,stroke-width:2px,color:#fff
+    classDef actions fill:#059669,stroke:#10b981,stroke-width:2px,color:#fff
+    classDef feedback fill:#7c3aed,stroke:#a855f7,stroke-width:2px,color:#fff
+    
+    class FRAME,LATENCY,ENERGY,ERRORS,RESOURCES metrics
+    class THRESHOLDS,EVALUATOR,STATE engine
+    class LOG,NOTIFY,ADAPT,EXPORT actions
+    class ORCHESTRATOR_ADAPT,UI_WARN,SYSTEM_ADJUST feedback
