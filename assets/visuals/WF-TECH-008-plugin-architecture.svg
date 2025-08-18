@@ -1,0 +1,364 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 1300 900" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="pluginCore" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#9966ff;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#b999ff;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="sandboxGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#ff6b6b;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ff8e8e;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="apiGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#6bcf7f;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#96e6a1;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="marketplaceGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#ffd93d;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ffe66d;stop-opacity:1" />
+    </linearGradient>
+    <marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#ffffff" />
+    </marker>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge> 
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1300" height="900" fill="#0a0a0a"/>
+  
+  <!-- Title -->
+  <text x="650" y="30" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="22" font-weight="bold">
+    WF-TECH-008: Plugin & Module Architecture
+  </text>
+  
+  <!-- Central Plugin Framework -->
+  <circle cx="650" cy="200" r="90" fill="url(#pluginCore)" stroke="#ffffff" stroke-width="4" filter="url(#glow)"/>
+  <text x="650" y="185" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="18" font-weight="bold">
+    Plugin
+  </text>
+  <text x="650" y="205" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="18" font-weight="bold">
+    Framework
+  </text>
+  <text x="650" y="225" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="12">
+    Extensible Architecture
+  </text>
+  
+  <!-- Security Sandbox -->
+  <rect x="50" y="80" width="320" height="200" fill="url(#sandboxGrad)" rx="15"/>
+  <text x="210" y="115" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="18" font-weight="bold">
+    Security Sandbox
+  </text>
+  <text x="210" y="135" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="14">
+    Isolation & Containment
+  </text>
+  
+  <!-- Sandbox Details -->
+  <rect x="70" y="150" width="280" height="120" fill="#1a1a1a" rx="8"/>
+  <text x="210" y="170" text-anchor="middle" fill="#ff6b6b" font-family="Arial, sans-serif" font-size="13" font-weight="bold">
+    Isolation Mechanisms
+  </text>
+  <text x="80" y="185" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Process isolation with dedicated memory space
+  </text>
+  <text x="80" y="200" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Filesystem access restrictions (chroot jail)
+  </text>
+  <text x="80" y="215" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Network traffic filtering and monitoring
+  </text>
+  <text x="80" y="230" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Resource limits (CPU, memory, disk I/O)
+  </text>
+  <text x="80" y="245" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • API call validation and rate limiting
+  </text>
+  <text x="80" y="260" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Automatic cleanup on plugin termination
+  </text>
+  
+  <!-- Plugin API Bridge -->
+  <rect x="930" y="80" width="320" height="200" fill="url(#apiGrad)" rx="15"/>
+  <text x="1090" y="115" text-anchor="middle" fill="#000000" font-family="Arial, sans-serif" font-size="18" font-weight="bold">
+    Plugin API Bridge
+  </text>
+  <text x="1090" y="135" text-anchor="middle" fill="#000000" font-family="Arial, sans-serif" font-size="14">
+    Controlled Interface
+  </text>
+  
+  <!-- API Details -->
+  <rect x="950" y="150" width="280" height="120" fill="#1a1a1a" rx="8"/>
+  <text x="1090" y="170" text-anchor="middle" fill="#6bcf7f" font-family="Arial, sans-serif" font-size="13" font-weight="bold">
+    API Capabilities
+  </text>
+  <text x="960" y="185" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Energy event subscription and emission
+  </text>
+  <text x="960" y="200" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • User interaction hooks (pre/post processing)
+  </text>
+  <text x="960" y="215" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Model pipeline integration points
+  </text>
+  <text x="960" y="230" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Configuration and state management
+  </text>
+  <text x="960" y="245" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • UI component registration
+  </text>
+  <text x="960" y="260" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Data export and backup hooks
+  </text>
+  
+  <!-- Plugin Development SDKs -->
+  <rect x="80" y="320" width="280" height="200" fill="#2a2a2a" rx="15" stroke="#4d96ff" stroke-width="3"/>
+  <text x="220" y="355" text-anchor="middle" fill="#4d96ff" font-family="Arial, sans-serif" font-size="18" font-weight="bold">
+    Development SDKs
+  </text>
+  <text x="220" y="375" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="14">
+    Multi-Language Support
+  </text>
+  
+  <!-- SDK Details -->
+  <rect x="100" y="390" width="240" height="120" fill="#1a1a1a" rx="8"/>
+  <text x="220" y="410" text-anchor="middle" fill="#4d96ff" font-family="Arial, sans-serif" font-size="13" font-weight="bold">
+    SDK Components
+  </text>
+  <text x="110" y="425" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Python SDK: Native integration, type hints
+  </text>
+  <text x="110" y="440" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • TypeScript SDK: Browser/Node.js support
+  </text>
+  <text x="110" y="455" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • CLI tools: Plugin scaffolding and packaging
+  </text>
+  <text x="110" y="470" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Testing harness: Unit and integration tests
+  </text>
+  <text x="110" y="485" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Documentation generator: API docs
+  </text>
+  <text x="110" y="500" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Code signing tools: Security verification
+  </text>
+  
+  <!-- Plugin Marketplace -->
+  <rect x="940" y="320" width="280" height="200" fill="url(#marketplaceGrad)" rx="15"/>
+  <text x="1080" y="355" text-anchor="middle" fill="#000000" font-family="Arial, sans-serif" font-size="18" font-weight="bold">
+    Plugin Marketplace
+  </text>
+  <text x="1080" y="375" text-anchor="middle" fill="#000000" font-family="Arial, sans-serif" font-size="14">
+    Distribution & Discovery
+  </text>
+  
+  <!-- Marketplace Details -->
+  <rect x="960" y="390" width="240" height="120" fill="#1a1a1a" rx="8"/>
+  <text x="1080" y="410" text-anchor="middle" fill="#ffd93d" font-family="Arial, sans-serif" font-size="13" font-weight="bold">
+    Marketplace Features
+  </text>
+  <text x="970" y="425" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Local-first plugin repository
+  </text>
+  <text x="970" y="440" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Cryptographic package signing
+  </text>
+  <text x="970" y="455" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Version management and updates
+  </text>
+  <text x="970" y="470" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Dependency resolution
+  </text>
+  <text x="970" y="485" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Rating and review system
+  </text>
+  <text x="970" y="500" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Installation and removal tools
+  </text>
+  
+  <!-- Plugin Architecture Core -->
+  <rect x="400" y="320" width="300" height="200" fill="#2a2a2a" rx="15" stroke="#9966ff" stroke-width="3"/>
+  <text x="550" y="355" text-anchor="middle" fill="#9966ff" font-family="Arial, sans-serif" font-size="18" font-weight="bold">
+    Architecture Core
+  </text>
+  <text x="550" y="375" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="14">
+    Plugin Lifecycle Management
+  </text>
+  
+  <!-- Architecture Details -->
+  <rect x="420" y="390" width="260" height="120" fill="#1a1a1a" rx="8"/>
+  <text x="550" y="410" text-anchor="middle" fill="#9966ff" font-family="Arial, sans-serif" font-size="13" font-weight="bold">
+    Core Services
+  </text>
+  <text x="430" y="425" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Plugin discovery and loading
+  </text>
+  <text x="430" y="440" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Lifecycle management (init/start/stop/destroy)
+  </text>
+  <text x="430" y="455" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Dependency injection and resolution
+  </text>
+  <text x="430" y="470" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Event routing and message passing
+  </text>
+  <text x="430" y="485" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Resource allocation and monitoring
+  </text>
+  <text x="430" y="500" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Hot-swapping and runtime updates
+  </text>
+  
+  <!-- Plugin Types & Examples -->
+  <rect x="50" y="560" width="1200" height="180" fill="#1a1a1a" rx="12" stroke="#333333" stroke-width="2"/>
+  <text x="650" y="585" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="18" font-weight="bold">
+    Plugin Types & Use Cases
+  </text>
+  
+  <!-- Plugin Categories -->
+  <rect x="80" y="600" width="220" height="130" fill="#2a2a2a" rx="8"/>
+  <text x="190" y="620" text-anchor="middle" fill="#6bcf7f" font-family="Arial, sans-serif" font-size="14" font-weight="bold">
+    Energy Plugins
+  </text>
+  <text x="90" y="635" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">
+    • Custom energy calculators
+  </text>
+  <text x="90" y="650" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">
+    • Pattern detection algorithms
+  </text>
+  <text x="90" y="665" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">
+    • Visualization enhancers
+  </text>
+  <text x="90" y="680" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">
+    • Performance optimizers
+  </text>
+  <text x="90" y="695" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">
+    • Energy field modifiers
+  </text>
+  <text x="90" y="710" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">
+    • Resonance analyzers
+  </text>
+  
+  <rect x="320" y="600" width="220" height="130" fill="#2a2a2a" rx="8"/>
+  <text x="430" y="620" text-anchor="middle" fill="#ffd93d" font-family="Arial, sans-serif" font-size="14" font-weight="bold">
+    Model Plugins
+  </text>
+  <text x="330" y="635" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">
+    • Custom model adapters
+  </text>
+  <text x="330" y="650" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">
+    • Prompt enhancers
+  </text>
+  <text x="330" y="665" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">
+    • Response processors
+  </text>
+  <text x="330" y="680" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">
+    • Council coordinators
+  </text>
+  <text x="330" y="695" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">
+    • Multi-modal integrations
+  </text>
+  <text x="330" y="710" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">
+    • Specialized reasoning
+  </text>
+  
+  <rect x="560" y="600" width="220" height="130" fill="#2a2a2a" rx="8"/>
+  <text x="670" y="620" text-anchor="middle" fill="#4d96ff" font-family="Arial, sans-serif" font-size="14" font-weight="bold">
+    UI Plugins
+  </text>
+  <text x="570" y="635" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">
+    • Custom visualizations
+  </text>
+  <text x="570" y="650" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">
+    • Theme systems
+  </text>
+  <text x="570" y="665" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">
+    • Interaction modes
+  </text>
+  <text x="570" y="680" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">
+    • Accessibility tools
+  </text>
+  <text x="570" y="695" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">
+    • Dashboard widgets
+  </text>
+  <text x="570" y="710" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">
+    • Export utilities
+  </text>
+  
+  <rect x="800" y="600" width="220" height="130" fill="#2a2a2a" rx="8"/>
+  <text x="910" y="620" text-anchor="middle" fill="#ff9f40" font-family="Arial, sans-serif" font-size="14" font-weight="bold">
+    Utility Plugins
+  </text>
+  <text x="810" y="635" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">
+    • Data export/import
+  </text>
+  <text x="810" y="650" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">
+    • Backup and sync
+  </text>
+  <text x="810" y="665" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">
+    • Integration bridges
+  </text>
+  <text x="810" y="680" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">
+    • Workflow automation
+  </text>
+  <text x="810" y="695" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">
+    • Performance monitoring
+  </text>
+  <text x="810" y="710" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">
+    • Debug and profiling
+  </text>
+  
+  <rect x="1040" y="600" width="180" height="130" fill="#2a2a2a" rx="8"/>
+  <text x="1130" y="620" text-anchor="middle" fill="#ff6b6b" font-family="Arial, sans-serif" font-size="14" font-weight="bold">
+    Security
+  </text>
+  <text x="1050" y="635" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">
+    • Authentication
+  </text>
+  <text x="1050" y="650" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">
+    • Encryption
+  </text>
+  <text x="1050" y="665" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">
+    • Access control
+  </text>
+  <text x="1050" y="680" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">
+    • Audit logging
+  </text>
+  <text x="1050" y="695" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">
+    • Threat detection
+  </text>
+  <text x="1050" y="710" fill="#ffffff" font-family="Arial, sans-serif" font-size="10">
+    • Compliance
+  </text>
+  
+  <!-- Data Flow Arrows -->
+  <line x1="370" y1="180" x2="560" y2="180" stroke="#ff6b6b" stroke-width="3" marker-end="url(#arrow)"/>
+  <line x1="740" y1="180" x2="930" y2="180" stroke="#6bcf7f" stroke-width="3" marker-end="url(#arrow)"/>
+  
+  <line x1="360" y1="420" x2="395" y2="420" stroke="#4d96ff" stroke-width="3" marker-end="url(#arrow)"/>
+  <line x1="705" y1="420" x2="935" y2="420" stroke="#ffd93d" stroke-width="3" marker-end="url(#arrow)"/>
+  
+  <line x1="220" y1="285" x2="220" y2="315" stroke="#4d96ff" stroke-width="3" marker-end="url(#arrow)"/>
+  <line x1="550" y1="285" x2="550" y2="315" stroke="#9966ff" stroke-width="3" marker-end="url(#arrow)"/>
+  <line x1="1080" y1="285" x2="1080" y2="315" stroke="#ffd93d" stroke-width="3" marker-end="url(#arrow)"/>
+  
+  <!-- Performance & Security -->
+  <rect x="50" y="780" width="1200" height="80" fill="#1a1a1a" rx="8" stroke="#333333" stroke-width="1"/>
+  <text x="70" y="805" fill="#ffffff" font-family="Arial, sans-serif" font-size="16" font-weight="bold">
+    Plugin Performance & Security Guarantees
+  </text>
+  <text x="70" y="825" fill="#ffffff" font-family="Arial, sans-serif" font-size="12">
+    • Performance: Plugin overhead &lt;5% system performance, isolated resource limits, automatic cleanup on failure
+  </text>
+  <text x="70" y="840" fill="#ffffff" font-family="Arial, sans-serif" font-size="12">
+    • Security: Process isolation, cryptographic signing, network restrictions, API rate limiting, sandbox containment
+  </text>
+  <text x="70" y="855" fill="#ffffff" font-family="Arial, sans-serif" font-size="12">
+    • Privacy: Local-only operation, no telemetry collection, user-controlled data access, GDPR compliance
+  </text>
+</svg>

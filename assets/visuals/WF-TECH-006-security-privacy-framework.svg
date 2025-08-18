@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 1300 900" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="securityCore" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#ff6b6b;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ff8e8e;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="privacyLayer" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#4d96ff;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#74b3ff;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="authGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#6bcf7f;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#96e6a1;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="sandboxGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#ffd93d;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ffe66d;stop-opacity:1" />
+    </linearGradient>
+    <marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#ffffff" />
+    </marker>
+    <filter id="shield">
+      <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+      <feMerge> 
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1300" height="900" fill="#0a0a0a"/>
+  
+  <!-- Title -->
+  <text x="650" y="30" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="22" font-weight="bold">
+    WF-TECH-006: Security & Privacy Framework
+  </text>
+  
+  <!-- Central Security Core -->
+  <circle cx="650" cy="200" r="100" fill="url(#securityCore)" stroke="#ffffff" stroke-width="4" filter="url(#shield)"/>
+  <text x="650" y="185" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="18" font-weight="bold">
+    Security
+  </text>
+  <text x="650" y="205" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="18" font-weight="bold">
+    Framework
+  </text>
+  <text x="650" y="225" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="12">
+    Zero-Trust Architecture
+  </text>
+  
+  <!-- Authentication & Authorization -->
+  <rect x="50" y="80" width="300" height="200" fill="url(#authGrad)" rx="15"/>
+  <text x="200" y="115" text-anchor="middle" fill="#000000" font-family="Arial, sans-serif" font-size="18" font-weight="bold">
+    Authentication &
+  </text>
+  <text x="200" y="135" text-anchor="middle" fill="#000000" font-family="Arial, sans-serif" font-size="18" font-weight="bold">
+    Authorization
+  </text>
+  <text x="200" y="155" text-anchor="middle" fill="#000000" font-family="Arial, sans-serif" font-size="14">
+    Identity & Access Control
+  </text>
+  
+  <!-- Auth Details -->
+  <rect x="70" y="170" width="260" height="100" fill="#1a1a1a" rx="8"/>
+  <text x="200" y="190" text-anchor="middle" fill="#6bcf7f" font-family="Arial, sans-serif" font-size="13" font-weight="bold">
+    Security Mechanisms
+  </text>
+  <text x="80" y="205" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Local user profiles (no external auth)
+  </text>
+  <text x="80" y="220" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Session-based access control
+  </text>
+  <text x="80" y="235" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Role-based permissions (RBAC)
+  </text>
+  <text x="80" y="250" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Hardware-tier enforcement
+  </text>
+  <text x="80" y="265" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • UX level capability gating
+  </text>
+  
+  <!-- Privacy Protection -->
+  <rect x="950" y="80" width="300" height="200" fill="url(#privacyLayer)" rx="15"/>
+  <text x="1100" y="115" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="18" font-weight="bold">
+    Privacy Protection
+  </text>
+  <text x="1100" y="135" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="14">
+    Data Sovereignty
+  </text>
+  
+  <!-- Privacy Details -->
+  <rect x="970" y="150" width="260" height="120" fill="#1a1a1a" rx="8"/>
+  <text x="1100" y="170" text-anchor="middle" fill="#4d96ff" font-family="Arial, sans-serif" font-size="13" font-weight="bold">
+    Privacy Guarantees
+  </text>
+  <text x="980" y="185" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Local-only processing (no cloud)
+  </text>
+  <text x="980" y="200" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Zero telemetry by default
+  </text>
+  <text x="980" y="215" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Content-free event emission
+  </text>
+  <text x="980" y="230" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • User-controlled data retention
+  </text>
+  <text x="980" y="245" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • GDPR/CCPA compliance
+  </text>
+  <text x="980" y="260" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Cryptographic audit trails
+  </text>
+  
+  <!-- Sandbox Manager -->
+  <rect x="80" y="350" width="300" height="220" fill="url(#sandboxGrad)" rx="15"/>
+  <text x="230" y="385" text-anchor="middle" fill="#000000" font-family="Arial, sans-serif" font-size="18" font-weight="bold">
+    Sandbox Manager
+  </text>
+  <text x="230" y="405" text-anchor="middle" fill="#000000" font-family="Arial, sans-serif" font-size="14">
+    Isolation & Containment
+  </text>
+  
+  <!-- Sandbox Details -->
+  <rect x="100" y="420" width="260" height="140" fill="#1a1a1a" rx="8"/>
+  <text x="230" y="440" text-anchor="middle" fill="#ffd93d" font-family="Arial, sans-serif" font-size="13" font-weight="bold">
+    Isolation Mechanisms
+  </text>
+  <text x="110" y="455" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Process isolation (no shared memory)
+  </text>
+  <text x="110" y="470" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Filesystem sandboxing
+  </text>
+  <text x="110" y="485" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Network access restrictions
+  </text>
+  <text x="110" y="500" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Resource limit enforcement
+  </text>
+  <text x="110" y="515" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Model execution containment
+  </text>
+  <text x="110" y="530" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Plugin security boundaries
+  </text>
+  <text x="110" y="545" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Clean-up on termination
+  </text>
+  
+  <!-- Network Security -->
+  <rect x="920" y="350" width="300" height="220" fill="#2a2a2a" rx="15" stroke="#ff9f40" stroke-width="3"/>
+  <text x="1070" y="385" text-anchor="middle" fill="#ff9f40" font-family="Arial, sans-serif" font-size="18" font-weight="bold">
+    Network Security
+  </text>
+  <text x="1070" y="405" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="14">
+    Communication Protection
+  </text>
+  
+  <!-- Network Details -->
+  <rect x="940" y="420" width="260" height="140" fill="#1a1a1a" rx="8"/>
+  <text x="1070" y="440" text-anchor="middle" fill="#ff9f40" font-family="Arial, sans-serif" font-size="13" font-weight="bold">
+    Security Protocols
+  </text>
+  <text x="950" y="455" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • TLS 1.3 for all external connections
+  </text>
+  <text x="950" y="470" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • WebSocket Secure (WSS) transport
+  </text>
+  <text x="950" y="485" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Certificate pinning
+  </text>
+  <text x="950" y="500" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Local network discovery protection
+  </text>
+  <text x="950" y="515" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • DNS-over-HTTPS (DoH) support
+  </text>
+  <text x="950" y="530" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Connection rate limiting
+  </text>
+  <text x="950" y="545" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Intrusion detection system
+  </text>
+  
+  <!-- Data Encryption -->
+  <rect x="450" y="350" width="300" height="220" fill="#2a2a2a" rx="15" stroke="#9966ff" stroke-width="3"/>
+  <text x="600" y="385" text-anchor="middle" fill="#9966ff" font-family="Arial, sans-serif" font-size="18" font-weight="bold">
+    Data Encryption
+  </text>
+  <text x="600" y="405" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="14">
+    At Rest & In Transit
+  </text>
+  
+  <!-- Encryption Details -->
+  <rect x="470" y="420" width="260" height="140" fill="#1a1a1a" rx="8"/>
+  <text x="600" y="440" text-anchor="middle" fill="#9966ff" font-family="Arial, sans-serif" font-size="13" font-weight="bold">
+    Encryption Standards
+  </text>
+  <text x="480" y="455" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • AES-256-GCM for data at rest
+  </text>
+  <text x="480" y="470" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • ChaCha20-Poly1305 for transport
+  </text>
+  <text x="480" y="485" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Ed25519 signatures for integrity
+  </text>
+  <text x="480" y="500" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • PBKDF2 key derivation
+  </text>
+  <text x="480" y="515" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Hardware security module (HSM)
+  </text>
+  <text x="480" y="530" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Zero-knowledge architecture
+  </text>
+  <text x="480" y="545" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Forward secrecy guarantees
+  </text>
+  
+  <!-- Threat Model -->
+  <rect x="80" y="610" width="540" height="120" fill="#1a1a1a" rx="12" stroke="#ff6b6b" stroke-width="2"/>
+  <text x="350" y="635" text-anchor="middle" fill="#ff6b6b" font-family="Arial, sans-serif" font-size="16" font-weight="bold">
+    Threat Model & Attack Vectors
+  </text>
+  
+  <text x="90" y="655" fill="#ffffff" font-family="Arial, sans-serif" font-size="12" font-weight="bold">
+    Protected Against:
+  </text>
+  <text x="90" y="670" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Malicious plugins and untrusted code execution
+  </text>
+  <text x="90" y="685" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Data exfiltration and unauthorized access
+  </text>
+  <text x="90" y="700" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Model poisoning and adversarial inputs
+  </text>
+  <text x="90" y="715" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Network-based attacks and MITM attempts
+  </text>
+  
+  <text x="350" y="655" fill="#ffffff" font-family="Arial, sans-serif" font-size="12" font-weight="bold">
+    Security Boundaries:
+  </text>
+  <text x="350" y="670" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Process isolation between components
+  </text>
+  <text x="350" y="685" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Memory protection and buffer overflow prevention
+  </text>
+  <text x="350" y="700" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Filesystem access control and chroot jails
+  </text>
+  <text x="350" y="715" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Network traffic filtering and inspection
+  </text>
+  
+  <!-- Compliance & Audit -->
+  <rect x="680" y="610" width="540" height="120" fill="#1a1a1a" rx="12" stroke="#4d96ff" stroke-width="2"/>
+  <text x="950" y="635" text-anchor="middle" fill="#4d96ff" font-family="Arial, sans-serif" font-size="16" font-weight="bold">
+    Compliance & Audit Framework
+  </text>
+  
+  <text x="690" y="655" fill="#ffffff" font-family="Arial, sans-serif" font-size="12" font-weight="bold">
+    Standards Compliance:
+  </text>
+  <text x="690" y="670" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • GDPR (General Data Protection Regulation)
+  </text>
+  <text x="690" y="685" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • CCPA (California Consumer Privacy Act)
+  </text>
+  <text x="690" y="700" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • SOC 2 Type II security controls
+  </text>
+  <text x="690" y="715" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • ISO 27001 information security management
+  </text>
+  
+  <text x="950" y="655" fill="#ffffff" font-family="Arial, sans-serif" font-size="12" font-weight="bold">
+    Audit Capabilities:
+  </text>
+  <text x="950" y="670" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Immutable audit trail with cryptographic integrity
+  </text>
+  <text x="950" y="685" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Real-time security event monitoring
+  </text>
+  <text x="950" y="700" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Automated compliance reporting
+  </text>
+  <text x="950" y="715" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Incident response and forensic support
+  </text>
+  
+  <!-- Security Flow Arrows -->
+  <line x1="350" y1="180" x2="550" y2="180" stroke="#6bcf7f" stroke-width="3" marker-end="url(#arrow)"/>
+  <line x1="750" y1="180" x2="950" y2="180" stroke="#4d96ff" stroke-width="3" marker-end="url(#arrow)"/>
+  
+  <line x1="380" y1="450" x2="445" y2="450" stroke="#ffd93d" stroke-width="3" marker-end="url(#arrow)"/>
+  <line x1="755" y1="450" x2="915" y2="450" stroke="#9966ff" stroke-width="3" marker-end="url(#arrow)"/>
+  
+  <line x1="230" y1="300" x2="230" y2="345" stroke="#6bcf7f" stroke-width="3" marker-end="url(#arrow)"/>
+  <line x1="600" y1="300" x2="600" y2="345" stroke="#9966ff" stroke-width="3" marker-end="url(#arrow)"/>
+  <line x1="1070" y1="300" x2="1070" y2="345" stroke="#ff9f40" stroke-width="3" marker-end="url(#arrow)"/>
+  
+  <!-- Performance Impact -->
+  <rect x="80" y="770" width="1140" height="60" fill="#1a1a1a" rx="8" stroke="#333333" stroke-width="1"/>
+  <text x="100" y="795" fill="#ffffff" font-family="Arial, sans-serif" font-size="14" font-weight="bold">
+    Security Performance Impact:
+  </text>
+  <text x="100" y="815" fill="#ffffff" font-family="Arial, sans-serif" font-size="12">
+    • Encryption/Decryption: &lt;1ms overhead per operation • Authentication: &lt;100μs per request • Sandbox Creation: &lt;10ms per process • Network Security: &lt;5ms additional latency • Total Security Overhead: &lt;2% of system performance
+  </text>
+  
+  <!-- Legend -->
+  <rect x="450" y="760" width="400" height="40" fill="#2a2a2a" rx="5" stroke="#666666" stroke-width="1"/>
+  <text x="650" y="780" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="12" font-weight="bold">
+    🛡️ Zero-Trust • 🔒 Privacy-First • 🏠 Local-Only • ⚡ Performance-Aware
+  </text>
+</svg>

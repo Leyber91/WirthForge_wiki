@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 1200 900" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="decipherCore" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#6bcf7f;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#96e6a1;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="frameLoop" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#ff6b6b;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ff8e8e;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="energyCalc" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#ffd93d;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ffe66d;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="patternDetect" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#9966ff;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#b999ff;stop-opacity:1" />
+    </linearGradient>
+    <marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#ffffff" />
+    </marker>
+    <filter id="pulse">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge> 
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1200" height="900" fill="#0a0a0a"/>
+  
+  <!-- Title -->
+  <text x="600" y="30" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="22" font-weight="bold">
+    WF-TECH-005: DECIPHER Implementation Architecture
+  </text>
+  
+  <!-- Central DECIPHER Core -->
+  <circle cx="600" cy="200" r="90" fill="url(#decipherCore)" stroke="#ffffff" stroke-width="4" filter="url(#pulse)"/>
+  <text x="600" y="185" text-anchor="middle" fill="#000000" font-family="Arial, sans-serif" font-size="18" font-weight="bold">
+    DECIPHER
+  </text>
+  <text x="600" y="205" text-anchor="middle" fill="#000000" font-family="Arial, sans-serif" font-size="18" font-weight="bold">
+    Core Engine
+  </text>
+  <text x="600" y="225" text-anchor="middle" fill="#000000" font-family="Arial, sans-serif" font-size="12">
+    Layer 3 Compiler
+  </text>
+  <text x="600" y="240" text-anchor="middle" fill="#000000" font-family="Arial, sans-serif" font-size="12">
+    60Hz Real-time
+  </text>
+  
+  <!-- 60Hz Frame Loop -->
+  <rect x="80" y="320" width="280" height="180" fill="url(#frameLoop)" rx="15"/>
+  <text x="220" y="350" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="18" font-weight="bold">
+    60Hz Frame Loop
+  </text>
+  <text x="220" y="370" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="14">
+    Strict Timing Controller
+  </text>
+  
+  <!-- Frame Loop Details -->
+  <rect x="100" y="385" width="240" height="105" fill="#1a1a1a" rx="8"/>
+  <text x="220" y="405" text-anchor="middle" fill="#ff6b6b" font-family="Arial, sans-serif" font-size="13" font-weight="bold">
+    Frame Management
+  </text>
+  <text x="110" y="420" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • 16.67ms budget enforcement
+  </text>
+  <text x="110" y="435" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Priority task scheduling
+  </text>
+  <text x="110" y="450" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Adaptive performance control
+  </text>
+  <text x="110" y="465" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Overrun detection & recovery
+  </text>
+  <text x="110" y="480" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Quality scaling under load
+  </text>
+  
+  <!-- Energy Calculator -->
+  <rect x="840" y="320" width="280" height="180" fill="url(#energyCalc)" rx="15"/>
+  <text x="980" y="350" text-anchor="middle" fill="#000000" font-family="Arial, sans-serif" font-size="18" font-weight="bold">
+    Energy Calculator
+  </text>
+  <text x="980" y="370" text-anchor="middle" fill="#000000" font-family="Arial, sans-serif" font-size="14">
+    WF-FND-002 Formula
+  </text>
+  
+  <!-- Energy Calculator Details -->
+  <rect x="860" y="385" width="240" height="105" fill="#1a1a1a" rx="8"/>
+  <text x="980" y="405" text-anchor="middle" fill="#ffd93d" font-family="Arial, sans-serif" font-size="13" font-weight="bold">
+    Energy Processing
+  </text>
+  <text x="870" y="420" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Real-time token analysis
+  </text>
+  <text x="870" y="435" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Model-specific calculations
+  </text>
+  <text x="870" y="450" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Content complexity scoring
+  </text>
+  <text x="870" y="465" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Batch processing optimization
+  </text>
+  <text x="870" y="480" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • EMA smoothing & accumulation
+  </text>
+  
+  <!-- Token Queue System -->
+  <rect x="80" y="80" width="200" height="140" fill="#2a2a2a" rx="12" stroke="#4d96ff" stroke-width="2"/>
+  <text x="180" y="105" text-anchor="middle" fill="#4d96ff" font-family="Arial, sans-serif" font-size="16" font-weight="bold">
+    Token Queue
+  </text>
+  <text x="180" y="125" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="12">
+    Thread-Safe Buffering
+  </text>
+  
+  <text x="90" y="145" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Backpressure handling
+  </text>
+  <text x="90" y="160" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Priority-based queuing
+  </text>
+  <text x="90" y="175" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Bounded memory usage
+  </text>
+  <text x="90" y="190" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Graceful overflow
+  </text>
+  <text x="90" y="205" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Multi-stream coordination
+  </text>
+  
+  <!-- Event Emission -->
+  <rect x="920" y="80" width="200" height="140" fill="#2a2a2a" rx="12" stroke="#9966ff" stroke-width="2"/>
+  <text x="1020" y="105" text-anchor="middle" fill="#9966ff" font-family="Arial, sans-serif" font-size="16" font-weight="bold">
+    Event Emission
+  </text>
+  <text x="1020" y="125" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="12">
+    Layer 4 Transport
+  </text>
+  
+  <text x="930" y="145" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Real-time energy events
+  </text>
+  <text x="930" y="160" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Privacy-preserving schema
+  </text>
+  <text x="930" y="175" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • WebSocket streaming
+  </text>
+  <text x="930" y="190" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Structured JSON payload
+  </text>
+  <text x="930" y="205" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Audit trail integration
+  </text>
+  
+  <!-- Pattern Detection Engine -->
+  <rect x="460" y="540" width="280" height="200" fill="url(#patternDetect)" rx="15"/>
+  <text x="600" y="570" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="18" font-weight="bold">
+    Pattern Detection
+  </text>
+  <text x="600" y="590" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="14">
+    Advanced Analytics Engine
+  </text>
+  
+  <!-- Pattern Detection Details -->
+  <rect x="480" y="605" width="240" height="125" fill="#1a1a1a" rx="8"/>
+  <text x="600" y="625" text-anchor="middle" fill="#9966ff" font-family="Arial, sans-serif" font-size="13" font-weight="bold">
+    Detection Algorithms
+  </text>
+  <text x="490" y="640" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Interference Pattern Recognition
+  </text>
+  <text x="490" y="655" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Resonance Frequency Analysis
+  </text>
+  <text x="490" y="670" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Cross-correlation Algorithms
+  </text>
+  <text x="490" y="685" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Phase-locked Loop Detection
+  </text>
+  <text x="490" y="700" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • UX Level Gating (L1-L5)
+  </text>
+  <text x="490" y="715" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Early exit optimization
+  </text>
+  
+  <!-- State Management -->
+  <rect x="80" y="540" width="280" height="200" fill="#2a2a2a" rx="12" stroke="#6bcf7f" stroke-width="2"/>
+  <text x="220" y="570" text-anchor="middle" fill="#6bcf7f" font-family="Arial, sans-serif" font-size="18" font-weight="bold">
+    State Management
+  </text>
+  <text x="220" y="590" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="14">
+    Memory & Persistence
+  </text>
+  
+  <!-- State Details -->
+  <rect x="100" y="605" width="240" height="125" fill="#1a1a1a" rx="8"/>
+  <text x="220" y="625" text-anchor="middle" fill="#6bcf7f" font-family="Arial, sans-serif" font-size="13" font-weight="bold">
+    State Components
+  </text>
+  <text x="110" y="640" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Energy Accumulator (session)
+  </text>
+  <text x="110" y="655" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • EMA Filter (smoothing)
+  </text>
+  <text x="110" y="670" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Frame State (60Hz ephemeral)
+  </text>
+  <text x="110" y="685" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Performance Metrics
+  </text>
+  <text x="110" y="700" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Pattern History Buffer
+  </text>
+  <text x="110" y="715" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Configuration State (UX level)
+  </text>
+  
+  <!-- Performance Monitoring -->
+  <rect x="840" y="540" width="280" height="200" fill="#2a2a2a" rx="12" stroke="#ff9f40" stroke-width="2"/>
+  <text x="980" y="570" text-anchor="middle" fill="#ff9f40" font-family="Arial, sans-serif" font-size="18" font-weight="bold">
+    Performance Monitor
+  </text>
+  <text x="980" y="590" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="14">
+    Real-time Telemetry
+  </text>
+  
+  <!-- Performance Details -->
+  <rect x="860" y="605" width="240" height="125" fill="#1a1a1a" rx="8"/>
+  <text x="980" y="625" text-anchor="middle" fill="#ff9f40" font-family="Arial, sans-serif" font-size="13" font-weight="bold">
+    Monitoring Metrics
+  </text>
+  <text x="870" y="640" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Frame timing compliance
+  </text>
+  <text x="870" y="655" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Memory usage tracking
+  </text>
+  <text x="870" y="670" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Energy calculation latency
+  </text>
+  <text x="870" y="685" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Queue depth monitoring
+  </text>
+  <text x="870" y="700" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Error rate tracking
+  </text>
+  <text x="870" y="715" fill="#ffffff" font-family="Arial, sans-serif" font-size="11">
+    • Adaptive controller feedback
+  </text>
+  
+  <!-- Data Flow Arrows -->
+  <!-- Token input to core -->
+  <line x1="285" y1="150" x2="510" y2="180" stroke="#4d96ff" stroke-width="3" marker-end="url(#arrow)"/>
+  
+  <!-- Core to frame loop -->
+  <line x1="530" y1="250" x2="330" y2="320" stroke="#ff6b6b" stroke-width="3" marker-end="url(#arrow)"/>
+  
+  <!-- Core to energy calc -->
+  <line x1="670" y1="250" x2="870" y2="320" stroke="#ffd93d" stroke-width="3" marker-end="url(#arrow)"/>
+  
+  <!-- Core to event emission -->
+  <line x1="690" y1="180" x2="915" y2="150" stroke="#9966ff" stroke-width="3" marker-end="url(#arrow)"/>
+  
+  <!-- Core to pattern detection -->
+  <line x1="600" y1="290" x2="600" y2="535" stroke="#9966ff" stroke-width="3" marker-end="url(#arrow)"/>
+  
+  <!-- Frame loop to state -->
+  <line x1="220" y1="505" x2="220" y2="535" stroke="#6bcf7f" stroke-width="3" marker-end="url(#arrow)"/>
+  
+  <!-- Energy calc to performance -->
+  <line x1="980" y1="505" x2="980" y2="535" stroke="#ff9f40" stroke-width="3" marker-end="url(#arrow)"/>
+  
+  <!-- Integration Points -->
+  <rect x="400" y="80" width="400" height="80" fill="#1a1a1a" rx="10" stroke="#333333" stroke-width="1"/>
+  <text x="600" y="105" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="16" font-weight="bold">
+    Integration Points
+  </text>
+  <text x="410" y="125" fill="#ffffff" font-family="Arial, sans-serif" font-size="12">
+    ↑ Layer 2: Token streams from Ollama models
+  </text>
+  <text x="410" y="140" fill="#ffffff" font-family="Arial, sans-serif" font-size="12">
+    ↓ Layer 4: Energy events via WebSocket transport
+  </text>
+  <text x="410" y="155" fill="#ffffff" font-family="Arial, sans-serif" font-size="12">
+    ↔ Storage: Event sourcing and state persistence
+  </text>
+  
+  <!-- Performance Constraints -->
+  <rect x="50" y="780" width="1100" height="100" fill="#1a1a1a" rx="8" stroke="#333333" stroke-width="1"/>
+  <text x="70" y="805" fill="#ffffff" font-family="Arial, sans-serif" font-size="16" font-weight="bold">
+    Performance Constraints & Guarantees
+  </text>
+  <text x="70" y="825" fill="#ffffff" font-family="Arial, sans-serif" font-size="12">
+    • 60 FPS Target: Maximum 16.67ms per frame processing cycle
+  </text>
+  <text x="70" y="840" fill="#ffffff" font-family="Arial, sans-serif" font-size="12">
+    • Local Processing: Zero external dependencies for core energy calculation
+  </text>
+  <text x="70" y="855" fill="#ffffff" font-family="Arial, sans-serif" font-size="12">
+    • Memory Bounded: Configurable limits with graceful degradation under pressure
+  </text>
+  <text x="70" y="870" fill="#ffffff" font-family="Arial, sans-serif" font-size="12">
+    • Privacy Preserving: Event emission contains no raw token content, only energy metadata
+  </text>
+</svg>
