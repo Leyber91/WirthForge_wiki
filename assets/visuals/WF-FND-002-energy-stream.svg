@@ -1,5 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <svg width="400" height="200" xmlns="http://www.w3.org/2000/svg">
   <defs>
+    <!-- Hidden paths for particle motion - MUST be defined first -->
+    <path id="streamPath" d="M20 100 Q100 80 200 100 T380 100"/>
+    <path id="streamPath2" d="M20 120 Q100 140 200 120 T380 120"/>
+    
     <!-- Energy stream gradient - flowing from left to right -->
     <linearGradient id="streamGradient" x1="0%" y1="0%" x2="100%" y2="0%">
       <stop offset="0%" style="stop-color:#60a5fa;stop-opacity:0.3" />
@@ -74,11 +79,6 @@
     <animate attributeName="opacity" values="0;0.8;0" dur="2.5s" repeatCount="indefinite"/>
   </circle>
   
-  <!-- Hidden paths for particle motion -->
-  <defs>
-    <path id="streamPath" d="M20 100 Q100 80 200 100 T380 100"/>
-    <path id="streamPath2" d="M20 120 Q100 140 200 120 T380 120"/>
-  </defs>
   
   <!-- Interference pattern where streams interact -->
   <ellipse cx="200" cy="110" rx="15" ry="8" 

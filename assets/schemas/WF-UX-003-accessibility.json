@@ -1,0 +1,250 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "WIRTHFORGE Energy Visualization Accessibility Configuration",
+  "description": "Schema defining accessibility features and configurations for energy visualization",
+  "type": "object",
+  "properties": {
+    "motionSensitivity": {
+      "type": "object",
+      "description": "Motion sensitivity and vestibular disorder accommodations",
+      "properties": {
+        "reducedMotion": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean", "default": false },
+            "respectSystemPreference": { "type": "boolean", "default": true },
+            "fallbackMode": { "type": "string", "enum": ["static", "minimal", "pulse"], "default": "pulse" },
+            "maxAnimationSpeed": { "type": "number", "minimum": 0.1, "maximum": 1.0, "default": 0.3 }
+          },
+          "required": ["enabled", "respectSystemPreference", "fallbackMode", "maxAnimationSpeed"]
+        },
+        "staticAlternatives": {
+          "type": "object",
+          "properties": {
+            "energyBar": {
+              "type": "object",
+              "properties": {
+                "enabled": { "type": "boolean", "default": true },
+                "updateRate": { "type": "number", "minimum": 0.5, "maximum": 2.0, "default": 1.0 },
+                "colorCoding": { "type": "boolean", "default": true }
+              },
+              "required": ["enabled", "updateRate", "colorCoding"]
+            },
+            "textualIndicators": {
+              "type": "object",
+              "properties": {
+                "energyLevel": { "type": "boolean", "default": true },
+                "modelStatus": { "type": "boolean", "default": true },
+                "performanceMetrics": { "type": "boolean", "default": false }
+              },
+              "required": ["energyLevel", "modelStatus", "performanceMetrics"]
+            }
+          },
+          "required": ["energyBar", "textualIndicators"]
+        }
+      },
+      "required": ["reducedMotion", "staticAlternatives"]
+    },
+    "visualImpairments": {
+      "type": "object",
+      "description": "Accommodations for visual impairments and color blindness",
+      "properties": {
+        "colorBlindness": {
+          "type": "object",
+          "properties": {
+            "protanopia": {
+              "type": "object",
+              "properties": {
+                "enabled": { "type": "boolean", "default": false },
+                "colorPalette": {
+                  "type": "array",
+                  "items": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
+                  "minItems": 4,
+                  "default": ["#0173B2", "#DE8F05", "#CC78BC", "#029E73"]
+                }
+              },
+              "required": ["enabled", "colorPalette"]
+            },
+            "deuteranopia": {
+              "type": "object",
+              "properties": {
+                "enabled": { "type": "boolean", "default": false },
+                "colorPalette": {
+                  "type": "array",
+                  "items": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
+                  "minItems": 4,
+                  "default": ["#0173B2", "#DE8F05", "#CC78BC", "#029E73"]
+                }
+              },
+              "required": ["enabled", "colorPalette"]
+            },
+            "tritanopia": {
+              "type": "object",
+              "properties": {
+                "enabled": { "type": "boolean", "default": false },
+                "colorPalette": {
+                  "type": "array",
+                  "items": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
+                  "minItems": 4,
+                  "default": ["#0173B2", "#DE8F05", "#CC78BC", "#029E73"]
+                }
+              },
+              "required": ["enabled", "colorPalette"]
+            }
+          },
+          "required": ["protanopia", "deuteranopia", "tritanopia"]
+        },
+        "highContrast": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean", "default": false },
+            "respectSystemPreference": { "type": "boolean", "default": true },
+            "contrastRatio": { "type": "number", "minimum": 4.5, "maximum": 21.0, "default": 7.0 },
+            "colorScheme": {
+              "type": "object",
+              "properties": {
+                "background": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$", "default": "#000000" },
+                "foreground": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$", "default": "#FFFFFF" },
+                "accent": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$", "default": "#FFFF00" },
+                "warning": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$", "default": "#FF0000" }
+              },
+              "required": ["background", "foreground", "accent", "warning"]
+            }
+          },
+          "required": ["enabled", "respectSystemPreference", "contrastRatio", "colorScheme"]
+        },
+        "lowVision": {
+          "type": "object",
+          "properties": {
+            "magnification": { "type": "number", "minimum": 1.0, "maximum": 5.0, "default": 1.0 },
+            "focusIndicators": { "type": "boolean", "default": true },
+            "largeTargets": { "type": "boolean", "default": false },
+            "simplifiedUI": { "type": "boolean", "default": false }
+          },
+          "required": ["magnification", "focusIndicators", "largeTargets", "simplifiedUI"]
+        }
+      },
+      "required": ["colorBlindness", "highContrast", "lowVision"]
+    },
+    "screenReader": {
+      "type": "object",
+      "description": "Screen reader and assistive technology support",
+      "properties": {
+        "ariaLiveRegions": {
+          "type": "object",
+          "properties": {
+            "energyUpdates": {
+              "type": "object",
+              "properties": {
+                "enabled": { "type": "boolean", "default": true },
+                "politeness": { "type": "string", "enum": ["off", "polite", "assertive"], "default": "polite" },
+                "updateThreshold": { "type": "number", "minimum": 0.1, "maximum": 0.5, "default": 0.2 }
+              },
+              "required": ["enabled", "politeness", "updateThreshold"]
+            },
+            "modelStatus": {
+              "type": "object",
+              "properties": {
+                "enabled": { "type": "boolean", "default": true },
+                "politeness": { "type": "string", "enum": ["off", "polite", "assertive"], "default": "assertive" },
+                "includeMetrics": { "type": "boolean", "default": false }
+              },
+              "required": ["enabled", "politeness", "includeMetrics"]
+            },
+            "performanceAlerts": {
+              "type": "object",
+              "properties": {
+                "enabled": { "type": "boolean", "default": true },
+                "politeness": { "type": "string", "enum": ["off", "polite", "assertive"], "default": "assertive" },
+                "throttleRate": { "type": "number", "minimum": 1.0, "maximum": 10.0, "default": 3.0 }
+              },
+              "required": ["enabled", "politeness", "throttleRate"]
+            }
+          },
+          "required": ["energyUpdates", "modelStatus", "performanceAlerts"]
+        },
+        "descriptions": {
+          "type": "object",
+          "properties": {
+            "energyStates": {
+              "type": "object",
+              "properties": {
+                "dormant": { "type": "string", "default": "AI energy dormant, minimal activity" },
+                "awakening": { "type": "string", "default": "AI energy awakening, building power" },
+                "active": { "type": "string", "default": "AI energy active, processing at full capacity" },
+                "resonance": { "type": "string", "default": "AI energy in resonance, peak performance achieved" }
+              },
+              "required": ["dormant", "awakening", "active", "resonance"]
+            },
+            "effectTypes": {
+              "type": "object",
+              "properties": {
+                "lightning": { "type": "string", "default": "Lightning bolt effect indicating single model processing" },
+                "particles": { "type": "string", "default": "Particle stream showing multi-model collaboration" },
+                "waves": { "type": "string", "default": "Wave interference pattern from model disagreement" },
+                "resonance": { "type": "string", "default": "Harmonic resonance field from model consensus" }
+              },
+              "required": ["lightning", "particles", "waves", "resonance"]
+            }
+          },
+          "required": ["energyStates", "effectTypes"]
+        }
+      },
+      "required": ["ariaLiveRegions", "descriptions"]
+    },
+    "keyboardNavigation": {
+      "type": "object",
+      "description": "Keyboard accessibility and navigation support",
+      "properties": {
+        "focusManagement": {
+          "type": "object",
+          "properties": {
+            "trapFocus": { "type": "boolean", "default": true },
+            "skipLinks": { "type": "boolean", "default": true },
+            "focusIndicators": { "type": "boolean", "default": true },
+            "logicalOrder": { "type": "boolean", "default": true }
+          },
+          "required": ["trapFocus", "skipLinks", "focusIndicators", "logicalOrder"]
+        },
+        "shortcuts": {
+          "type": "object",
+          "properties": {
+            "toggleEffects": { "type": "string", "default": "Ctrl+E" },
+            "adjustIntensity": { "type": "string", "default": "Ctrl+Plus/Minus" },
+            "cycleThemes": { "type": "string", "default": "Ctrl+T" },
+            "emergencyStop": { "type": "string", "default": "Escape" }
+          },
+          "required": ["toggleEffects", "adjustIntensity", "cycleThemes", "emergencyStop"]
+        }
+      },
+      "required": ["focusManagement", "shortcuts"]
+    },
+    "cognitiveAccessibility": {
+      "type": "object",
+      "description": "Cognitive accessibility and comprehension support",
+      "properties": {
+        "simplification": {
+          "type": "object",
+          "properties": {
+            "reducedComplexity": { "type": "boolean", "default": false },
+            "clearLabels": { "type": "boolean", "default": true },
+            "consistentLayout": { "type": "boolean", "default": true },
+            "helpText": { "type": "boolean", "default": true }
+          },
+          "required": ["reducedComplexity", "clearLabels", "consistentLayout", "helpText"]
+        },
+        "timeouts": {
+          "type": "object",
+          "properties": {
+            "extendedTimeouts": { "type": "boolean", "default": false },
+            "noTimeouts": { "type": "boolean", "default": false },
+            "warningDuration": { "type": "number", "minimum": 10, "maximum": 120, "default": 30 }
+          },
+          "required": ["extendedTimeouts", "noTimeouts", "warningDuration"]
+        }
+      },
+      "required": ["simplification", "timeouts"]
+    }
+  },
+  "required": ["motionSensitivity", "visualImpairments", "screenReader", "keyboardNavigation", "cognitiveAccessibility"]
+}

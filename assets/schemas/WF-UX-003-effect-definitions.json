@@ -1,0 +1,224 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "WIRTHFORGE Energy Visualization Effect Definitions",
+  "description": "Schema defining visual effects for energy visualization system",
+  "type": "object",
+  "properties": {
+    "effects": {
+      "type": "object",
+      "properties": {
+        "lightning": {
+          "type": "object",
+          "description": "Single model lightning bolt effect",
+          "properties": {
+            "type": { "const": "lightning" },
+            "energyThreshold": { "type": "number", "minimum": 0, "maximum": 1 },
+            "visual": {
+              "type": "object",
+              "properties": {
+                "color": {
+                  "type": "object",
+                  "properties": {
+                    "base": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
+                    "intensity": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
+                    "fade": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" }
+                  },
+                  "required": ["base", "intensity", "fade"]
+                },
+                "opacity": {
+                  "type": "object",
+                  "properties": {
+                    "min": { "type": "number", "minimum": 0, "maximum": 1 },
+                    "max": { "type": "number", "minimum": 0, "maximum": 1 }
+                  },
+                  "required": ["min", "max"]
+                },
+                "geometry": {
+                  "type": "object",
+                  "properties": {
+                    "segments": { "type": "integer", "minimum": 3, "maximum": 20 },
+                    "width": { "type": "number", "minimum": 1, "maximum": 10 },
+                    "jitter": { "type": "number", "minimum": 0, "maximum": 1 }
+                  },
+                  "required": ["segments", "width", "jitter"]
+                }
+              },
+              "required": ["color", "opacity", "geometry"]
+            },
+            "animation": {
+              "type": "object",
+              "properties": {
+                "duration": { "type": "number", "minimum": 0.1, "maximum": 5.0 },
+                "easing": { "type": "string", "enum": ["linear", "ease-in", "ease-out", "ease-in-out"] },
+                "repeat": { "type": "boolean" },
+                "delay": { "type": "number", "minimum": 0, "maximum": 2.0 }
+              },
+              "required": ["duration", "easing", "repeat"]
+            }
+          },
+          "required": ["type", "energyThreshold", "visual", "animation"]
+        },
+        "particles": {
+          "type": "object",
+          "description": "Multi-model particle stream effect",
+          "properties": {
+            "type": { "const": "particles" },
+            "energyThreshold": { "type": "number", "minimum": 0, "maximum": 1 },
+            "system": {
+              "type": "object",
+              "properties": {
+                "maxParticles": { "type": "integer", "minimum": 10, "maximum": 1000 },
+                "emissionRate": { "type": "number", "minimum": 1, "maximum": 100 },
+                "lifetime": { "type": "number", "minimum": 0.5, "maximum": 10.0 },
+                "velocity": {
+                  "type": "object",
+                  "properties": {
+                    "min": { "type": "number", "minimum": 0 },
+                    "max": { "type": "number", "minimum": 0 }
+                  },
+                  "required": ["min", "max"]
+                }
+              },
+              "required": ["maxParticles", "emissionRate", "lifetime", "velocity"]
+            },
+            "appearance": {
+              "type": "object",
+              "properties": {
+                "size": {
+                  "type": "object",
+                  "properties": {
+                    "start": { "type": "number", "minimum": 0.1, "maximum": 10 },
+                    "end": { "type": "number", "minimum": 0.1, "maximum": 10 }
+                  },
+                  "required": ["start", "end"]
+                },
+                "color": {
+                  "type": "object",
+                  "properties": {
+                    "start": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
+                    "end": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" }
+                  },
+                  "required": ["start", "end"]
+                },
+                "texture": { "type": "string" }
+              },
+              "required": ["size", "color"]
+            }
+          },
+          "required": ["type", "energyThreshold", "system", "appearance"]
+        },
+        "waves": {
+          "type": "object",
+          "description": "Wave interference pattern effect",
+          "properties": {
+            "type": { "const": "waves" },
+            "energyThreshold": { "type": "number", "minimum": 0, "maximum": 1 },
+            "waveform": {
+              "type": "object",
+              "properties": {
+                "frequency": { "type": "number", "minimum": 0.1, "maximum": 10.0 },
+                "amplitude": { "type": "number", "minimum": 0.1, "maximum": 2.0 },
+                "wavelength": { "type": "number", "minimum": 10, "maximum": 200 },
+                "phase": { "type": "number", "minimum": 0, "maximum": 6.28 }
+              },
+              "required": ["frequency", "amplitude", "wavelength", "phase"]
+            },
+            "interference": {
+              "type": "object",
+              "properties": {
+                "constructive": {
+                  "type": "object",
+                  "properties": {
+                    "color": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
+                    "intensity": { "type": "number", "minimum": 0, "maximum": 2.0 }
+                  },
+                  "required": ["color", "intensity"]
+                },
+                "destructive": {
+                  "type": "object",
+                  "properties": {
+                    "color": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
+                    "intensity": { "type": "number", "minimum": 0, "maximum": 1.0 }
+                  },
+                  "required": ["color", "intensity"]
+                }
+              },
+              "required": ["constructive", "destructive"]
+            }
+          },
+          "required": ["type", "energyThreshold", "waveform", "interference"]
+        },
+        "resonance": {
+          "type": "object",
+          "description": "Harmonic resonance field effect",
+          "properties": {
+            "type": { "const": "resonance" },
+            "energyThreshold": { "type": "number", "minimum": 0.8, "maximum": 1.0 },
+            "field": {
+              "type": "object",
+              "properties": {
+                "radius": { "type": "number", "minimum": 50, "maximum": 500 },
+                "harmonics": { "type": "integer", "minimum": 3, "maximum": 12 },
+                "resonanceFreq": { "type": "number", "minimum": 0.5, "maximum": 5.0 }
+              },
+              "required": ["radius", "harmonics", "resonanceFreq"]
+            },
+            "visualization": {
+              "type": "object",
+              "properties": {
+                "colorSpectrum": {
+                  "type": "array",
+                  "items": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
+                  "minItems": 3,
+                  "maxItems": 12
+                },
+                "pulseRate": { "type": "number", "minimum": 0.1, "maximum": 3.0 },
+                "fieldStrength": { "type": "number", "minimum": 0.5, "maximum": 2.0 }
+              },
+              "required": ["colorSpectrum", "pulseRate", "fieldStrength"]
+            }
+          },
+          "required": ["type", "energyThreshold", "field", "visualization"]
+        }
+      },
+      "required": ["lightning", "particles", "waves", "resonance"]
+    },
+    "qualityLevels": {
+      "type": "object",
+      "properties": {
+        "low": {
+          "type": "object",
+          "properties": {
+            "particleCount": { "type": "number", "minimum": 0.1, "maximum": 1.0 },
+            "shaderComplexity": { "type": "string", "enum": ["basic", "standard", "advanced"] },
+            "postProcessing": { "type": "boolean" },
+            "frameRate": { "type": "integer", "enum": [30, 60] }
+          },
+          "required": ["particleCount", "shaderComplexity", "postProcessing", "frameRate"]
+        },
+        "medium": {
+          "type": "object",
+          "properties": {
+            "particleCount": { "type": "number", "minimum": 0.1, "maximum": 1.0 },
+            "shaderComplexity": { "type": "string", "enum": ["basic", "standard", "advanced"] },
+            "postProcessing": { "type": "boolean" },
+            "frameRate": { "type": "integer", "enum": [30, 60] }
+          },
+          "required": ["particleCount", "shaderComplexity", "postProcessing", "frameRate"]
+        },
+        "high": {
+          "type": "object",
+          "properties": {
+            "particleCount": { "type": "number", "minimum": 0.1, "maximum": 1.0 },
+            "shaderComplexity": { "type": "string", "enum": ["basic", "standard", "advanced"] },
+            "postProcessing": { "type": "boolean" },
+            "frameRate": { "type": "integer", "enum": [30, 60] }
+          },
+          "required": ["particleCount", "shaderComplexity", "postProcessing", "frameRate"]
+        }
+      },
+      "required": ["low", "medium", "high"]
+    }
+  },
+  "required": ["effects", "qualityLevels"]
+}

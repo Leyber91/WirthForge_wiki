@@ -1,0 +1,140 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "WIRTHFORGE Energy Visualization Timing Specifications",
+  "description": "Schema defining timing and performance requirements for energy effects",
+  "type": "object",
+  "properties": {
+    "frameRate": {
+      "type": "object",
+      "description": "Frame rate specifications and targets",
+      "properties": {
+        "target": { "type": "integer", "const": 60 },
+        "frameBudget": { "type": "number", "const": 16.67 },
+        "fallbackRates": {
+          "type": "array",
+          "items": { "type": "integer", "enum": [30, 45, 60] },
+          "default": [60, 45, 30]
+        },
+        "adaptiveThreshold": { "type": "number", "minimum": 0.8, "maximum": 1.2 }
+      },
+      "required": ["target", "frameBudget", "fallbackRates", "adaptiveThreshold"]
+    },
+    "animationTiming": {
+      "type": "object",
+      "description": "Animation duration and easing specifications",
+      "properties": {
+        "lightning": {
+          "type": "object",
+          "properties": {
+            "strike": { "type": "number", "minimum": 0.1, "maximum": 0.5 },
+            "fade": { "type": "number", "minimum": 0.2, "maximum": 1.0 },
+            "interval": { "type": "number", "minimum": 0.5, "maximum": 3.0 }
+          },
+          "required": ["strike", "fade", "interval"]
+        },
+        "particles": {
+          "type": "object",
+          "properties": {
+            "emission": { "type": "number", "minimum": 0.016, "maximum": 0.1 },
+            "lifetime": { "type": "number", "minimum": 1.0, "maximum": 5.0 },
+            "spawn": { "type": "number", "minimum": 0.033, "maximum": 0.2 }
+          },
+          "required": ["emission", "lifetime", "spawn"]
+        },
+        "waves": {
+          "type": "object",
+          "properties": {
+            "period": { "type": "number", "minimum": 0.5, "maximum": 3.0 },
+            "propagation": { "type": "number", "minimum": 0.1, "maximum": 1.0 },
+            "interference": { "type": "number", "minimum": 0.05, "maximum": 0.5 }
+          },
+          "required": ["period", "propagation", "interference"]
+        },
+        "resonance": {
+          "type": "object",
+          "properties": {
+            "buildup": { "type": "number", "minimum": 1.0, "maximum": 3.0 },
+            "sustain": { "type": "number", "minimum": 2.0, "maximum": 10.0 },
+            "decay": { "type": "number", "minimum": 0.5, "maximum": 2.0 }
+          },
+          "required": ["buildup", "sustain", "decay"]
+        }
+      },
+      "required": ["lightning", "particles", "waves", "resonance"]
+    },
+    "performanceBudgets": {
+      "type": "object",
+      "description": "Performance budget allocations per frame",
+      "properties": {
+        "energyCalculation": { "type": "number", "minimum": 0.5, "maximum": 2.0 },
+        "effectGeneration": { "type": "number", "minimum": 2.0, "maximum": 6.0 },
+        "rendering": { "type": "number", "minimum": 8.0, "maximum": 12.0 },
+        "postProcessing": { "type": "number", "minimum": 1.0, "maximum": 4.0 },
+        "bufferSwap": { "type": "number", "minimum": 0.5, "maximum": 1.5 },
+        "overhead": { "type": "number", "minimum": 1.0, "maximum": 3.0 }
+      },
+      "required": ["energyCalculation", "effectGeneration", "rendering", "postProcessing", "bufferSwap", "overhead"]
+    },
+    "adaptiveQuality": {
+      "type": "object",
+      "description": "Quality adaptation timing and thresholds",
+      "properties": {
+        "measurementWindow": { "type": "number", "minimum": 0.5, "maximum": 2.0 },
+        "adaptationDelay": { "type": "number", "minimum": 0.1, "maximum": 1.0 },
+        "qualitySteps": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "threshold": { "type": "number", "minimum": 0.5, "maximum": 2.0 },
+              "action": { "type": "string", "enum": ["reduce_particles", "simplify_shaders", "disable_postfx", "fallback_2d"] },
+              "impact": { "type": "number", "minimum": 0.1, "maximum": 0.5 }
+            },
+            "required": ["threshold", "action", "impact"]
+          },
+          "minItems": 4,
+          "maxItems": 8
+        },
+        "recoveryHysteresis": { "type": "number", "minimum": 0.1, "maximum": 0.3 }
+      },
+      "required": ["measurementWindow", "adaptationDelay", "qualitySteps", "recoveryHysteresis"]
+    },
+    "synchronization": {
+      "type": "object",
+      "description": "Timing synchronization with energy events",
+      "properties": {
+        "energyUpdateRate": { "type": "integer", "minimum": 30, "maximum": 120 },
+        "visualLatency": { "type": "number", "minimum": 0.016, "maximum": 0.1 },
+        "bufferSize": { "type": "integer", "minimum": 2, "maximum": 8 },
+        "predictionWindow": { "type": "number", "minimum": 0.1, "maximum": 0.5 }
+      },
+      "required": ["energyUpdateRate", "visualLatency", "bufferSize", "predictionWindow"]
+    },
+    "accessibility": {
+      "type": "object",
+      "description": "Timing considerations for accessibility features",
+      "properties": {
+        "motionReduction": {
+          "type": "object",
+          "properties": {
+            "maxAnimationSpeed": { "type": "number", "minimum": 0.1, "maximum": 0.5 },
+            "staticUpdateRate": { "type": "number", "minimum": 0.5, "maximum": 2.0 },
+            "transitionDuration": { "type": "number", "minimum": 0.2, "maximum": 1.0 }
+          },
+          "required": ["maxAnimationSpeed", "staticUpdateRate", "transitionDuration"]
+        },
+        "screenReader": {
+          "type": "object",
+          "properties": {
+            "updateThrottle": { "type": "number", "minimum": 0.5, "maximum": 2.0 },
+            "significantChangeThreshold": { "type": "number", "minimum": 0.1, "maximum": 0.3 },
+            "announcementDelay": { "type": "number", "minimum": 0.1, "maximum": 1.0 }
+          },
+          "required": ["updateThrottle", "significantChangeThreshold", "announcementDelay"]
+        }
+      },
+      "required": ["motionReduction", "screenReader"]
+    }
+  },
+  "required": ["frameRate", "animationTiming", "performanceBudgets", "adaptiveQuality", "synchronization", "accessibility"]
+}
