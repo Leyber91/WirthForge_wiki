@@ -1,0 +1,324 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://wirthforge.org/schemas/WF-OPS-003-backup-manifest.json",
+  "title": "WF-OPS-003 Backup Manifest Schema",
+  "description": "Schema for backup manifest files containing metadata, file listings, and integrity information for WirthForge backup archives",
+  "type": "object",
+  "required": [
+    "backup_id",
+    "created_utc",
+    "strategy",
+    "includes",
+    "root_hash",
+    "items",
+    "wf_version",
+    "engine_ver",
+    "governance"
+  ],
+  "properties": {
+    "backup_id": {
+      "type": "string",
+      "pattern": "^wf-[0-9]{4}-[0-9]{2}-[0-9]{2}-[0-9]{6}$",
+      "description": "Unique backup identifier with timestamp format: wf-YYYY-MM-DD-HHMMSS",
+      "examples": ["wf-2025-08-19-011500", "wf-2025-08-19-143022"]
+    },
+    "created_utc": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 UTC timestamp when backup was created",
+      "examples": ["2025-08-19T01:15:00Z", "2025-08-19T14:30:22Z"]
+    },
+    "strategy": {
+      "type": "string",
+      "enum": ["full", "incremental", "differential"],
+      "description": "Backup strategy used for this archive"
+    },
+    "includes": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["db", "config", "logs", "certs", "models", "audit"]
+      },
+      "minItems": 1,
+      "uniqueItems": true,
+      "description": "List of data categories included in this backup"
+    },
+    "excludes": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["db", "config", "logs", "certs", "models", "audit"]
+      },
+      "uniqueItems": true,
+      "description": "List of data categories explicitly excluded from this backup"
+    },
+    "root_hash": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$",
+      "description": "SHA-256 hash of the entire backup content for integrity verification",
+      "examples": ["sha256:ab12cd34ef56789012345678901234567890abcdef1234567890abcdef123456"]
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["path", "size", "sha256"],
+        "properties": {
+          "path": {
+            "type": "string",
+            "description": "Relative path of the backed up file",
+            "examples": ["data/wirthforge.db", "config/settings.json", "certs/server.pem"]
+          },
+          "size": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "File size in bytes"
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$",
+            "description": "SHA-256 hash of the individual file"
+          },
+          "compressed": {
+            "type": "boolean",
+            "description": "Whether this file is compressed in the archive"
+          },
+          "encrypted": {
+            "type": "boolean",
+            "description": "Whether this file is encrypted in the archive"
+          },
+          "modified_utc": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Last modification time of the original file"
+          },
+          "permissions": {
+            "type": "string",
+            "pattern": "^[0-7]{3,4}$",
+            "description": "Unix-style file permissions",
+            "examples": ["644", "755", "600"]
+          }
+        },
+        "additionalProperties": false
+      },
+      "description": "List of all files included in the backup with their metadata"
+    },
+    "wf_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$",
+      "description": "WirthForge system version at time of backup",
+      "examples": ["1.0.0", "1.2.3"]
+    },
+    "engine_ver": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+$",
+      "description": "Backup engine version used to create this backup",
+      "examples": ["1.0", "1.1"]
+    },
+    "governance": {
+      "type": "object",
+      "required": ["local_first", "ui_presence"],
+      "properties": {
+        "local_first": {
+          "type": "boolean",
+          "description": "Confirms backup was created with local-first principles"
+        },
+        "ui_presence": {
+          "type": "boolean",
+          "description": "Confirms UI remained responsive during backup creation"
+        },
+        "frame_budget_respected": {
+          "type": "boolean",
+          "description": "Confirms 60Hz frame budget was maintained during backup"
+        },
+        "no_external_calls": {
+          "type": "boolean",
+          "description": "Confirms no external network calls were made during backup"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Governance compliance indicators"
+    },
+    "performance": {
+      "type": "object",
+      "properties": {
+        "duration_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Total backup duration in milliseconds"
+        },
+        "avg_frame_time_ms": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 50,
+          "description": "Average frame time during backup operation"
+        },
+        "max_frame_time_ms": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Maximum frame time during backup operation"
+        },
+        "frame_overruns": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Number of frames that exceeded 16.67ms budget"
+        },
+        "bytes_per_second": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Average backup throughput in bytes per second"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Performance metrics for the backup operation"
+    },
+    "dependencies": {
+      "type": "object",
+      "properties": {
+        "parent_backup_id": {
+          "type": "string",
+          "pattern": "^wf-[0-9]{4}-[0-9]{2}-[0-9]{2}-[0-9]{6}$",
+          "description": "Parent backup ID for incremental/differential backups"
+        },
+        "base_backup_id": {
+          "type": "string",
+          "pattern": "^wf-[0-9]{4}-[0-9]{2}-[0-9]{2}-[0-9]{6}$",
+          "description": "Base full backup ID for incremental chains"
+        },
+        "requires_backups": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^wf-[0-9]{4}-[0-9]{2}-[0-9]{2}-[0-9]{6}$"
+          },
+          "description": "List of backup IDs required for complete restoration"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Backup dependency information for incremental/differential strategies"
+    },
+    "encryption": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Whether encryption is applied to this backup"
+        },
+        "algorithm": {
+          "type": "string",
+          "enum": ["AES-256-GCM", "ChaCha20-Poly1305"],
+          "description": "Encryption algorithm used"
+        },
+        "key_derivation": {
+          "type": "string",
+          "enum": ["PBKDF2", "Argon2id"],
+          "description": "Key derivation function used"
+        },
+        "salt": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{32}$",
+          "description": "Salt used for key derivation (hex encoded)"
+        },
+        "iterations": {
+          "type": "integer",
+          "minimum": 10000,
+          "description": "Number of iterations for key derivation"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Encryption metadata (only present if backup is encrypted)"
+    },
+    "audit": {
+      "type": "object",
+      "properties": {
+        "created_by": {
+          "type": "string",
+          "description": "User or system that initiated the backup"
+        },
+        "trigger": {
+          "type": "string",
+          "enum": ["scheduled", "manual", "event", "policy"],
+          "description": "What triggered this backup"
+        },
+        "verification_status": {
+          "type": "string",
+          "enum": ["pending", "verified", "failed", "corrupted"],
+          "description": "Integrity verification status"
+        },
+        "last_verified_utc": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Last time this backup was verified"
+        },
+        "restore_count": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Number of times this backup has been used for restoration"
+        },
+        "preservation_tag": {
+          "type": "string",
+          "description": "Optional tag to prevent automatic deletion"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Audit trail and metadata"
+    }
+  },
+  "additionalProperties": false,
+  "examples": [
+    {
+      "backup_id": "wf-2025-08-19-011500",
+      "created_utc": "2025-08-19T01:15:00Z",
+      "strategy": "incremental",
+      "includes": ["db", "config", "logs"],
+      "excludes": ["models"],
+      "root_hash": "sha256:ab12cd34ef56789012345678901234567890abcdef1234567890abcdef123456",
+      "items": [
+        {
+          "path": "data/wirthforge.db",
+          "size": 7340032,
+          "sha256": "1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef",
+          "compressed": true,
+          "encrypted": false,
+          "modified_utc": "2025-08-19T01:14:55Z",
+          "permissions": "644"
+        },
+        {
+          "path": "config/settings.json",
+          "size": 4096,
+          "sha256": "abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890",
+          "compressed": false,
+          "encrypted": false,
+          "modified_utc": "2025-08-19T01:10:30Z",
+          "permissions": "644"
+        }
+      ],
+      "wf_version": "1.0.0",
+      "engine_ver": "1.0",
+      "governance": {
+        "local_first": true,
+        "ui_presence": true,
+        "frame_budget_respected": true,
+        "no_external_calls": true
+      },
+      "performance": {
+        "duration_ms": 15000,
+        "avg_frame_time_ms": 12.5,
+        "max_frame_time_ms": 16.2,
+        "frame_overruns": 0,
+        "bytes_per_second": 489600
+      },
+      "dependencies": {
+        "parent_backup_id": "wf-2025-08-18-011500",
+        "base_backup_id": "wf-2025-08-17-011500"
+      },
+      "audit": {
+        "created_by": "system_scheduler",
+        "trigger": "scheduled",
+        "verification_status": "verified",
+        "last_verified_utc": "2025-08-19T01:15:30Z",
+        "restore_count": 0
+      }
+    }
+  ]
+}

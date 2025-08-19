@@ -1,0 +1,693 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://wirthforge.org/schemas/WF-OPS-002-panel-layout.json",
+  "title": "WIRTHFORGE Dashboard Panel Layout Schema",
+  "description": "Schema for defining dashboard panel layouts and configurations in the WIRTHFORGE monitoring system",
+  "type": "object",
+  "required": [
+    "layout_id",
+    "version",
+    "name",
+    "panels",
+    "grid_config"
+  ],
+  "properties": {
+    "layout_id": {
+      "type": "string",
+      "pattern": "^layout\\.[a-zA-Z0-9_-]+$",
+      "description": "Unique identifier for the dashboard layout",
+      "examples": [
+        "layout.default_monitoring",
+        "layout.performance_focus",
+        "layout.system_overview"
+      ]
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+$",
+      "description": "Layout schema version",
+      "default": "1.0"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100,
+      "description": "Human-readable name for the layout"
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 500,
+      "description": "Description of the layout purpose and contents"
+    },
+    "grid_config": {
+      "type": "object",
+      "required": ["columns", "rows", "gap"],
+      "properties": {
+        "columns": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 24,
+          "description": "Number of grid columns"
+        },
+        "rows": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 20,
+          "description": "Number of grid rows"
+        },
+        "gap": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 32,
+          "description": "Gap between grid items in pixels"
+        },
+        "responsive": {
+          "type": "boolean",
+          "description": "Whether the layout is responsive",
+          "default": true
+        },
+        "breakpoints": {
+          "type": "object",
+          "properties": {
+            "mobile": {
+              "type": "integer",
+              "description": "Mobile breakpoint in pixels"
+            },
+            "tablet": {
+              "type": "integer",
+              "description": "Tablet breakpoint in pixels"
+            },
+            "desktop": {
+              "type": "integer",
+              "description": "Desktop breakpoint in pixels"
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "panels": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/definitions/panel"
+      },
+      "description": "Array of panel configurations"
+    },
+    "theme": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "enum": ["light", "dark", "auto", "energy"],
+          "description": "Theme name"
+        },
+        "energy_visuals": {
+          "type": "boolean",
+          "description": "Enable energy-aware visualizations",
+          "default": true
+        },
+        "reduced_motion": {
+          "type": "boolean",
+          "description": "Reduce motion for accessibility",
+          "default": false
+        },
+        "high_contrast": {
+          "type": "boolean",
+          "description": "High contrast mode",
+          "default": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "performance_config": {
+      "type": "object",
+      "properties": {
+        "frame_budget_ms": {
+          "type": "number",
+          "minimum": 8.33,
+          "maximum": 33.33,
+          "description": "Frame budget in milliseconds",
+          "default": 16.67
+        },
+        "update_frequency_hz": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 60,
+          "description": "Dashboard update frequency in Hz",
+          "default": 60
+        },
+        "max_data_points": {
+          "type": "integer",
+          "minimum": 100,
+          "maximum": 10000,
+          "description": "Maximum data points per chart"
+        },
+        "enable_gpu_acceleration": {
+          "type": "boolean",
+          "description": "Enable GPU acceleration for rendering",
+          "default": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "user_preferences": {
+      "type": "object",
+      "properties": {
+        "auto_refresh": {
+          "type": "boolean",
+          "description": "Auto-refresh dashboard data",
+          "default": true
+        },
+        "show_tooltips": {
+          "type": "boolean",
+          "description": "Show tooltips on hover",
+          "default": true
+        },
+        "enable_sounds": {
+          "type": "boolean",
+          "description": "Enable audio notifications",
+          "default": false
+        },
+        "compact_mode": {
+          "type": "boolean",
+          "description": "Use compact panel layouts",
+          "default": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Layout creation timestamp"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Layout last update timestamp"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[a-zA-Z0-9_-]+$"
+      },
+      "description": "Tags for layout organization"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "panel": {
+      "type": "object",
+      "required": [
+        "panel_id",
+        "type",
+        "position",
+        "size",
+        "config"
+      ],
+      "properties": {
+        "panel_id": {
+          "type": "string",
+          "pattern": "^panel\\.[a-zA-Z0-9_-]+$",
+          "description": "Unique identifier for the panel"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "system_overview",
+            "model_performance",
+            "ui_metrics",
+            "network_status",
+            "alerts_panel",
+            "energy_visualization",
+            "analytics_chart",
+            "log_viewer",
+            "custom"
+          ],
+          "description": "Type of panel"
+        },
+        "title": {
+          "type": "string",
+          "maxLength": 100,
+          "description": "Panel title"
+        },
+        "position": {
+          "type": "object",
+          "required": ["x", "y"],
+          "properties": {
+            "x": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "X position in grid units"
+            },
+            "y": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Y position in grid units"
+            }
+          },
+          "additionalProperties": false
+        },
+        "size": {
+          "type": "object",
+          "required": ["width", "height"],
+          "properties": {
+            "width": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Width in grid units"
+            },
+            "height": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Height in grid units"
+            },
+            "min_width": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Minimum width in grid units"
+            },
+            "min_height": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Minimum height in grid units"
+            },
+            "max_width": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Maximum width in grid units"
+            },
+            "max_height": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Maximum height in grid units"
+            }
+          },
+          "additionalProperties": false
+        },
+        "config": {
+          "type": "object",
+          "description": "Panel-specific configuration",
+          "properties": {
+            "data_source": {
+              "type": "string",
+              "description": "Data source identifier"
+            },
+            "metrics": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "List of metrics to display"
+            },
+            "time_range": {
+              "type": "string",
+              "enum": [
+                "1m",
+                "5m",
+                "15m",
+                "30m",
+                "1h",
+                "6h",
+                "24h",
+                "7d",
+                "30d"
+              ],
+              "description": "Time range for data display"
+            },
+            "refresh_interval_ms": {
+              "type": "integer",
+              "minimum": 100,
+              "maximum": 300000,
+              "description": "Refresh interval in milliseconds"
+            },
+            "chart_type": {
+              "type": "string",
+              "enum": [
+                "line",
+                "area",
+                "bar",
+                "gauge",
+                "heatmap",
+                "energy_ribbon",
+                "particle_flow"
+              ],
+              "description": "Chart visualization type"
+            },
+            "thresholds": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/threshold"
+              },
+              "description": "Visual thresholds for the panel"
+            },
+            "alerts": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Alert rules associated with this panel"
+            },
+            "energy_config": {
+              "type": "object",
+              "properties": {
+                "enable_ribbons": {
+                  "type": "boolean",
+                  "description": "Enable energy ribbon visualization"
+                },
+                "enable_particles": {
+                  "type": "boolean",
+                  "description": "Enable particle flow visualization"
+                },
+                "ribbon_width_metric": {
+                  "type": "string",
+                  "description": "Metric that controls ribbon width"
+                },
+                "particle_density_metric": {
+                  "type": "string",
+                  "description": "Metric that controls particle density"
+                },
+                "animation_speed_metric": {
+                  "type": "string",
+                  "description": "Metric that controls animation speed"
+                }
+              },
+              "additionalProperties": false
+            },
+            "accessibility": {
+              "type": "object",
+              "properties": {
+                "alt_text": {
+                  "type": "string",
+                  "description": "Alternative text for screen readers"
+                },
+                "keyboard_navigation": {
+                  "type": "boolean",
+                  "description": "Enable keyboard navigation",
+                  "default": true
+                },
+                "high_contrast_mode": {
+                  "type": "boolean",
+                  "description": "High contrast mode support"
+                },
+                "reduced_motion": {
+                  "type": "boolean",
+                  "description": "Reduced motion support"
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": true
+        },
+        "visible": {
+          "type": "boolean",
+          "description": "Whether the panel is visible",
+          "default": true
+        },
+        "resizable": {
+          "type": "boolean",
+          "description": "Whether the panel can be resized",
+          "default": true
+        },
+        "movable": {
+          "type": "boolean",
+          "description": "Whether the panel can be moved",
+          "default": true
+        },
+        "collapsible": {
+          "type": "boolean",
+          "description": "Whether the panel can be collapsed",
+          "default": false
+        },
+        "priority": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10,
+          "description": "Rendering priority (1=highest, 10=lowest)",
+          "default": 5
+        }
+      },
+      "additionalProperties": false
+    },
+    "threshold": {
+      "type": "object",
+      "required": ["value", "color"],
+      "properties": {
+        "value": {
+          "type": "number",
+          "description": "Threshold value"
+        },
+        "color": {
+          "type": "string",
+          "pattern": "^#[0-9A-Fa-f]{6}$",
+          "description": "Color for values above this threshold"
+        },
+        "label": {
+          "type": "string",
+          "maxLength": 50,
+          "description": "Label for the threshold"
+        },
+        "operator": {
+          "type": "string",
+          "enum": [">", ">=", "<", "<=", "=="],
+          "description": "Comparison operator",
+          "default": ">="
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "examples": [
+    {
+      "layout_id": "layout.default_monitoring",
+      "version": "1.0",
+      "name": "Default Monitoring Layout",
+      "description": "Standard monitoring dashboard with system, model, and UI panels",
+      "grid_config": {
+        "columns": 12,
+        "rows": 8,
+        "gap": 16,
+        "responsive": true,
+        "breakpoints": {
+          "mobile": 768,
+          "tablet": 1024,
+          "desktop": 1440
+        }
+      },
+      "panels": [
+        {
+          "panel_id": "panel.system_overview",
+          "type": "system_overview",
+          "title": "System Overview",
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "size": {
+            "width": 6,
+            "height": 3,
+            "min_width": 4,
+            "min_height": 2
+          },
+          "config": {
+            "data_source": "system_collector",
+            "metrics": [
+              "cpu_percent",
+              "memory_percent",
+              "gpu_utilization",
+              "disk_usage"
+            ],
+            "time_range": "15m",
+            "refresh_interval_ms": 1000,
+            "chart_type": "gauge",
+            "thresholds": [
+              {
+                "value": 70,
+                "color": "#FFA500",
+                "label": "Warning",
+                "operator": ">="
+              },
+              {
+                "value": 90,
+                "color": "#FF0000",
+                "label": "Critical",
+                "operator": ">="
+              }
+            ]
+          },
+          "visible": true,
+          "resizable": true,
+          "movable": true,
+          "priority": 1
+        },
+        {
+          "panel_id": "panel.model_performance",
+          "type": "model_performance",
+          "title": "Model Performance",
+          "position": {
+            "x": 6,
+            "y": 0
+          },
+          "size": {
+            "width": 6,
+            "height": 3,
+            "min_width": 4,
+            "min_height": 2
+          },
+          "config": {
+            "data_source": "model_collector",
+            "metrics": [
+              "tokens_per_second",
+              "ttft_ms",
+              "energy_normalized"
+            ],
+            "time_range": "5m",
+            "refresh_interval_ms": 500,
+            "chart_type": "line",
+            "energy_config": {
+              "enable_ribbons": true,
+              "enable_particles": true,
+              "ribbon_width_metric": "tokens_per_second",
+              "particle_density_metric": "entropy_bits",
+              "animation_speed_metric": "energy_normalized"
+            }
+          },
+          "visible": true,
+          "resizable": true,
+          "movable": true,
+          "priority": 1
+        },
+        {
+          "panel_id": "panel.ui_performance",
+          "type": "ui_metrics",
+          "title": "UI Performance",
+          "position": {
+            "x": 0,
+            "y": 3
+          },
+          "size": {
+            "width": 8,
+            "height": 2,
+            "min_width": 6,
+            "min_height": 2
+          },
+          "config": {
+            "data_source": "ui_collector",
+            "metrics": [
+              "frame_time_ms",
+              "dropped_frames",
+              "input_latency_ms"
+            ],
+            "time_range": "1m",
+            "refresh_interval_ms": 100,
+            "chart_type": "area",
+            "thresholds": [
+              {
+                "value": 16.67,
+                "color": "#FF6B6B",
+                "label": "Frame Budget",
+                "operator": ">"
+              }
+            ]
+          },
+          "visible": true,
+          "resizable": true,
+          "movable": true,
+          "priority": 1
+        },
+        {
+          "panel_id": "panel.alerts",
+          "type": "alerts_panel",
+          "title": "Active Alerts",
+          "position": {
+            "x": 8,
+            "y": 3
+          },
+          "size": {
+            "width": 4,
+            "height": 2,
+            "min_width": 3,
+            "min_height": 2
+          },
+          "config": {
+            "data_source": "alert_engine",
+            "time_range": "1h",
+            "refresh_interval_ms": 2000,
+            "alerts": [
+              "rule.fps_cpu_pressure",
+              "rule.model_performance_drop",
+              "rule.system_resource_pressure"
+            ]
+          },
+          "visible": true,
+          "resizable": true,
+          "movable": true,
+          "priority": 2
+        },
+        {
+          "panel_id": "panel.energy_visualization",
+          "type": "energy_visualization",
+          "title": "Energy Flow",
+          "position": {
+            "x": 0,
+            "y": 5
+          },
+          "size": {
+            "width": 12,
+            "height": 3,
+            "min_width": 8,
+            "min_height": 2
+          },
+          "config": {
+            "data_source": "model_collector",
+            "metrics": [
+              "energy_normalized",
+              "entropy_bits",
+              "tokens_per_second"
+            ],
+            "time_range": "30s",
+            "refresh_interval_ms": 100,
+            "chart_type": "energy_ribbon",
+            "energy_config": {
+              "enable_ribbons": true,
+              "enable_particles": true,
+              "ribbon_width_metric": "tokens_per_second",
+              "particle_density_metric": "entropy_bits",
+              "animation_speed_metric": "energy_normalized"
+            },
+            "accessibility": {
+              "alt_text": "Energy flow visualization showing token generation patterns",
+              "reduced_motion": false
+            }
+          },
+          "visible": true,
+          "resizable": true,
+          "movable": true,
+          "priority": 3
+        }
+      ],
+      "theme": {
+        "name": "energy",
+        "energy_visuals": true,
+        "reduced_motion": false,
+        "high_contrast": false
+      },
+      "performance_config": {
+        "frame_budget_ms": 16.67,
+        "update_frequency_hz": 60,
+        "max_data_points": 1000,
+        "enable_gpu_acceleration": true
+      },
+      "user_preferences": {
+        "auto_refresh": true,
+        "show_tooltips": true,
+        "enable_sounds": false,
+        "compact_mode": false
+      },
+      "tags": ["default", "monitoring", "energy", "performance"]
+    }
+  ]
+}

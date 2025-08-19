@@ -1,0 +1,413 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://wirthforge.org/schemas/WF-OPS-002-metrics-event.json",
+  "title": "WIRTHFORGE Metrics Event Schema",
+  "description": "Schema for real-time metrics events in the WIRTHFORGE monitoring system",
+  "type": "object",
+  "required": [
+    "timestamp",
+    "source",
+    "type",
+    "data",
+    "version"
+  ],
+  "properties": {
+    "timestamp": {
+      "type": "integer",
+      "description": "Unix timestamp in milliseconds",
+      "minimum": 0
+    },
+    "source": {
+      "type": "string",
+      "description": "Source identifier for the metric",
+      "pattern": "^(system|model:[a-zA-Z0-9_-]+|ui|network|custom:[a-zA-Z0-9_-]+)$",
+      "examples": [
+        "system",
+        "model:llama7b",
+        "ui",
+        "network",
+        "custom:user_metric"
+      ]
+    },
+    "type": {
+      "type": "string",
+      "description": "Type of metrics event",
+      "enum": [
+        "performance",
+        "resource",
+        "error",
+        "health",
+        "usage",
+        "energy",
+        "alert"
+      ]
+    },
+    "data": {
+      "type": "object",
+      "description": "Metric data payload",
+      "minProperties": 1,
+      "additionalProperties": true,
+      "properties": {
+        "cpu_percent": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "CPU utilization percentage"
+        },
+        "memory_percent": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Memory utilization percentage"
+        },
+        "gpu_utilization": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "GPU utilization percentage"
+        },
+        "gpu_memory_mb": {
+          "type": "number",
+          "minimum": 0,
+          "description": "GPU memory usage in megabytes"
+        },
+        "tokens_per_second": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Token generation rate"
+        },
+        "ttft_ms": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Time to first token in milliseconds"
+        },
+        "frame_time_ms": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Frame rendering time in milliseconds"
+        },
+        "dropped_frames": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Number of dropped frames"
+        },
+        "energy_normalized": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Normalized energy level (0-1)"
+        },
+        "entropy_bits": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Entropy measurement in bits"
+        }
+      }
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+$",
+      "description": "Schema version",
+      "default": "1.0"
+    },
+    "window": {
+      "type": "string",
+      "description": "Aggregation window for the metric",
+      "enum": [
+        "instant",
+        "1s",
+        "10s",
+        "1m",
+        "5m",
+        "15m",
+        "1h"
+      ],
+      "default": "instant"
+    },
+    "tags": {
+      "type": "object",
+      "description": "Additional metadata tags",
+      "additionalProperties": {
+        "type": "string"
+      },
+      "properties": {
+        "environment": {
+          "type": "string",
+          "enum": ["dev", "test", "prod"]
+        },
+        "component": {
+          "type": "string",
+          "description": "Component identifier"
+        },
+        "severity": {
+          "type": "string",
+          "enum": ["info", "warning", "error", "critical"]
+        }
+      }
+    },
+    "energy_visual": {
+      "type": "object",
+      "description": "Energy visualization parameters",
+      "properties": {
+        "ribbon_width": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Energy ribbon width (0-1)"
+        },
+        "particle_density": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Particle density (0-1)"
+        },
+        "animation_speed": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Animation speed multiplier (0-1)"
+        },
+        "lightning_intensity": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Lightning effect intensity (0-1)"
+        }
+      },
+      "additionalProperties": false
+    },
+    "frame_budget_used_ms": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 16.67,
+      "description": "Frame budget used for processing this metric (max 16.67ms)"
+    },
+    "privacy_level": {
+      "type": "string",
+      "enum": [
+        "public",
+        "internal",
+        "sensitive",
+        "private"
+      ],
+      "default": "internal",
+      "description": "Privacy classification for the metric data"
+    },
+    "retention_policy": {
+      "type": "string",
+      "enum": [
+        "high_frequency",
+        "medium_frequency",
+        "low_frequency",
+        "archive",
+        "ephemeral"
+      ],
+      "default": "medium_frequency",
+      "description": "Data retention policy for this metric"
+    }
+  },
+  "additionalProperties": false,
+  "examples": [
+    {
+      "timestamp": 1724049600123,
+      "source": "system",
+      "type": "resource",
+      "data": {
+        "cpu_percent": 45.2,
+        "memory_percent": 67.8,
+        "gpu_utilization": 23.1,
+        "gpu_memory_mb": 2048
+      },
+      "version": "1.0",
+      "window": "10s",
+      "tags": {
+        "environment": "prod",
+        "component": "system_monitor"
+      },
+      "frame_budget_used_ms": 2.1,
+      "privacy_level": "internal",
+      "retention_policy": "medium_frequency"
+    },
+    {
+      "timestamp": 1724049600140,
+      "source": "model:llama7b",
+      "type": "performance",
+      "data": {
+        "tokens_per_second": 18.4,
+        "ttft_ms": 120,
+        "energy_normalized": 0.66,
+        "entropy_bits": 3.2,
+        "gpu_utilization": 74.0,
+        "gpu_memory_mb": 5221
+      },
+      "version": "1.0",
+      "window": "1s",
+      "tags": {
+        "environment": "prod",
+        "component": "ai_model",
+        "model_type": "llama"
+      },
+      "energy_visual": {
+        "ribbon_width": 0.73,
+        "particle_density": 0.64,
+        "animation_speed": 0.82,
+        "lightning_intensity": 0.45
+      },
+      "frame_budget_used_ms": 1.8,
+      "privacy_level": "internal",
+      "retention_policy": "high_frequency"
+    },
+    {
+      "timestamp": 1724049600156,
+      "source": "ui",
+      "type": "performance",
+      "data": {
+        "frame_time_ms": 14.2,
+        "dropped_frames": 0,
+        "input_latency_ms": 8.5,
+        "paint_time_ms": 3.2,
+        "layout_time_ms": 2.1
+      },
+      "version": "1.0",
+      "window": "instant",
+      "tags": {
+        "environment": "prod",
+        "component": "ui_renderer",
+        "severity": "info"
+      },
+      "frame_budget_used_ms": 0.9,
+      "privacy_level": "internal",
+      "retention_policy": "high_frequency"
+    }
+  ],
+  "definitions": {
+    "systemMetrics": {
+      "type": "object",
+      "properties": {
+        "cpu_percent": { "$ref": "#/properties/data/properties/cpu_percent" },
+        "memory_percent": { "$ref": "#/properties/data/properties/memory_percent" },
+        "gpu_utilization": { "$ref": "#/properties/data/properties/gpu_utilization" },
+        "gpu_memory_mb": { "$ref": "#/properties/data/properties/gpu_memory_mb" },
+        "disk_io_read_mb": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Disk read I/O in MB/s"
+        },
+        "disk_io_write_mb": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Disk write I/O in MB/s"
+        },
+        "network_bytes_in": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Network bytes received"
+        },
+        "network_bytes_out": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Network bytes sent"
+        }
+      }
+    },
+    "modelMetrics": {
+      "type": "object",
+      "properties": {
+        "tokens_per_second": { "$ref": "#/properties/data/properties/tokens_per_second" },
+        "ttft_ms": { "$ref": "#/properties/data/properties/ttft_ms" },
+        "queue_wait_ms": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Queue waiting time in milliseconds"
+        },
+        "cache_hit_rate": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Cache hit rate (0-1)"
+        },
+        "batch_size": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Processing batch size"
+        },
+        "energy_normalized": { "$ref": "#/properties/data/properties/energy_normalized" },
+        "entropy_bits": { "$ref": "#/properties/data/properties/entropy_bits" },
+        "accuracy_proxy": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Task-level accuracy proxy (0-1)"
+        }
+      }
+    },
+    "uiMetrics": {
+      "type": "object",
+      "properties": {
+        "frame_time_ms": { "$ref": "#/properties/data/properties/frame_time_ms" },
+        "dropped_frames": { "$ref": "#/properties/data/properties/dropped_frames" },
+        "input_latency_ms": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Input to response latency in milliseconds"
+        },
+        "paint_time_ms": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Paint operation time in milliseconds"
+        },
+        "layout_time_ms": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Layout calculation time in milliseconds"
+        },
+        "jank_budget_used": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Jank budget utilization (0-1)"
+        },
+        "interaction_score": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "User interaction responsiveness score (0-1)"
+        }
+      }
+    }
+  },
+  "if": {
+    "properties": {
+      "source": { "const": "system" }
+    }
+  },
+  "then": {
+    "properties": {
+      "data": { "$ref": "#/definitions/systemMetrics" }
+    }
+  },
+  "else": {
+    "if": {
+      "properties": {
+        "source": { "pattern": "^model:" }
+      }
+    },
+    "then": {
+      "properties": {
+        "data": { "$ref": "#/definitions/modelMetrics" }
+      }
+    },
+    "else": {
+      "if": {
+        "properties": {
+          "source": { "const": "ui" }
+        }
+      },
+      "then": {
+        "properties": {
+          "data": { "$ref": "#/definitions/uiMetrics" }
+        }
+      }
+    }
+  }
+}

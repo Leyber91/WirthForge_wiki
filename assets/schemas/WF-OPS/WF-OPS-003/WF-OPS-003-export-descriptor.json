@@ -1,0 +1,574 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://wirthforge.org/schemas/WF-OPS-003-export-descriptor.json",
+  "title": "WF-OPS-003 Export Descriptor Schema",
+  "description": "Schema for backup export configurations defining encryption, privacy controls, consent management, and output specifications for WirthForge backup exports",
+  "type": "object",
+  "required": [
+    "export_id",
+    "created_utc",
+    "backup_id",
+    "export_scope",
+    "privacy_controls",
+    "encryption_config",
+    "output_config"
+  ],
+  "properties": {
+    "export_id": {
+      "type": "string",
+      "pattern": "^export-[0-9]{4}-[0-9]{2}-[0-9]{2}-[0-9]{6}$",
+      "description": "Unique export identifier with timestamp format",
+      "examples": ["export-2025-08-19-143000", "export-2025-08-19-091500"]
+    },
+    "created_utc": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 UTC timestamp when export descriptor was created"
+    },
+    "backup_id": {
+      "type": "string",
+      "pattern": "^wf-[0-9]{4}-[0-9]{2}-[0-9]{2}-[0-9]{6}$",
+      "description": "Source backup ID to export from"
+    },
+    "export_scope": {
+      "type": "object",
+      "required": ["type", "components"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["config_only", "db_only", "selective", "full_filtered"],
+          "description": "Type of export operation"
+        },
+        "components": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["db", "config", "logs", "certs", "models", "audit"]
+          },
+          "minItems": 1,
+          "uniqueItems": true,
+          "description": "Components to include in export"
+        },
+        "exclude_components": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["db", "config", "logs", "certs", "models", "audit"]
+          },
+          "uniqueItems": true,
+          "description": "Components to explicitly exclude from export"
+        },
+        "data_filters": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["component", "filter_type", "criteria"],
+            "properties": {
+              "component": {
+                "type": "string",
+                "enum": ["db", "config", "logs", "certs", "models", "audit"]
+              },
+              "filter_type": {
+                "type": "string",
+                "enum": ["exclude_sensitive", "anonymize", "aggregate_only", "time_range"]
+              },
+              "criteria": {
+                "type": "object",
+                "description": "Filter-specific criteria"
+              }
+            }
+          },
+          "description": "Data filtering rules for privacy compliance"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Defines what data will be exported and how it will be filtered"
+    },
+    "privacy_controls": {
+      "type": "object",
+      "required": ["consent_required", "privacy_level"],
+      "properties": {
+        "consent_required": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether explicit user consent is required for this export"
+        },
+        "privacy_level": {
+          "type": "string",
+          "enum": ["public", "aggregated_only", "local_only", "restricted"],
+          "description": "Privacy level classification for the export"
+        },
+        "user_consent": {
+          "type": "object",
+          "properties": {
+            "user_id": {
+              "type": "string",
+              "description": "ID of user providing consent"
+            },
+            "granted_utc": {
+              "type": "string",
+              "format": "date-time",
+              "description": "When consent was granted"
+            },
+            "expires_utc": {
+              "type": "string",
+              "format": "date-time",
+              "description": "When consent expires"
+            },
+            "scopes": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Specific data scopes covered by consent"
+            },
+            "consent_method": {
+              "type": "string",
+              "enum": ["explicit", "implied", "opt_out"],
+              "description": "Method by which consent was obtained"
+            }
+          },
+          "additionalProperties": false,
+          "description": "User consent information"
+        },
+        "data_minimization": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "default": true,
+              "description": "Whether data minimization is applied"
+            },
+            "remove_identifiers": {
+              "type": "boolean",
+              "default": true,
+              "description": "Remove personally identifiable information"
+            },
+            "anonymize_timestamps": {
+              "type": "boolean",
+              "default": false,
+              "description": "Anonymize or round timestamps"
+            },
+            "aggregate_metrics": {
+              "type": "boolean",
+              "default": false,
+              "description": "Export only aggregated metrics, not raw data"
+            },
+            "hash_sensitive_data": {
+              "type": "boolean",
+              "default": true,
+              "description": "Hash sensitive data fields"
+            }
+          },
+          "additionalProperties": false,
+          "description": "Data minimization settings"
+        },
+        "compliance": {
+          "type": "object",
+          "properties": {
+            "gdpr_compliant": {
+              "type": "boolean",
+              "default": true,
+              "description": "Whether export complies with GDPR requirements"
+            },
+            "ccpa_compliant": {
+              "type": "boolean",
+              "default": true,
+              "description": "Whether export complies with CCPA requirements"
+            },
+            "right_to_be_forgotten": {
+              "type": "boolean",
+              "default": true,
+              "description": "Supports right to be forgotten requests"
+            },
+            "data_portability": {
+              "type": "boolean",
+              "default": true,
+              "description": "Supports data portability requirements"
+            }
+          },
+          "additionalProperties": false,
+          "description": "Privacy regulation compliance flags"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Privacy controls and consent management"
+    },
+    "encryption_config": {
+      "type": "object",
+      "required": ["enabled"],
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether encryption is enabled for this export"
+        },
+        "algorithm": {
+          "type": "string",
+          "enum": ["AES-256-GCM", "ChaCha20-Poly1305"],
+          "default": "AES-256-GCM",
+          "description": "Encryption algorithm to use"
+        },
+        "key_derivation": {
+          "type": "object",
+          "properties": {
+            "function": {
+              "type": "string",
+              "enum": ["PBKDF2", "Argon2id"],
+              "default": "PBKDF2",
+              "description": "Key derivation function"
+            },
+            "iterations": {
+              "type": "integer",
+              "minimum": 10000,
+              "maximum": 1000000,
+              "default": 100000,
+              "description": "Number of iterations for key derivation"
+            },
+            "salt_length": {
+              "type": "integer",
+              "minimum": 16,
+              "maximum": 64,
+              "default": 32,
+              "description": "Salt length in bytes"
+            }
+          },
+          "additionalProperties": false,
+          "description": "Key derivation configuration"
+        },
+        "passphrase_requirements": {
+          "type": "object",
+          "properties": {
+            "min_length": {
+              "type": "integer",
+              "minimum": 8,
+              "maximum": 128,
+              "default": 12,
+              "description": "Minimum passphrase length"
+            },
+            "require_uppercase": {
+              "type": "boolean",
+              "default": true,
+              "description": "Require uppercase letters"
+            },
+            "require_lowercase": {
+              "type": "boolean",
+              "default": true,
+              "description": "Require lowercase letters"
+            },
+            "require_numbers": {
+              "type": "boolean",
+              "default": true,
+              "description": "Require numeric characters"
+            },
+            "require_symbols": {
+              "type": "boolean",
+              "default": false,
+              "description": "Require special symbols"
+            }
+          },
+          "additionalProperties": false,
+          "description": "Passphrase strength requirements"
+        },
+        "compression": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "default": true,
+              "description": "Whether compression is applied before encryption"
+            },
+            "algorithm": {
+              "type": "string",
+              "enum": ["gzip", "zstd", "lz4"],
+              "default": "gzip",
+              "description": "Compression algorithm"
+            },
+            "level": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9,
+              "default": 6,
+              "description": "Compression level (1=fast, 9=best)"
+            }
+          },
+          "additionalProperties": false,
+          "description": "Compression settings"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Encryption configuration for the export"
+    },
+    "output_config": {
+      "type": "object",
+      "required": ["format", "destination"],
+      "properties": {
+        "format": {
+          "type": "string",
+          "enum": ["zip", "tar.gz", "7z"],
+          "default": "zip",
+          "description": "Output archive format"
+        },
+        "destination": {
+          "type": "object",
+          "required": ["type"],
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": ["local_file", "user_download", "removable_media"],
+              "description": "Export destination type"
+            },
+            "path": {
+              "type": "string",
+              "description": "Destination path (for local_file and removable_media)"
+            },
+            "filename": {
+              "type": "string",
+              "description": "Output filename (auto-generated if not specified)"
+            },
+            "overwrite_existing": {
+              "type": "boolean",
+              "default": false,
+              "description": "Whether to overwrite existing files"
+            }
+          },
+          "additionalProperties": false,
+          "description": "Export destination configuration"
+        },
+        "metadata_inclusion": {
+          "type": "object",
+          "properties": {
+            "include_manifest": {
+              "type": "boolean",
+              "default": true,
+              "description": "Include backup manifest in export"
+            },
+            "include_checksums": {
+              "type": "boolean",
+              "default": true,
+              "description": "Include file checksums for verification"
+            },
+            "include_export_log": {
+              "type": "boolean",
+              "default": true,
+              "description": "Include export operation log"
+            },
+            "include_privacy_report": {
+              "type": "boolean",
+              "default": true,
+              "description": "Include privacy compliance report"
+            }
+          },
+          "additionalProperties": false,
+          "description": "Metadata files to include in export"
+        },
+        "size_limits": {
+          "type": "object",
+          "properties": {
+            "max_file_size_mb": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 10240,
+              "description": "Maximum size for individual files in MB"
+            },
+            "max_total_size_mb": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 51200,
+              "description": "Maximum total export size in MB"
+            },
+            "split_large_exports": {
+              "type": "boolean",
+              "default": false,
+              "description": "Split large exports into multiple files"
+            },
+            "split_size_mb": {
+              "type": "integer",
+              "minimum": 100,
+              "maximum": 2048,
+              "default": 1024,
+              "description": "Size per split file in MB"
+            }
+          },
+          "additionalProperties": false,
+          "description": "Size limits and splitting configuration"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Output format and destination configuration"
+    },
+    "lifecycle": {
+      "type": "object",
+      "properties": {
+        "auto_cleanup": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically clean up temporary export files"
+        },
+        "cleanup_delay_hours": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 168,
+          "default": 24,
+          "description": "Hours to wait before cleaning up export files"
+        },
+        "retention_days": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 30,
+          "default": 7,
+          "description": "Days to retain export files"
+        },
+        "notification_on_cleanup": {
+          "type": "boolean",
+          "default": true,
+          "description": "Notify user when export files are cleaned up"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Export lifecycle management"
+    },
+    "audit": {
+      "type": "object",
+      "properties": {
+        "created_by": {
+          "type": "string",
+          "description": "User who created this export descriptor"
+        },
+        "purpose": {
+          "type": "string",
+          "description": "Purpose or reason for the export"
+        },
+        "approval_required": {
+          "type": "boolean",
+          "default": false,
+          "description": "Whether this export requires approval before execution"
+        },
+        "approved_by": {
+          "type": "string",
+          "description": "User who approved this export"
+        },
+        "approved_utc": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When this export was approved"
+        },
+        "executed_utc": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When this export was executed"
+        },
+        "execution_status": {
+          "type": "string",
+          "enum": ["pending", "in_progress", "completed", "failed", "cancelled"],
+          "description": "Current execution status"
+        },
+        "risk_assessment": {
+          "type": "string",
+          "enum": ["low", "medium", "high", "critical"],
+          "description": "Risk level assessment for this export"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Audit information for the export operation"
+    }
+  },
+  "additionalProperties": false,
+  "examples": [
+    {
+      "export_id": "export-2025-08-19-143000",
+      "created_utc": "2025-08-19T14:30:00Z",
+      "backup_id": "wf-2025-08-19-011500",
+      "export_scope": {
+        "type": "selective",
+        "components": ["config", "logs"],
+        "exclude_components": ["db", "models"],
+        "data_filters": [
+          {
+            "component": "logs",
+            "filter_type": "exclude_sensitive",
+            "criteria": {
+              "exclude_patterns": ["password", "token", "key"]
+            }
+          }
+        ]
+      },
+      "privacy_controls": {
+        "consent_required": true,
+        "privacy_level": "local_only",
+        "user_consent": {
+          "user_id": "user123",
+          "granted_utc": "2025-08-19T14:25:00Z",
+          "expires_utc": "2025-08-26T14:25:00Z",
+          "scopes": ["config", "logs"],
+          "consent_method": "explicit"
+        },
+        "data_minimization": {
+          "enabled": true,
+          "remove_identifiers": true,
+          "anonymize_timestamps": false,
+          "aggregate_metrics": false,
+          "hash_sensitive_data": true
+        },
+        "compliance": {
+          "gdpr_compliant": true,
+          "ccpa_compliant": true,
+          "right_to_be_forgotten": true,
+          "data_portability": true
+        }
+      },
+      "encryption_config": {
+        "enabled": true,
+        "algorithm": "AES-256-GCM",
+        "key_derivation": {
+          "function": "PBKDF2",
+          "iterations": 100000,
+          "salt_length": 32
+        },
+        "passphrase_requirements": {
+          "min_length": 12,
+          "require_uppercase": true,
+          "require_lowercase": true,
+          "require_numbers": true,
+          "require_symbols": false
+        },
+        "compression": {
+          "enabled": true,
+          "algorithm": "gzip",
+          "level": 6
+        }
+      },
+      "output_config": {
+        "format": "zip",
+        "destination": {
+          "type": "user_download",
+          "filename": "wirthforge-backup-config-logs-2025-08-19.zip",
+          "overwrite_existing": false
+        },
+        "metadata_inclusion": {
+          "include_manifest": true,
+          "include_checksums": true,
+          "include_export_log": true,
+          "include_privacy_report": true
+        },
+        "size_limits": {
+          "max_total_size_mb": 100,
+          "split_large_exports": false
+        }
+      },
+      "lifecycle": {
+        "auto_cleanup": true,
+        "cleanup_delay_hours": 24,
+        "retention_days": 7,
+        "notification_on_cleanup": true
+      },
+      "audit": {
+        "created_by": "user123",
+        "purpose": "Configuration backup for system migration",
+        "approval_required": false,
+        "execution_status": "pending",
+        "risk_assessment": "low"
+      }
+    }
+  ]
+}

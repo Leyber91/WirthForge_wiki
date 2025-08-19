@@ -1,0 +1,426 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://wirthforge.org/schemas/WF-OPS-003-recovery-plan.json",
+  "title": "WF-OPS-003 Recovery Plan Schema",
+  "description": "Schema for recovery plan configurations defining restoration scope, safety checks, and rollback procedures for WirthForge backup recovery operations",
+  "type": "object",
+  "required": [
+    "plan_id",
+    "created_utc",
+    "backup_id",
+    "recovery_scope",
+    "safety_checks",
+    "rollback_config"
+  ],
+  "properties": {
+    "plan_id": {
+      "type": "string",
+      "pattern": "^recovery-[0-9]{4}-[0-9]{2}-[0-9]{2}-[0-9]{6}$",
+      "description": "Unique recovery plan identifier with timestamp format",
+      "examples": ["recovery-2025-08-19-143000", "recovery-2025-08-19-091500"]
+    },
+    "created_utc": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 UTC timestamp when recovery plan was created"
+    },
+    "backup_id": {
+      "type": "string",
+      "pattern": "^wf-[0-9]{4}-[0-9]{2}-[0-9]{2}-[0-9]{6}$",
+      "description": "Target backup ID to restore from"
+    },
+    "recovery_scope": {
+      "type": "object",
+      "required": ["type", "components"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["full", "selective", "config_only", "db_only"],
+          "description": "Type of recovery operation"
+        },
+        "components": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["db", "config", "logs", "certs", "models", "audit"]
+          },
+          "minItems": 1,
+          "uniqueItems": true,
+          "description": "Specific components to recover"
+        },
+        "exclude_components": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["db", "config", "logs", "certs", "models", "audit"]
+          },
+          "uniqueItems": true,
+          "description": "Components to explicitly exclude from recovery"
+        },
+        "preserve_current": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "List of current files/settings to preserve during recovery"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Defines what will be recovered and how"
+    },
+    "safety_checks": {
+      "type": "object",
+      "required": ["pre_recovery", "during_recovery", "post_recovery"],
+      "properties": {
+        "pre_recovery": {
+          "type": "object",
+          "properties": {
+            "verify_backup_integrity": {
+              "type": "boolean",
+              "default": true,
+              "description": "Verify backup SHA-256 hashes before starting"
+            },
+            "check_system_health": {
+              "type": "boolean",
+              "default": true,
+              "description": "Check system load and frame budget status"
+            },
+            "validate_dependencies": {
+              "type": "boolean",
+              "default": true,
+              "description": "Ensure all required backup dependencies are available"
+            },
+            "confirm_disk_space": {
+              "type": "boolean",
+              "default": true,
+              "description": "Verify sufficient disk space for recovery"
+            },
+            "backup_current_state": {
+              "type": "boolean",
+              "default": true,
+              "description": "Create emergency backup of current state"
+            },
+            "stop_services": {
+              "type": "boolean",
+              "default": true,
+              "description": "Gracefully stop WirthForge services before recovery"
+            }
+          },
+          "additionalProperties": false,
+          "description": "Safety checks to perform before starting recovery"
+        },
+        "during_recovery": {
+          "type": "object",
+          "properties": {
+            "verify_file_hashes": {
+              "type": "boolean",
+              "default": true,
+              "description": "Verify each file hash during restoration"
+            },
+            "atomic_operations": {
+              "type": "boolean",
+              "default": true,
+              "description": "Use atomic file operations where possible"
+            },
+            "progress_checkpoints": {
+              "type": "boolean",
+              "default": true,
+              "description": "Create progress checkpoints for rollback"
+            },
+            "monitor_frame_budget": {
+              "type": "boolean",
+              "default": true,
+              "description": "Monitor and respect 60Hz frame budget during recovery"
+            },
+            "pause_on_load": {
+              "type": "boolean",
+              "default": true,
+              "description": "Pause recovery if system load becomes too high"
+            }
+          },
+          "additionalProperties": false,
+          "description": "Safety checks to perform during recovery"
+        },
+        "post_recovery": {
+          "type": "object",
+          "properties": {
+            "verify_restored_files": {
+              "type": "boolean",
+              "default": true,
+              "description": "Verify all restored files exist and have correct hashes"
+            },
+            "database_integrity_check": {
+              "type": "boolean",
+              "default": true,
+              "description": "Run SQLite integrity check on restored database"
+            },
+            "smoke_tests": {
+              "type": "boolean",
+              "default": true,
+              "description": "Run smoke tests to verify system functionality"
+            },
+            "service_startup_test": {
+              "type": "boolean",
+              "default": true,
+              "description": "Test service startup in verify mode"
+            },
+            "configuration_validation": {
+              "type": "boolean",
+              "default": true,
+              "description": "Validate restored configuration files"
+            }
+          },
+          "additionalProperties": false,
+          "description": "Safety checks to perform after recovery"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Comprehensive safety check configuration"
+    },
+    "rollback_config": {
+      "type": "object",
+      "required": ["enabled", "triggers"],
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether automatic rollback is enabled"
+        },
+        "triggers": {
+          "type": "object",
+          "properties": {
+            "smoke_test_failure": {
+              "type": "boolean",
+              "default": true,
+              "description": "Rollback if smoke tests fail"
+            },
+            "service_startup_failure": {
+              "type": "boolean",
+              "default": true,
+              "description": "Rollback if services fail to start"
+            },
+            "integrity_check_failure": {
+              "type": "boolean",
+              "default": true,
+              "description": "Rollback if integrity checks fail"
+            },
+            "user_abort": {
+              "type": "boolean",
+              "default": true,
+              "description": "Rollback if user manually aborts recovery"
+            },
+            "timeout": {
+              "type": "boolean",
+              "default": true,
+              "description": "Rollback if recovery times out"
+            }
+          },
+          "additionalProperties": false,
+          "description": "Conditions that trigger automatic rollback"
+        },
+        "timeout_minutes": {
+          "type": "integer",
+          "minimum": 5,
+          "maximum": 120,
+          "default": 30,
+          "description": "Maximum time allowed for recovery before timeout"
+        },
+        "preserve_logs": {
+          "type": "boolean",
+          "default": true,
+          "description": "Preserve recovery logs even after rollback"
+        },
+        "emergency_backup_retention": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 30,
+          "default": 7,
+          "description": "Days to retain emergency backup created before recovery"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Rollback configuration and triggers"
+    },
+    "performance_limits": {
+      "type": "object",
+      "properties": {
+        "max_frame_time_ms": {
+          "type": "number",
+          "minimum": 16.67,
+          "maximum": 50,
+          "default": 16.67,
+          "description": "Maximum allowed frame time during recovery"
+        },
+        "cpu_threshold_percent": {
+          "type": "integer",
+          "minimum": 50,
+          "maximum": 95,
+          "default": 85,
+          "description": "CPU usage threshold to pause recovery"
+        },
+        "memory_threshold_percent": {
+          "type": "integer",
+          "minimum": 50,
+          "maximum": 95,
+          "default": 90,
+          "description": "Memory usage threshold to pause recovery"
+        },
+        "chunk_size_bytes": {
+          "type": "integer",
+          "minimum": 1024,
+          "maximum": 10485760,
+          "default": 1048576,
+          "description": "File processing chunk size in bytes"
+        },
+        "pause_duration_ms": {
+          "type": "integer",
+          "minimum": 100,
+          "maximum": 5000,
+          "default": 1000,
+          "description": "Duration to pause when performance limits are exceeded"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Performance limits and throttling configuration"
+    },
+    "notifications": {
+      "type": "object",
+      "properties": {
+        "progress_updates": {
+          "type": "boolean",
+          "default": true,
+          "description": "Send progress update notifications"
+        },
+        "milestone_notifications": {
+          "type": "boolean",
+          "default": true,
+          "description": "Send notifications at major milestones"
+        },
+        "error_notifications": {
+          "type": "boolean",
+          "default": true,
+          "description": "Send notifications for errors and warnings"
+        },
+        "completion_notification": {
+          "type": "boolean",
+          "default": true,
+          "description": "Send notification when recovery completes"
+        },
+        "update_interval_seconds": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 60,
+          "default": 5,
+          "description": "Interval between progress updates"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Notification preferences during recovery"
+    },
+    "audit": {
+      "type": "object",
+      "properties": {
+        "created_by": {
+          "type": "string",
+          "description": "User or system that created this recovery plan"
+        },
+        "reason": {
+          "type": "string",
+          "description": "Reason for creating this recovery plan"
+        },
+        "approval_required": {
+          "type": "boolean",
+          "default": false,
+          "description": "Whether this recovery plan requires approval before execution"
+        },
+        "approved_by": {
+          "type": "string",
+          "description": "User who approved this recovery plan"
+        },
+        "approved_utc": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When this recovery plan was approved"
+        },
+        "risk_level": {
+          "type": "string",
+          "enum": ["low", "medium", "high", "critical"],
+          "description": "Assessed risk level of this recovery operation"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Audit information for the recovery plan"
+    }
+  },
+  "additionalProperties": false,
+  "examples": [
+    {
+      "plan_id": "recovery-2025-08-19-143000",
+      "created_utc": "2025-08-19T14:30:00Z",
+      "backup_id": "wf-2025-08-19-011500",
+      "recovery_scope": {
+        "type": "selective",
+        "components": ["db", "config"],
+        "exclude_components": ["models"],
+        "preserve_current": ["config/user_preferences.json"]
+      },
+      "safety_checks": {
+        "pre_recovery": {
+          "verify_backup_integrity": true,
+          "check_system_health": true,
+          "validate_dependencies": true,
+          "confirm_disk_space": true,
+          "backup_current_state": true,
+          "stop_services": true
+        },
+        "during_recovery": {
+          "verify_file_hashes": true,
+          "atomic_operations": true,
+          "progress_checkpoints": true,
+          "monitor_frame_budget": true,
+          "pause_on_load": true
+        },
+        "post_recovery": {
+          "verify_restored_files": true,
+          "database_integrity_check": true,
+          "smoke_tests": true,
+          "service_startup_test": true,
+          "configuration_validation": true
+        }
+      },
+      "rollback_config": {
+        "enabled": true,
+        "triggers": {
+          "smoke_test_failure": true,
+          "service_startup_failure": true,
+          "integrity_check_failure": true,
+          "user_abort": true,
+          "timeout": true
+        },
+        "timeout_minutes": 30,
+        "preserve_logs": true,
+        "emergency_backup_retention": 7
+      },
+      "performance_limits": {
+        "max_frame_time_ms": 16.67,
+        "cpu_threshold_percent": 85,
+        "memory_threshold_percent": 90,
+        "chunk_size_bytes": 1048576,
+        "pause_duration_ms": 1000
+      },
+      "notifications": {
+        "progress_updates": true,
+        "milestone_notifications": true,
+        "error_notifications": true,
+        "completion_notification": true,
+        "update_interval_seconds": 5
+      },
+      "audit": {
+        "created_by": "admin_user",
+        "reason": "Database corruption detected, need to restore from last known good backup",
+        "approval_required": false,
+        "risk_level": "medium"
+      }
+    }
+  ]
+}

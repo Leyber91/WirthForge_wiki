@@ -1,0 +1,263 @@
+{
+  "manifest_version": "1.0.0",
+  "component_id": "WF-OPS-003",
+  "component_name": "Backup, Recovery & Data Management",
+  "description": "Local-first backup and recovery system with privacy-preserving exports, SHA-256 content addressing, and 60Hz frame budget compliance",
+  "created_date": "2025-01-19T11:33:07Z",
+  "last_updated": "2025-01-19T11:33:07Z",
+  "version": "1.0.0",
+  "status": "complete",
+  "dependencies": {
+    "internal": [
+      "WF-OPS-001",
+      "WF-OPS-002"
+    ],
+    "external": [
+      "python>=3.8",
+      "cryptography>=3.4.8",
+      "psutil>=5.8.0",
+      "tkinter"
+    ]
+  },
+  "assets": {
+    "diagrams": [
+      {
+        "name": "backup-architecture",
+        "path": "assets/diagrams/WF-OPS/WF-OPS-003/WF-OPS-003-backup-architecture.md",
+        "type": "mermaid",
+        "description": "System architecture for local-first backup with monitoring integration"
+      },
+      {
+        "name": "recovery-sequence",
+        "path": "assets/diagrams/WF-OPS/WF-OPS-003/WF-OPS-003-recovery-sequence.md",
+        "type": "mermaid",
+        "description": "Recovery sequence with safety checks and selective restore scopes"
+      },
+      {
+        "name": "data-lifecycle",
+        "path": "assets/diagrams/WF-OPS/WF-OPS-003/WF-OPS-003-data-lifecycle.md",
+        "type": "mermaid",
+        "description": "Data lifecycle management with energy-aware scheduling"
+      },
+      {
+        "name": "retention-cleanup",
+        "path": "assets/diagrams/WF-OPS/WF-OPS-003/WF-OPS-003-retention-cleanup.md",
+        "type": "mermaid",
+        "description": "Retention policy enforcement and performance-aware cleanup"
+      }
+    ],
+    "schemas": [
+      {
+        "name": "backup-manifest",
+        "path": "assets/schemas/WF-OPS/WF-OPS-003/WF-OPS-003-backup-manifest.json",
+        "type": "json_schema",
+        "description": "Schema for backup manifest with integrity, performance, and audit metadata"
+      },
+      {
+        "name": "recovery-plan",
+        "path": "assets/schemas/WF-OPS/WF-OPS-003/WF-OPS-003-recovery-plan.json",
+        "type": "json_schema",
+        "description": "Schema for recovery plan with safety checks and rollback configuration"
+      },
+      {
+        "name": "retention-policy",
+        "path": "assets/schemas/WF-OPS/WF-OPS-003/WF-OPS-003-retention-policy.json",
+        "type": "json_schema",
+        "description": "Schema for retention policy with cleanup scheduling and preservation rules"
+      },
+      {
+        "name": "export-descriptor",
+        "path": "assets/schemas/WF-OPS/WF-OPS-003/WF-OPS-003-export-descriptor.json",
+        "type": "json_schema",
+        "description": "Schema for privacy-preserving export with encryption and compliance controls"
+      }
+    ],
+    "code": [
+      {
+        "name": "planner",
+        "path": "assets/code/WF-OPS/WF-OPS-003/planner.py",
+        "type": "python_module",
+        "description": "Energy-aware backup planning with WF-OPS-002 monitoring integration"
+      },
+      {
+        "name": "backup-engine",
+        "path": "assets/code/WF-OPS/WF-OPS-003/backup-engine.py",
+        "type": "python_module",
+        "description": "Local-first backup engine with SHA-256 content addressing and frame budget compliance"
+      },
+      {
+        "name": "recovery-engine",
+        "path": "assets/code/WF-OPS/WF-OPS-003/recovery-engine.py",
+        "type": "python_module",
+        "description": "Safe recovery engine with rollback, smoke tests, and emergency backup capabilities"
+      },
+      {
+        "name": "encryption-helper",
+        "path": "assets/code/WF-OPS/WF-OPS-003/encryption-helper.py",
+        "type": "python_module",
+        "description": "Privacy-preserving encryption for optional exports with explicit user consent"
+      },
+      {
+        "name": "audit-verify",
+        "path": "assets/code/WF-OPS/WF-OPS-003/audit-verify.py",
+        "type": "python_module",
+        "description": "Immutable audit trails, integrity verification, and compliance reporting"
+      },
+      {
+        "name": "ui-module",
+        "path": "assets/code/WF-OPS/WF-OPS-003/ui-module.py",
+        "type": "python_module",
+        "description": "60Hz responsive UI with energy-aware visualizations and real-time progress"
+      }
+    ],
+    "tests": [
+      {
+        "name": "integrity-verify",
+        "path": "assets/tests/WF-OPS/WF-OPS-003/test-integrity-verify.py",
+        "type": "test_suite",
+        "description": "Comprehensive integrity verification tests with SHA-256 validation and hash tree verification"
+      },
+      {
+        "name": "restore-smoke",
+        "path": "assets/tests/WF-OPS/WF-OPS-003/test-restore-smoke.py",
+        "type": "test_suite",
+        "description": "Critical smoke tests for recovery operations with safety checks and rollback testing"
+      },
+      {
+        "name": "performance-load",
+        "path": "assets/tests/WF-OPS/WF-OPS-003/test-performance-load.py",
+        "type": "test_suite",
+        "description": "Performance testing under load with frame budget compliance and resource monitoring"
+      },
+      {
+        "name": "policy-consent",
+        "path": "assets/tests/WF-OPS/WF-OPS-003/test-policy-consent.py",
+        "type": "test_suite",
+        "description": "Privacy controls and consent mechanism testing with GDPR/CCPA compliance validation"
+      }
+    ]
+  },
+  "features": {
+    "core_capabilities": [
+      "Local-first backup creation with SHA-256 content addressing",
+      "Selective recovery with config-only, DB-only, and full restore scopes",
+      "Privacy-preserving encrypted exports with explicit user consent",
+      "Immutable audit trails with hash tree integrity verification",
+      "Energy-aware scheduling integrated with WF-OPS-002 monitoring",
+      "60Hz frame budget compliance for responsive UI operations",
+      "Emergency recovery with automatic rollback on failure",
+      "Comprehensive integrity verification and corruption detection"
+    ],
+    "integration_points": [
+      "WF-OPS-001 deployment system for service management and installation",
+      "WF-OPS-002 monitoring system for energy-aware scheduling and health signals",
+      "Native filesystem operations with no Docker dependencies",
+      "SQLite persistence for backup plans and audit trails",
+      "WebSocket/SSE integration for real-time progress updates"
+    ],
+    "compliance_features": [
+      "GDPR and CCPA compliance with data minimization principles",
+      "Purpose limitation and retention period enforcement",
+      "User data rights support (access, rectification, erasure, portability)",
+      "Explicit consent mechanisms for encryption and exports",
+      "Comprehensive audit logging for compliance reporting"
+    ]
+  },
+  "technical_specifications": {
+    "performance_requirements": {
+      "frame_budget": "16.67ms (60 FPS)",
+      "backup_throughput": ">10 files/second for small files, >5 MB/s for large files",
+      "recovery_throughput": ">5 files/second with integrity verification",
+      "memory_usage": "<500MB peak during normal operations",
+      "cpu_usage": "<80% average during backup/recovery operations"
+    },
+    "security_specifications": {
+      "content_addressing": "SHA-256 hashing for all files",
+      "encryption": "AES-256-GCM with PBKDF2-SHA256 key derivation",
+      "key_iterations": "100,000 iterations minimum",
+      "audit_integrity": "Immutable hash trees with cryptographic verification",
+      "privacy_controls": "Local-first with optional encrypted exports only"
+    },
+    "reliability_specifications": {
+      "integrity_verification": "100% file verification with hash validation",
+      "rollback_capability": "Automatic rollback on recovery failure",
+      "emergency_backup": "Pre-recovery emergency backup creation",
+      "smoke_testing": "Post-recovery smoke tests for critical functions",
+      "audit_trail": "Complete immutable audit log for all operations"
+    }
+  },
+  "deployment": {
+    "installation_requirements": [
+      "Python 3.8+ runtime environment",
+      "Cryptography library for encryption operations",
+      "psutil for system resource monitoring",
+      "tkinter for GUI operations (included with Python)",
+      "SQLite for audit database (included with Python)",
+      "Minimum 1GB available disk space for operations",
+      "Minimum 512MB available RAM"
+    ],
+    "configuration": {
+      "backup_directory": "Configurable backup storage location",
+      "frame_budget": "Configurable performance budget (default 16.67ms)",
+      "retention_policies": "Configurable retention periods per backup type",
+      "encryption_settings": "Optional encryption with user-controlled keys",
+      "monitoring_integration": "WF-OPS-002 endpoint configuration",
+      "audit_database": "SQLite database location and retention settings"
+    }
+  },
+  "testing": {
+    "coverage": {
+      "unit_tests": "95%+ code coverage across all modules",
+      "integration_tests": "Full integration with WF-OPS-001 and WF-OPS-002",
+      "performance_tests": "Frame budget compliance and throughput validation",
+      "security_tests": "Encryption, integrity, and privacy control validation",
+      "compliance_tests": "GDPR/CCPA compliance and audit trail verification"
+    },
+    "test_execution": {
+      "integrity_suite": "python test-integrity-verify.py",
+      "restore_suite": "python test-restore-smoke.py", 
+      "performance_suite": "python test-performance-load.py",
+      "policy_suite": "python test-policy-consent.py",
+      "full_suite": "Run all test suites for comprehensive validation"
+    }
+  },
+  "documentation": {
+    "architecture_diagrams": "4 Mermaid diagrams covering system architecture and data flows",
+    "json_schemas": "4 comprehensive schemas for backup, recovery, retention, and export operations",
+    "code_documentation": "Inline documentation and docstrings for all modules",
+    "integration_guide": "Complete integration guide with WF-OPS-001 and WF-OPS-002",
+    "user_guide": "UI operation guide with privacy controls and consent mechanisms",
+    "compliance_guide": "GDPR/CCPA compliance implementation and audit procedures"
+  },
+  "validation": {
+    "functional_validation": [
+      "All backup operations create valid manifests with SHA-256 hashes",
+      "Recovery operations successfully restore files with integrity verification",
+      "Encryption operations require and record explicit user consent",
+      "Audit trails are immutable and cryptographically verifiable",
+      "UI operations maintain 60Hz frame budget during all operations",
+      "Integration with WF-OPS-001 and WF-OPS-002 functions correctly"
+    ],
+    "performance_validation": [
+      "Frame budget compliance verified under load testing",
+      "Memory usage remains stable during extended operations",
+      "CPU usage stays within acceptable limits during backup/recovery",
+      "Disk I/O operations are efficient and non-blocking",
+      "Concurrent operations handle resource contention appropriately"
+    ],
+    "security_validation": [
+      "All file hashes verified using SHA-256 content addressing",
+      "Encryption uses industry-standard AES-256-GCM with proper key derivation",
+      "User consent is explicitly required and recorded for all exports",
+      "Audit trails cannot be tampered with or deleted",
+      "Privacy controls prevent unauthorized data access or export"
+    ]
+  },
+  "maintenance": {
+    "monitoring_integration": "Health metrics reported to WF-OPS-002 monitoring system",
+    "log_management": "Structured logging with configurable retention periods",
+    "performance_monitoring": "Frame budget and resource usage tracking",
+    "security_monitoring": "Integrity verification and audit trail monitoring",
+    "update_procedures": "Safe update mechanisms with rollback capabilities"
+  }
+}

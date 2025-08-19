@@ -1,0 +1,512 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://wirthforge.org/schemas/WF-OPS-003-retention-policy.json",
+  "title": "WF-OPS-003 Retention Policy Schema",
+  "description": "Schema for backup retention policies defining lifecycle rules, cleanup schedules, and preservation criteria for WirthForge backup management",
+  "type": "object",
+  "required": [
+    "policy_id",
+    "name",
+    "created_utc",
+    "retention_rules",
+    "cleanup_schedule",
+    "preservation_rules"
+  ],
+  "properties": {
+    "policy_id": {
+      "type": "string",
+      "pattern": "^retention-policy-[a-z0-9-]+$",
+      "description": "Unique retention policy identifier",
+      "examples": ["retention-policy-default", "retention-policy-development", "retention-policy-production"]
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100,
+      "description": "Human-readable name for the retention policy"
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 500,
+      "description": "Optional description of the retention policy purpose and scope"
+    },
+    "created_utc": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 UTC timestamp when policy was created"
+    },
+    "updated_utc": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 UTC timestamp when policy was last updated"
+    },
+    "active": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether this retention policy is currently active"
+    },
+    "retention_rules": {
+      "type": "object",
+      "required": ["count_based", "time_based", "size_based"],
+      "properties": {
+        "count_based": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "default": true,
+              "description": "Whether count-based retention is enabled"
+            },
+            "daily_backups": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 30,
+              "default": 7,
+              "description": "Number of daily backups to retain"
+            },
+            "weekly_backups": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 52,
+              "default": 4,
+              "description": "Number of weekly backups to retain"
+            },
+            "monthly_backups": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 60,
+              "default": 12,
+              "description": "Number of monthly backups to retain"
+            },
+            "yearly_backups": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 10,
+              "default": 3,
+              "description": "Number of yearly backups to retain"
+            }
+          },
+          "additionalProperties": false,
+          "description": "Count-based retention rules"
+        },
+        "time_based": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "default": true,
+              "description": "Whether time-based retention is enabled"
+            },
+            "recent_retention_days": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 90,
+              "default": 7,
+              "description": "Days to retain all recent backups"
+            },
+            "weekly_retention_days": {
+              "type": "integer",
+              "minimum": 7,
+              "maximum": 365,
+              "default": 30,
+              "description": "Days to retain weekly backups"
+            },
+            "monthly_retention_days": {
+              "type": "integer",
+              "minimum": 30,
+              "maximum": 1095,
+              "default": 365,
+              "description": "Days to retain monthly backups"
+            },
+            "archive_retention_days": {
+              "type": "integer",
+              "minimum": 365,
+              "maximum": 3650,
+              "description": "Days to retain archived backups (optional, 0 = indefinite)"
+            }
+          },
+          "additionalProperties": false,
+          "description": "Time-based retention rules"
+        },
+        "size_based": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "default": false,
+              "description": "Whether size-based retention is enabled"
+            },
+            "max_total_size_gb": {
+              "type": "number",
+              "minimum": 1,
+              "maximum": 10000,
+              "description": "Maximum total size of all backups in GB"
+            },
+            "cleanup_threshold_percent": {
+              "type": "integer",
+              "minimum": 70,
+              "maximum": 95,
+              "default": 85,
+              "description": "Percentage of max size that triggers cleanup"
+            },
+            "target_size_percent": {
+              "type": "integer",
+              "minimum": 50,
+              "maximum": 80,
+              "default": 70,
+              "description": "Target size percentage after cleanup"
+            }
+          },
+          "additionalProperties": false,
+          "description": "Size-based retention rules"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Retention rule configuration"
+    },
+    "cleanup_schedule": {
+      "type": "object",
+      "required": ["enabled", "frequency"],
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether automatic cleanup is enabled"
+        },
+        "frequency": {
+          "type": "string",
+          "enum": ["daily", "weekly", "monthly"],
+          "default": "daily",
+          "description": "How often cleanup runs"
+        },
+        "time_of_day": {
+          "type": "string",
+          "pattern": "^([01]?[0-9]|2[0-3]):[0-5][0-9]$",
+          "default": "02:00",
+          "description": "Time of day to run cleanup (HH:MM format)"
+        },
+        "day_of_week": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 6,
+          "description": "Day of week for weekly cleanup (0=Sunday, 6=Saturday)"
+        },
+        "day_of_month": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 31,
+          "description": "Day of month for monthly cleanup"
+        },
+        "max_duration_minutes": {
+          "type": "integer",
+          "minimum": 5,
+          "maximum": 120,
+          "default": 30,
+          "description": "Maximum time allowed for cleanup operation"
+        },
+        "performance_requirements": {
+          "type": "object",
+          "properties": {
+            "max_cpu_percent": {
+              "type": "integer",
+              "minimum": 50,
+              "maximum": 95,
+              "default": 60,
+              "description": "Maximum CPU usage to start cleanup"
+            },
+            "min_fps": {
+              "type": "integer",
+              "minimum": 30,
+              "maximum": 60,
+              "default": 58,
+              "description": "Minimum FPS required to start cleanup"
+            },
+            "pause_on_load": {
+              "type": "boolean",
+              "default": true,
+              "description": "Pause cleanup if system load increases"
+            }
+          },
+          "additionalProperties": false,
+          "description": "Performance requirements for cleanup operations"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Cleanup scheduling configuration"
+    },
+    "preservation_rules": {
+      "type": "object",
+      "properties": {
+        "never_delete_last_good": {
+          "type": "boolean",
+          "default": true,
+          "description": "Never delete the last known good backup"
+        },
+        "preserve_tagged_backups": {
+          "type": "boolean",
+          "default": true,
+          "description": "Never delete backups with preservation tags"
+        },
+        "preserve_full_backups": {
+          "type": "boolean",
+          "default": false,
+          "description": "Always preserve full backups (never delete)"
+        },
+        "minimum_backups": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10,
+          "default": 3,
+          "description": "Minimum number of backups to always keep"
+        },
+        "preservation_tags": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 50
+          },
+          "uniqueItems": true,
+          "description": "List of tags that prevent backup deletion"
+        },
+        "critical_backup_retention_days": {
+          "type": "integer",
+          "minimum": 30,
+          "maximum": 365,
+          "default": 90,
+          "description": "Minimum retention period for critical backups"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Rules for preserving important backups"
+    },
+    "backup_type_rules": {
+      "type": "object",
+      "properties": {
+        "full_backups": {
+          "type": "object",
+          "properties": {
+            "priority": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 10,
+              "default": 10,
+              "description": "Priority for retention (10 = highest)"
+            },
+            "min_retention_days": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 365,
+              "default": 30,
+              "description": "Minimum retention period for full backups"
+            },
+            "preserve_monthly": {
+              "type": "boolean",
+              "default": true,
+              "description": "Preserve one full backup per month"
+            }
+          },
+          "additionalProperties": false
+        },
+        "incremental_backups": {
+          "type": "object",
+          "properties": {
+            "priority": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 10,
+              "default": 5,
+              "description": "Priority for retention (10 = highest)"
+            },
+            "min_retention_days": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 90,
+              "default": 7,
+              "description": "Minimum retention period for incremental backups"
+            },
+            "chain_preservation": {
+              "type": "boolean",
+              "default": true,
+              "description": "Preserve complete incremental chains"
+            }
+          },
+          "additionalProperties": false
+        },
+        "differential_backups": {
+          "type": "object",
+          "properties": {
+            "priority": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 10,
+              "default": 7,
+              "description": "Priority for retention (10 = highest)"
+            },
+            "min_retention_days": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 90,
+              "default": 14,
+              "description": "Minimum retention period for differential backups"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false,
+      "description": "Retention rules specific to backup types"
+    },
+    "user_confirmation": {
+      "type": "object",
+      "properties": {
+        "required_for_cleanup": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether user confirmation is required before cleanup"
+        },
+        "required_for_large_cleanup": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether confirmation is required for large cleanup operations"
+        },
+        "large_cleanup_threshold": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100,
+          "default": 10,
+          "description": "Number of backups that constitutes a 'large' cleanup"
+        },
+        "timeout_minutes": {
+          "type": "integer",
+          "minimum": 5,
+          "maximum": 60,
+          "default": 15,
+          "description": "Minutes to wait for user confirmation before canceling"
+        },
+        "auto_approve_small_cleanup": {
+          "type": "boolean",
+          "default": false,
+          "description": "Automatically approve cleanup of small numbers of backups"
+        }
+      },
+      "additionalProperties": false,
+      "description": "User confirmation requirements for cleanup operations"
+    },
+    "audit": {
+      "type": "object",
+      "properties": {
+        "created_by": {
+          "type": "string",
+          "description": "User who created this retention policy"
+        },
+        "last_modified_by": {
+          "type": "string",
+          "description": "User who last modified this retention policy"
+        },
+        "approval_required": {
+          "type": "boolean",
+          "default": false,
+          "description": "Whether policy changes require approval"
+        },
+        "approved_by": {
+          "type": "string",
+          "description": "User who approved this retention policy"
+        },
+        "approved_utc": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When this retention policy was approved"
+        },
+        "last_cleanup_utc": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When cleanup was last executed with this policy"
+        },
+        "cleanup_count": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Number of times cleanup has been executed with this policy"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Audit information for the retention policy"
+    }
+  },
+  "additionalProperties": false,
+  "examples": [
+    {
+      "policy_id": "retention-policy-default",
+      "name": "Default Retention Policy",
+      "description": "Standard retention policy for WirthForge backups with balanced storage usage and recovery capabilities",
+      "created_utc": "2025-08-19T10:00:00Z",
+      "active": true,
+      "retention_rules": {
+        "count_based": {
+          "enabled": true,
+          "daily_backups": 7,
+          "weekly_backups": 4,
+          "monthly_backups": 12,
+          "yearly_backups": 3
+        },
+        "time_based": {
+          "enabled": true,
+          "recent_retention_days": 7,
+          "weekly_retention_days": 30,
+          "monthly_retention_days": 365,
+          "archive_retention_days": 1095
+        },
+        "size_based": {
+          "enabled": false
+        }
+      },
+      "cleanup_schedule": {
+        "enabled": true,
+        "frequency": "daily",
+        "time_of_day": "02:00",
+        "max_duration_minutes": 30,
+        "performance_requirements": {
+          "max_cpu_percent": 60,
+          "min_fps": 58,
+          "pause_on_load": true
+        }
+      },
+      "preservation_rules": {
+        "never_delete_last_good": true,
+        "preserve_tagged_backups": true,
+        "preserve_full_backups": false,
+        "minimum_backups": 3,
+        "preservation_tags": ["critical", "milestone", "release"],
+        "critical_backup_retention_days": 90
+      },
+      "backup_type_rules": {
+        "full_backups": {
+          "priority": 10,
+          "min_retention_days": 30,
+          "preserve_monthly": true
+        },
+        "incremental_backups": {
+          "priority": 5,
+          "min_retention_days": 7,
+          "chain_preservation": true
+        },
+        "differential_backups": {
+          "priority": 7,
+          "min_retention_days": 14
+        }
+      },
+      "user_confirmation": {
+        "required_for_cleanup": true,
+        "required_for_large_cleanup": true,
+        "large_cleanup_threshold": 10,
+        "timeout_minutes": 15,
+        "auto_approve_small_cleanup": false
+      },
+      "audit": {
+        "created_by": "system_admin",
+        "approval_required": false,
+        "cleanup_count": 0
+      }
+    }
+  ]
+}
