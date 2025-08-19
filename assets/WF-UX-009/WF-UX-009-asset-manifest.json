@@ -1,0 +1,404 @@
+{
+  "manifestVersion": "1.0.0",
+  "specificationId": "WF-UX-009",
+  "specificationTitle": "Advanced User Workflows",
+  "generatedDate": "2025-08-19T00:06:19.000Z",
+  "generatedBy": "WIRTHFORGE Asset Generator v1.0",
+  "totalAssets": 18,
+  
+  "assetCategories": {
+    "diagrams": {
+      "count": 4,
+      "description": "Mermaid architecture and flow diagrams",
+      "assets": [
+        {
+          "id": "workflow-architecture",
+          "name": "Workflow Architecture Diagram",
+          "path": "assets/diagrams/WF-UX-009/WF-UX-009-workflow-architecture.md",
+          "type": "mermaid",
+          "description": "Multi-layer system architecture showing advanced UI, workflow management, orchestrator, AI engine, and system core layers",
+          "dependencies": ["WF-UX-001", "WF-UX-002", "WF-TECH-003"],
+          "size": "130 lines",
+          "lastModified": "2025-08-19T00:06:19.000Z"
+        },
+        {
+          "id": "power-user-flows",
+          "name": "Power User Flow Diagrams",
+          "path": "assets/diagrams/WF-UX-009/WF-UX-009-power-user-flows.md",
+          "type": "mermaid",
+          "description": "User journey flowcharts for feature unlocks, workflow creation, dashboard customization, and scripting workflows",
+          "dependencies": ["WF-UX-002"],
+          "size": "130 lines",
+          "lastModified": "2025-08-19T00:06:19.000Z"
+        },
+        {
+          "id": "automation-sequence",
+          "name": "Automation Sequence Diagrams",
+          "path": "assets/diagrams/WF-UX-009/WF-UX-009-automation-sequence.md",
+          "type": "mermaid",
+          "description": "Sequence diagrams for workflow execution, automation scheduling, plugin integration, and batch processing",
+          "dependencies": ["WF-TECH-003", "WF-TECH-004"],
+          "size": "160 lines",
+          "lastModified": "2025-08-19T00:06:19.000Z"
+        },
+        {
+          "id": "integration-points",
+          "name": "Integration Points Architecture",
+          "path": "assets/diagrams/WF-UX-009/WF-UX-009-integration-points.md",
+          "type": "mermaid",
+          "description": "External integration architecture, local API endpoints, plugin architecture, and data flow with security boundaries",
+          "dependencies": ["WF-TECH-005", "WF-TECH-002"],
+          "size": "175 lines",
+          "lastModified": "2025-08-19T00:06:19.000Z"
+        }
+      ]
+    },
+    
+    "schemas": {
+      "count": 4,
+      "description": "JSON schemas for data validation and API specifications",
+      "assets": [
+        {
+          "id": "workflow-definition",
+          "name": "Workflow Definition Schema",
+          "path": "assets/schemas/WF-UX-009/WF-UX-009-workflow-definition.json",
+          "type": "json-schema",
+          "description": "Schema for multi-step workflows with parameters, scheduling, error handling, and energy budgets",
+          "schemaVersion": "draft-07",
+          "size": "460 lines",
+          "lastModified": "2025-08-19T00:06:19.000Z"
+        },
+        {
+          "id": "automation-rules",
+          "name": "Automation Rules Schema",
+          "path": "assets/schemas/WF-UX-009/WF-UX-009-automation-rules.json",
+          "type": "json-schema",
+          "description": "Schema for automation triggers, conditions, actions, error handling, and monitoring",
+          "schemaVersion": "draft-07",
+          "size": "460 lines",
+          "lastModified": "2025-08-19T00:06:19.000Z"
+        },
+        {
+          "id": "plugin-manifest",
+          "name": "Plugin Manifest Schema",
+          "path": "assets/schemas/WF-UX-009/WF-UX-009-plugin-manifest.json",
+          "type": "json-schema",
+          "description": "Schema for plugin metadata, permissions, compatibility, lifecycle hooks, and security requirements",
+          "schemaVersion": "draft-07",
+          "size": "460 lines",
+          "lastModified": "2025-08-19T00:06:19.000Z"
+        },
+        {
+          "id": "integration-api",
+          "name": "Integration API Schema",
+          "path": "assets/schemas/WF-UX-009/WF-UX-009-integration-api.json",
+          "type": "openapi",
+          "description": "OpenAPI 3.0.3 specification for local REST and WebSocket API endpoints",
+          "apiVersion": "3.0.3",
+          "size": "460 lines",
+          "lastModified": "2025-08-19T00:06:19.000Z"
+        }
+      ]
+    },
+    
+    "codeModules": {
+      "count": 6,
+      "description": "JavaScript implementation modules for advanced workflow features",
+      "assets": [
+        {
+          "id": "advanced-dashboard",
+          "name": "Advanced Dashboard Component",
+          "path": "assets/code/WF-UX-009/advanced-dashboard.js",
+          "type": "javascript",
+          "description": "Sophisticated workflow management interface with real-time energy visualization and custom layouts",
+          "dependencies": ["energy-pattern-editor.js", "workflow-orchestrator.js", "hotkey-manager.js"],
+          "features": ["60Hz compliance", "Real-time updates", "Progressive enhancement", "Custom layouts"],
+          "size": "~800 lines",
+          "lastModified": "2025-08-19T00:06:19.000Z"
+        },
+        {
+          "id": "energy-pattern-editor",
+          "name": "Energy Pattern Editor",
+          "path": "assets/code/WF-UX-009/energy-pattern-editor.js",
+          "type": "javascript",
+          "description": "Advanced energy pattern creation and visualization with GPU-accelerated canvas rendering",
+          "dependencies": [],
+          "features": ["Canvas rendering", "Real-time visualization", "Pattern templates", "Performance optimization"],
+          "size": "~900 lines",
+          "lastModified": "2025-08-19T00:06:19.000Z"
+        },
+        {
+          "id": "workflow-orchestrator",
+          "name": "Workflow Orchestrator",
+          "path": "assets/code/WF-UX-009/workflow-orchestrator.js",
+          "type": "javascript",
+          "description": "Advanced workflow execution engine with visual canvas and real-time monitoring",
+          "dependencies": [],
+          "features": ["Drag-drop builder", "Parallel execution", "Error recovery", "60Hz UI updates"],
+          "size": "~1000 lines",
+          "lastModified": "2025-08-19T00:06:19.000Z"
+        },
+        {
+          "id": "script-sandbox",
+          "name": "Script Sandbox",
+          "path": "assets/code/WF-UX-009/script-sandbox.js",
+          "type": "javascript",
+          "description": "Secure execution environment for user scripts with safety constraints and resource limits",
+          "dependencies": [],
+          "features": ["Isolated execution", "Resource limits", "Security validation", "Performance monitoring"],
+          "size": "~800 lines",
+          "lastModified": "2025-08-19T00:06:19.000Z"
+        },
+        {
+          "id": "local-api-extension",
+          "name": "Local API Extension",
+          "path": "assets/code/WF-UX-009/local-api-extension.js",
+          "type": "javascript",
+          "description": "Secure local HTTP server for external tool integration with REST and WebSocket support",
+          "dependencies": [],
+          "features": ["REST endpoints", "WebSocket support", "Authentication", "Rate limiting"],
+          "size": "~900 lines",
+          "lastModified": "2025-08-19T00:06:19.000Z"
+        },
+        {
+          "id": "hotkey-manager",
+          "name": "Hotkey Manager",
+          "path": "assets/code/WF-UX-009/hotkey-manager.js",
+          "type": "javascript",
+          "description": "Advanced keyboard shortcut system with context awareness and customization",
+          "dependencies": [],
+          "features": ["Global hotkeys", "Context-sensitive bindings", "Key sequences", "Conflict resolution"],
+          "size": "~800 lines",
+          "lastModified": "2025-08-19T00:06:19.000Z"
+        }
+      ]
+    },
+    
+    "testSuites": {
+      "count": 4,
+      "description": "Comprehensive test suites for quality assurance and performance validation",
+      "assets": [
+        {
+          "id": "workflow-execution-tests",
+          "name": "Workflow Execution Test Suite",
+          "path": "assets/tests/WF-UX-009/workflow-execution.test.js",
+          "type": "jest",
+          "description": "Unit and integration tests for workflow creation, execution, error handling, and performance",
+          "testFramework": "Jest",
+          "coverage": ["Unit tests", "Integration tests", "Performance benchmarks", "Error scenarios"],
+          "size": "~600 lines",
+          "lastModified": "2025-08-19T00:06:19.000Z"
+        },
+        {
+          "id": "automation-scheduling-tests",
+          "name": "Automation Scheduling Test Suite",
+          "path": "assets/tests/WF-UX-009/automation-scheduling.test.js",
+          "type": "jest",
+          "description": "Tests for automation rules, trigger evaluation, scheduling, and conflict resolution",
+          "testFramework": "Jest",
+          "coverage": ["Cron scheduling", "Event triggers", "Resource management", "Performance tests"],
+          "size": "~700 lines",
+          "lastModified": "2025-08-19T00:06:19.000Z"
+        },
+        {
+          "id": "integration-api-tests",
+          "name": "Integration API Test Suite",
+          "path": "assets/tests/WF-UX-009/integration-api.test.js",
+          "type": "jest",
+          "description": "Tests for local API server, REST endpoints, WebSocket connections, and security",
+          "testFramework": "Jest + Supertest",
+          "coverage": ["API functionality", "Security", "Performance", "Error handling"],
+          "size": "~800 lines",
+          "lastModified": "2025-08-19T00:06:19.000Z"
+        },
+        {
+          "id": "ui-acceptance-tests",
+          "name": "UI Acceptance Test Suite",
+          "path": "assets/tests/WF-UX-009/ui-acceptance.test.js",
+          "type": "puppeteer",
+          "description": "End-to-end tests for UI components, accessibility, performance, and visual regression",
+          "testFramework": "Jest + Puppeteer",
+          "coverage": ["User interactions", "Accessibility", "Performance", "Visual regression"],
+          "size": "~900 lines",
+          "lastModified": "2025-08-19T00:06:19.000Z"
+        }
+      ]
+    }
+  },
+  
+  "technicalSpecifications": {
+    "performanceRequirements": {
+      "frameRate": "60Hz (16.67ms budget)",
+      "memoryLimit": "50MB per workflow",
+      "cpuUsage": "80% maximum",
+      "responseTime": "< 100ms for interactions"
+    },
+    
+    "securityRequirements": {
+      "sandboxing": "Isolated script execution",
+      "authentication": "API key validation",
+      "rateLimiting": "100 requests per minute",
+      "dataValidation": "JSON schema validation"
+    },
+    
+    "compatibilityRequirements": {
+      "userLevels": "Level 4+ (Power Users)",
+      "browsers": "Modern browsers with ES2020 support",
+      "nodeVersion": "Node.js 16+",
+      "dependencies": "Minimal external dependencies"
+    }
+  },
+  
+  "integrationPoints": {
+    "dependencies": [
+      {
+        "id": "WF-UX-001",
+        "name": "UI Architecture",
+        "relationship": "Foundation for advanced UI components"
+      },
+      {
+        "id": "WF-UX-002", 
+        "name": "Progressive Levels",
+        "relationship": "User level gating for advanced features"
+      },
+      {
+        "id": "WF-TECH-003",
+        "name": "Workflow Engine",
+        "relationship": "Core workflow execution system"
+      },
+      {
+        "id": "WF-TECH-004",
+        "name": "Plugin System",
+        "relationship": "Plugin integration and management"
+      },
+      {
+        "id": "WF-TECH-005",
+        "name": "API Design",
+        "relationship": "Local API server implementation"
+      },
+      {
+        "id": "WF-TECH-002",
+        "name": "Security",
+        "relationship": "Security policies and sandboxing"
+      }
+    ],
+    
+    "externalAPIs": [
+      {
+        "name": "Local REST API",
+        "endpoint": "http://localhost:8080/api",
+        "authentication": "X-API-Key header",
+        "purpose": "External tool integration"
+      },
+      {
+        "name": "WebSocket API",
+        "endpoint": "ws://localhost:8080/ws",
+        "authentication": "Connection-level validation",
+        "purpose": "Real-time communication"
+      }
+    ]
+  },
+  
+  "deploymentInstructions": {
+    "prerequisites": [
+      "Node.js 16+ installed",
+      "Modern browser with ES2020 support",
+      "User Level 4+ access",
+      "WF-UX-001 and WF-UX-002 implemented"
+    ],
+    
+    "installationSteps": [
+      "1. Copy all code modules to appropriate directories",
+      "2. Install dependencies: npm install",
+      "3. Configure API server settings",
+      "4. Initialize energy system integration",
+      "5. Setup workflow engine connection",
+      "6. Configure user level permissions",
+      "7. Run test suites to verify installation",
+      "8. Deploy to production environment"
+    ],
+    
+    "configurationFiles": [
+      {
+        "file": "config/advanced-workflows.json",
+        "description": "Main configuration for advanced workflow features"
+      },
+      {
+        "file": "config/api-server.json", 
+        "description": "Local API server configuration"
+      },
+      {
+        "file": "config/security-policies.json",
+        "description": "Security and sandboxing policies"
+      }
+    ]
+  },
+  
+  "testingGuidelines": {
+    "unitTests": {
+      "command": "npm test",
+      "coverage": "90%+ code coverage required",
+      "frameworks": ["Jest", "Testing Library"]
+    },
+    
+    "integrationTests": {
+      "command": "npm run test:integration",
+      "environment": "Test environment with mock services",
+      "requirements": ["API server running", "Mock data loaded"]
+    },
+    
+    "e2eTests": {
+      "command": "npm run test:e2e",
+      "browser": "Chromium via Puppeteer",
+      "requirements": ["Full application stack", "Test data seeded"]
+    },
+    
+    "performanceTests": {
+      "command": "npm run test:performance",
+      "metrics": ["Frame rate", "Memory usage", "Response time"],
+      "thresholds": ["60Hz", "50MB", "100ms"]
+    }
+  },
+  
+  "maintenanceGuidelines": {
+    "codeQuality": {
+      "linting": "ESLint with Airbnb config",
+      "formatting": "Prettier with 2-space indentation",
+      "documentation": "JSDoc comments required"
+    },
+    
+    "performanceMonitoring": {
+      "metrics": ["Frame rate", "Memory usage", "API response times"],
+      "alerting": "Slack notifications for performance degradation",
+      "profiling": "Chrome DevTools and Node.js profiler"
+    },
+    
+    "securityUpdates": {
+      "dependencies": "Monthly security audit",
+      "vulnerabilities": "Immediate patching required",
+      "penetrationTesting": "Quarterly security assessment"
+    }
+  },
+  
+  "changelog": [
+    {
+      "version": "1.0.0",
+      "date": "2025-08-19",
+      "changes": [
+        "Initial release of WF-UX-009 Advanced User Workflows",
+        "Complete asset suite with 18 comprehensive assets",
+        "Full implementation of advanced dashboard, workflow orchestrator, and energy pattern editor",
+        "Comprehensive test coverage with 4 test suites",
+        "Local API server with REST and WebSocket support",
+        "Advanced hotkey system with context awareness",
+        "Secure script sandbox with resource limits"
+      ]
+    }
+  ],
+  
+  "supportContacts": {
+    "technical": "tech-support@wirthforge.com",
+    "documentation": "docs@wirthforge.com",
+    "security": "security@wirthforge.com"
+  }
+}
