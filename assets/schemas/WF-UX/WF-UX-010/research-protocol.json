@@ -1,0 +1,643 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "WIRTHFORGE Research Protocol Schema",
+  "description": "Schema defining the structure and requirements for user research protocols in WIRTHFORGE",
+  "type": "object",
+  "required": [
+    "protocolId",
+    "title",
+    "version",
+    "researchType",
+    "objectives",
+    "methodology",
+    "dataCollection",
+    "privacyControls",
+    "governanceApproval",
+    "timeline",
+    "participants",
+    "metrics",
+    "complianceChecks"
+  ],
+  "properties": {
+    "protocolId": {
+      "type": "string",
+      "pattern": "^WF-RESEARCH-[0-9]{3}-[A-Z0-9]{8}$",
+      "description": "Unique identifier for the research protocol"
+    },
+    "title": {
+      "type": "string",
+      "maxLength": 200,
+      "description": "Human-readable title of the research protocol"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$",
+      "description": "Semantic version of the protocol"
+    },
+    "researchType": {
+      "type": "string",
+      "enum": [
+        "energy_engagement_study",
+        "usability_testing",
+        "performance_analysis",
+        "a_b_testing",
+        "longitudinal_study",
+        "feedback_collection",
+        "behavioral_analysis"
+      ],
+      "description": "Type of research being conducted"
+    },
+    "objectives": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "description", "priority", "successCriteria"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier for the objective"
+          },
+          "description": {
+            "type": "string",
+            "description": "Detailed description of the research objective"
+          },
+          "priority": {
+            "type": "string",
+            "enum": ["high", "medium", "low"]
+          },
+          "successCriteria": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Measurable criteria for objective success"
+          }
+        }
+      }
+    },
+    "methodology": {
+      "type": "object",
+      "required": ["approach", "duration", "frequency", "localFirst"],
+      "properties": {
+        "approach": {
+          "type": "string",
+          "enum": [
+            "observational",
+            "experimental",
+            "survey_based",
+            "mixed_methods",
+            "longitudinal",
+            "cross_sectional"
+          ]
+        },
+        "duration": {
+          "type": "object",
+          "required": ["value", "unit"],
+          "properties": {
+            "value": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "unit": {
+              "type": "string",
+              "enum": ["minutes", "hours", "days", "weeks", "months"]
+            }
+          }
+        },
+        "frequency": {
+          "type": "string",
+          "enum": ["continuous", "daily", "weekly", "monthly", "one_time"]
+        },
+        "localFirst": {
+          "type": "boolean",
+          "const": true,
+          "description": "Must be true - all research must be local-first"
+        },
+        "energyTruthCompliant": {
+          "type": "boolean",
+          "const": true,
+          "description": "Must maintain energy truth visualization principles"
+        },
+        "performanceBudget": {
+          "type": "object",
+          "required": ["maxFrameTime", "maxMemoryUsage"],
+          "properties": {
+            "maxFrameTime": {
+              "type": "number",
+              "maximum": 16.67,
+              "description": "Maximum frame time in milliseconds (60Hz compliance)"
+            },
+            "maxMemoryUsage": {
+              "type": "integer",
+              "description": "Maximum additional memory usage in MB"
+            }
+          }
+        }
+      }
+    },
+    "dataCollection": {
+      "type": "object",
+      "required": ["types", "storage", "retention", "anonymization"],
+      "properties": {
+        "types": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "interaction_metrics",
+              "energy_engagement_data",
+              "performance_telemetry",
+              "user_feedback",
+              "behavioral_patterns",
+              "error_logs",
+              "completion_rates"
+            ]
+          }
+        },
+        "storage": {
+          "type": "object",
+          "required": ["location", "encryption", "access"],
+          "properties": {
+            "location": {
+              "type": "string",
+              "enum": ["local_only", "local_with_export_option"],
+              "description": "Data must remain local by default"
+            },
+            "encryption": {
+              "type": "boolean",
+              "const": true
+            },
+            "access": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": ["user", "researcher", "governance_board"]
+              }
+            }
+          }
+        },
+        "retention": {
+          "type": "object",
+          "required": ["period", "autoDelete"],
+          "properties": {
+            "period": {
+              "type": "object",
+              "required": ["value", "unit"],
+              "properties": {
+                "value": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "unit": {
+                  "type": "string",
+                  "enum": ["days", "weeks", "months", "years"]
+                }
+              }
+            },
+            "autoDelete": {
+              "type": "boolean",
+              "description": "Whether data is automatically deleted after retention period"
+            }
+          }
+        },
+        "anonymization": {
+          "type": "object",
+          "required": ["level", "techniques"],
+          "properties": {
+            "level": {
+              "type": "string",
+              "enum": ["none", "pseudonymized", "anonymized", "differential_privacy"]
+            },
+            "techniques": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "data_masking",
+                  "aggregation",
+                  "noise_injection",
+                  "k_anonymity",
+                  "l_diversity"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "privacyControls": {
+      "type": "object",
+      "required": ["consentRequired", "optOut", "dataRights", "transparency"],
+      "properties": {
+        "consentRequired": {
+          "type": "boolean",
+          "const": true,
+          "description": "Explicit consent always required"
+        },
+        "optOut": {
+          "type": "object",
+          "required": ["available", "immediate", "retroactive"],
+          "properties": {
+            "available": {
+              "type": "boolean",
+              "const": true
+            },
+            "immediate": {
+              "type": "boolean",
+              "const": true,
+              "description": "Opt-out takes effect immediately"
+            },
+            "retroactive": {
+              "type": "boolean",
+              "description": "Whether opt-out deletes previously collected data"
+            }
+          }
+        },
+        "dataRights": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "access",
+              "rectification",
+              "erasure",
+              "portability",
+              "restriction",
+              "objection"
+            ]
+          },
+          "minItems": 1
+        },
+        "transparency": {
+          "type": "object",
+          "required": ["dataUsage", "sharing", "processing"],
+          "properties": {
+            "dataUsage": {
+              "type": "string",
+              "description": "Clear explanation of how data will be used"
+            },
+            "sharing": {
+              "type": "string",
+              "description": "Data sharing policies and restrictions"
+            },
+            "processing": {
+              "type": "string",
+              "description": "Description of data processing methods"
+            }
+          }
+        }
+      }
+    },
+    "governanceApproval": {
+      "type": "object",
+      "required": ["status", "approvals", "auditTrail"],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": [
+            "draft",
+            "technical_review",
+            "ethics_review",
+            "governance_review",
+            "sandbox_testing",
+            "approved",
+            "active",
+            "suspended",
+            "terminated"
+          ]
+        },
+        "approvals": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["stage", "approver", "timestamp", "signature"],
+            "properties": {
+              "stage": {
+                "type": "string",
+                "enum": [
+                  "technical_review",
+                  "ethics_review",
+                  "governance_board",
+                  "final_approval"
+                ]
+              },
+              "approver": {
+                "type": "string",
+                "description": "Identifier of the approving authority"
+              },
+              "timestamp": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "signature": {
+                "type": "string",
+                "description": "Digital signature or hash for approval verification"
+              },
+              "conditions": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Any conditions or requirements for approval"
+              }
+            }
+          }
+        },
+        "auditTrail": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["timestamp", "action", "actor", "details"],
+            "properties": {
+              "timestamp": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "action": {
+                "type": "string",
+                "enum": [
+                  "created",
+                  "modified",
+                  "submitted",
+                  "approved",
+                  "rejected",
+                  "suspended",
+                  "terminated"
+                ]
+              },
+              "actor": {
+                "type": "string",
+                "description": "Who performed the action"
+              },
+              "details": {
+                "type": "string",
+                "description": "Additional details about the action"
+              }
+            }
+          }
+        }
+      }
+    },
+    "timeline": {
+      "type": "object",
+      "required": ["phases", "milestones"],
+      "properties": {
+        "phases": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "startDate", "endDate", "deliverables"],
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "startDate": {
+                "type": "string",
+                "format": "date"
+              },
+              "endDate": {
+                "type": "string",
+                "format": "date"
+              },
+              "deliverables": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "milestones": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "date", "criteria"],
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "date": {
+                "type": "string",
+                "format": "date"
+              },
+              "criteria": {
+                "type": "string",
+                "description": "Success criteria for the milestone"
+              }
+            }
+          }
+        }
+      }
+    },
+    "participants": {
+      "type": "object",
+      "required": ["targetCount", "criteria", "recruitment"],
+      "properties": {
+        "targetCount": {
+          "type": "object",
+          "required": ["minimum", "optimal"],
+          "properties": {
+            "minimum": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "optimal": {
+              "type": "integer",
+              "minimum": 1
+            }
+          }
+        },
+        "criteria": {
+          "type": "object",
+          "properties": {
+            "inclusion": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "exclusion": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "recruitment": {
+          "type": "object",
+          "required": ["method", "voluntary"],
+          "properties": {
+            "method": {
+              "type": "string",
+              "enum": [
+                "opt_in_notification",
+                "community_invitation",
+                "progressive_unlock",
+                "random_sampling"
+              ]
+            },
+            "voluntary": {
+              "type": "boolean",
+              "const": true,
+              "description": "Participation must always be voluntary"
+            }
+          }
+        }
+      }
+    },
+    "metrics": {
+      "type": "object",
+      "required": ["primary", "secondary", "collection"],
+      "properties": {
+        "primary": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "type", "unit", "target"],
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "energy_engagement",
+                  "usability_score",
+                  "performance_metric",
+                  "completion_rate",
+                  "error_rate",
+                  "satisfaction_score"
+                ]
+              },
+              "unit": {
+                "type": "string"
+              },
+              "target": {
+                "type": "object",
+                "required": ["value", "direction"],
+                "properties": {
+                  "value": {
+                    "type": "number"
+                  },
+                  "direction": {
+                    "type": "string",
+                    "enum": ["increase", "decrease", "maintain"]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "secondary": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "type", "unit"],
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string"
+              },
+              "unit": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "collection": {
+          "type": "object",
+          "required": ["frequency", "methods"],
+          "properties": {
+            "frequency": {
+              "type": "string",
+              "enum": ["real_time", "periodic", "event_based", "manual"]
+            },
+            "methods": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "automated_instrumentation",
+                  "user_feedback",
+                  "behavioral_observation",
+                  "performance_monitoring"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "complianceChecks": {
+      "type": "object",
+      "required": ["coreprinciples", "technical", "ethical"],
+      "properties": {
+        "coreprinciples": {
+          "type": "object",
+          "required": ["localFirst", "energyTruth", "performance", "privacy"],
+          "properties": {
+            "localFirst": {
+              "type": "boolean",
+              "const": true
+            },
+            "energyTruth": {
+              "type": "boolean",
+              "const": true
+            },
+            "performance": {
+              "type": "boolean",
+              "const": true
+            },
+            "privacy": {
+              "type": "boolean",
+              "const": true
+            }
+          }
+        },
+        "technical": {
+          "type": "object",
+          "properties": {
+            "frameBudgetCompliance": {
+              "type": "boolean",
+              "const": true
+            },
+            "memoryUsageWithinLimits": {
+              "type": "boolean",
+              "const": true
+            },
+            "noExternalDependencies": {
+              "type": "boolean",
+              "const": true
+            }
+          }
+        },
+        "ethical": {
+          "type": "object",
+          "properties": {
+            "informedConsent": {
+              "type": "boolean",
+              "const": true
+            },
+            "voluntaryParticipation": {
+              "type": "boolean",
+              "const": true
+            },
+            "dataMinimization": {
+              "type": "boolean",
+              "const": true
+            },
+            "transparentProcessing": {
+              "type": "boolean",
+              "const": true
+            }
+          }
+        }
+      }
+    }
+  }
+}

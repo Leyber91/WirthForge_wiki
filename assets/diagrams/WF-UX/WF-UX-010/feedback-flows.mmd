@@ -1,0 +1,85 @@
+```mermaid
+sequenceDiagram
+    participant U as User
+    participant UI as Web Interface
+    participant FC as Feedback Collector
+    participant PM as Privacy Manager
+    participant GV as Governance Validator
+    participant AL as Audit Logger
+    participant LD as Local Database
+    participant MA as Metrics Analyzer
+    participant RD as Research Dashboard
+
+    Note over U,RD: User Feedback Collection Flow
+    
+    U->>UI: Interacts with energy visualization
+    UI->>FC: Captures interaction metrics
+    FC->>PM: Request privacy validation
+    PM->>PM: Check user consent settings
+    PM-->>FC: Privacy approval granted
+    
+    FC->>GV: Submit for governance review
+    GV->>GV: Validate against core principles
+    GV-->>FC: Governance approval granted
+    
+    FC->>AL: Log collection event
+    AL->>LD: Store audit entry
+    FC->>LD: Store feedback data locally
+    
+    Note over U,RD: Explicit Feedback Submission
+    
+    U->>UI: Opens feedback form
+    UI->>FC: Initialize feedback session
+    FC->>PM: Check consent status
+    PM-->>UI: Display consent options
+    
+    U->>UI: Provides feedback + consent
+    UI->>FC: Submit feedback with consent
+    FC->>GV: Validate submission
+    GV->>AL: Log governance check
+    
+    FC->>LD: Store feedback securely
+    FC->>MA: Trigger analysis update
+    MA->>MA: Process new feedback
+    MA->>RD: Update dashboard metrics
+    
+    Note over U,RD: Research Participation Flow
+    
+    U->>UI: Opts into research study
+    UI->>PM: Request research consent
+    PM->>GV: Validate research protocol
+    GV->>AL: Log research enrollment
+    
+    PM->>FC: Enable research data collection
+    FC->>LD: Mark user as research participant
+    FC->>MA: Begin enhanced metrics collection
+    
+    loop Research Data Collection
+        UI->>FC: Collect enhanced metrics
+        FC->>PM: Validate data collection scope
+        PM-->>FC: Confirm within consent bounds
+        FC->>LD: Store research data
+        FC->>AL: Log collection activity
+    end
+    
+    Note over U,RD: Data Export & Analysis
+    
+    U->>RD: Requests data export
+    RD->>PM: Validate export permissions
+    PM->>GV: Check governance compliance
+    GV->>AL: Log export request
+    
+    MA->>LD: Query aggregated data
+    LD-->>MA: Return anonymized metrics
+    MA->>RD: Generate export report
+    RD-->>U: Provide data export
+    
+    Note over U,RD: Continuous Improvement Loop
+    
+    MA->>MA: Analyze feedback patterns
+    MA->>RD: Update improvement recommendations
+    RD->>UI: Display insights to user
+    U->>UI: Reviews insights
+    UI->>FC: Captures user response to insights
+    FC->>AL: Log improvement cycle completion
+```

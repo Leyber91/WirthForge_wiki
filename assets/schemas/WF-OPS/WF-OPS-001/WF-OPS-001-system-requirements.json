@@ -1,0 +1,1109 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://wirthforge.org/schemas/WF-OPS-001-system-requirements.json",
+  "title": "WIRTHFORGE System Requirements Schema",
+  "description": "System requirements schema for WIRTHFORGE deployment validation and compatibility checking",
+  "type": "object",
+  "required": [
+    "version",
+    "platforms",
+    "hardware",
+    "software",
+    "network"
+  ],
+  "properties": {
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Requirements specification version"
+    },
+    "lastUpdated": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Last update timestamp"
+    },
+    "platforms": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["os", "architecture", "versions"],
+        "properties": {
+          "os": {
+            "type": "string",
+            "enum": ["windows", "macos", "linux"],
+            "description": "Operating system"
+          },
+          "architecture": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": ["x64", "arm64", "x86"]
+            },
+            "description": "Supported architectures"
+          },
+          "versions": {
+            "type": "object",
+            "required": ["minimum"],
+            "properties": {
+              "minimum": {
+                "type": "string",
+                "description": "Minimum OS version required"
+              },
+              "recommended": {
+                "type": "string",
+                "description": "Recommended OS version"
+              },
+              "maximum": {
+                "type": "string",
+                "description": "Maximum tested OS version"
+              },
+              "unsupported": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Known unsupported versions"
+              }
+            }
+          },
+          "distributions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "Distribution name (Linux only)"
+                },
+                "versions": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "packageManager": {
+                  "type": "string",
+                  "enum": ["apt", "yum", "dnf", "pacman", "zypper", "brew"]
+                }
+              }
+            },
+            "description": "Supported Linux distributions"
+          },
+          "kernelRequirements": {
+            "type": "object",
+            "properties": {
+              "minimum": {
+                "type": "string",
+                "description": "Minimum kernel version (Linux/macOS)"
+              },
+              "features": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Required kernel features"
+              }
+            }
+          }
+        }
+      }
+    },
+    "hardware": {
+      "type": "object",
+      "required": ["memory", "storage", "processor"],
+      "properties": {
+        "processor": {
+          "type": "object",
+          "required": ["minimum"],
+          "properties": {
+            "minimum": {
+              "type": "object",
+              "properties": {
+                "cores": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "description": "Minimum CPU cores"
+                },
+                "frequency": {
+                  "type": "number",
+                  "minimum": 0,
+                  "description": "Minimum CPU frequency in GHz"
+                },
+                "architecture": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "enum": ["x86_64", "aarch64", "arm64"]
+                  }
+                }
+              }
+            },
+            "recommended": {
+              "type": "object",
+              "properties": {
+                "cores": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "frequency": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "features": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Recommended CPU features (AVX, SSE, etc.)"
+                }
+              }
+            },
+            "supportedVendors": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": ["intel", "amd", "apple", "arm", "qualcomm"]
+              }
+            }
+          }
+        },
+        "memory": {
+          "type": "object",
+          "required": ["minimum"],
+          "properties": {
+            "minimum": {
+              "type": "object",
+              "required": ["total"],
+              "properties": {
+                "total": {
+                  "type": "integer",
+                  "minimum": 512,
+                  "description": "Minimum total RAM in MB"
+                },
+                "available": {
+                  "type": "integer",
+                  "minimum": 256,
+                  "description": "Minimum available RAM in MB"
+                }
+              }
+            },
+            "recommended": {
+              "type": "object",
+              "properties": {
+                "total": {
+                  "type": "integer",
+                  "minimum": 1024,
+                  "description": "Recommended total RAM in MB"
+                },
+                "available": {
+                  "type": "integer",
+                  "minimum": 512,
+                  "description": "Recommended available RAM in MB"
+                }
+              }
+            },
+            "aiModels": {
+              "type": "object",
+              "properties": {
+                "perModel": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "description": "Additional RAM per AI model in MB"
+                },
+                "baseOverhead": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "description": "Base AI engine overhead in MB"
+                }
+              }
+            }
+          }
+        },
+        "storage": {
+          "type": "object",
+          "required": ["minimum"],
+          "properties": {
+            "minimum": {
+              "type": "object",
+              "required": ["total", "free"],
+              "properties": {
+                "total": {
+                  "type": "integer",
+                  "minimum": 1024,
+                  "description": "Minimum total disk space in MB"
+                },
+                "free": {
+                  "type": "integer",
+                  "minimum": 512,
+                  "description": "Minimum free disk space in MB"
+                },
+                "type": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "enum": ["hdd", "ssd", "nvme", "network"]
+                  },
+                  "description": "Supported storage types"
+                }
+              }
+            },
+            "recommended": {
+              "type": "object",
+              "properties": {
+                "total": {
+                  "type": "integer",
+                  "minimum": 2048
+                },
+                "free": {
+                  "type": "integer",
+                  "minimum": 1024
+                },
+                "type": {
+                  "type": "string",
+                  "enum": ["ssd", "nvme"],
+                  "description": "Recommended storage type"
+                },
+                "speed": {
+                  "type": "object",
+                  "properties": {
+                    "read": {
+                      "type": "integer",
+                      "description": "Minimum read speed in MB/s"
+                    },
+                    "write": {
+                      "type": "integer",
+                      "description": "Minimum write speed in MB/s"
+                    }
+                  }
+                }
+              }
+            },
+            "components": {
+              "type": "object",
+              "properties": {
+                "core": {
+                  "type": "integer",
+                  "description": "Core application size in MB"
+                },
+                "webUI": {
+                  "type": "integer",
+                  "description": "Web UI assets size in MB"
+                },
+                "aiModels": {
+                  "type": "object",
+                  "properties": {
+                    "base": {
+                      "type": "integer",
+                      "description": "Base model size in MB"
+                    },
+                    "perModel": {
+                      "type": "integer",
+                      "description": "Average additional model size in MB"
+                    }
+                  }
+                },
+                "userData": {
+                  "type": "integer",
+                  "description": "Estimated user data growth in MB"
+                },
+                "logs": {
+                  "type": "integer",
+                  "description": "Log files space in MB"
+                },
+                "temp": {
+                  "type": "integer",
+                  "description": "Temporary files space in MB"
+                }
+              }
+            }
+          }
+        },
+        "graphics": {
+          "type": "object",
+          "properties": {
+            "required": {
+              "type": "boolean",
+              "default": false,
+              "description": "Whether dedicated graphics are required"
+            },
+            "accelerated": {
+              "type": "object",
+              "properties": {
+                "supported": {
+                  "type": "boolean",
+                  "description": "Whether GPU acceleration is supported"
+                },
+                "vendors": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "enum": ["nvidia", "amd", "intel", "apple"]
+                  }
+                },
+                "apis": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "enum": ["cuda", "opencl", "metal", "vulkan", "directx"]
+                  }
+                },
+                "memory": {
+                  "type": "object",
+                  "properties": {
+                    "minimum": {
+                      "type": "integer",
+                      "description": "Minimum GPU memory in MB"
+                    },
+                    "recommended": {
+                      "type": "integer",
+                      "description": "Recommended GPU memory in MB"
+                    }
+                  }
+                }
+              }
+            },
+            "display": {
+              "type": "object",
+              "properties": {
+                "resolution": {
+                  "type": "object",
+                  "properties": {
+                    "minimum": {
+                      "type": "string",
+                      "pattern": "^\\d+x\\d+$",
+                      "description": "Minimum display resolution"
+                    },
+                    "recommended": {
+                      "type": "string",
+                      "pattern": "^\\d+x\\d+$",
+                      "description": "Recommended display resolution"
+                    }
+                  }
+                },
+                "colorDepth": {
+                  "type": "integer",
+                  "enum": [16, 24, 32],
+                  "description": "Required color depth in bits"
+                }
+              }
+            }
+          }
+        },
+        "peripherals": {
+          "type": "object",
+          "properties": {
+            "input": {
+              "type": "object",
+              "properties": {
+                "keyboard": {
+                  "type": "boolean",
+                  "default": true
+                },
+                "mouse": {
+                  "type": "boolean",
+                  "default": true
+                },
+                "touchscreen": {
+                  "type": "boolean",
+                  "default": false
+                }
+              }
+            },
+            "audio": {
+              "type": "object",
+              "properties": {
+                "required": {
+                  "type": "boolean",
+                  "default": false
+                },
+                "output": {
+                  "type": "boolean",
+                  "description": "Audio output capability"
+                },
+                "input": {
+                  "type": "boolean",
+                  "description": "Audio input capability"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "software": {
+      "type": "object",
+      "required": ["runtime"],
+      "properties": {
+        "runtime": {
+          "type": "object",
+          "properties": {
+            "webBrowser": {
+              "type": "object",
+              "required": ["required"],
+              "properties": {
+                "required": {
+                  "type": "boolean",
+                  "default": true,
+                  "description": "Whether web browser is required"
+                },
+                "supported": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string",
+                        "enum": ["chrome", "firefox", "safari", "edge", "opera"]
+                      },
+                      "minVersion": {
+                        "type": "string"
+                      },
+                      "features": {
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "enum": ["websockets", "webgl", "webassembly", "serviceworker"]
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "javascript": {
+              "type": "object",
+              "properties": {
+                "version": {
+                  "type": "string",
+                  "description": "Minimum JavaScript/ECMAScript version"
+                },
+                "features": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Required JavaScript features"
+                }
+              }
+            },
+            "systemLibraries": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "version": {
+                    "type": "string"
+                  },
+                  "platform": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": ["windows", "macos", "linux"]
+                    }
+                  },
+                  "optional": {
+                    "type": "boolean",
+                    "default": false
+                  },
+                  "purpose": {
+                    "type": "string",
+                    "description": "What this library is used for"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "dependencies": {
+          "type": "object",
+          "properties": {
+            "required": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "version": {
+                    "type": "string"
+                  },
+                  "platform": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "installMethod": {
+                    "type": "string",
+                    "enum": ["bundled", "system", "download"]
+                  }
+                }
+              }
+            },
+            "optional": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "version": {
+                    "type": "string"
+                  },
+                  "benefit": {
+                    "type": "string",
+                    "description": "What this optional dependency provides"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": {
+          "type": "object",
+          "properties": {
+            "antivirus": {
+              "type": "object",
+              "properties": {
+                "compatibility": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Compatible antivirus software"
+                },
+                "exclusions": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Recommended antivirus exclusions"
+                }
+              }
+            },
+            "firewall": {
+              "type": "object",
+              "properties": {
+                "configurationRequired": {
+                  "type": "boolean",
+                  "description": "Whether firewall configuration is required"
+                },
+                "ports": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "port": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 65535
+                      },
+                      "protocol": {
+                        "type": "string",
+                        "enum": ["tcp", "udp"]
+                      },
+                      "direction": {
+                        "type": "string",
+                        "enum": ["inbound", "outbound", "both"]
+                      },
+                      "purpose": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "network": {
+      "type": "object",
+      "required": ["connectivity"],
+      "properties": {
+        "connectivity": {
+          "type": "object",
+          "properties": {
+            "internetRequired": {
+              "type": "boolean",
+              "default": false,
+              "description": "Whether internet connection is required for operation"
+            },
+            "installationInternet": {
+              "type": "boolean",
+              "default": true,
+              "description": "Whether internet is required for installation"
+            },
+            "bandwidth": {
+              "type": "object",
+              "properties": {
+                "minimum": {
+                  "type": "integer",
+                  "description": "Minimum bandwidth in Kbps"
+                },
+                "recommended": {
+                  "type": "integer",
+                  "description": "Recommended bandwidth in Kbps"
+                }
+              }
+            },
+            "latency": {
+              "type": "object",
+              "properties": {
+                "maximum": {
+                  "type": "integer",
+                  "description": "Maximum acceptable latency in ms"
+                }
+              }
+            }
+          }
+        },
+        "protocols": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "enum": ["http", "https", "websocket", "tcp", "udp"]
+              },
+              "required": {
+                "type": "boolean"
+              },
+              "purpose": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "ports": {
+          "type": "object",
+          "properties": {
+            "required": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "port": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 65535
+                  },
+                  "protocol": {
+                    "type": "string",
+                    "enum": ["tcp", "udp"]
+                  },
+                  "direction": {
+                    "type": "string",
+                    "enum": ["inbound", "outbound", "both"]
+                  },
+                  "bindAddress": {
+                    "type": "string",
+                    "default": "127.0.0.1",
+                    "description": "Address to bind to"
+                  },
+                  "configurable": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Whether port can be configured"
+                  }
+                }
+              }
+            },
+            "ranges": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "start": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 65535
+                  },
+                  "end": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 65535
+                  },
+                  "purpose": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": {
+          "type": "object",
+          "properties": {
+            "encryption": {
+              "type": "object",
+              "properties": {
+                "required": {
+                  "type": "boolean",
+                  "default": true
+                },
+                "protocols": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "enum": ["tls1.2", "tls1.3"]
+                  }
+                }
+              }
+            },
+            "certificates": {
+              "type": "object",
+              "properties": {
+                "selfSigned": {
+                  "type": "boolean",
+                  "default": true,
+                  "description": "Whether self-signed certificates are used"
+                },
+                "customCA": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Whether custom CA certificates are supported"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "validation": {
+      "type": "object",
+      "properties": {
+        "preInstallChecks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "critical": {
+                "type": "boolean",
+                "default": true,
+                "description": "Whether failure blocks installation"
+              },
+              "category": {
+                "type": "string",
+                "enum": ["hardware", "software", "network", "security", "permissions"]
+              }
+            }
+          }
+        },
+        "runtimeChecks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "frequency": {
+                "type": "string",
+                "enum": ["startup", "periodic", "on-demand"]
+              },
+              "interval": {
+                "type": "integer",
+                "description": "Check interval in seconds (for periodic checks)"
+              }
+            }
+          }
+        }
+      }
+    },
+    "performance": {
+      "type": "object",
+      "properties": {
+        "benchmarks": {
+          "type": "object",
+          "properties": {
+            "startup": {
+              "type": "object",
+              "properties": {
+                "target": {
+                  "type": "integer",
+                  "description": "Target startup time in seconds"
+                },
+                "maximum": {
+                  "type": "integer",
+                  "description": "Maximum acceptable startup time in seconds"
+                }
+              }
+            },
+            "response": {
+              "type": "object",
+              "properties": {
+                "target": {
+                  "type": "integer",
+                  "description": "Target response time in milliseconds"
+                },
+                "maximum": {
+                  "type": "integer",
+                  "description": "Maximum acceptable response time in milliseconds"
+                }
+              }
+            },
+            "throughput": {
+              "type": "object",
+              "properties": {
+                "minimum": {
+                  "type": "integer",
+                  "description": "Minimum requests per second"
+                },
+                "target": {
+                  "type": "integer",
+                  "description": "Target requests per second"
+                }
+              }
+            }
+          }
+        },
+        "resourceLimits": {
+          "type": "object",
+          "properties": {
+            "cpu": {
+              "type": "object",
+              "properties": {
+                "normal": {
+                  "type": "integer",
+                  "description": "Normal CPU usage percentage"
+                },
+                "peak": {
+                  "type": "integer",
+                  "description": "Peak CPU usage percentage"
+                }
+              }
+            },
+            "memory": {
+              "type": "object",
+              "properties": {
+                "normal": {
+                  "type": "integer",
+                  "description": "Normal memory usage in MB"
+                },
+                "peak": {
+                  "type": "integer",
+                  "description": "Peak memory usage in MB"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "additionalProperties": false,
+  "examples": [
+    {
+      "version": "1.0.0",
+      "lastUpdated": "2024-08-19T10:00:00Z",
+      "platforms": [
+        {
+          "os": "windows",
+          "architecture": ["x64", "arm64"],
+          "versions": {
+            "minimum": "10.0.19041",
+            "recommended": "11.0.22000",
+            "unsupported": ["7", "8", "8.1"]
+          }
+        },
+        {
+          "os": "macos",
+          "architecture": ["x64", "arm64"],
+          "versions": {
+            "minimum": "10.15.0",
+            "recommended": "12.0.0"
+          }
+        },
+        {
+          "os": "linux",
+          "architecture": ["x64", "arm64"],
+          "versions": {
+            "minimum": "5.4.0",
+            "recommended": "5.15.0"
+          },
+          "distributions": [
+            {
+              "name": "ubuntu",
+              "versions": ["20.04", "22.04", "24.04"],
+              "packageManager": "apt"
+            },
+            {
+              "name": "fedora",
+              "versions": ["38", "39", "40"],
+              "packageManager": "dnf"
+            }
+          ]
+        }
+      ],
+      "hardware": {
+        "processor": {
+          "minimum": {
+            "cores": 2,
+            "frequency": 1.5,
+            "architecture": ["x86_64", "aarch64"]
+          },
+          "recommended": {
+            "cores": 4,
+            "frequency": 2.0,
+            "features": ["avx2", "sse4.2"]
+          },
+          "supportedVendors": ["intel", "amd", "apple"]
+        },
+        "memory": {
+          "minimum": {
+            "total": 2048,
+            "available": 1024
+          },
+          "recommended": {
+            "total": 8192,
+            "available": 4096
+          },
+          "aiModels": {
+            "perModel": 2048,
+            "baseOverhead": 512
+          }
+        },
+        "storage": {
+          "minimum": {
+            "total": 5120,
+            "free": 2048,
+            "type": ["hdd", "ssd", "nvme"]
+          },
+          "recommended": {
+            "total": 20480,
+            "free": 10240,
+            "type": "ssd",
+            "speed": {
+              "read": 100,
+              "write": 50
+            }
+          },
+          "components": {
+            "core": 256,
+            "webUI": 128,
+            "aiModels": {
+              "base": 2048,
+              "perModel": 4096
+            },
+            "userData": 1024,
+            "logs": 512,
+            "temp": 1024
+          }
+        }
+      },
+      "software": {
+        "runtime": {
+          "webBrowser": {
+            "required": true,
+            "supported": [
+              {
+                "name": "chrome",
+                "minVersion": "90.0",
+                "features": ["websockets", "webgl", "webassembly"]
+              },
+              {
+                "name": "firefox",
+                "minVersion": "88.0",
+                "features": ["websockets", "webgl", "webassembly"]
+              }
+            ]
+          },
+          "javascript": {
+            "version": "ES2020",
+            "features": ["modules", "async-await", "websockets"]
+          }
+        }
+      },
+      "network": {
+        "connectivity": {
+          "internetRequired": false,
+          "installationInternet": true,
+          "bandwidth": {
+            "minimum": 1024,
+            "recommended": 10240
+          }
+        },
+        "ports": {
+          "required": [
+            {
+              "port": 9443,
+              "protocol": "tcp",
+              "direction": "inbound",
+              "bindAddress": "127.0.0.1",
+              "configurable": true
+            },
+            {
+              "port": 9444,
+              "protocol": "tcp",
+              "direction": "inbound",
+              "bindAddress": "127.0.0.1",
+              "configurable": true
+            }
+          ]
+        }
+      },
+      "validation": {
+        "preInstallChecks": [
+          {
+            "name": "memory_check",
+            "description": "Verify sufficient RAM is available",
+            "critical": true,
+            "category": "hardware"
+          },
+          {
+            "name": "disk_space_check",
+            "description": "Verify sufficient disk space is available",
+            "critical": true,
+            "category": "hardware"
+          },
+          {
+            "name": "port_availability",
+            "description": "Check if required ports are available",
+            "critical": true,
+            "category": "network"
+          }
+        ]
+      },
+      "performance": {
+        "benchmarks": {
+          "startup": {
+            "target": 10,
+            "maximum": 30
+          },
+          "response": {
+            "target": 100,
+            "maximum": 1000
+          }
+        },
+        "resourceLimits": {
+          "cpu": {
+            "normal": 15,
+            "peak": 80
+          },
+          "memory": {
+            "normal": 1024,
+            "peak": 4096
+          }
+        }
+      }
+    }
+  ]
+}

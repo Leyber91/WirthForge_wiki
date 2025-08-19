@@ -111,7 +111,40 @@ GitHub
 GitHub
 . By integrating these components, WF-UX-010 will create a sustainable pipeline for user-driven enhancement of WIRTHFORGE without compromising its core values.
 
-Sources:
+## Implementation Assets
+
+### Architecture Diagrams
+
+The following Mermaid diagrams provide visual representations of the WF-UX-010 research framework:
+
+### Code Modules
+
+JavaScript modules implementing the research framework functionality:
+
+- **[Feedback Collector](../../assets/code/WF-UX-010/feedback-collector.js)** - Collects user interactions, explicit feedback, and energy metrics with privacy controls and 60Hz performance compliance
+- **[Metrics Analyzer](../../assets/code/WF-UX-010/metrics-analyzer.js)** - Processes feedback data and generates insights with statistical analysis, anomaly detection, and real-time reporting  
+- **[Privacy Manager](../../assets/code/WF-UX-010/privacy-manager.js)** - Manages user privacy controls, consent, and data protection with anonymization engine
+
+### Test Suites
+
+Comprehensive test coverage ensuring reliability and compliance:
+
+- **[Feedback Collection Tests](../../assets/code/WF-UX-010/tests/feedback-collection.test.js)** - Tests for user feedback collection, processing, privacy compliance, and performance optimization
+
+*Note: Additional diagrams, schemas, code modules, and test suites are planned for future implementation to complete the full WF-UX-010 research framework.*
+
+## Technical Compliance
+
+All WF-UX-010 assets adhere to WIRTHFORGE core principles:
+
+- **Local-First Execution**: All processing and storage remains on the user's device unless explicitly shared
+- **60Hz Performance Budget**: Maintains 16.67ms frame time budget for smooth energy visualizations
+- **Energy Truth Visualization**: All UI elements map to real computational processes without fabricated effects
+- **Privacy-First Design**: Implements privacy-by-design with granular consent, immediate opt-out, and data minimization
+- **Governance Integration**: Multi-stage approval processes with immutable audit trails and compliance validation
+- **Statistical Rigor**: Proper statistical methods for experiment design, analysis, and reporting
+
+## Sources
 
 WIRTHFORGE UX Prompt Guidelines – Core Principles and WF-UX-010 Requirements
 GitHub

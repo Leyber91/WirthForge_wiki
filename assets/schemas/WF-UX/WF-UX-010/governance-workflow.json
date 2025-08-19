@@ -1,0 +1,737 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "WIRTHFORGE Governance Workflow Schema",
+    "description": "Schema defining governance workflows and approval processes for WIRTHFORGE research activities",
+    "type": "object",
+    "required": [
+      "workflowId",
+      "name",
+      "version",
+      "type",
+      "stages",
+      "approvalCriteria",
+      "auditRequirements",
+      "complianceChecks",
+      "escalation"
+    ],
+    "properties": {
+      "workflowId": {
+        "type": "string",
+        "pattern": "^WF-GOV-[A-Z]{3}-[0-9]{3}$",
+        "description": "Unique identifier for the governance workflow"
+      },
+      "name": {
+        "type": "string",
+        "maxLength": 150,
+        "description": "Human-readable name of the governance workflow"
+      },
+      "version": {
+        "type": "string",
+        "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$",
+        "description": "Semantic version of the workflow"
+      },
+      "type": {
+        "type": "string",
+        "enum": [
+          "research_approval",
+          "data_collection_approval",
+          "experiment_approval",
+          "privacy_review",
+          "security_review",
+          "performance_review",
+          "ethics_review",
+          "technical_review"
+        ],
+        "description": "Type of governance workflow"
+      },
+      "scope": {
+        "type": "string",
+        "enum": ["research_protocol", "data_handling", "system_change", "policy_update"],
+        "description": "Scope of what this workflow governs"
+      },
+      "stages": {
+        "type": "array",
+        "minItems": 1,
+        "items": {
+          "type": "object",
+          "required": ["stageId", "name", "type", "approvers", "criteria", "timeframe"],
+          "properties": {
+            "stageId": {
+              "type": "string",
+              "description": "Unique identifier for the stage"
+            },
+            "name": {
+              "type": "string",
+              "description": "Name of the governance stage"
+            },
+            "type": {
+              "type": "string",
+              "enum": [
+                "initial_review",
+                "technical_assessment",
+                "ethics_evaluation",
+                "privacy_assessment",
+                "security_review",
+                "performance_evaluation",
+                "governance_board_review",
+                "sandbox_testing",
+                "final_approval"
+              ]
+            },
+            "order": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Order of execution for this stage"
+            },
+            "parallel": {
+              "type": "boolean",
+              "default": false,
+              "description": "Whether this stage can run in parallel with others"
+            },
+            "approvers": {
+              "type": "object",
+              "required": ["roles", "minimumCount"],
+              "properties": {
+                "roles": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "enum": [
+                      "technical_lead",
+                      "ethics_officer",
+                      "privacy_officer",
+                      "security_officer",
+                      "governance_board_member",
+                      "research_lead",
+                      "user_advocate"
+                    ]
+                  }
+                },
+                "minimumCount": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "description": "Minimum number of approvers required"
+                },
+                "unanimousRequired": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Whether unanimous approval is required"
+                },
+                "conflictResolution": {
+                  "type": "string",
+                  "enum": ["escalate", "majority_vote", "senior_override"],
+                  "description": "How to resolve approval conflicts"
+                }
+              }
+            },
+            "criteria": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["criterion", "type", "mandatory"],
+                "properties": {
+                  "criterion": {
+                    "type": "string",
+                    "description": "Specific criterion to be evaluated"
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "core_principle_compliance",
+                      "technical_feasibility",
+                      "privacy_protection",
+                      "security_assessment",
+                      "performance_impact",
+                      "ethical_consideration",
+                      "user_benefit",
+                      "risk_assessment"
+                    ]
+                  },
+                  "mandatory": {
+                    "type": "boolean",
+                    "description": "Whether this criterion must be met to proceed"
+                  },
+                  "weight": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1,
+                    "description": "Weight of this criterion in overall evaluation"
+                  },
+                  "evaluation": {
+                    "type": "object",
+                    "properties": {
+                      "method": {
+                        "type": "string",
+                        "enum": ["checklist", "score", "binary", "narrative"]
+                      },
+                      "scale": {
+                        "type": "object",
+                        "properties": {
+                          "min": {
+                            "type": "number"
+                          },
+                          "max": {
+                            "type": "number"
+                          },
+                          "threshold": {
+                            "type": "number",
+                            "description": "Minimum score to pass"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "timeframe": {
+              "type": "object",
+              "required": ["maximum"],
+              "properties": {
+                "maximum": {
+                  "type": "object",
+                  "required": ["value", "unit"],
+                  "properties": {
+                    "value": {
+                      "type": "integer",
+                      "minimum": 1
+                    },
+                    "unit": {
+                      "type": "string",
+                      "enum": ["hours", "days", "weeks"]
+                    }
+                  }
+                },
+                "typical": {
+                  "type": "object",
+                  "properties": {
+                    "value": {
+                      "type": "integer"
+                    },
+                    "unit": {
+                      "type": "string",
+                      "enum": ["hours", "days", "weeks"]
+                    }
+                  }
+                },
+                "escalationTrigger": {
+                  "type": "object",
+                  "properties": {
+                    "value": {
+                      "type": "integer"
+                    },
+                    "unit": {
+                      "type": "string",
+                      "enum": ["hours", "days", "weeks"]
+                    }
+                  }
+                }
+              }
+            },
+            "outputs": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "approval",
+                  "conditional_approval",
+                  "rejection",
+                  "revision_required",
+                  "escalation",
+                  "additional_review_required"
+                ]
+              }
+            },
+            "documentation": {
+              "type": "object",
+              "properties": {
+                "required": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "enum": [
+                      "evaluation_report",
+                      "risk_assessment",
+                      "recommendation",
+                      "conditions",
+                      "dissenting_opinions"
+                    ]
+                  }
+                },
+                "templates": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "description": "Document templates to be used"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "approvalCriteria": {
+        "type": "object",
+        "required": ["coreprinciples", "riskThresholds"],
+        "properties": {
+          "coreprinciples": {
+            "type": "object",
+            "required": ["localFirst", "energyTruth", "performance", "privacy"],
+            "properties": {
+              "localFirst": {
+                "type": "object",
+                "properties": {
+                  "required": {
+                    "type": "boolean",
+                    "const": true
+                  },
+                  "verification": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "no_cloud_dependencies",
+                        "local_data_storage",
+                        "offline_capability",
+                        "no_external_apis"
+                      ]
+                    }
+                  }
+                }
+              },
+              "energyTruth": {
+                "type": "object",
+                "properties": {
+                  "required": {
+                    "type": "boolean",
+                    "const": true
+                  },
+                  "verification": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "real_computation_mapping",
+                        "no_fake_visualizations",
+                        "accurate_energy_representation",
+                        "transparent_metrics"
+                      ]
+                    }
+                  }
+                }
+              },
+              "performance": {
+                "type": "object",
+                "properties": {
+                  "required": {
+                    "type": "boolean",
+                    "const": true
+                  },
+                  "verification": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "60fps_compliance",
+                        "frame_budget_adherence",
+                        "memory_limits",
+                        "cpu_efficiency"
+                      ]
+                    }
+                  },
+                  "thresholds": {
+                    "type": "object",
+                    "properties": {
+                      "maxFrameTime": {
+                        "type": "number",
+                        "maximum": 16.67
+                      },
+                      "maxMemoryIncrease": {
+                        "type": "number",
+                        "description": "Maximum memory increase in MB"
+                      }
+                    }
+                  }
+                }
+              },
+              "privacy": {
+                "type": "object",
+                "properties": {
+                  "required": {
+                    "type": "boolean",
+                    "const": true
+                  },
+                  "verification": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "explicit_consent",
+                        "data_minimization",
+                        "local_storage_default",
+                        "user_control",
+                        "transparent_collection"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "riskThresholds": {
+            "type": "object",
+            "properties": {
+              "technical": {
+                "type": "object",
+                "properties": {
+                  "low": {
+                    "type": "string",
+                    "description": "Criteria for low technical risk"
+                  },
+                  "medium": {
+                    "type": "string",
+                    "description": "Criteria for medium technical risk"
+                  },
+                  "high": {
+                    "type": "string",
+                    "description": "Criteria for high technical risk"
+                  }
+                }
+              },
+              "privacy": {
+                "type": "object",
+                "properties": {
+                  "low": {
+                    "type": "string"
+                  },
+                  "medium": {
+                    "type": "string"
+                  },
+                  "high": {
+                    "type": "string"
+                  }
+                }
+              },
+              "user": {
+                "type": "object",
+                "properties": {
+                  "low": {
+                    "type": "string"
+                  },
+                  "medium": {
+                    "type": "string"
+                  },
+                  "high": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "auditRequirements": {
+        "type": "object",
+        "required": ["logging", "retention", "access"],
+        "properties": {
+          "logging": {
+            "type": "object",
+            "required": ["events", "immutable"],
+            "properties": {
+              "events": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "workflow_initiated",
+                    "stage_started",
+                    "stage_completed",
+                    "approval_given",
+                    "rejection_issued",
+                    "revision_requested",
+                    "escalation_triggered",
+                    "workflow_completed",
+                    "workflow_terminated"
+                  ]
+                }
+              },
+              "immutable": {
+                "type": "boolean",
+                "const": true,
+                "description": "Audit logs must be immutable"
+              },
+              "integrity": {
+                "type": "object",
+                "properties": {
+                  "checksums": {
+                    "type": "boolean",
+                    "const": true
+                  },
+                  "digitalSignatures": {
+                    "type": "boolean",
+                    "const": true
+                  },
+                  "timestamping": {
+                    "type": "boolean",
+                    "const": true
+                  }
+                }
+              }
+            }
+          },
+          "retention": {
+            "type": "object",
+            "required": ["period", "archival"],
+            "properties": {
+              "period": {
+                "type": "object",
+                "required": ["value", "unit"],
+                "properties": {
+                  "value": {
+                    "type": "integer",
+                    "minimum": 1
+                  },
+                  "unit": {
+                    "type": "string",
+                    "enum": ["years", "months"]
+                  }
+                }
+              },
+              "archival": {
+                "type": "object",
+                "properties": {
+                  "required": {
+                    "type": "boolean"
+                  },
+                  "format": {
+                    "type": "string",
+                    "enum": ["json", "xml", "csv", "database"]
+                  },
+                  "compression": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
+          },
+          "access": {
+            "type": "object",
+            "properties": {
+              "authorized": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "governance_board",
+                    "audit_committee",
+                    "compliance_officer",
+                    "legal_team",
+                    "external_auditor"
+                  ]
+                }
+              },
+              "restrictions": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "read_only",
+                    "time_limited",
+                    "purpose_limited",
+                    "supervised_access"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "complianceChecks": {
+        "type": "object",
+        "required": ["automated", "manual"],
+        "properties": {
+          "automated": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["check", "frequency", "threshold"],
+              "properties": {
+                "check": {
+                  "type": "string",
+                  "enum": [
+                    "core_principle_validation",
+                    "performance_monitoring",
+                    "privacy_compliance",
+                    "security_scanning",
+                    "data_integrity",
+                    "audit_trail_validation"
+                  ]
+                },
+                "frequency": {
+                  "type": "string",
+                  "enum": ["continuous", "daily", "weekly", "monthly"]
+                },
+                "threshold": {
+                  "type": "object",
+                  "properties": {
+                    "warning": {
+                      "type": "number"
+                    },
+                    "critical": {
+                      "type": "number"
+                    }
+                  }
+                },
+                "action": {
+                  "type": "string",
+                  "enum": ["alert", "suspend", "escalate", "auto_remediate"]
+                }
+              }
+            }
+          },
+          "manual": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["review", "frequency", "reviewer"],
+              "properties": {
+                "review": {
+                  "type": "string",
+                  "enum": [
+                    "governance_compliance",
+                    "ethics_review",
+                    "risk_assessment",
+                    "stakeholder_impact",
+                    "policy_adherence"
+                  ]
+                },
+                "frequency": {
+                  "type": "string",
+                  "enum": ["monthly", "quarterly", "annually", "ad_hoc"]
+                },
+                "reviewer": {
+                  "type": "string",
+                  "enum": [
+                    "governance_board",
+                    "ethics_committee",
+                    "compliance_officer",
+                    "external_auditor"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "escalation": {
+        "type": "object",
+        "required": ["triggers", "procedures"],
+        "properties": {
+          "triggers": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["condition", "level"],
+              "properties": {
+                "condition": {
+                  "type": "string",
+                  "enum": [
+                    "stage_timeout",
+                    "approval_conflict",
+                    "compliance_violation",
+                    "high_risk_identified",
+                    "stakeholder_objection",
+                    "technical_issue"
+                  ]
+                },
+                "level": {
+                  "type": "string",
+                  "enum": ["supervisor", "governance_board", "executive_committee"]
+                },
+                "timeframe": {
+                  "type": "object",
+                  "properties": {
+                    "value": {
+                      "type": "integer"
+                    },
+                    "unit": {
+                      "type": "string",
+                      "enum": ["hours", "days"]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "procedures": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["level", "actions"],
+              "properties": {
+                "level": {
+                  "type": "string",
+                  "enum": ["supervisor", "governance_board", "executive_committee"]
+                },
+                "actions": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "enum": [
+                      "immediate_review",
+                      "stakeholder_consultation",
+                      "expert_panel",
+                      "external_review",
+                      "emergency_suspension",
+                      "executive_decision"
+                    ]
+                  }
+                },
+                "timeframe": {
+                  "type": "object",
+                  "properties": {
+                    "value": {
+                      "type": "integer"
+                    },
+                    "unit": {
+                      "type": "string",
+                      "enum": ["hours", "days"]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "metadata": {
+        "type": "object",
+        "properties": {
+          "createdBy": {
+            "type": "string"
+          },
+          "createdDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "lastModified": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["draft", "approved", "active", "deprecated"]
+          },
+          "applicableFrom": {
+            "type": "string",
+            "format": "date"
+          },
+          "reviewDate": {
+            "type": "string",
+            "format": "date"
+          }
+        }
+      }
+    }
+  }
+  

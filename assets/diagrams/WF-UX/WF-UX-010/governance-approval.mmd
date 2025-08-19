@@ -1,0 +1,83 @@
+```mermaid
+flowchart TD
+    Start([Research Proposal Submitted]) --> RP[Review Proposal]
+    RP --> CP{Core Principles Check}
+    
+    CP -->|Local-First?| LF[Verify Local Execution]
+    CP -->|Energy Truth?| ET[Validate Energy Mapping]
+    CP -->|60Hz Performance?| PF[Check Performance Impact]
+    CP -->|Privacy Compliant?| PC[Review Privacy Controls]
+    
+    LF --> LF_OK{Compliant?}
+    ET --> ET_OK{Compliant?}
+    PF --> PF_OK{Compliant?}
+    PC --> PC_OK{Compliant?}
+    
+    LF_OK -->|No| REJECT[Reject Proposal]
+    ET_OK -->|No| REJECT
+    PF_OK -->|No| REJECT
+    PC_OK -->|No| REJECT
+    
+    LF_OK -->|Yes| STAGE1[Stage 1: Technical Review]
+    ET_OK -->|Yes| STAGE1
+    PF_OK -->|Yes| STAGE1
+    PC_OK -->|Yes| STAGE1
+    
+    STAGE1 --> TR[Technical Review Board]
+    TR --> TR_OK{Approved?}
+    TR_OK -->|No| REVISE[Request Revisions]
+    REVISE --> RP
+    
+    TR_OK -->|Yes| STAGE2[Stage 2: Ethics Review]
+    STAGE2 --> ER[Ethics Review Board]
+    ER --> ER_OK{Approved?}
+    ER_OK -->|No| REVISE
+    
+    ER_OK -->|Yes| STAGE3[Stage 3: Governance Board]
+    STAGE3 --> GB[Governance Board Review]
+    GB --> GB_OK{Final Approval?}
+    GB_OK -->|No| REVISE
+    
+    GB_OK -->|Yes| SANDBOX[Sandbox Testing Phase]
+    SANDBOX --> ST[Conduct Sandbox Tests]
+    ST --> ST_OK{Tests Pass?}
+    ST_OK -->|No| REVISE
+    
+    ST_OK -->|Yes| DEPLOY[Production Deployment]
+    DEPLOY --> MONITOR[Continuous Monitoring]
+    MONITOR --> AUDIT[Audit Trail Update]
+    
+    REJECT --> LOG_REJECT[Log Rejection Reason]
+    LOG_REJECT --> END_REJECT([End: Proposal Rejected])
+    
+    AUDIT --> LOG_APPROVE[Log Approval & Deployment]
+    LOG_APPROVE --> END_APPROVE([End: Research Active])
+    
+    %% Parallel Consent Management
+    DEPLOY --> CONSENT[User Consent Management]
+    CONSENT --> OPT_IN[Opt-in Collection]
+    CONSENT --> OPT_OUT[Opt-out Mechanisms]
+    OPT_IN --> COLLECT[Data Collection Active]
+    OPT_OUT --> PAUSE[Pause Data Collection]
+    
+    %% Continuous Governance
+    COLLECT --> REVIEW_CYCLE[Periodic Review Cycle]
+    REVIEW_CYCLE --> ONGOING[Ongoing Compliance Check]
+    ONGOING --> CONTINUE{Continue Research?}
+    CONTINUE -->|Yes| COLLECT
+    CONTINUE -->|No| TERMINATE[Terminate Research]
+    TERMINATE --> CLEANUP[Data Cleanup & Archive]
+    CLEANUP --> END_TERMINATE([End: Research Terminated])
+    
+    classDef startEnd fill:#e8f5e8
+    classDef process fill:#e1f5fe
+    classDef decision fill:#fff3e0
+    classDef reject fill:#ffebee
+    classDef approve fill:#f3e5f5
+    
+    class Start,END_REJECT,END_APPROVE,END_TERMINATE startEnd
+    class RP,LF,ET,PF,PC,STAGE1,STAGE2,STAGE3,TR,ER,GB,SANDBOX,ST,DEPLOY,MONITOR,AUDIT process
+    class CP,LF_OK,ET_OK,PF_OK,PC_OK,TR_OK,ER_OK,GB_OK,ST_OK,CONTINUE decision
+    class REJECT,REVISE,LOG_REJECT reject
+    class LOG_APPROVE,COLLECT,OPT_IN approve
+```

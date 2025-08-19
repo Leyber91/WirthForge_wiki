@@ -1,0 +1,551 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "WIRTHFORGE Research Metrics Definition Schema",
+    "description": "Schema defining research metrics and measurement standards for WIRTHFORGE",
+    "type": "object",
+    "required": [
+      "metricId",
+      "name",
+      "category",
+      "definition",
+      "measurement",
+      "targets",
+      "collection",
+      "analysis",
+      "reporting"
+    ],
+    "properties": {
+      "metricId": {
+        "type": "string",
+        "pattern": "^WF-METRIC-[A-Z]{2,3}-[0-9]{3}$",
+        "description": "Unique identifier for the metric"
+      },
+      "name": {
+        "type": "string",
+        "maxLength": 100,
+        "description": "Human-readable name of the metric"
+      },
+      "category": {
+        "type": "string",
+        "enum": [
+          "energy_engagement",
+          "usability",
+          "performance",
+          "satisfaction",
+          "behavioral",
+          "technical",
+          "governance"
+        ],
+        "description": "Primary category of the metric"
+      },
+      "priority": {
+        "type": "string",
+        "enum": ["primary", "secondary", "tertiary"],
+        "description": "Priority level based on WIRTHFORGE research focus"
+      },
+      "definition": {
+        "type": "object",
+        "required": ["description", "rationale", "scope"],
+        "properties": {
+          "description": {
+            "type": "string",
+            "description": "Detailed description of what the metric measures"
+          },
+          "rationale": {
+            "type": "string",
+            "description": "Why this metric is important for WIRTHFORGE research"
+          },
+          "scope": {
+            "type": "string",
+            "enum": ["user_level", "session_level", "system_level", "aggregate_level"]
+          },
+          "energyTruthMapping": {
+            "type": "string",
+            "description": "How this metric relates to energy truth visualization principles"
+          }
+        }
+      },
+      "measurement": {
+        "type": "object",
+        "required": ["unit", "scale", "method"],
+        "properties": {
+          "unit": {
+            "type": "string",
+            "description": "Unit of measurement (e.g., 'seconds', 'count', 'percentage', 'score')"
+          },
+          "scale": {
+            "type": "object",
+            "required": ["type", "range"],
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": ["continuous", "discrete", "ordinal", "categorical", "binary"]
+              },
+              "range": {
+                "type": "object",
+                "properties": {
+                  "min": {
+                    "type": "number"
+                  },
+                  "max": {
+                    "type": "number"
+                  },
+                  "values": {
+                    "type": "array",
+                    "items": {
+                      "oneOf": [
+                        {"type": "string"},
+                        {"type": "number"}
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "method": {
+            "type": "string",
+            "enum": [
+              "direct_measurement",
+              "calculated_metric",
+              "user_reported",
+              "behavioral_inference",
+              "system_instrumentation"
+            ]
+          },
+          "precision": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Number of decimal places for numeric metrics"
+          },
+          "accuracy": {
+            "type": "object",
+            "properties": {
+              "tolerance": {
+                "type": "number",
+                "description": "Acceptable margin of error"
+              },
+              "confidence": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1,
+                "description": "Confidence level for the measurement"
+              }
+            }
+          }
+        }
+      },
+      "targets": {
+        "type": "object",
+        "properties": {
+          "baseline": {
+            "type": "number",
+            "description": "Current or expected baseline value"
+          },
+          "target": {
+            "type": "number",
+            "description": "Target value to achieve"
+          },
+          "threshold": {
+            "type": "object",
+            "properties": {
+              "warning": {
+                "type": "number",
+                "description": "Value that triggers a warning"
+              },
+              "critical": {
+                "type": "number",
+                "description": "Value that triggers critical alert"
+              }
+            }
+          },
+          "direction": {
+            "type": "string",
+            "enum": ["increase", "decrease", "maintain", "optimize"],
+            "description": "Desired direction of change"
+          },
+          "timeframe": {
+            "type": "object",
+            "properties": {
+              "period": {
+                "type": "string",
+                "enum": ["immediate", "short_term", "medium_term", "long_term"]
+              },
+              "duration": {
+                "type": "object",
+                "properties": {
+                  "value": {
+                    "type": "integer"
+                  },
+                  "unit": {
+                    "type": "string",
+                    "enum": ["hours", "days", "weeks", "months"]
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "collection": {
+        "type": "object",
+        "required": ["frequency", "triggers", "methods"],
+        "properties": {
+          "frequency": {
+            "type": "string",
+            "enum": ["real_time", "continuous", "periodic", "event_driven", "on_demand"]
+          },
+          "interval": {
+            "type": "object",
+            "properties": {
+              "value": {
+                "type": "integer"
+              },
+              "unit": {
+                "type": "string",
+                "enum": ["milliseconds", "seconds", "minutes", "hours", "days"]
+              }
+            }
+          },
+          "triggers": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "user_interaction",
+                "system_event",
+                "time_based",
+                "threshold_exceeded",
+                "error_occurred",
+                "task_completed",
+                "session_started",
+                "session_ended"
+              ]
+            }
+          },
+          "methods": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "javascript_instrumentation",
+                "server_side_logging",
+                "user_input_capture",
+                "performance_api",
+                "websocket_events",
+                "local_storage_tracking"
+              ]
+            }
+          },
+          "sampling": {
+            "type": "object",
+            "properties": {
+              "strategy": {
+                "type": "string",
+                "enum": ["all", "random", "systematic", "stratified", "convenience"]
+              },
+              "rate": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1,
+                "description": "Sampling rate (0-1)"
+              },
+              "size": {
+                "type": "integer",
+                "minimum": 1,
+                "description": "Sample size if fixed"
+              }
+            }
+          }
+        }
+      },
+      "analysis": {
+        "type": "object",
+        "required": ["aggregation", "statistical"],
+        "properties": {
+          "aggregation": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "sum",
+                "average",
+                "median",
+                "mode",
+                "min",
+                "max",
+                "count",
+                "percentage",
+                "rate",
+                "ratio"
+              ]
+            }
+          },
+          "statistical": {
+            "type": "object",
+            "properties": {
+              "descriptive": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "mean",
+                    "standard_deviation",
+                    "variance",
+                    "percentiles",
+                    "quartiles",
+                    "skewness",
+                    "kurtosis"
+                  ]
+                }
+              },
+              "inferential": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "t_test",
+                    "chi_square",
+                    "anova",
+                    "correlation",
+                    "regression",
+                    "confidence_intervals"
+                  ]
+                }
+              }
+            }
+          },
+          "segmentation": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "user_level",
+                "device_type",
+                "session_duration",
+                "time_of_day",
+                "feature_usage",
+                "performance_tier"
+              ]
+            }
+          },
+          "correlation": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "description": "Other metrics to correlate with"
+            }
+          }
+        }
+      },
+      "reporting": {
+        "type": "object",
+        "required": ["visualization", "frequency", "audience"],
+        "properties": {
+          "visualization": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "line_chart",
+                "bar_chart",
+                "histogram",
+                "scatter_plot",
+                "heatmap",
+                "gauge",
+                "table",
+                "energy_visualization"
+              ]
+            }
+          },
+          "frequency": {
+            "type": "string",
+            "enum": ["real_time", "daily", "weekly", "monthly", "quarterly", "on_demand"]
+          },
+          "audience": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "end_users",
+                "researchers",
+                "developers",
+                "governance_board",
+                "stakeholders"
+              ]
+            }
+          },
+          "format": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": ["dashboard", "report", "alert", "export", "api"]
+            }
+          },
+          "alerts": {
+            "type": "object",
+            "properties": {
+              "enabled": {
+                "type": "boolean"
+              },
+              "conditions": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "threshold": {
+                      "type": "number"
+                    },
+                    "operator": {
+                      "type": "string",
+                      "enum": ["greater_than", "less_than", "equals", "not_equals"]
+                    },
+                    "severity": {
+                      "type": "string",
+                      "enum": ["info", "warning", "critical"]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "compliance": {
+        "type": "object",
+        "required": ["privacy", "governance", "performance"],
+        "properties": {
+          "privacy": {
+            "type": "object",
+            "properties": {
+              "piiContained": {
+                "type": "boolean",
+                "description": "Whether metric contains personally identifiable information"
+              },
+              "anonymization": {
+                "type": "string",
+                "enum": ["none", "pseudonymization", "anonymization", "differential_privacy"]
+              },
+              "consentRequired": {
+                "type": "boolean"
+              },
+              "retentionPeriod": {
+                "type": "integer",
+                "description": "Data retention period in days"
+              }
+            }
+          },
+          "governance": {
+            "type": "object",
+            "properties": {
+              "approvalRequired": {
+                "type": "boolean"
+              },
+              "auditTrail": {
+                "type": "boolean",
+                "const": true
+              },
+              "localFirst": {
+                "type": "boolean",
+                "const": true
+              }
+            }
+          },
+          "performance": {
+            "type": "object",
+            "properties": {
+              "maxCollectionTime": {
+                "type": "number",
+                "maximum": 16.67,
+                "description": "Maximum time for metric collection in milliseconds"
+              },
+              "memoryImpact": {
+                "type": "string",
+                "enum": ["negligible", "low", "medium", "high"]
+              },
+              "processingLoad": {
+                "type": "string",
+                "enum": ["negligible", "low", "medium", "high"]
+              }
+            }
+          }
+        }
+      },
+      "validation": {
+        "type": "object",
+        "properties": {
+          "rules": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "enum": ["range_check", "format_validation", "consistency_check", "business_rule"]
+                },
+                "condition": {
+                  "type": "string",
+                  "description": "Validation condition or rule"
+                },
+                "errorMessage": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "qualityChecks": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "completeness",
+                "accuracy",
+                "consistency",
+                "timeliness",
+                "validity",
+                "uniqueness"
+              ]
+            }
+          }
+        }
+      },
+      "metadata": {
+        "type": "object",
+        "properties": {
+          "version": {
+            "type": "string",
+            "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+          },
+          "createdBy": {
+            "type": "string"
+          },
+          "createdDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "lastModified": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["draft", "approved", "active", "deprecated"]
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "dependencies": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "description": "Other metrics this metric depends on"
+            }
+          }
+        }
+      }
+    }
+  }
+  

@@ -1,0 +1,791 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://wirthforge.org/schemas/WF-OPS-001-update-metadata.json",
+  "title": "WIRTHFORGE Update Metadata Schema",
+  "description": "Update metadata schema for WIRTHFORGE local update system with rollback support and integrity verification",
+  "type": "object",
+  "required": [
+    "updateId",
+    "version",
+    "releaseInfo",
+    "packages",
+    "verification",
+    "compatibility"
+  ],
+  "properties": {
+    "updateId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Unique identifier for this update"
+    },
+    "version": {
+      "type": "object",
+      "required": ["current", "target"],
+      "properties": {
+        "current": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$",
+          "description": "Current WIRTHFORGE version"
+        },
+        "target": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$",
+          "description": "Target version to update to"
+        },
+        "minimum": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$",
+          "description": "Minimum version required for this update"
+        },
+        "buildNumber": {
+          "type": "string",
+          "description": "Build number or commit hash"
+        }
+      }
+    },
+    "releaseInfo": {
+      "type": "object",
+      "required": ["releaseDate", "type"],
+      "properties": {
+        "releaseDate": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Release date in ISO 8601 format"
+        },
+        "type": {
+          "type": "string",
+          "enum": ["major", "minor", "patch", "hotfix", "security"],
+          "description": "Type of update release"
+        },
+        "priority": {
+          "type": "string",
+          "enum": ["low", "medium", "high", "critical", "emergency"],
+          "default": "medium",
+          "description": "Update priority level"
+        },
+        "title": {
+          "type": "string",
+          "description": "Update title or name"
+        },
+        "description": {
+          "type": "string",
+          "description": "Brief update description"
+        },
+        "releaseNotes": {
+          "type": "string",
+          "description": "Detailed release notes in markdown format"
+        },
+        "changelog": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "category": {
+                "type": "string",
+                "enum": ["added", "changed", "deprecated", "removed", "fixed", "security"]
+              },
+              "description": {
+                "type": "string"
+              },
+              "component": {
+                "type": "string",
+                "description": "Affected component"
+              }
+            }
+          }
+        },
+        "breakingChanges": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "component": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "migrationGuide": {
+                "type": "string",
+                "format": "uri"
+              }
+            }
+          }
+        }
+      }
+    },
+    "packages": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "version", "type", "url", "size", "checksum"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Package identifier"
+          },
+          "name": {
+            "type": "string",
+            "description": "Package display name"
+          },
+          "version": {
+            "type": "string",
+            "description": "Package version"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["core", "ui", "model", "plugin", "config", "patch"],
+            "description": "Package type"
+          },
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "description": "Download URL for the package"
+          },
+          "mirrors": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uri"
+            },
+            "description": "Alternative download mirrors"
+          },
+          "size": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Package size in bytes"
+          },
+          "checksum": {
+            "type": "object",
+            "required": ["algorithm", "value"],
+            "properties": {
+              "algorithm": {
+                "type": "string",
+                "enum": ["sha256", "sha512", "blake2b"],
+                "description": "Checksum algorithm"
+              },
+              "value": {
+                "type": "string",
+                "pattern": "^[a-fA-F0-9]+$",
+                "description": "Checksum value"
+              }
+            }
+          },
+          "signature": {
+            "type": "object",
+            "properties": {
+              "algorithm": {
+                "type": "string",
+                "enum": ["rsa", "ecdsa", "ed25519"]
+              },
+              "value": {
+                "type": "string"
+              },
+              "publicKey": {
+                "type": "string"
+              }
+            }
+          },
+          "dependencies": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Package dependencies"
+          },
+          "optional": {
+            "type": "boolean",
+            "default": false,
+            "description": "Whether this package is optional"
+          },
+          "platform": {
+            "type": "object",
+            "properties": {
+              "os": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": ["windows", "macos", "linux"]
+                }
+              },
+              "architecture": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": ["x64", "arm64", "x86"]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "verification": {
+      "type": "object",
+      "required": ["required"],
+      "properties": {
+        "required": {
+          "type": "boolean",
+          "description": "Whether verification is required"
+        },
+        "methods": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["checksum", "signature", "certificate"]
+          },
+          "description": "Verification methods to use"
+        },
+        "publicKeys": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "algorithm": {
+                "type": "string"
+              },
+              "key": {
+                "type": "string"
+              },
+              "fingerprint": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "certificates": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "issuer": {
+                "type": "string"
+              },
+              "subject": {
+                "type": "string"
+              },
+              "fingerprint": {
+                "type": "string"
+              },
+              "validFrom": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "validTo": {
+                "type": "string",
+                "format": "date-time"
+              }
+            }
+          }
+        }
+      }
+    },
+    "compatibility": {
+      "type": "object",
+      "required": ["platforms"],
+      "properties": {
+        "platforms": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["os", "architecture"],
+            "properties": {
+              "os": {
+                "type": "string",
+                "enum": ["windows", "macos", "linux"]
+              },
+              "architecture": {
+                "type": "string",
+                "enum": ["x64", "arm64", "x86"]
+              },
+              "minVersion": {
+                "type": "string",
+                "description": "Minimum OS version required"
+              },
+              "maxVersion": {
+                "type": "string",
+                "description": "Maximum OS version supported"
+              }
+            }
+          }
+        },
+        "systemRequirements": {
+          "type": "object",
+          "properties": {
+            "minMemoryMB": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Minimum RAM requirement in MB"
+            },
+            "minDiskSpaceMB": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Minimum disk space requirement in MB"
+            },
+            "requiredPorts": {
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 65535
+              }
+            },
+            "dependencies": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "version": {
+                    "type": "string"
+                  },
+                  "optional": {
+                    "type": "boolean",
+                    "default": false
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "installation": {
+      "type": "object",
+      "properties": {
+        "method": {
+          "type": "string",
+          "enum": ["replace", "patch", "overlay", "incremental"],
+          "default": "replace",
+          "description": "Installation method"
+        },
+        "requiresRestart": {
+          "type": "boolean",
+          "default": false,
+          "description": "Whether update requires system restart"
+        },
+        "requiresServiceStop": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether update requires stopping services"
+        },
+        "backupRequired": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether backup is required before update"
+        },
+        "rollbackSupported": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether rollback is supported"
+        },
+        "estimatedDuration": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Estimated installation time in seconds"
+        },
+        "steps": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "order": {
+                "type": "integer"
+              },
+              "critical": {
+                "type": "boolean",
+                "default": false
+              },
+              "rollbackable": {
+                "type": "boolean",
+                "default": true
+              }
+            }
+          }
+        }
+      }
+    },
+    "rollback": {
+      "type": "object",
+      "properties": {
+        "supported": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether rollback is supported"
+        },
+        "automatic": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether automatic rollback on failure is enabled"
+        },
+        "preserveUserData": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether user data is preserved during rollback"
+        },
+        "backupComponents": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["core", "ui", "config", "data", "models", "plugins"]
+          },
+          "description": "Components to backup for rollback"
+        },
+        "validationTests": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "critical": {
+                "type": "boolean",
+                "default": false
+              },
+              "timeout": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "Test timeout in seconds"
+              }
+            }
+          }
+        }
+      }
+    },
+    "security": {
+      "type": "object",
+      "properties": {
+        "securityFixes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "cve": {
+                "type": "string",
+                "pattern": "^CVE-\\d{4}-\\d+$"
+              },
+              "severity": {
+                "type": "string",
+                "enum": ["low", "medium", "high", "critical"]
+              },
+              "description": {
+                "type": "string"
+              },
+              "component": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "permissions": {
+          "type": "object",
+          "properties": {
+            "requiresElevation": {
+              "type": "boolean",
+              "default": false
+            },
+            "modifiesSystem": {
+              "type": "boolean",
+              "default": false
+            },
+            "networkAccess": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        }
+      }
+    },
+    "testing": {
+      "type": "object",
+      "properties": {
+        "preInstallTests": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "required": {
+                "type": "boolean",
+                "default": true
+              }
+            }
+          }
+        },
+        "postInstallTests": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "critical": {
+                "type": "boolean",
+                "default": false
+              },
+              "timeout": {
+                "type": "integer",
+                "minimum": 0
+              }
+            }
+          }
+        },
+        "smokeTests": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "component": {
+                "type": "string"
+              },
+              "test": {
+                "type": "string"
+              },
+              "expectedResult": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "createdBy": {
+          "type": "string",
+          "description": "Update creator or system"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "approvedBy": {
+          "type": "string",
+          "description": "Update approver"
+        },
+        "approvedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "categories": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["bugfix", "feature", "security", "performance", "ui", "api"]
+          }
+        },
+        "downloadCount": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "successRate": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        }
+      }
+    }
+  },
+  "additionalProperties": false,
+  "examples": [
+    {
+      "updateId": "550e8400-e29b-41d4-a716-446655440000",
+      "version": {
+        "current": "1.0.0",
+        "target": "1.0.1",
+        "minimum": "1.0.0",
+        "buildNumber": "abc123def"
+      },
+      "releaseInfo": {
+        "releaseDate": "2024-08-19T14:30:00Z",
+        "type": "patch",
+        "priority": "medium",
+        "title": "WIRTHFORGE 1.0.1 - Bug Fixes and Improvements",
+        "description": "This patch release fixes several bugs and improves performance",
+        "releaseNotes": "## Bug Fixes\n- Fixed memory leak in AI model loading\n- Resolved UI rendering issues on high-DPI displays\n\n## Improvements\n- Improved startup time by 15%\n- Enhanced error messages",
+        "changelog": [
+          {
+            "category": "fixed",
+            "description": "Memory leak in AI model loading",
+            "component": "ai-engine"
+          },
+          {
+            "category": "fixed",
+            "description": "UI rendering issues on high-DPI displays",
+            "component": "web-ui"
+          }
+        ]
+      },
+      "packages": [
+        {
+          "id": "core-1.0.1",
+          "name": "WIRTHFORGE Core",
+          "version": "1.0.1",
+          "type": "core",
+          "url": "https://releases.wirthforge.org/core-1.0.1.zip",
+          "mirrors": [
+            "https://mirror1.wirthforge.org/core-1.0.1.zip",
+            "https://mirror2.wirthforge.org/core-1.0.1.zip"
+          ],
+          "size": 52428800,
+          "checksum": {
+            "algorithm": "sha256",
+            "value": "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3"
+          },
+          "signature": {
+            "algorithm": "rsa",
+            "value": "signature_value_here",
+            "publicKey": "public_key_here"
+          },
+          "optional": false,
+          "platform": {
+            "os": ["windows", "macos", "linux"],
+            "architecture": ["x64", "arm64"]
+          }
+        }
+      ],
+      "verification": {
+        "required": true,
+        "methods": ["checksum", "signature"],
+        "publicKeys": [
+          {
+            "id": "wirthforge-release-key",
+            "algorithm": "rsa",
+            "key": "public_key_content",
+            "fingerprint": "AA:BB:CC:DD:EE:FF"
+          }
+        ]
+      },
+      "compatibility": {
+        "platforms": [
+          {
+            "os": "windows",
+            "architecture": "x64",
+            "minVersion": "10.0.0"
+          },
+          {
+            "os": "macos",
+            "architecture": "x64",
+            "minVersion": "10.15.0"
+          },
+          {
+            "os": "linux",
+            "architecture": "x64",
+            "minVersion": "5.4.0"
+          }
+        ],
+        "systemRequirements": {
+          "minMemoryMB": 2048,
+          "minDiskSpaceMB": 1024,
+          "requiredPorts": [9443, 9444]
+        }
+      },
+      "installation": {
+        "method": "replace",
+        "requiresRestart": false,
+        "requiresServiceStop": true,
+        "backupRequired": true,
+        "rollbackSupported": true,
+        "estimatedDuration": 300,
+        "steps": [
+          {
+            "id": "backup",
+            "name": "Create Backup",
+            "description": "Create backup of current installation",
+            "order": 1,
+            "critical": true,
+            "rollbackable": false
+          },
+          {
+            "id": "stop_services",
+            "name": "Stop Services",
+            "description": "Stop WIRTHFORGE services",
+            "order": 2,
+            "critical": true,
+            "rollbackable": true
+          },
+          {
+            "id": "update_core",
+            "name": "Update Core",
+            "description": "Update core engine files",
+            "order": 3,
+            "critical": true,
+            "rollbackable": true
+          }
+        ]
+      },
+      "rollback": {
+        "supported": true,
+        "automatic": true,
+        "preserveUserData": true,
+        "backupComponents": ["core", "config"],
+        "validationTests": [
+          {
+            "name": "service_startup",
+            "description": "Test service startup",
+            "critical": true,
+            "timeout": 30
+          }
+        ]
+      },
+      "testing": {
+        "postInstallTests": [
+          {
+            "name": "core_functionality",
+            "description": "Test core functionality",
+            "critical": true,
+            "timeout": 60
+          }
+        ],
+        "smokeTests": [
+          {
+            "component": "web-server",
+            "test": "http_response",
+            "expectedResult": "200 OK"
+          }
+        ]
+      },
+      "metadata": {
+        "createdBy": "WIRTHFORGE Release System",
+        "createdAt": "2024-08-19T12:00:00Z",
+        "tags": ["bugfix", "performance"],
+        "categories": ["bugfix", "performance"]
+      }
+    }
+  ]
+}

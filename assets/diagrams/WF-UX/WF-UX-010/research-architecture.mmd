@@ -1,0 +1,100 @@
+```mermaid
+graph TB
+    subgraph "User Layer"
+        UI[Web Interface]
+        FB[Feedback Forms]
+        RD[Research Dashboard]
+        EC[Energy Console]
+    end
+    
+    subgraph "Research Framework"
+        FC[Feedback Collector]
+        MA[Metrics Analyzer]
+        EF[Experiment Framework]
+        PM[Privacy Manager]
+    end
+    
+    subgraph "Governance Layer"
+        GV[Governance Validator]
+        AL[Audit Logger]
+        CC[Consent Controller]
+        DR[Data Rights Manager]
+    end
+    
+    subgraph "Local Storage"
+        LD[Local Database]
+        ML[Metrics Log]
+        AT[Audit Trail]
+        UC[User Consent]
+    end
+    
+    subgraph "Analytics Engine"
+        LP[Local Processing]
+        AG[Aggregation Engine]
+        VI[Visualization Interface]
+        ER[Export/Report]
+    end
+    
+    subgraph "Integration Points"
+        WS[WebSocket Events]
+        API[Local API]
+        OB[Observability System]
+        EN[Energy Metrics]
+    end
+    
+    %% User Interactions
+    UI --> FB
+    FB --> FC
+    UI --> RD
+    RD --> MA
+    EC --> EN
+    
+    %% Research Flow
+    FC --> PM
+    PM --> GV
+    GV --> AL
+    MA --> LP
+    EF --> CC
+    
+    %% Data Flow
+    FC --> LD
+    MA --> ML
+    AL --> AT
+    CC --> UC
+    
+    %% Analytics Processing
+    LP --> AG
+    AG --> VI
+    VI --> RD
+    LP --> ER
+    
+    %% Integration
+    FC --> WS
+    MA --> API
+    EN --> OB
+    OB --> MA
+    
+    %% Privacy Controls
+    PM --> DR
+    DR --> UC
+    PM --> ER
+    
+    %% Governance Validation
+    GV --> EF
+    GV --> FC
+    AL --> VI
+    
+    classDef userLayer fill:#e1f5fe
+    classDef researchLayer fill:#f3e5f5
+    classDef governanceLayer fill:#fff3e0
+    classDef storageLayer fill:#e8f5e8
+    classDef analyticsLayer fill:#fce4ec
+    classDef integrationLayer fill:#f1f8e9
+    
+    class UI,FB,RD,EC userLayer
+    class FC,MA,EF,PM researchLayer
+    class GV,AL,CC,DR governanceLayer
+    class LD,ML,AT,UC storageLayer
+    class LP,AG,VI,ER analyticsLayer
+    class WS,API,OB,EN integrationLayer
+```

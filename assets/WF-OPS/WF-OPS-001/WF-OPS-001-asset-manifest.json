@@ -1,0 +1,721 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://wirthforge.org/schemas/WF-OPS-001-asset-manifest.json",
+  "title": "WIRTHFORGE WF-OPS-001 Asset Manifest",
+  "description": "Complete asset manifest for WF-OPS-001 Deployment and Installation operations document",
+  "type": "object",
+  "required": [
+    "document",
+    "version",
+    "generated",
+    "assets"
+  ],
+  "properties": {
+    "document": {
+      "type": "object",
+      "required": ["id", "title", "version"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "const": "WF-OPS-001"
+        },
+        "title": {
+          "type": "string",
+          "const": "WIRTHFORGE Deployment and Installation"
+        },
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$"
+        },
+        "description": {
+          "type": "string"
+        },
+        "author": {
+          "type": "string"
+        },
+        "lastModified": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Asset manifest version"
+    },
+    "generated": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Timestamp when assets were generated"
+    },
+    "assets": {
+      "type": "object",
+      "required": ["diagrams", "schemas", "code", "tests"],
+      "properties": {
+        "diagrams": {
+          "type": "array",
+          "minItems": 4,
+          "items": {
+            "type": "object",
+            "required": ["id", "name", "type", "path", "description"],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string",
+                "enum": ["mermaid", "plantuml", "drawio"]
+              },
+              "path": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "size": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "checksum": {
+                "type": "string"
+              },
+              "dependencies": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "schemas": {
+          "type": "array",
+          "minItems": 4,
+          "items": {
+            "type": "object",
+            "required": ["id", "name", "type", "path", "description"],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string",
+                "enum": ["json-schema", "xml-schema", "yaml-schema"]
+              },
+              "path": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "version": {
+                "type": "string"
+              },
+              "size": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "checksum": {
+                "type": "string"
+              },
+              "validation": {
+                "type": "object",
+                "properties": {
+                  "valid": {
+                    "type": "boolean"
+                  },
+                  "errors": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "code": {
+          "type": "array",
+          "minItems": 6,
+          "items": {
+            "type": "object",
+            "required": ["id", "name", "language", "path", "description"],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "language": {
+                "type": "string",
+                "enum": ["javascript", "typescript", "python", "java", "c++", "rust", "go"]
+              },
+              "path": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string",
+                "enum": ["module", "class", "function", "script", "library"]
+              },
+              "size": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "lines": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "checksum": {
+                "type": "string"
+              },
+              "dependencies": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "exports": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "platforms": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": ["windows", "macos", "linux", "cross-platform"]
+                }
+              }
+            }
+          }
+        },
+        "tests": {
+          "type": "array",
+          "minItems": 4,
+          "items": {
+            "type": "object",
+            "required": ["id", "name", "framework", "path", "description"],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "framework": {
+                "type": "string",
+                "enum": ["jest", "mocha", "jasmine", "pytest", "junit", "custom"]
+              },
+              "path": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string",
+                "enum": ["unit", "integration", "e2e", "performance", "security"]
+              },
+              "coverage": {
+                "type": "object",
+                "properties": {
+                  "target": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 100
+                  },
+                  "actual": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 100
+                  }
+                }
+              },
+              "size": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "testCount": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "checksum": {
+                "type": "string"
+              },
+              "dependencies": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "documentation": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "name", "type", "path", "description"],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string",
+                "enum": ["markdown", "html", "pdf", "api-doc", "readme"]
+              },
+              "path": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "size": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "checksum": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "totalAssets": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "totalSize": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "platforms": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["windows", "macos", "linux", "cross-platform"]
+          }
+        },
+        "technologies": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "dependencies": {
+          "type": "object",
+          "properties": {
+            "runtime": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "version": {
+                    "type": "string"
+                  },
+                  "required": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            },
+            "development": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "version": {
+                    "type": "string"
+                  },
+                  "purpose": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "validation": {
+          "type": "object",
+          "properties": {
+            "validated": {
+              "type": "boolean"
+            },
+            "validationDate": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "errors": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "asset": {
+                    "type": "string"
+                  },
+                  "error": {
+                    "type": "string"
+                  },
+                  "severity": {
+                    "type": "string",
+                    "enum": ["error", "warning", "info"]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "example": {
+    "document": {
+      "id": "WF-OPS-001",
+      "title": "WIRTHFORGE Deployment and Installation",
+      "version": "1.0.0",
+      "description": "Comprehensive deployment and installation procedures for WIRTHFORGE local-first AI assistant",
+      "author": "WIRTHFORGE Team",
+      "lastModified": "2024-08-19T10:00:00Z"
+    },
+    "version": "1.0.0",
+    "generated": "2024-08-19T11:37:24Z",
+    "assets": {
+      "diagrams": [
+        {
+          "id": "installation-flow",
+          "name": "Installation Flow Diagram",
+          "type": "mermaid",
+          "path": "assets/diagrams/WF-OPS/WF-OPS-001/WF-OPS-001-installation-flow.md",
+          "description": "Comprehensive installation process flow with error handling and background monitoring",
+          "size": 15420,
+          "checksum": "sha256:abc123...",
+          "dependencies": ["system-requirements"]
+        },
+        {
+          "id": "deployment-architecture",
+          "name": "Deployment Architecture Diagram",
+          "type": "mermaid",
+          "path": "assets/diagrams/WF-OPS/WF-OPS-001/WF-OPS-001-deployment-architecture.md",
+          "description": "Local deployment system architecture with components and security layers",
+          "size": 18750,
+          "checksum": "sha256:def456...",
+          "dependencies": ["local-server", "platform-scripts"]
+        },
+        {
+          "id": "update-process",
+          "name": "Update Process Diagram",
+          "type": "mermaid",
+          "path": "assets/diagrams/WF-OPS/WF-OPS-001/WF-OPS-001-update-process.md",
+          "description": "Update workflow with backup, verification, and rollback procedures",
+          "size": 16890,
+          "checksum": "sha256:ghi789...",
+          "dependencies": ["update-manager", "backup-restore"]
+        },
+        {
+          "id": "system-integration",
+          "name": "System Integration Diagram",
+          "type": "mermaid",
+          "path": "assets/diagrams/WF-OPS/WF-OPS-001/WF-OPS-001-system-integration.md",
+          "description": "Cross-platform OS integration and service management",
+          "size": 21340,
+          "checksum": "sha256:jkl012...",
+          "dependencies": ["platform-scripts", "diagnostics"]
+        }
+      ],
+      "schemas": [
+        {
+          "id": "installation-config",
+          "name": "Installation Configuration Schema",
+          "type": "json-schema",
+          "path": "assets/schemas/WF-OPS/WF-OPS-001/WF-OPS-001-installation-config.json",
+          "description": "Schema for installation configuration parameters and validation",
+          "version": "2020-12",
+          "size": 25680,
+          "checksum": "sha256:mno345...",
+          "validation": {
+            "valid": true,
+            "errors": []
+          }
+        },
+        {
+          "id": "deployment-manifest",
+          "name": "Deployment Manifest Schema",
+          "type": "json-schema",
+          "path": "assets/schemas/WF-OPS/WF-OPS-001/WF-OPS-001-deployment-manifest.json",
+          "description": "Schema for deployment state tracking and runtime status",
+          "version": "2020-12",
+          "size": 28940,
+          "checksum": "sha256:pqr678...",
+          "validation": {
+            "valid": true,
+            "errors": []
+          }
+        },
+        {
+          "id": "update-metadata",
+          "name": "Update Metadata Schema",
+          "type": "json-schema",
+          "path": "assets/schemas/WF-OPS/WF-OPS-001/WF-OPS-001-update-metadata.json",
+          "description": "Schema for update packages and verification metadata",
+          "version": "2020-12",
+          "size": 31250,
+          "checksum": "sha256:stu901...",
+          "validation": {
+            "valid": true,
+            "errors": []
+          }
+        },
+        {
+          "id": "system-requirements",
+          "name": "System Requirements Schema",
+          "type": "json-schema",
+          "path": "assets/schemas/WF-OPS/WF-OPS-001/WF-OPS-001-system-requirements.json",
+          "description": "Schema for system requirements validation and compatibility checking",
+          "version": "2020-12",
+          "size": 42180,
+          "checksum": "sha256:vwx234...",
+          "validation": {
+            "valid": true,
+            "errors": []
+          }
+        }
+      ],
+      "code": [
+        {
+          "id": "web-installer",
+          "name": "Web-Based Installer",
+          "language": "javascript",
+          "path": "assets/code/WF-OPS/WF-OPS-001/web-installer.js",
+          "description": "Secure localhost-bound web interface for WIRTHFORGE installation",
+          "type": "module",
+          "size": 45620,
+          "lines": 892,
+          "checksum": "sha256:yza567...",
+          "dependencies": ["express", "ws", "https"],
+          "exports": ["WirthForgeWebInstaller"],
+          "platforms": ["cross-platform"]
+        },
+        {
+          "id": "platform-scripts",
+          "name": "Platform-Specific Scripts",
+          "language": "javascript",
+          "path": "assets/code/WF-OPS/WF-OPS-001/platform-scripts.js",
+          "description": "Cross-platform installation utilities with OS-specific implementations",
+          "type": "module",
+          "size": 38940,
+          "lines": 756,
+          "checksum": "sha256:bcd890...",
+          "dependencies": ["child_process", "fs", "path"],
+          "exports": ["PlatformScripts", "WindowsScripts", "MacOSScripts", "LinuxScripts"],
+          "platforms": ["windows", "macos", "linux"]
+        },
+        {
+          "id": "local-server",
+          "name": "Local HTTPS Server",
+          "language": "javascript",
+          "path": "assets/code/WF-OPS/WF-OPS-001/local-server.js",
+          "description": "Secure localhost-bound HTTPS server with WebSocket support and AI integration",
+          "type": "module",
+          "size": 52340,
+          "lines": 1024,
+          "checksum": "sha256:efg123...",
+          "dependencies": ["https", "ws", "express", "sqlite3"],
+          "exports": ["WirthForgeLocalServer"],
+          "platforms": ["cross-platform"]
+        },
+        {
+          "id": "update-manager",
+          "name": "Update Manager",
+          "language": "javascript",
+          "path": "assets/code/WF-OPS/WF-OPS-001/update-manager.js",
+          "description": "Automatic and manual updates with backup, verification, and rollback",
+          "type": "module",
+          "size": 41780,
+          "lines": 812,
+          "checksum": "sha256:hij456...",
+          "dependencies": ["fs", "crypto", "child_process"],
+          "exports": ["WirthForgeUpdateManager"],
+          "platforms": ["cross-platform"]
+        },
+        {
+          "id": "diagnostics",
+          "name": "System Diagnostics",
+          "language": "javascript",
+          "path": "assets/code/WF-OPS/WF-OPS-001/diagnostics.js",
+          "description": "Comprehensive system diagnostics and health monitoring tools",
+          "type": "module",
+          "size": 36920,
+          "lines": 718,
+          "checksum": "sha256:klm789...",
+          "dependencies": ["fs", "os", "child_process"],
+          "exports": ["WirthForgeDiagnostics"],
+          "platforms": ["cross-platform"]
+        },
+        {
+          "id": "backup-restore",
+          "name": "Backup & Restore System",
+          "language": "javascript",
+          "path": "assets/code/WF-OPS/WF-OPS-001/backup-restore.js",
+          "description": "Automated backup creation and restoration with encryption support",
+          "type": "module",
+          "size": 44560,
+          "lines": 867,
+          "checksum": "sha256:nop012...",
+          "dependencies": ["fs", "crypto", "zlib", "stream"],
+          "exports": ["WirthForgeBackupRestore"],
+          "platforms": ["cross-platform"]
+        }
+      ],
+      "tests": [
+        {
+          "id": "installation-validation",
+          "name": "Installation Validation Tests",
+          "framework": "jest",
+          "path": "assets/tests/WF-OPS/WF-OPS-001/installation-validation.test.js",
+          "description": "Comprehensive tests for validating WIRTHFORGE installation integrity",
+          "type": "integration",
+          "coverage": {
+            "target": 90,
+            "actual": 92
+          },
+          "size": 28450,
+          "testCount": 45,
+          "checksum": "sha256:qrs345...",
+          "dependencies": ["fs", "os", "child_process"]
+        },
+        {
+          "id": "deployment-testing",
+          "name": "Deployment Testing Suite",
+          "framework": "jest",
+          "path": "assets/tests/WF-OPS/WF-OPS-001/deployment-testing.test.js",
+          "description": "Tests for validating deployment functionality and API endpoints",
+          "type": "e2e",
+          "coverage": {
+            "target": 85,
+            "actual": 88
+          },
+          "size": 24680,
+          "testCount": 38,
+          "checksum": "sha256:tuv678...",
+          "dependencies": ["https", "ws", "fs"]
+        },
+        {
+          "id": "update-verification",
+          "name": "Update Verification Tests",
+          "framework": "jest",
+          "path": "assets/tests/WF-OPS/WF-OPS-001/update-verification.test.js",
+          "description": "Tests for validating update processes and rollback functionality",
+          "type": "integration",
+          "coverage": {
+            "target": 88,
+            "actual": 91
+          },
+          "size": 31920,
+          "testCount": 52,
+          "checksum": "sha256:wxy901...",
+          "dependencies": ["fs", "crypto", "child_process"]
+        },
+        {
+          "id": "system-diagnostics",
+          "name": "System Diagnostics Tests",
+          "framework": "jest",
+          "path": "assets/tests/WF-OPS/WF-OPS-001/system-diagnostics.test.js",
+          "description": "Tests for validating system diagnostics and health monitoring",
+          "type": "unit",
+          "coverage": {
+            "target": 85,
+            "actual": 87
+          },
+          "size": 26340,
+          "testCount": 41,
+          "checksum": "sha256:zab234...",
+          "dependencies": ["fs", "os", "child_process"]
+        }
+      ],
+      "documentation": [
+        {
+          "id": "integration-guide",
+          "name": "WF-OPS-001 Integration Guide",
+          "type": "markdown",
+          "path": "assets/docs/WF-OPS/WF-OPS-001/WF-OPS-001-integration-guide.md",
+          "description": "Comprehensive integration guide for WF-OPS-001 assets",
+          "size": 15680,
+          "checksum": "sha256:cde567..."
+        }
+      ]
+    },
+    "metadata": {
+      "totalAssets": 18,
+      "totalSize": 512840,
+      "platforms": ["windows", "macos", "linux", "cross-platform"],
+      "technologies": ["Node.js", "JavaScript", "HTTPS", "WebSocket", "SQLite", "Mermaid", "JSON Schema"],
+      "dependencies": {
+        "runtime": [
+          {
+            "name": "node",
+            "version": ">=16.0.0",
+            "required": true
+          },
+          {
+            "name": "npm",
+            "version": ">=8.0.0",
+            "required": true
+          }
+        ],
+        "development": [
+          {
+            "name": "jest",
+            "version": "^29.0.0",
+            "purpose": "Testing framework"
+          },
+          {
+            "name": "express",
+            "version": "^4.18.0",
+            "purpose": "Web server framework"
+          },
+          {
+            "name": "ws",
+            "version": "^8.13.0",
+            "purpose": "WebSocket implementation"
+          },
+          {
+            "name": "sqlite3",
+            "version": "^5.1.0",
+            "purpose": "Local database"
+          }
+        ]
+      },
+      "validation": {
+        "validated": true,
+        "validationDate": "2024-08-19T11:37:24Z",
+        "errors": []
+      }
+    }
+  }
+}

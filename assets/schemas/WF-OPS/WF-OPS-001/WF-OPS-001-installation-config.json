@@ -1,0 +1,626 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://wirthforge.org/schemas/WF-OPS-001-installation-config.json",
+  "title": "WIRTHFORGE Installation Configuration Schema",
+  "description": "Configuration schema for WIRTHFORGE local installation process with cross-platform support and local-first principles",
+  "type": "object",
+  "required": [
+    "version",
+    "installationId",
+    "platform",
+    "components",
+    "paths",
+    "network",
+    "security"
+  ],
+  "properties": {
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Installation configuration version"
+    },
+    "installationId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Unique identifier for this installation instance"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Installation timestamp in ISO 8601 format"
+    },
+    "platform": {
+      "type": "object",
+      "required": ["os", "architecture"],
+      "properties": {
+        "os": {
+          "type": "string",
+          "enum": ["windows", "macos", "linux"],
+          "description": "Target operating system"
+        },
+        "architecture": {
+          "type": "string",
+          "enum": ["x64", "arm64", "x86"],
+          "description": "System architecture"
+        },
+        "osVersion": {
+          "type": "string",
+          "description": "Operating system version"
+        },
+        "distribution": {
+          "type": "string",
+          "description": "Linux distribution name (for Linux only)"
+        }
+      }
+    },
+    "user": {
+      "type": "object",
+      "properties": {
+        "username": {
+          "type": "string",
+          "description": "Installing user account name"
+        },
+        "isAdmin": {
+          "type": "boolean",
+          "description": "Whether user has administrative privileges"
+        },
+        "homeDirectory": {
+          "type": "string",
+          "description": "User home directory path"
+        }
+      }
+    },
+    "components": {
+      "type": "object",
+      "required": ["core", "webUI", "aiModels"],
+      "properties": {
+        "core": {
+          "type": "object",
+          "required": ["enabled", "version"],
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "Install core WIRTHFORGE engine"
+            },
+            "version": {
+              "type": "string",
+              "description": "Core engine version to install"
+            },
+            "source": {
+              "type": "string",
+              "format": "uri",
+              "description": "Download source URL for core package"
+            },
+            "checksum": {
+              "type": "string",
+              "pattern": "^[a-fA-F0-9]{64}$",
+              "description": "SHA-256 checksum for verification"
+            }
+          }
+        },
+        "webUI": {
+          "type": "object",
+          "required": ["enabled", "version"],
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "Install web-based user interface"
+            },
+            "version": {
+              "type": "string",
+              "description": "Web UI version to install"
+            },
+            "source": {
+              "type": "string",
+              "format": "uri",
+              "description": "Download source URL for UI package"
+            },
+            "checksum": {
+              "type": "string",
+              "pattern": "^[a-fA-F0-9]{64}$",
+              "description": "SHA-256 checksum for verification"
+            }
+          }
+        },
+        "aiModels": {
+          "type": "object",
+          "required": ["enabled", "models"],
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "Install AI models for local inference"
+            },
+            "models": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["id", "name", "version", "size"],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "Model identifier"
+                  },
+                  "name": {
+                    "type": "string",
+                    "description": "Human-readable model name"
+                  },
+                  "version": {
+                    "type": "string",
+                    "description": "Model version"
+                  },
+                  "size": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "description": "Model file size in bytes"
+                  },
+                  "source": {
+                    "type": "string",
+                    "format": "uri",
+                    "description": "Download source URL for model"
+                  },
+                  "checksum": {
+                    "type": "string",
+                    "pattern": "^[a-fA-F0-9]{64}$",
+                    "description": "SHA-256 checksum for verification"
+                  },
+                  "required": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Whether this model is required for basic functionality"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "optional": {
+          "type": "object",
+          "properties": {
+            "plugins": {
+              "type": "boolean",
+              "default": false,
+              "description": "Install plugin system support"
+            },
+            "diagnostics": {
+              "type": "boolean",
+              "default": true,
+              "description": "Install diagnostic and troubleshooting tools"
+            },
+            "samples": {
+              "type": "boolean",
+              "default": false,
+              "description": "Install sample workflows and configurations"
+            }
+          }
+        }
+      }
+    },
+    "paths": {
+      "type": "object",
+      "required": ["installRoot"],
+      "properties": {
+        "installRoot": {
+          "type": "string",
+          "description": "Root installation directory path"
+        },
+        "binaries": {
+          "type": "string",
+          "description": "Executable files directory"
+        },
+        "webUI": {
+          "type": "string",
+          "description": "Web UI assets directory"
+        },
+        "data": {
+          "type": "string",
+          "description": "User data and configuration directory"
+        },
+        "models": {
+          "type": "string",
+          "description": "AI models storage directory"
+        },
+        "logs": {
+          "type": "string",
+          "description": "Log files directory"
+        },
+        "temp": {
+          "type": "string",
+          "description": "Temporary files directory"
+        },
+        "backup": {
+          "type": "string",
+          "description": "Backup storage directory"
+        }
+      }
+    },
+    "network": {
+      "type": "object",
+      "required": ["localOnly"],
+      "properties": {
+        "localOnly": {
+          "type": "boolean",
+          "default": true,
+          "description": "Bind services to localhost only"
+        },
+        "ports": {
+          "type": "object",
+          "properties": {
+            "https": {
+              "type": "integer",
+              "minimum": 1024,
+              "maximum": 65535,
+              "default": 9443,
+              "description": "HTTPS server port"
+            },
+            "websocket": {
+              "type": "integer",
+              "minimum": 1024,
+              "maximum": 65535,
+              "default": 9444,
+              "description": "WebSocket server port"
+            },
+            "api": {
+              "type": "integer",
+              "minimum": 1024,
+              "maximum": 65535,
+              "default": 9445,
+              "description": "REST API port"
+            },
+            "debug": {
+              "type": "integer",
+              "minimum": 1024,
+              "maximum": 65535,
+              "default": 9446,
+              "description": "Debug interface port"
+            }
+          }
+        },
+        "autoPortSelection": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically select available ports if defaults are in use"
+        },
+        "firewall": {
+          "type": "object",
+          "properties": {
+            "configureRules": {
+              "type": "boolean",
+              "default": true,
+              "description": "Automatically configure firewall rules"
+            },
+            "allowLocalhost": {
+              "type": "boolean",
+              "default": true,
+              "description": "Allow localhost connections"
+            }
+          }
+        }
+      }
+    },
+    "security": {
+      "type": "object",
+      "required": ["generateCertificates"],
+      "properties": {
+        "generateCertificates": {
+          "type": "boolean",
+          "default": true,
+          "description": "Generate self-signed SSL certificates for local HTTPS"
+        },
+        "certificateInfo": {
+          "type": "object",
+          "properties": {
+            "commonName": {
+              "type": "string",
+              "default": "localhost",
+              "description": "Certificate common name"
+            },
+            "organization": {
+              "type": "string",
+              "default": "WIRTHFORGE Local",
+              "description": "Certificate organization"
+            },
+            "validityDays": {
+              "type": "integer",
+              "minimum": 30,
+              "maximum": 3650,
+              "default": 365,
+              "description": "Certificate validity period in days"
+            }
+          }
+        },
+        "dataEncryption": {
+          "type": "object",
+          "properties": {
+            "encryptUserData": {
+              "type": "boolean",
+              "default": false,
+              "description": "Encrypt user data at rest"
+            },
+            "encryptionAlgorithm": {
+              "type": "string",
+              "enum": ["AES-256-GCM", "ChaCha20-Poly1305"],
+              "default": "AES-256-GCM",
+              "description": "Encryption algorithm for data at rest"
+            }
+          }
+        },
+        "permissions": {
+          "type": "object",
+          "properties": {
+            "restrictFileAccess": {
+              "type": "boolean",
+              "default": true,
+              "description": "Set restrictive file permissions"
+            },
+            "requireElevation": {
+              "type": "boolean",
+              "default": false,
+              "description": "Require administrator privileges for installation"
+            }
+          }
+        }
+      }
+    },
+    "systemIntegration": {
+      "type": "object",
+      "properties": {
+        "createShortcuts": {
+          "type": "boolean",
+          "default": true,
+          "description": "Create desktop and start menu shortcuts"
+        },
+        "registerService": {
+          "type": "boolean",
+          "default": true,
+          "description": "Register as system service for auto-start"
+        },
+        "autoStart": {
+          "type": "boolean",
+          "default": false,
+          "description": "Start WIRTHFORGE automatically on system boot"
+        },
+        "fileAssociations": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "extension": {
+                "type": "string",
+                "pattern": "^\\.[a-zA-Z0-9]+$",
+                "description": "File extension to associate"
+              },
+              "description": {
+                "type": "string",
+                "description": "File type description"
+              }
+            }
+          }
+        },
+        "environmentVariables": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Environment variables to set"
+        }
+      }
+    },
+    "installation": {
+      "type": "object",
+      "properties": {
+        "mode": {
+          "type": "string",
+          "enum": ["interactive", "silent", "automated"],
+          "default": "interactive",
+          "description": "Installation mode"
+        },
+        "skipValidation": {
+          "type": "boolean",
+          "default": false,
+          "description": "Skip post-installation validation"
+        },
+        "createBackup": {
+          "type": "boolean",
+          "default": true,
+          "description": "Create backup before installation"
+        },
+        "rollbackOnFailure": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically rollback on installation failure"
+        },
+        "logLevel": {
+          "type": "string",
+          "enum": ["debug", "info", "warn", "error"],
+          "default": "info",
+          "description": "Installation logging level"
+        }
+      }
+    },
+    "validation": {
+      "type": "object",
+      "properties": {
+        "systemRequirements": {
+          "type": "object",
+          "properties": {
+            "minMemoryMB": {
+              "type": "integer",
+              "minimum": 512,
+              "default": 2048,
+              "description": "Minimum RAM requirement in MB"
+            },
+            "minDiskSpaceMB": {
+              "type": "integer",
+              "minimum": 100,
+              "default": 5120,
+              "description": "Minimum disk space requirement in MB"
+            },
+            "requiredPorts": {
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "minimum": 1024,
+                "maximum": 65535
+              },
+              "description": "Ports that must be available"
+            }
+          }
+        },
+        "postInstallTests": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Test name"
+              },
+              "description": {
+                "type": "string",
+                "description": "Test description"
+              },
+              "critical": {
+                "type": "boolean",
+                "default": false,
+                "description": "Whether test failure should abort installation"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "additionalProperties": false,
+  "examples": [
+    {
+      "version": "1.0.0",
+      "installationId": "550e8400-e29b-41d4-a716-446655440000",
+      "timestamp": "2024-08-19T10:30:00Z",
+      "platform": {
+        "os": "windows",
+        "architecture": "x64",
+        "osVersion": "10.0.19041"
+      },
+      "user": {
+        "username": "alice",
+        "isAdmin": true,
+        "homeDirectory": "C:\\Users\\alice"
+      },
+      "components": {
+        "core": {
+          "enabled": true,
+          "version": "1.0.0",
+          "source": "https://releases.wirthforge.org/core-1.0.0-windows-x64.zip",
+          "checksum": "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3"
+        },
+        "webUI": {
+          "enabled": true,
+          "version": "1.0.0",
+          "source": "https://releases.wirthforge.org/ui-1.0.0.zip",
+          "checksum": "b776877c3e1b4c4e9b6b8a8c8d8e8f8g8h8i8j8k8l8m8n8o8p8q8r8s8t8u8v8w"
+        },
+        "aiModels": {
+          "enabled": true,
+          "models": [
+            {
+              "id": "llama2-7b",
+              "name": "Llama 2 7B",
+              "version": "1.0",
+              "size": 3825205248,
+              "source": "https://models.wirthforge.org/llama2-7b-1.0.bin",
+              "checksum": "c887c8c9c0c1c2c3c4c5c6c7c8c9c0c1c2c3c4c5c6c7c8c9c0c1c2c3c4c5c6c7",
+              "required": true
+            }
+          ]
+        },
+        "optional": {
+          "plugins": false,
+          "diagnostics": true,
+          "samples": false
+        }
+      },
+      "paths": {
+        "installRoot": "C:\\Program Files\\WIRTHFORGE",
+        "binaries": "C:\\Program Files\\WIRTHFORGE\\bin",
+        "webUI": "C:\\Program Files\\WIRTHFORGE\\web-ui",
+        "data": "C:\\Program Files\\WIRTHFORGE\\data",
+        "models": "C:\\Program Files\\WIRTHFORGE\\models",
+        "logs": "C:\\Program Files\\WIRTHFORGE\\logs",
+        "temp": "C:\\Program Files\\WIRTHFORGE\\temp",
+        "backup": "C:\\Program Files\\WIRTHFORGE\\backup"
+      },
+      "network": {
+        "localOnly": true,
+        "ports": {
+          "https": 9443,
+          "websocket": 9444,
+          "api": 9445,
+          "debug": 9446
+        },
+        "autoPortSelection": true,
+        "firewall": {
+          "configureRules": true,
+          "allowLocalhost": true
+        }
+      },
+      "security": {
+        "generateCertificates": true,
+        "certificateInfo": {
+          "commonName": "localhost",
+          "organization": "WIRTHFORGE Local",
+          "validityDays": 365
+        },
+        "dataEncryption": {
+          "encryptUserData": false,
+          "encryptionAlgorithm": "AES-256-GCM"
+        },
+        "permissions": {
+          "restrictFileAccess": true,
+          "requireElevation": true
+        }
+      },
+      "systemIntegration": {
+        "createShortcuts": true,
+        "registerService": true,
+        "autoStart": false,
+        "fileAssociations": [
+          {
+            "extension": ".wf",
+            "description": "WIRTHFORGE Workflow File"
+          }
+        ]
+      },
+      "installation": {
+        "mode": "interactive",
+        "skipValidation": false,
+        "createBackup": true,
+        "rollbackOnFailure": true,
+        "logLevel": "info"
+      },
+      "validation": {
+        "systemRequirements": {
+          "minMemoryMB": 2048,
+          "minDiskSpaceMB": 5120,
+          "requiredPorts": [9443, 9444, 9445]
+        },
+        "postInstallTests": [
+          {
+            "name": "server_startup",
+            "description": "Test local server startup",
+            "critical": true
+          },
+          {
+            "name": "ai_model_loading",
+            "description": "Test AI model loading",
+            "critical": true
+          },
+          {
+            "name": "web_ui_access",
+            "description": "Test web UI accessibility",
+            "critical": false
+          }
+        ]
+      }
+    }
+  ]
+}

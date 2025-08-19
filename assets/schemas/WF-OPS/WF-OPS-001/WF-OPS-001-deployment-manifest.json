@@ -1,0 +1,700 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://wirthforge.org/schemas/WF-OPS-001-deployment-manifest.json",
+  "title": "WIRTHFORGE Deployment Manifest Schema",
+  "description": "Deployment manifest schema for WIRTHFORGE local deployment tracking and system state management",
+  "type": "object",
+  "required": [
+    "manifestVersion",
+    "deploymentId",
+    "installation",
+    "runtime",
+    "components",
+    "systemState"
+  ],
+  "properties": {
+    "manifestVersion": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Deployment manifest schema version"
+    },
+    "deploymentId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Unique identifier for this deployment"
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Deployment creation timestamp"
+    },
+    "lastUpdated": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Last update timestamp"
+    },
+    "installation": {
+      "type": "object",
+      "required": ["version", "platform", "paths"],
+      "properties": {
+        "version": {
+          "type": "string",
+          "description": "WIRTHFORGE version installed"
+        },
+        "buildNumber": {
+          "type": "string",
+          "description": "Build number or commit hash"
+        },
+        "installDate": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Installation completion date"
+        },
+        "installMethod": {
+          "type": "string",
+          "enum": ["web-installer", "package-manager", "manual", "automated"],
+          "description": "Installation method used"
+        },
+        "platform": {
+          "type": "object",
+          "required": ["os", "architecture"],
+          "properties": {
+            "os": {
+              "type": "string",
+              "enum": ["windows", "macos", "linux"],
+              "description": "Operating system"
+            },
+            "architecture": {
+              "type": "string",
+              "enum": ["x64", "arm64", "x86"],
+              "description": "System architecture"
+            },
+            "osVersion": {
+              "type": "string",
+              "description": "Operating system version"
+            },
+            "distribution": {
+              "type": "string",
+              "description": "Linux distribution (if applicable)"
+            },
+            "kernelVersion": {
+              "type": "string",
+              "description": "Kernel version"
+            }
+          }
+        },
+        "paths": {
+          "type": "object",
+          "required": ["root"],
+          "properties": {
+            "root": {
+              "type": "string",
+              "description": "Installation root directory"
+            },
+            "binaries": {
+              "type": "string",
+              "description": "Executable files directory"
+            },
+            "webUI": {
+              "type": "string",
+              "description": "Web UI assets directory"
+            },
+            "data": {
+              "type": "string",
+              "description": "Data storage directory"
+            },
+            "models": {
+              "type": "string",
+              "description": "AI models directory"
+            },
+            "logs": {
+              "type": "string",
+              "description": "Log files directory"
+            },
+            "config": {
+              "type": "string",
+              "description": "Configuration files directory"
+            },
+            "temp": {
+              "type": "string",
+              "description": "Temporary files directory"
+            }
+          }
+        },
+        "installer": {
+          "type": "object",
+          "properties": {
+            "version": {
+              "type": "string",
+              "description": "Installer version used"
+            },
+            "checksum": {
+              "type": "string",
+              "description": "Installer package checksum"
+            },
+            "source": {
+              "type": "string",
+              "format": "uri",
+              "description": "Installer download source"
+            }
+          }
+        }
+      }
+    },
+    "runtime": {
+      "type": "object",
+      "required": ["status", "services"],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["running", "stopped", "error", "maintenance", "updating"],
+          "description": "Current runtime status"
+        },
+        "startTime": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Last startup time"
+        },
+        "uptime": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Uptime in seconds"
+        },
+        "processId": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Main process ID"
+        },
+        "services": {
+          "type": "object",
+          "properties": {
+            "webServer": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "enum": ["running", "stopped", "error"]
+                },
+                "port": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 65535
+                },
+                "protocol": {
+                  "type": "string",
+                  "enum": ["http", "https"]
+                },
+                "bindAddress": {
+                  "type": "string",
+                  "default": "127.0.0.1"
+                }
+              }
+            },
+            "websocketServer": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "enum": ["running", "stopped", "error"]
+                },
+                "port": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 65535
+                },
+                "activeConnections": {
+                  "type": "integer",
+                  "minimum": 0
+                }
+              }
+            },
+            "aiEngine": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "enum": ["running", "stopped", "error", "loading"]
+                },
+                "modelsLoaded": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "memoryUsage": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "description": "Memory usage in bytes"
+                }
+              }
+            },
+            "database": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "enum": ["connected", "disconnected", "error"]
+                },
+                "type": {
+                  "type": "string",
+                  "enum": ["sqlite", "postgresql", "mysql"]
+                },
+                "version": {
+                  "type": "string"
+                },
+                "size": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "description": "Database size in bytes"
+                }
+              }
+            }
+          }
+        },
+        "performance": {
+          "type": "object",
+          "properties": {
+            "cpuUsage": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100,
+              "description": "CPU usage percentage"
+            },
+            "memoryUsage": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Memory usage in bytes"
+            },
+            "diskUsage": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Disk usage in bytes"
+            },
+            "networkConnections": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Active network connections"
+            }
+          }
+        }
+      }
+    },
+    "components": {
+      "type": "object",
+      "required": ["core", "webUI"],
+      "properties": {
+        "core": {
+          "type": "object",
+          "required": ["version", "status"],
+          "properties": {
+            "version": {
+              "type": "string",
+              "description": "Core engine version"
+            },
+            "status": {
+              "type": "string",
+              "enum": ["installed", "running", "error", "updating"]
+            },
+            "checksum": {
+              "type": "string",
+              "pattern": "^[a-fA-F0-9]{64}$",
+              "description": "Core binary checksum"
+            },
+            "size": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Core binary size in bytes"
+            },
+            "lastModified": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        },
+        "webUI": {
+          "type": "object",
+          "required": ["version", "status"],
+          "properties": {
+            "version": {
+              "type": "string",
+              "description": "Web UI version"
+            },
+            "status": {
+              "type": "string",
+              "enum": ["installed", "serving", "error", "updating"]
+            },
+            "assetCount": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Number of UI asset files"
+            },
+            "totalSize": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Total UI assets size in bytes"
+            }
+          }
+        },
+        "aiModels": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "version", "status"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Model identifier"
+              },
+              "name": {
+                "type": "string",
+                "description": "Model display name"
+              },
+              "version": {
+                "type": "string",
+                "description": "Model version"
+              },
+              "status": {
+                "type": "string",
+                "enum": ["installed", "loaded", "error", "updating", "downloading"]
+              },
+              "size": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "Model file size in bytes"
+              },
+              "checksum": {
+                "type": "string",
+                "pattern": "^[a-fA-F0-9]{64}$",
+                "description": "Model file checksum"
+              },
+              "loadTime": {
+                "type": "number",
+                "minimum": 0,
+                "description": "Model load time in seconds"
+              },
+              "memoryUsage": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "Model memory usage in bytes"
+              },
+              "lastUsed": {
+                "type": "string",
+                "format": "date-time"
+              }
+            }
+          }
+        },
+        "plugins": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "version", "status"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Plugin identifier"
+              },
+              "name": {
+                "type": "string",
+                "description": "Plugin display name"
+              },
+              "version": {
+                "type": "string",
+                "description": "Plugin version"
+              },
+              "status": {
+                "type": "string",
+                "enum": ["installed", "enabled", "disabled", "error"]
+              },
+              "author": {
+                "type": "string",
+                "description": "Plugin author"
+              },
+              "description": {
+                "type": "string",
+                "description": "Plugin description"
+              },
+              "permissions": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Required permissions"
+              }
+            }
+          }
+        }
+      }
+    },
+    "systemState": {
+      "type": "object",
+      "required": ["health"],
+      "properties": {
+        "health": {
+          "type": "object",
+          "required": ["overall"],
+          "properties": {
+            "overall": {
+              "type": "string",
+              "enum": ["healthy", "warning", "error", "critical"],
+              "description": "Overall system health status"
+            },
+            "lastCheck": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Last health check timestamp"
+            },
+            "checks": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["name", "status"],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "Health check name"
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": ["pass", "warn", "fail"]
+                  },
+                  "message": {
+                    "type": "string",
+                    "description": "Check result message"
+                  },
+                  "timestamp": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "duration": {
+                    "type": "number",
+                    "minimum": 0,
+                    "description": "Check duration in milliseconds"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": {
+          "type": "object",
+          "properties": {
+            "certificates": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": ["ssl", "ca", "client"]
+                  },
+                  "subject": {
+                    "type": "string"
+                  },
+                  "issuer": {
+                    "type": "string"
+                  },
+                  "validFrom": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "validTo": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "fingerprint": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "firewall": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "enum": ["configured", "not-configured", "error"]
+                },
+                "rules": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "port": {
+                        "type": "integer"
+                      },
+                      "protocol": {
+                        "type": "string",
+                        "enum": ["tcp", "udp"]
+                      },
+                      "direction": {
+                        "type": "string",
+                        "enum": ["inbound", "outbound"]
+                      },
+                      "action": {
+                        "type": "string",
+                        "enum": ["allow", "deny"]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "updates": {
+          "type": "object",
+          "properties": {
+            "lastCheck": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Last update check timestamp"
+            },
+            "available": {
+              "type": "boolean",
+              "description": "Whether updates are available"
+            },
+            "autoUpdate": {
+              "type": "boolean",
+              "description": "Auto-update enabled status"
+            },
+            "updateHistory": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "version": {
+                    "type": "string"
+                  },
+                  "date": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": ["success", "failed", "rolled-back"]
+                  },
+                  "components": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "backup": {
+          "type": "object",
+          "properties": {
+            "lastBackup": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Last backup timestamp"
+            },
+            "backupCount": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Number of available backups"
+            },
+            "totalSize": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Total backup size in bytes"
+            },
+            "autoBackup": {
+              "type": "boolean",
+              "description": "Auto-backup enabled status"
+            }
+          }
+        }
+      }
+    },
+    "configuration": {
+      "type": "object",
+      "properties": {
+        "configFiles": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "path": {
+                "type": "string",
+                "description": "Configuration file path"
+              },
+              "checksum": {
+                "type": "string",
+                "description": "Configuration file checksum"
+              },
+              "lastModified": {
+                "type": "string",
+                "format": "date-time"
+              }
+            }
+          }
+        },
+        "userSettings": {
+          "type": "object",
+          "properties": {
+            "theme": {
+              "type": "string"
+            },
+            "language": {
+              "type": "string"
+            },
+            "notifications": {
+              "type": "boolean"
+            }
+          }
+        }
+      }
+    },
+    "diagnostics": {
+      "type": "object",
+      "properties": {
+        "logs": {
+          "type": "object",
+          "properties": {
+            "errorCount": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "warningCount": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "lastError": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "logSize": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Total log size in bytes"
+            }
+          }
+        },
+        "performance": {
+          "type": "object",
+          "properties": {
+            "averageResponseTime": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Average response time in milliseconds"
+            },
+            "requestCount": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "errorRate": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100,
+              "description": "Error rate percentage"
+            }
+          }
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}
