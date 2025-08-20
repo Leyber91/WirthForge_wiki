@@ -1,0 +1,461 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://wirthforge.com/schemas/pricing-tiers.json",
+  "title": "WIRTHFORGE Pricing Tiers Schema",
+  "description": "Schema defining pricing tier structures, energy allocations, feature access, and billing parameters for WIRTHFORGE platform",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Schema version following semantic versioning"
+    },
+    "last_updated": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Timestamp of last schema update"
+    },
+    "currency": {
+      "type": "string",
+      "enum": ["EUR", "USD", "GBP"],
+      "description": "Base currency for pricing (EUR is primary)"
+    },
+    "energy_unit_rate": {
+      "type": "object",
+      "properties": {
+        "base_rate": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Base rate per Energy Unit (EU) in specified currency"
+        },
+        "rate_currency": {
+          "type": "string",
+          "enum": ["EUR", "USD", "GBP"]
+        },
+        "last_updated": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "adjustment_frequency": {
+          "type": "string",
+          "enum": ["monthly", "quarterly", "annually"],
+          "description": "How often rates are reviewed and potentially adjusted"
+        }
+      },
+      "required": ["base_rate", "rate_currency", "last_updated"],
+      "additionalProperties": false
+    },
+    "tiers": {
+      "type": "object",
+      "properties": {
+        "free": {
+          "$ref": "#/$defs/tier_definition"
+        },
+        "personal": {
+          "$ref": "#/$defs/tier_definition"
+        },
+        "professional": {
+          "$ref": "#/$defs/tier_definition"
+        },
+        "enterprise": {
+          "$ref": "#/$defs/tier_definition"
+        }
+      },
+      "required": ["free", "personal", "professional", "enterprise"],
+      "additionalProperties": false
+    },
+    "upgrade_paths": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "from_tier": {
+            "type": "string",
+            "enum": ["free", "personal", "professional"]
+          },
+          "to_tier": {
+            "type": "string",
+            "enum": ["personal", "professional", "enterprise"]
+          },
+          "trigger_conditions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "condition_type": {
+                  "type": "string",
+                  "enum": ["energy_usage", "feature_request", "time_based", "manual"]
+                },
+                "threshold_value": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "threshold_unit": {
+                  "type": "string",
+                  "enum": ["EUs", "days", "percentage", "count"]
+                },
+                "description": {
+                  "type": "string"
+                }
+              },
+              "required": ["condition_type", "description"],
+              "additionalProperties": false
+            }
+          },
+          "upgrade_incentives": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "incentive_type": {
+                  "type": "string",
+                  "enum": ["discount", "bonus_energy", "feature_preview", "priority_support"]
+                },
+                "value": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "duration": {
+                  "type": "string",
+                  "description": "Duration of incentive (e.g., '30 days', 'first month', 'permanent')"
+                },
+                "description": {
+                  "type": "string"
+                }
+              },
+              "required": ["incentive_type", "description"],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": ["from_tier", "to_tier", "trigger_conditions"],
+        "additionalProperties": false
+      }
+    },
+    "regional_adjustments": {
+      "type": "object",
+      "patternProperties": {
+        "^[A-Z]{2}$": {
+          "type": "object",
+          "properties": {
+            "country_code": {
+              "type": "string",
+              "pattern": "^[A-Z]{2}$"
+            },
+            "currency": {
+              "type": "string",
+              "enum": ["EUR", "USD", "GBP", "CAD", "AUD", "JPY"]
+            },
+            "price_multiplier": {
+              "type": "number",
+              "minimum": 0.1,
+              "maximum": 5.0,
+              "description": "Multiplier applied to base prices for regional adjustment"
+            },
+            "tax_rate": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "Local tax rate as decimal (e.g., 0.20 for 20% VAT)"
+            },
+            "payment_methods": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": ["credit_card", "debit_card", "paypal", "bank_transfer", "crypto", "mobile_payment"]
+              }
+            }
+          },
+          "required": ["country_code", "currency", "price_multiplier"],
+          "additionalProperties": false
+        }
+      }
+    }
+  },
+  "required": ["schema_version", "currency", "energy_unit_rate", "tiers"],
+  "additionalProperties": false,
+  
+  "$defs": {
+    "tier_definition": {
+      "type": "object",
+      "properties": {
+        "tier_name": {
+          "type": "string",
+          "description": "Human-readable tier name"
+        },
+        "tier_id": {
+          "type": "string",
+          "enum": ["free", "personal", "professional", "enterprise"]
+        },
+        "pricing": {
+          "type": "object",
+          "properties": {
+            "monthly_price": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Monthly subscription price in base currency"
+            },
+            "annual_price": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Annual subscription price (if different from 12x monthly)"
+            },
+            "annual_discount": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "Discount rate for annual billing as decimal"
+            },
+            "setup_fee": {
+              "type": "number",
+              "minimum": 0,
+              "description": "One-time setup fee (typically for enterprise)"
+            },
+            "custom_pricing": {
+              "type": "boolean",
+              "description": "Whether this tier uses custom/negotiated pricing"
+            }
+          },
+          "required": ["monthly_price"],
+          "additionalProperties": false
+        },
+        "energy_allocation": {
+          "type": "object",
+          "properties": {
+            "monthly_energy_units": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Included Energy Units per month"
+            },
+            "rollover_allowed": {
+              "type": "boolean",
+              "description": "Whether unused EUs can roll over to next month"
+            },
+            "rollover_limit": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Maximum EUs that can be rolled over"
+            },
+            "overage_rate": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Rate per EU for usage beyond allocation"
+            },
+            "burst_allowance": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Temporary overage allowance before billing kicks in"
+            }
+          },
+          "required": ["monthly_energy_units", "rollover_allowed", "overage_rate"],
+          "additionalProperties": false
+        },
+        "feature_access": {
+          "type": "object",
+          "properties": {
+            "core_features": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "List of included core features"
+            },
+            "advanced_features": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "List of included advanced features"
+            },
+            "enterprise_features": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "List of included enterprise features"
+            },
+            "concurrent_sessions": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Maximum number of concurrent AI sessions"
+            },
+            "parallel_models": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Maximum number of parallel AI models"
+            },
+            "api_access": {
+              "type": "boolean",
+              "description": "Whether API access is included"
+            },
+            "api_rate_limit": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "API requests per minute (0 = unlimited)"
+            },
+            "storage_limit": {
+              "type": "object",
+              "properties": {
+                "local_storage_gb": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "cloud_sync_gb": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "unlimited": {
+                  "type": "boolean"
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "required": ["core_features", "concurrent_sessions", "parallel_models"],
+          "additionalProperties": false
+        },
+        "support_level": {
+          "type": "object",
+          "properties": {
+            "support_channels": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": ["community", "email", "chat", "phone", "dedicated_manager"]
+              }
+            },
+            "response_time_sla": {
+              "type": "string",
+              "description": "Guaranteed response time (e.g., '24 hours', '4 hours', '1 hour')"
+            },
+            "priority_level": {
+              "type": "string",
+              "enum": ["standard", "priority", "premium", "enterprise"]
+            },
+            "training_included": {
+              "type": "boolean",
+              "description": "Whether training sessions are included"
+            },
+            "custom_integrations": {
+              "type": "boolean",
+              "description": "Whether custom integration support is included"
+            }
+          },
+          "required": ["support_channels", "priority_level"],
+          "additionalProperties": false
+        },
+        "marketplace_benefits": {
+          "type": "object",
+          "properties": {
+            "commission_rate": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "Commission rate for marketplace sales as decimal"
+            },
+            "creator_tools_access": {
+              "type": "boolean",
+              "description": "Access to advanced creator tools"
+            },
+            "featured_placement": {
+              "type": "boolean",
+              "description": "Eligibility for featured marketplace placement"
+            },
+            "analytics_access": {
+              "type": "boolean",
+              "description": "Access to detailed marketplace analytics"
+            },
+            "early_access": {
+              "type": "boolean",
+              "description": "Early access to new marketplace features"
+            }
+          },
+          "additionalProperties": false
+        },
+        "limitations": {
+          "type": "object",
+          "properties": {
+            "model_restrictions": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "List of restricted AI models"
+            },
+            "feature_restrictions": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "List of restricted features"
+            },
+            "usage_restrictions": {
+              "type": "object",
+              "properties": {
+                "commercial_use": {
+                  "type": "boolean",
+                  "description": "Whether commercial use is allowed"
+                },
+                "redistribution": {
+                  "type": "boolean",
+                  "description": "Whether content redistribution is allowed"
+                },
+                "white_labeling": {
+                  "type": "boolean",
+                  "description": "Whether white-labeling is allowed"
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
+        },
+        "billing_options": {
+          "type": "object",
+          "properties": {
+            "billing_cycles": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": ["monthly", "quarterly", "annually", "custom"]
+              }
+            },
+            "payment_methods": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": ["credit_card", "debit_card", "paypal", "bank_transfer", "crypto", "invoice"]
+              }
+            },
+            "auto_renewal": {
+              "type": "boolean",
+              "description": "Whether auto-renewal is default for this tier"
+            },
+            "trial_period": {
+              "type": "object",
+              "properties": {
+                "duration_days": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "full_access": {
+                  "type": "boolean",
+                  "description": "Whether trial includes full tier access"
+                },
+                "credit_card_required": {
+                  "type": "boolean",
+                  "description": "Whether credit card is required for trial"
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "required": ["billing_cycles", "payment_methods"],
+          "additionalProperties": false
+        }
+      },
+      "required": ["tier_name", "tier_id", "pricing", "energy_allocation", "feature_access", "support_level", "billing_options"],
+      "additionalProperties": false
+    }
+  }
+}

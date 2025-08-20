@@ -1,0 +1,798 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://wirthforge.com/schemas/payment-structures.json",
+  "title": "WIRTHFORGE Payment Structures Schema",
+  "description": "Schema defining payment processing structures, transaction models, security protocols, and payment flow management for WIRTHFORGE platform",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Schema version following semantic versioning"
+    },
+    "last_updated": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Timestamp of last schema update"
+    },
+    "payment_methods": {
+      "type": "object",
+      "properties": {
+        "credit_cards": {
+          "type": "object",
+          "properties": {
+            "supported_networks": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": ["visa", "mastercard", "amex", "discover", "jcb", "diners"]
+              }
+            },
+            "minimum_amount": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Minimum transaction amount"
+            },
+            "maximum_amount": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Maximum transaction amount"
+            },
+            "processing_fees": {
+              "type": "object",
+              "properties": {
+                "percentage": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 0.1
+                },
+                "fixed_fee": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "international_surcharge": {
+                  "type": "number",
+                  "minimum": 0
+                }
+              },
+              "required": ["percentage", "fixed_fee"],
+              "additionalProperties": false
+            },
+            "security_features": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": ["3ds", "cvv_verification", "avs", "fraud_detection", "tokenization"]
+              }
+            }
+          },
+          "required": ["supported_networks", "processing_fees", "security_features"],
+          "additionalProperties": false
+        },
+        "digital_wallets": {
+          "type": "object",
+          "properties": {
+            "apple_pay": {
+              "$ref": "#/$defs/digital_wallet_config"
+            },
+            "google_pay": {
+              "$ref": "#/$defs/digital_wallet_config"
+            },
+            "paypal": {
+              "$ref": "#/$defs/digital_wallet_config"
+            },
+            "samsung_pay": {
+              "$ref": "#/$defs/digital_wallet_config"
+            }
+          },
+          "additionalProperties": false
+        },
+        "bank_transfers": {
+          "type": "object",
+          "properties": {
+            "ach_transfers": {
+              "type": "object",
+              "properties": {
+                "enabled": {
+                  "type": "boolean"
+                },
+                "processing_time_days": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 10
+                },
+                "fees": {
+                  "type": "object",
+                  "properties": {
+                    "fixed_fee": {
+                      "type": "number",
+                      "minimum": 0
+                    },
+                    "percentage": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 0.05
+                    }
+                  },
+                  "required": ["fixed_fee"],
+                  "additionalProperties": false
+                },
+                "verification_required": {
+                  "type": "boolean"
+                }
+              },
+              "required": ["enabled"],
+              "additionalProperties": false
+            },
+            "wire_transfers": {
+              "type": "object",
+              "properties": {
+                "enabled": {
+                  "type": "boolean"
+                },
+                "minimum_amount": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "processing_fee": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "international_supported": {
+                  "type": "boolean"
+                }
+              },
+              "required": ["enabled"],
+              "additionalProperties": false
+            },
+            "sepa_transfers": {
+              "type": "object",
+              "properties": {
+                "enabled": {
+                  "type": "boolean"
+                },
+                "supported_countries": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "pattern": "^[A-Z]{2}$"
+                  }
+                },
+                "processing_time_days": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 3
+                }
+              },
+              "required": ["enabled"],
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
+        },
+        "cryptocurrency": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "supported_currencies": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "currency_code": {
+                    "type": "string",
+                    "enum": ["BTC", "ETH", "LTC", "BCH", "ADA", "DOT"]
+                  },
+                  "network": {
+                    "type": "string"
+                  },
+                  "minimum_amount": {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  "confirmation_blocks": {
+                    "type": "integer",
+                    "minimum": 1
+                  }
+                },
+                "required": ["currency_code", "network", "confirmation_blocks"],
+                "additionalProperties": false
+              }
+            },
+            "conversion_provider": {
+              "type": "string",
+              "enum": ["coinbase", "kraken", "binance", "internal"]
+            },
+            "volatility_protection": {
+              "type": "boolean",
+              "description": "Whether to lock in fiat value at payment time"
+            }
+          },
+          "required": ["enabled"],
+          "additionalProperties": false
+        }
+      },
+      "required": ["credit_cards", "digital_wallets"],
+      "additionalProperties": false
+    },
+    "transaction_types": {
+      "type": "object",
+      "properties": {
+        "subscription_payments": {
+          "type": "object",
+          "properties": {
+            "recurring_billing": {
+              "type": "object",
+              "properties": {
+                "billing_cycles": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "enum": ["monthly", "quarterly", "semi_annual", "annual"]
+                  }
+                },
+                "retry_logic": {
+                  "type": "object",
+                  "properties": {
+                    "max_attempts": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 5
+                    },
+                    "retry_schedule": {
+                      "type": "array",
+                      "items": {
+                        "type": "integer",
+                        "minimum": 1
+                      },
+                      "description": "Days between retry attempts"
+                    },
+                    "dunning_management": {
+                      "type": "boolean",
+                      "description": "Automated dunning email sequence"
+                    }
+                  },
+                  "required": ["max_attempts", "retry_schedule"],
+                  "additionalProperties": false
+                },
+                "proration_handling": {
+                  "type": "string",
+                  "enum": ["immediate", "next_cycle", "proportional"],
+                  "description": "How to handle mid-cycle changes"
+                }
+              },
+              "required": ["billing_cycles", "retry_logic"],
+              "additionalProperties": false
+            },
+            "trial_periods": {
+              "type": "object",
+              "properties": {
+                "free_trial": {
+                  "type": "object",
+                  "properties": {
+                    "duration_days": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 90
+                    },
+                    "credit_card_required": {
+                      "type": "boolean"
+                    },
+                    "auto_convert": {
+                      "type": "boolean",
+                      "description": "Automatically convert to paid at trial end"
+                    }
+                  },
+                  "required": ["duration_days", "credit_card_required"],
+                  "additionalProperties": false
+                },
+                "paid_trial": {
+                  "type": "object",
+                  "properties": {
+                    "trial_amount": {
+                      "type": "number",
+                      "minimum": 0
+                    },
+                    "duration_days": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 30
+                    },
+                    "refund_policy": {
+                      "type": "string",
+                      "enum": ["full_refund", "partial_refund", "no_refund"]
+                    }
+                  },
+                  "required": ["trial_amount", "duration_days"],
+                  "additionalProperties": false
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "required": ["recurring_billing"],
+          "additionalProperties": false
+        },
+        "one_time_payments": {
+          "type": "object",
+          "properties": {
+            "energy_purchases": {
+              "type": "object",
+              "properties": {
+                "minimum_purchase": {
+                  "type": "number",
+                  "minimum": 0,
+                  "description": "Minimum energy units that can be purchased"
+                },
+                "maximum_purchase": {
+                  "type": "number",
+                  "minimum": 0,
+                  "description": "Maximum energy units in single transaction"
+                },
+                "bulk_discounts": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "threshold": {
+                        "type": "number",
+                        "minimum": 0
+                      },
+                      "discount_percentage": {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 0.5
+                      }
+                    },
+                    "required": ["threshold", "discount_percentage"],
+                    "additionalProperties": false
+                  }
+                },
+                "expiration_policy": {
+                  "type": "object",
+                  "properties": {
+                    "expires": {
+                      "type": "boolean"
+                    },
+                    "expiration_days": {
+                      "type": "integer",
+                      "minimum": 30
+                    },
+                    "warning_days": {
+                      "type": "integer",
+                      "minimum": 1
+                    }
+                  },
+                  "required": ["expires"],
+                  "additionalProperties": false
+                }
+              },
+              "required": ["minimum_purchase", "expiration_policy"],
+              "additionalProperties": false
+            },
+            "marketplace_purchases": {
+              "type": "object",
+              "properties": {
+                "instant_download": {
+                  "type": "boolean",
+                  "description": "Whether purchases are immediately available"
+                },
+                "refund_window_hours": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 168,
+                  "description": "Hours within which refunds are allowed"
+                },
+                "license_generation": {
+                  "type": "boolean",
+                  "description": "Whether to generate license keys"
+                },
+                "usage_tracking": {
+                  "type": "boolean",
+                  "description": "Whether to track plugin usage"
+                }
+              },
+              "required": ["instant_download", "refund_window_hours"],
+              "additionalProperties": false
+            }
+          },
+          "required": ["energy_purchases", "marketplace_purchases"],
+          "additionalProperties": false
+        }
+      },
+      "required": ["subscription_payments", "one_time_payments"],
+      "additionalProperties": false
+    },
+    "security_protocols": {
+      "type": "object",
+      "properties": {
+        "encryption": {
+          "type": "object",
+          "properties": {
+            "data_in_transit": {
+              "type": "string",
+              "enum": ["TLS_1_2", "TLS_1_3"],
+              "description": "Encryption standard for data transmission"
+            },
+            "data_at_rest": {
+              "type": "string",
+              "enum": ["AES_256", "ChaCha20", "AES_128"],
+              "description": "Encryption standard for stored data"
+            },
+            "key_management": {
+              "type": "string",
+              "enum": ["hardware_hsm", "software_hsm", "cloud_kms", "local_keystore"],
+              "description": "Key management system"
+            },
+            "key_rotation_days": {
+              "type": "integer",
+              "minimum": 30,
+              "maximum": 365,
+              "description": "Days between key rotations"
+            }
+          },
+          "required": ["data_in_transit", "data_at_rest", "key_management"],
+          "additionalProperties": false
+        },
+        "fraud_prevention": {
+          "type": "object",
+          "properties": {
+            "risk_scoring": {
+              "type": "boolean",
+              "description": "Enable transaction risk scoring"
+            },
+            "velocity_checks": {
+              "type": "object",
+              "properties": {
+                "enabled": {
+                  "type": "boolean"
+                },
+                "max_transactions_per_hour": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "max_amount_per_day": {
+                  "type": "number",
+                  "minimum": 0
+                }
+              },
+              "required": ["enabled"],
+              "additionalProperties": false
+            },
+            "geolocation_blocking": {
+              "type": "object",
+              "properties": {
+                "enabled": {
+                  "type": "boolean"
+                },
+                "blocked_countries": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "pattern": "^[A-Z]{2}$"
+                  }
+                },
+                "vpn_detection": {
+                  "type": "boolean"
+                }
+              },
+              "required": ["enabled"],
+              "additionalProperties": false
+            },
+            "device_fingerprinting": {
+              "type": "boolean",
+              "description": "Enable device fingerprinting for fraud detection"
+            }
+          },
+          "required": ["risk_scoring", "velocity_checks"],
+          "additionalProperties": false
+        },
+        "compliance": {
+          "type": "object",
+          "properties": {
+            "pci_dss": {
+              "type": "object",
+              "properties": {
+                "compliance_level": {
+                  "type": "string",
+                  "enum": ["level_1", "level_2", "level_3", "level_4"]
+                },
+                "saq_type": {
+                  "type": "string",
+                  "enum": ["SAQ_A", "SAQ_A_EP", "SAQ_B", "SAQ_C", "SAQ_D"]
+                },
+                "last_audit_date": {
+                  "type": "string",
+                  "format": "date"
+                }
+              },
+              "required": ["compliance_level", "saq_type"],
+              "additionalProperties": false
+            },
+            "gdpr": {
+              "type": "object",
+              "properties": {
+                "data_minimization": {
+                  "type": "boolean",
+                  "description": "Only collect necessary payment data"
+                },
+                "consent_management": {
+                  "type": "boolean",
+                  "description": "Track user consent for payment processing"
+                },
+                "right_to_erasure": {
+                  "type": "boolean",
+                  "description": "Support payment data deletion"
+                },
+                "data_portability": {
+                  "type": "boolean",
+                  "description": "Support payment data export"
+                }
+              },
+              "required": ["data_minimization", "consent_management"],
+              "additionalProperties": false
+            },
+            "psd2": {
+              "type": "object",
+              "properties": {
+                "sca_required": {
+                  "type": "boolean",
+                  "description": "Strong Customer Authentication required"
+                },
+                "exemptions_supported": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "enum": ["low_value", "recurring", "trusted_merchant", "corporate"]
+                  }
+                }
+              },
+              "required": ["sca_required"],
+              "additionalProperties": false
+            }
+          },
+          "required": ["pci_dss", "gdpr"],
+          "additionalProperties": false
+        }
+      },
+      "required": ["encryption", "fraud_prevention", "compliance"],
+      "additionalProperties": false
+    },
+    "payment_flows": {
+      "type": "object",
+      "properties": {
+        "checkout_process": {
+          "type": "object",
+          "properties": {
+            "hosted_checkout": {
+              "type": "boolean",
+              "description": "Use payment processor hosted checkout"
+            },
+            "embedded_checkout": {
+              "type": "boolean",
+              "description": "Use embedded payment forms"
+            },
+            "mobile_optimized": {
+              "type": "boolean",
+              "description": "Mobile-optimized checkout experience"
+            },
+            "guest_checkout": {
+              "type": "boolean",
+              "description": "Allow checkout without account creation"
+            },
+            "saved_payment_methods": {
+              "type": "boolean",
+              "description": "Allow saving payment methods for future use"
+            },
+            "address_validation": {
+              "type": "boolean",
+              "description": "Validate billing addresses"
+            }
+          },
+          "required": ["hosted_checkout", "embedded_checkout", "mobile_optimized"],
+          "additionalProperties": false
+        },
+        "payment_confirmation": {
+          "type": "object",
+          "properties": {
+            "immediate_confirmation": {
+              "type": "boolean",
+              "description": "Show immediate payment confirmation"
+            },
+            "email_receipt": {
+              "type": "boolean",
+              "description": "Send email receipt automatically"
+            },
+            "sms_confirmation": {
+              "type": "boolean",
+              "description": "Send SMS confirmation (optional)"
+            },
+            "webhook_notifications": {
+              "type": "boolean",
+              "description": "Send webhook notifications for payment events"
+            },
+            "receipt_customization": {
+              "type": "object",
+              "properties": {
+                "company_branding": {
+                  "type": "boolean"
+                },
+                "custom_fields": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "pdf_generation": {
+                  "type": "boolean"
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "required": ["immediate_confirmation", "email_receipt"],
+          "additionalProperties": false
+        },
+        "refund_process": {
+          "type": "object",
+          "properties": {
+            "self_service_refunds": {
+              "type": "boolean",
+              "description": "Allow users to request refunds directly"
+            },
+            "automated_refunds": {
+              "type": "object",
+              "properties": {
+                "enabled": {
+                  "type": "boolean"
+                },
+                "conditions": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "enum": ["duplicate_payment", "failed_delivery", "technical_error", "fraud_detected"]
+                  }
+                },
+                "time_limit_hours": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 168
+                }
+              },
+              "required": ["enabled"],
+              "additionalProperties": false
+            },
+            "partial_refunds": {
+              "type": "boolean",
+              "description": "Support partial refund amounts"
+            },
+            "refund_to_original": {
+              "type": "boolean",
+              "description": "Refund to original payment method only"
+            },
+            "processing_time_days": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 10,
+              "description": "Expected refund processing time"
+            }
+          },
+          "required": ["self_service_refunds", "automated_refunds", "processing_time_days"],
+          "additionalProperties": false
+        }
+      },
+      "required": ["checkout_process", "payment_confirmation", "refund_process"],
+      "additionalProperties": false
+    },
+    "reporting_and_analytics": {
+      "type": "object",
+      "properties": {
+        "transaction_reporting": {
+          "type": "object",
+          "properties": {
+            "real_time_dashboard": {
+              "type": "boolean",
+              "description": "Real-time transaction monitoring"
+            },
+            "automated_reports": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": ["daily", "weekly", "monthly", "quarterly", "annual"]
+              }
+            },
+            "custom_date_ranges": {
+              "type": "boolean",
+              "description": "Support custom reporting periods"
+            },
+            "export_formats": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": ["csv", "excel", "pdf", "json"]
+              }
+            }
+          },
+          "required": ["real_time_dashboard", "automated_reports"],
+          "additionalProperties": false
+        },
+        "financial_reconciliation": {
+          "type": "object",
+          "properties": {
+            "automated_reconciliation": {
+              "type": "boolean",
+              "description": "Automatic reconciliation with payment processors"
+            },
+            "discrepancy_alerts": {
+              "type": "boolean",
+              "description": "Alert on reconciliation discrepancies"
+            },
+            "settlement_tracking": {
+              "type": "boolean",
+              "description": "Track payment processor settlements"
+            },
+            "accounting_integration": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": ["quickbooks", "xero", "sage", "custom_api"]
+              }
+            }
+          },
+          "required": ["automated_reconciliation", "discrepancy_alerts"],
+          "additionalProperties": false
+        }
+      },
+      "required": ["transaction_reporting", "financial_reconciliation"],
+      "additionalProperties": false
+    }
+  },
+  "required": ["schema_version", "payment_methods", "transaction_types", "security_protocols", "payment_flows", "reporting_and_analytics"],
+  "additionalProperties": false,
+  
+  "$defs": {
+    "digital_wallet_config": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "supported_regions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Z]{2}$"
+          }
+        },
+        "processing_fees": {
+          "type": "object",
+          "properties": {
+            "percentage": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 0.1
+            },
+            "fixed_fee": {
+              "type": "number",
+              "minimum": 0
+            }
+          },
+          "required": ["percentage"],
+          "additionalProperties": false
+        },
+        "minimum_amount": {
+          "type": "number",
+          "minimum": 0
+        },
+        "maximum_amount": {
+          "type": "number",
+          "minimum": 0
+        }
+      },
+      "required": ["enabled"],
+      "additionalProperties": false
+    }
+  }
+}

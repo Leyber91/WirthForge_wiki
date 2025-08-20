@@ -1,0 +1,922 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://wirthforge.com/schemas/loyalty-rewards.json",
+  "title": "WIRTHFORGE Loyalty & Rewards Schema",
+  "description": "Schema defining loyalty programs, reward structures, achievement systems, and community recognition mechanisms for WIRTHFORGE platform",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Schema version following semantic versioning"
+    },
+    "last_updated": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Timestamp of last schema update"
+    },
+    "loyalty_programs": {
+      "type": "object",
+      "properties": {
+        "points_system": {
+          "type": "object",
+          "properties": {
+            "point_currency": {
+              "type": "string",
+              "enum": ["WF_POINTS", "ENERGY_CREDITS", "COMMUNITY_TOKENS"],
+              "description": "Base currency for loyalty points"
+            },
+            "earning_rules": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "action_type": {
+                    "type": "string",
+                    "enum": ["subscription_payment", "energy_purchase", "marketplace_sale", "community_contribution", "referral", "review", "tutorial_completion", "bug_report", "feature_suggestion"]
+                  },
+                  "points_awarded": {
+                    "type": "number",
+                    "minimum": 0,
+                    "description": "Base points awarded for this action"
+                  },
+                  "multiplier_conditions": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "condition": {
+                          "type": "string",
+                          "description": "Condition for multiplier (e.g., 'first_month', 'tier_professional')"
+                        },
+                        "multiplier": {
+                          "type": "number",
+                          "minimum": 1,
+                          "maximum": 10
+                        }
+                      },
+                      "required": ["condition", "multiplier"],
+                      "additionalProperties": false
+                    }
+                  },
+                  "frequency_limits": {
+                    "type": "object",
+                    "properties": {
+                      "max_per_day": {
+                        "type": "integer",
+                        "minimum": 0
+                      },
+                      "max_per_week": {
+                        "type": "integer",
+                        "minimum": 0
+                      },
+                      "max_per_month": {
+                        "type": "integer",
+                        "minimum": 0
+                      }
+                    },
+                    "additionalProperties": false
+                  },
+                  "expiration_days": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "description": "Days after which points expire (0 = never expire)"
+                  }
+                },
+                "required": ["action_type", "points_awarded"],
+                "additionalProperties": false
+              }
+            },
+            "redemption_options": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "reward_type": {
+                    "type": "string",
+                    "enum": ["energy_credits", "subscription_discount", "marketplace_credit", "premium_features", "exclusive_content", "physical_merchandise", "early_access"]
+                  },
+                  "reward_name": {
+                    "type": "string",
+                    "description": "Human-readable reward name"
+                  },
+                  "points_required": {
+                    "type": "integer",
+                    "minimum": 1
+                  },
+                  "reward_value": {
+                    "type": "object",
+                    "properties": {
+                      "monetary_value": {
+                        "type": "number",
+                        "minimum": 0,
+                        "description": "Equivalent monetary value in base currency"
+                      },
+                      "energy_units": {
+                        "type": "number",
+                        "minimum": 0,
+                        "description": "Energy units provided"
+                      },
+                      "discount_percentage": {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 1,
+                        "description": "Discount as decimal (0.1 = 10%)"
+                      },
+                      "duration_days": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "description": "Duration for time-limited rewards"
+                      }
+                    },
+                    "additionalProperties": false
+                  },
+                  "availability": {
+                    "type": "object",
+                    "properties": {
+                      "tier_restrictions": {
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "enum": ["free", "personal", "professional", "enterprise"]
+                        }
+                      },
+                      "quantity_limit": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "description": "Total quantity available"
+                      },
+                      "per_user_limit": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "description": "Maximum redemptions per user"
+                      },
+                      "time_window": {
+                        "type": "object",
+                        "properties": {
+                          "start_date": {
+                            "type": "string",
+                            "format": "date-time"
+                          },
+                          "end_date": {
+                            "type": "string",
+                            "format": "date-time"
+                          }
+                        },
+                        "additionalProperties": false
+                      }
+                    },
+                    "additionalProperties": false
+                  }
+                },
+                "required": ["reward_type", "reward_name", "points_required", "reward_value"],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": ["point_currency", "earning_rules", "redemption_options"],
+          "additionalProperties": false
+        },
+        "tier_benefits": {
+          "type": "object",
+          "properties": {
+            "loyalty_tiers": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "tier_name": {
+                    "type": "string",
+                    "description": "Name of loyalty tier (e.g., 'Bronze', 'Silver', 'Gold', 'Platinum')"
+                  },
+                  "tier_level": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "description": "Numeric tier level for ordering"
+                  },
+                  "requirements": {
+                    "type": "object",
+                    "properties": {
+                      "points_threshold": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "description": "Points required to reach this tier"
+                      },
+                      "spending_threshold": {
+                        "type": "number",
+                        "minimum": 0,
+                        "description": "Total spending required"
+                      },
+                      "time_period_months": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "description": "Time period for spending threshold"
+                      },
+                      "additional_criteria": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        },
+                        "description": "Additional requirements (e.g., 'community_contributions', 'referrals')"
+                      }
+                    },
+                    "additionalProperties": false
+                  },
+                  "benefits": {
+                    "type": "object",
+                    "properties": {
+                      "point_multiplier": {
+                        "type": "number",
+                        "minimum": 1,
+                        "description": "Multiplier for points earned"
+                      },
+                      "exclusive_rewards": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        },
+                        "description": "Rewards exclusive to this tier"
+                      },
+                      "priority_support": {
+                        "type": "boolean",
+                        "description": "Access to priority customer support"
+                      },
+                      "early_access": {
+                        "type": "boolean",
+                        "description": "Early access to new features"
+                      },
+                      "beta_participation": {
+                        "type": "boolean",
+                        "description": "Invitation to beta programs"
+                      },
+                      "community_recognition": {
+                        "type": "object",
+                        "properties": {
+                          "badge_display": {
+                            "type": "boolean"
+                          },
+                          "profile_highlighting": {
+                            "type": "boolean"
+                          },
+                          "special_privileges": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        "additionalProperties": false
+                      }
+                    },
+                    "required": ["point_multiplier"],
+                    "additionalProperties": false
+                  },
+                  "maintenance_requirements": {
+                    "type": "object",
+                    "properties": {
+                      "annual_spending": {
+                        "type": "number",
+                        "minimum": 0,
+                        "description": "Minimum annual spending to maintain tier"
+                      },
+                      "activity_requirements": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        },
+                        "description": "Required activities to maintain tier"
+                      },
+                      "grace_period_months": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 12,
+                        "description": "Grace period before tier demotion"
+                      }
+                    },
+                    "additionalProperties": false
+                  }
+                },
+                "required": ["tier_name", "tier_level", "requirements", "benefits"],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": ["loyalty_tiers"],
+          "additionalProperties": false
+        },
+        "referral_program": {
+          "type": "object",
+          "properties": {
+            "referrer_rewards": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "trigger_event": {
+                    "type": "string",
+                    "enum": ["signup", "first_payment", "subscription_active", "spending_threshold"]
+                  },
+                  "reward_type": {
+                    "type": "string",
+                    "enum": ["points", "credits", "discount", "cash"]
+                  },
+                  "reward_amount": {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  "conditions": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Additional conditions for reward"
+                  }
+                },
+                "required": ["trigger_event", "reward_type", "reward_amount"],
+                "additionalProperties": false
+              }
+            },
+            "referee_rewards": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "trigger_event": {
+                    "type": "string",
+                    "enum": ["signup", "first_payment", "subscription_active"]
+                  },
+                  "reward_type": {
+                    "type": "string",
+                    "enum": ["points", "credits", "discount", "trial_extension"]
+                  },
+                  "reward_amount": {
+                    "type": "number",
+                    "minimum": 0
+                  }
+                },
+                "required": ["trigger_event", "reward_type", "reward_amount"],
+                "additionalProperties": false
+              }
+            },
+            "tracking_mechanism": {
+              "type": "object",
+              "properties": {
+                "referral_codes": {
+                  "type": "boolean",
+                  "description": "Use unique referral codes"
+                },
+                "referral_links": {
+                  "type": "boolean",
+                  "description": "Use trackable referral links"
+                },
+                "attribution_window_days": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 365,
+                  "description": "Days to attribute referral after click"
+                },
+                "fraud_detection": {
+                  "type": "boolean",
+                  "description": "Enable referral fraud detection"
+                }
+              },
+              "required": ["attribution_window_days"],
+              "additionalProperties": false
+            }
+          },
+          "required": ["referrer_rewards", "referee_rewards", "tracking_mechanism"],
+          "additionalProperties": false
+        }
+      },
+      "required": ["points_system", "referral_program"],
+      "additionalProperties": false
+    },
+    "achievement_system": {
+      "type": "object",
+      "properties": {
+        "achievement_categories": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "category_name": {
+                "type": "string",
+                "description": "Achievement category (e.g., 'Usage Milestones', 'Community Contributor')"
+              },
+              "category_description": {
+                "type": "string"
+              },
+              "achievements": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "achievement_id": {
+                      "type": "string",
+                      "pattern": "^[a-z0-9_]+$"
+                    },
+                    "achievement_name": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": "string"
+                    },
+                    "criteria": {
+                      "type": "object",
+                      "properties": {
+                        "metric_type": {
+                          "type": "string",
+                          "enum": ["energy_usage", "subscription_duration", "marketplace_purchases", "community_posts", "referrals", "plugin_downloads", "tutorial_completions"]
+                        },
+                        "threshold_value": {
+                          "type": "number",
+                          "minimum": 0
+                        },
+                        "time_period": {
+                          "type": "string",
+                          "enum": ["all_time", "monthly", "quarterly", "annually"],
+                          "description": "Time period for achievement"
+                        },
+                        "additional_conditions": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      },
+                      "required": ["metric_type", "threshold_value"],
+                      "additionalProperties": false
+                    },
+                    "rewards": {
+                      "type": "object",
+                      "properties": {
+                        "points_awarded": {
+                          "type": "integer",
+                          "minimum": 0
+                        },
+                        "badge_unlocked": {
+                          "type": "string",
+                          "description": "Badge ID unlocked by this achievement"
+                        },
+                        "title_unlocked": {
+                          "type": "string",
+                          "description": "Profile title unlocked"
+                        },
+                        "special_privileges": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      },
+                      "additionalProperties": false
+                    },
+                    "rarity": {
+                      "type": "string",
+                      "enum": ["common", "uncommon", "rare", "epic", "legendary"],
+                      "description": "Achievement rarity level"
+                    },
+                    "hidden": {
+                      "type": "boolean",
+                      "description": "Whether achievement is hidden until unlocked"
+                    },
+                    "repeatable": {
+                      "type": "boolean",
+                      "description": "Whether achievement can be earned multiple times"
+                    }
+                  },
+                  "required": ["achievement_id", "achievement_name", "description", "criteria", "rarity"],
+                  "additionalProperties": false
+                }
+              }
+            },
+            "required": ["category_name", "achievements"],
+            "additionalProperties": false
+          }
+        },
+        "badge_system": {
+          "type": "object",
+          "properties": {
+            "badge_types": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "badge_id": {
+                    "type": "string",
+                    "pattern": "^[a-z0-9_]+$"
+                  },
+                  "badge_name": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "visual_design": {
+                    "type": "object",
+                    "properties": {
+                      "icon_url": {
+                        "type": "string",
+                        "format": "uri"
+                      },
+                      "color_scheme": {
+                        "type": "string"
+                      },
+                      "animation": {
+                        "type": "boolean"
+                      }
+                    },
+                    "additionalProperties": false
+                  },
+                  "display_priority": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "description": "Priority for badge display (1 = highest)"
+                  },
+                  "stackable": {
+                    "type": "boolean",
+                    "description": "Whether multiple instances can be earned"
+                  }
+                },
+                "required": ["badge_id", "badge_name", "description"],
+                "additionalProperties": false
+              }
+            },
+            "display_rules": {
+              "type": "object",
+              "properties": {
+                "max_displayed": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "description": "Maximum badges shown on profile"
+                },
+                "auto_select": {
+                  "type": "boolean",
+                  "description": "Automatically select highest priority badges"
+                },
+                "user_customizable": {
+                  "type": "boolean",
+                  "description": "Allow users to choose displayed badges"
+                }
+              },
+              "required": ["max_displayed"],
+              "additionalProperties": false
+            }
+          },
+          "required": ["badge_types", "display_rules"],
+          "additionalProperties": false
+        },
+        "leaderboards": {
+          "type": "object",
+          "properties": {
+            "leaderboard_types": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "leaderboard_id": {
+                    "type": "string",
+                    "pattern": "^[a-z0-9_]+$"
+                  },
+                  "leaderboard_name": {
+                    "type": "string"
+                  },
+                  "metric": {
+                    "type": "string",
+                    "enum": ["total_points", "monthly_energy", "community_contributions", "marketplace_sales", "referrals", "achievements_unlocked"]
+                  },
+                  "time_period": {
+                    "type": "string",
+                    "enum": ["all_time", "monthly", "weekly", "daily"]
+                  },
+                  "participant_filter": {
+                    "type": "object",
+                    "properties": {
+                      "tier_restrictions": {
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "enum": ["free", "personal", "professional", "enterprise"]
+                        }
+                      },
+                      "region_restrictions": {
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "pattern": "^[A-Z]{2}$"
+                        }
+                      },
+                      "opt_in_required": {
+                        "type": "boolean"
+                      }
+                    },
+                    "additionalProperties": false
+                  },
+                  "rewards": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "rank_range": {
+                          "type": "object",
+                          "properties": {
+                            "start_rank": {
+                              "type": "integer",
+                              "minimum": 1
+                            },
+                            "end_rank": {
+                              "type": "integer",
+                              "minimum": 1
+                            }
+                          },
+                          "required": ["start_rank", "end_rank"],
+                          "additionalProperties": false
+                        },
+                        "reward_type": {
+                          "type": "string",
+                          "enum": ["points", "credits", "badge", "title", "exclusive_access"]
+                        },
+                        "reward_value": {
+                          "type": "number",
+                          "minimum": 0
+                        }
+                      },
+                      "required": ["rank_range", "reward_type"],
+                      "additionalProperties": false
+                    }
+                  }
+                },
+                "required": ["leaderboard_id", "leaderboard_name", "metric", "time_period"],
+                "additionalProperties": false
+              }
+            },
+            "privacy_settings": {
+              "type": "object",
+              "properties": {
+                "anonymous_participation": {
+                  "type": "boolean",
+                  "description": "Allow anonymous leaderboard participation"
+                },
+                "opt_out_available": {
+                  "type": "boolean",
+                  "description": "Allow users to opt out of leaderboards"
+                },
+                "data_retention_days": {
+                  "type": "integer",
+                  "minimum": 30,
+                  "description": "Days to retain leaderboard data"
+                }
+              },
+              "required": ["anonymous_participation", "opt_out_available"],
+              "additionalProperties": false
+            }
+          },
+          "required": ["leaderboard_types", "privacy_settings"],
+          "additionalProperties": false
+        }
+      },
+      "required": ["achievement_categories", "badge_system"],
+      "additionalProperties": false
+    },
+    "community_recognition": {
+      "type": "object",
+      "properties": {
+        "contributor_roles": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "role_id": {
+                "type": "string",
+                "pattern": "^[a-z0-9_]+$"
+              },
+              "role_name": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "requirements": {
+                "type": "object",
+                "properties": {
+                  "minimum_contributions": {
+                    "type": "integer",
+                    "minimum": 1
+                  },
+                  "contribution_types": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": ["code_contributions", "documentation", "community_support", "bug_reports", "feature_requests", "tutorials", "translations"]
+                    }
+                  },
+                  "quality_threshold": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1,
+                    "description": "Minimum quality score for contributions"
+                  },
+                  "time_commitment": {
+                    "type": "string",
+                    "description": "Expected time commitment (e.g., '5 hours/week')"
+                  }
+                },
+                "required": ["minimum_contributions", "contribution_types"],
+                "additionalProperties": false
+              },
+              "benefits": {
+                "type": "object",
+                "properties": {
+                  "special_badge": {
+                    "type": "string"
+                  },
+                  "profile_highlighting": {
+                    "type": "boolean"
+                  },
+                  "early_access": {
+                    "type": "boolean"
+                  },
+                  "direct_developer_contact": {
+                    "type": "boolean"
+                  },
+                  "influence_on_roadmap": {
+                    "type": "boolean"
+                  },
+                  "monetary_rewards": {
+                    "type": "object",
+                    "properties": {
+                      "monthly_stipend": {
+                        "type": "number",
+                        "minimum": 0
+                      },
+                      "performance_bonuses": {
+                        "type": "boolean"
+                      }
+                    },
+                    "additionalProperties": false
+                  }
+                },
+                "additionalProperties": false
+              },
+              "application_process": {
+                "type": "string",
+                "enum": ["automatic", "nomination", "application", "invitation_only"]
+              }
+            },
+            "required": ["role_id", "role_name", "description", "requirements", "benefits", "application_process"],
+            "additionalProperties": false
+          }
+        },
+        "recognition_events": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "event_type": {
+                "type": "string",
+                "enum": ["monthly_spotlight", "annual_awards", "milestone_celebration", "special_recognition"]
+              },
+              "frequency": {
+                "type": "string",
+                "enum": ["monthly", "quarterly", "annually", "ad_hoc"]
+              },
+              "categories": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Award categories (e.g., 'Best Plugin', 'Most Helpful')"
+              },
+              "nomination_process": {
+                "type": "string",
+                "enum": ["community_voting", "peer_nomination", "staff_selection", "algorithmic"]
+              },
+              "rewards": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "reward_type": {
+                      "type": "string",
+                      "enum": ["trophy_badge", "monetary_prize", "platform_credits", "exclusive_access", "physical_award"]
+                    },
+                    "reward_value": {
+                      "type": "number",
+                      "minimum": 0
+                    }
+                  },
+                  "required": ["reward_type"],
+                  "additionalProperties": false
+                }
+              }
+            },
+            "required": ["event_type", "frequency", "categories", "nomination_process"],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": ["contributor_roles", "recognition_events"],
+      "additionalProperties": false
+    },
+    "gamification_settings": {
+      "type": "object",
+      "properties": {
+        "progress_tracking": {
+          "type": "object",
+          "properties": {
+            "visual_progress_bars": {
+              "type": "boolean",
+              "description": "Show visual progress indicators"
+            },
+            "milestone_notifications": {
+              "type": "boolean",
+              "description": "Notify users of milestone achievements"
+            },
+            "streak_tracking": {
+              "type": "boolean",
+              "description": "Track consecutive usage streaks"
+            },
+            "goal_setting": {
+              "type": "boolean",
+              "description": "Allow users to set personal goals"
+            }
+          },
+          "required": ["visual_progress_bars", "milestone_notifications"],
+          "additionalProperties": false
+        },
+        "social_features": {
+          "type": "object",
+          "properties": {
+            "achievement_sharing": {
+              "type": "boolean",
+              "description": "Allow sharing achievements on social media"
+            },
+            "friend_comparisons": {
+              "type": "boolean",
+              "description": "Compare progress with friends"
+            },
+            "team_challenges": {
+              "type": "boolean",
+              "description": "Enable team-based challenges"
+            },
+            "public_profiles": {
+              "type": "boolean",
+              "description": "Allow public achievement profiles"
+            }
+          },
+          "required": ["achievement_sharing"],
+          "additionalProperties": false
+        },
+        "customization_options": {
+          "type": "object",
+          "properties": {
+            "gamification_level": {
+              "type": "string",
+              "enum": ["minimal", "standard", "full", "custom"],
+              "description": "Level of gamification features enabled"
+            },
+            "notification_preferences": {
+              "type": "object",
+              "properties": {
+                "achievement_notifications": {
+                  "type": "boolean"
+                },
+                "progress_reminders": {
+                  "type": "boolean"
+                },
+                "leaderboard_updates": {
+                  "type": "boolean"
+                },
+                "challenge_invitations": {
+                  "type": "boolean"
+                }
+              },
+              "additionalProperties": false
+            },
+            "privacy_controls": {
+              "type": "object",
+              "properties": {
+                "hide_achievements": {
+                  "type": "boolean"
+                },
+                "anonymous_leaderboards": {
+                  "type": "boolean"
+                },
+                "opt_out_challenges": {
+                  "type": "boolean"
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "required": ["gamification_level"],
+          "additionalProperties": false
+        }
+      },
+      "required": ["progress_tracking", "social_features", "customization_options"],
+      "additionalProperties": false
+    }
+  },
+  "required": ["schema_version", "loyalty_programs", "achievement_system", "community_recognition", "gamification_settings"],
+  "additionalProperties": false
+}
