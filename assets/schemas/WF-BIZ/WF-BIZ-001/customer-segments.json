@@ -1,0 +1,465 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://wirthforge.org/schemas/wf-biz-001/customer-segments.json",
+  "title": "WIRTHFORGE Customer Segments Schema",
+  "description": "Defines customer segment structure for local-first AI platform business model",
+  "type": "object",
+  "properties": {
+    "segmentId": {
+      "type": "string",
+      "pattern": "^[A-Z]{2,4}-[0-9]{3}$",
+      "description": "Unique segment identifier (e.g., 'PRIV-001', 'EDU-002')"
+    },
+    "segmentName": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 50,
+      "description": "Human-readable segment name"
+    },
+    "segmentType": {
+      "type": "string",
+      "enum": [
+        "privacy_conscious_individuals",
+        "professional_creators",
+        "educational_institutions", 
+        "small_medium_businesses",
+        "enterprise_organizations",
+        "developer_community",
+        "research_institutions",
+        "government_agencies"
+      ],
+      "description": "Primary customer segment category"
+    },
+    "demographics": {
+      "type": "object",
+      "properties": {
+        "ageRange": {
+          "type": "object",
+          "properties": {
+            "min": {
+              "type": "integer",
+              "minimum": 13,
+              "maximum": 100
+            },
+            "max": {
+              "type": "integer", 
+              "minimum": 13,
+              "maximum": 100
+            }
+          },
+          "required": ["min", "max"]
+        },
+        "geographicRegions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "north_america",
+              "europe",
+              "asia_pacific",
+              "latin_america",
+              "middle_east_africa",
+              "global"
+            ]
+          },
+          "minItems": 1
+        },
+        "techSavviness": {
+          "type": "string",
+          "enum": ["beginner", "intermediate", "advanced", "expert"],
+          "description": "Technical skill level of segment"
+        },
+        "organizationSize": {
+          "type": "string",
+          "enum": ["individual", "small_team", "medium_org", "large_enterprise"],
+          "description": "Organization size for business segments"
+        }
+      },
+      "required": ["geographicRegions", "techSavviness"]
+    },
+    "painPoints": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "painPointId": {
+            "type": "string",
+            "pattern": "^PP-[0-9]{3}$"
+          },
+          "description": {
+            "type": "string",
+            "minLength": 10,
+            "maxLength": 200
+          },
+          "severity": {
+            "type": "string",
+            "enum": ["low", "medium", "high", "critical"]
+          },
+          "frequency": {
+            "type": "string",
+            "enum": ["rare", "occasional", "frequent", "constant"]
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "privacy_concerns",
+              "cost_transparency", 
+              "performance_reliability",
+              "ease_of_use",
+              "data_sovereignty",
+              "vendor_lock_in",
+              "compliance_requirements",
+              "energy_efficiency"
+            ]
+          }
+        },
+        "required": ["painPointId", "description", "severity", "frequency", "category"]
+      },
+      "minItems": 1,
+      "maxItems": 10
+    },
+    "valuePropositions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "valueId": {
+            "type": "string",
+            "pattern": "^VP-[0-9]{3}$"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 5,
+            "maxLength": 50
+          },
+          "description": {
+            "type": "string",
+            "minLength": 20,
+            "maxLength": 300
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "privacy_protection",
+              "cost_savings",
+              "performance_improvement",
+              "user_experience",
+              "compliance_assurance",
+              "energy_efficiency",
+              "community_benefits"
+            ]
+          },
+          "priority": {
+            "type": "string",
+            "enum": ["primary", "secondary", "tertiary"]
+          },
+          "measurableOutcome": {
+            "type": "string",
+            "description": "Quantifiable benefit or outcome"
+          }
+        },
+        "required": ["valueId", "title", "description", "category", "priority"]
+      },
+      "minItems": 1,
+      "maxItems": 8
+    },
+    "channels": {
+      "type": "object",
+      "properties": {
+        "acquisition": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "organic_search",
+              "privacy_communities",
+              "developer_forums",
+              "educational_partnerships",
+              "word_of_mouth",
+              "content_marketing",
+              "conference_speaking",
+              "open_source_contributions"
+            ]
+          },
+          "minItems": 1
+        },
+        "retention": {
+          "type": "array", 
+          "items": {
+            "type": "string",
+            "enum": [
+              "community_engagement",
+              "regular_updates",
+              "user_support",
+              "feature_requests",
+              "educational_content",
+              "ecosystem_development"
+            ]
+          },
+          "minItems": 1
+        },
+        "preferred_communication": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "email_newsletters",
+              "community_forums",
+              "documentation",
+              "video_tutorials",
+              "live_workshops",
+              "github_discussions",
+              "privacy_focused_platforms"
+            ]
+          },
+          "minItems": 1
+        }
+      },
+      "required": ["acquisition", "retention", "preferred_communication"]
+    },
+    "relationships": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "self_service",
+            "community_support", 
+            "dedicated_support",
+            "co_creation",
+            "automated_assistance"
+          ]
+        },
+        "touchpoints": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "initial_download",
+              "onboarding_process",
+              "daily_usage",
+              "feature_discovery",
+              "problem_resolution",
+              "community_participation",
+              "feedback_provision",
+              "renewal_decision"
+            ]
+          },
+          "minItems": 1
+        },
+        "engagement_level": {
+          "type": "string",
+          "enum": ["low", "medium", "high", "very_high"]
+        }
+      },
+      "required": ["type", "touchpoints", "engagement_level"]
+    },
+    "revenueModel": {
+      "type": "object",
+      "properties": {
+        "primaryModel": {
+          "type": "string",
+          "enum": [
+            "freemium_subscription",
+            "energy_based_usage",
+            "professional_services",
+            "marketplace_commission",
+            "enterprise_licensing"
+          ]
+        },
+        "pricingSensitivity": {
+          "type": "string",
+          "enum": ["very_low", "low", "medium", "high", "very_high"]
+        },
+        "paymentPreferences": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "monthly_subscription",
+              "annual_subscription", 
+              "pay_per_use",
+              "one_time_purchase",
+              "institutional_billing"
+            ]
+          },
+          "minItems": 1
+        },
+        "budgetRange": {
+          "type": "object",
+          "properties": {
+            "currency": {
+              "type": "string",
+              "pattern": "^[A-Z]{3}$",
+              "default": "USD"
+            },
+            "min": {
+              "type": "number",
+              "minimum": 0
+            },
+            "max": {
+              "type": "number",
+              "minimum": 0
+            },
+            "period": {
+              "type": "string",
+              "enum": ["monthly", "annual", "per_project", "one_time"]
+            }
+          },
+          "required": ["currency", "min", "max", "period"]
+        }
+      },
+      "required": ["primaryModel", "pricingSensitivity", "paymentPreferences"]
+    },
+    "adoptionBarriers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "barrierId": {
+            "type": "string",
+            "pattern": "^AB-[0-9]{3}$"
+          },
+          "description": {
+            "type": "string",
+            "minLength": 10,
+            "maxLength": 200
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "technical_complexity",
+              "cost_concerns",
+              "feature_gaps",
+              "trust_issues",
+              "switching_costs",
+              "organizational_resistance",
+              "regulatory_concerns"
+            ]
+          },
+          "impact": {
+            "type": "string",
+            "enum": ["low", "medium", "high", "blocking"]
+          },
+          "mitigation_strategy": {
+            "type": "string",
+            "description": "How WIRTHFORGE addresses this barrier"
+          }
+        },
+        "required": ["barrierId", "description", "category", "impact"]
+      },
+      "maxItems": 8
+    },
+    "successMetrics": {
+      "type": "object",
+      "properties": {
+        "acquisition": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "monthly_active_users",
+              "conversion_rate",
+              "customer_acquisition_cost",
+              "time_to_first_value",
+              "trial_to_paid_conversion"
+            ]
+          }
+        },
+        "engagement": {
+          "type": "array",
+          "items": {
+            "type": "string", 
+            "enum": [
+              "daily_active_users",
+              "session_duration",
+              "feature_adoption_rate",
+              "community_participation",
+              "support_ticket_volume"
+            ]
+          }
+        },
+        "retention": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "monthly_churn_rate",
+              "customer_lifetime_value",
+              "net_promoter_score",
+              "renewal_rate",
+              "expansion_revenue"
+            ]
+          }
+        }
+      },
+      "required": ["acquisition", "engagement", "retention"]
+    },
+    "privacyRequirements": {
+      "type": "object",
+      "properties": {
+        "dataResidency": {
+          "type": "string",
+          "enum": ["local_only", "regional_preference", "global_acceptable"]
+        },
+        "complianceNeeds": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["GDPR", "CCPA", "PIPEDA", "LGPD", "SOX", "HIPAA", "FERPA"]
+          }
+        },
+        "auditRequirements": {
+          "type": "boolean",
+          "description": "Whether segment requires audit trails"
+        },
+        "encryptionLevel": {
+          "type": "string",
+          "enum": ["basic", "standard", "enterprise", "government"]
+        }
+      },
+      "required": ["dataResidency", "complianceNeeds", "auditRequirements", "encryptionLevel"]
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string", 
+          "format": "date-time"
+        },
+        "version": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+        },
+        "source": {
+          "type": "string",
+          "enum": ["market_research", "user_interviews", "analytics", "competitive_analysis"]
+        },
+        "confidence": {
+          "type": "string",
+          "enum": ["low", "medium", "high", "validated"]
+        }
+      },
+      "required": ["createdAt", "version", "source", "confidence"]
+    }
+  },
+  "required": [
+    "segmentId",
+    "segmentName", 
+    "segmentType",
+    "demographics",
+    "painPoints",
+    "valuePropositions",
+    "channels",
+    "relationships",
+    "revenueModel",
+    "successMetrics",
+    "privacyRequirements",
+    "metadata"
+  ],
+  "additionalProperties": false
+}

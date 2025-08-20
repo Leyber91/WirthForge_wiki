@@ -1,0 +1,521 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://wirthforge.org/schemas/wf-biz-001/revenue-models.json",
+  "title": "WIRTHFORGE Revenue Models Schema",
+  "description": "Defines revenue stream structure for local-first AI platform business model",
+  "type": "object",
+  "properties": {
+    "revenueStreamId": {
+      "type": "string",
+      "pattern": "^RS-[0-9]{3}$",
+      "description": "Unique revenue stream identifier"
+    },
+    "streamName": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 50,
+      "description": "Human-readable revenue stream name"
+    },
+    "streamType": {
+      "type": "string",
+      "enum": [
+        "subscription_recurring",
+        "energy_based_usage",
+        "marketplace_commission",
+        "professional_services",
+        "enterprise_licensing",
+        "community_donations",
+        "training_certification"
+      ],
+      "description": "Primary revenue stream category"
+    },
+    "pricingModel": {
+      "type": "object",
+      "properties": {
+        "structure": {
+          "type": "string",
+          "enum": [
+            "freemium",
+            "tiered_subscription",
+            "usage_based",
+            "value_based",
+            "flat_rate",
+            "commission_based",
+            "project_based"
+          ]
+        },
+        "billingCycle": {
+          "type": "string",
+          "enum": ["real_time", "daily", "weekly", "monthly", "quarterly", "annual", "per_project"]
+        },
+        "currency": {
+          "type": "string",
+          "pattern": "^[A-Z]{3}$",
+          "default": "USD"
+        },
+        "energyUnit": {
+          "type": "string",
+          "enum": ["joule", "watt_hour", "kilowatt_hour", "gpu_second", "cpu_second"],
+          "description": "Unit for energy-based pricing"
+        }
+      },
+      "required": ["structure", "billingCycle", "currency"]
+    },
+    "tiers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "tierId": {
+            "type": "string",
+            "pattern": "^T-[0-9]{2}$"
+          },
+          "tierName": {
+            "type": "string",
+            "enum": ["free", "personal", "professional", "enterprise", "custom"]
+          },
+          "price": {
+            "type": "object",
+            "properties": {
+              "base": {
+                "type": "number",
+                "minimum": 0
+              },
+              "variable": {
+                "type": "number",
+                "minimum": 0,
+                "description": "Variable cost per unit (energy, usage, etc.)"
+              },
+              "setup": {
+                "type": "number",
+                "minimum": 0,
+                "description": "One-time setup fee"
+              }
+            },
+            "required": ["base"]
+          },
+          "features": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Features included in this tier"
+          },
+          "limits": {
+            "type": "object",
+            "properties": {
+              "energyBudget": {
+                "type": "number",
+                "description": "Monthly energy allowance in kWh"
+              },
+              "apiCalls": {
+                "type": "integer",
+                "description": "Monthly API call limit"
+              },
+              "storage": {
+                "type": "number",
+                "description": "Storage limit in GB"
+              },
+              "users": {
+                "type": "integer",
+                "description": "Maximum number of users"
+              },
+              "projects": {
+                "type": "integer",
+                "description": "Maximum number of projects"
+              }
+            }
+          },
+          "targetSegment": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "privacy_conscious_individuals",
+                "professional_creators",
+                "educational_institutions",
+                "small_medium_businesses",
+                "enterprise_organizations",
+                "developer_community"
+              ]
+            }
+          }
+        },
+        "required": ["tierId", "tierName", "price", "features", "targetSegment"]
+      },
+      "minItems": 1
+    },
+    "energyPricing": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Whether energy-based pricing is active"
+        },
+        "baseRate": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Base rate per kWh in USD"
+        },
+        "markup": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 5,
+          "description": "Markup multiplier over actual energy cost"
+        },
+        "minimumCharge": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Minimum monthly charge in USD"
+        },
+        "freeAllowance": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Free energy allowance per month in kWh"
+        },
+        "measurementAccuracy": {
+          "type": "string",
+          "enum": ["estimated", "measured", "precise"],
+          "description": "Energy measurement precision level"
+        }
+      },
+      "required": ["enabled", "baseRate", "markup"]
+    },
+    "marketplaceCommission": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "commissionRate": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Commission rate as decimal (0.1 = 10%)"
+        },
+        "minimumTransaction": {
+          "type": "number",
+          "minimum": 0
+        },
+        "paymentProcessing": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Payment processing fee percentage"
+        },
+        "categories": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "ai_models",
+              "plugins_extensions",
+              "templates_presets",
+              "training_data",
+              "professional_services",
+              "custom_integrations"
+            ]
+          }
+        }
+      },
+      "required": ["enabled", "commissionRate"]
+    },
+    "professionalServices": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "services": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "serviceId": {
+                "type": "string",
+                "pattern": "^PS-[0-9]{3}$"
+              },
+              "serviceName": {
+                "type": "string"
+              },
+              "category": {
+                "type": "string",
+                "enum": [
+                  "implementation",
+                  "training",
+                  "consulting",
+                  "custom_development",
+                  "support",
+                  "certification"
+                ]
+              },
+              "pricingType": {
+                "type": "string",
+                "enum": ["hourly", "daily", "project", "retainer"]
+              },
+              "rate": {
+                "type": "number",
+                "minimum": 0
+              },
+              "estimatedDuration": {
+                "type": "string",
+                "description": "Typical project duration"
+              }
+            },
+            "required": ["serviceId", "serviceName", "category", "pricingType", "rate"]
+          }
+        }
+      },
+      "required": ["enabled"]
+    },
+    "revenueProjections": {
+      "type": "object",
+      "properties": {
+        "timeframe": {
+          "type": "string",
+          "enum": ["monthly", "quarterly", "annual"]
+        },
+        "projections": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "period": {
+                "type": "string",
+                "description": "Time period (e.g., '2024-Q1', '2024-01')"
+              },
+              "conservative": {
+                "type": "number",
+                "minimum": 0
+              },
+              "realistic": {
+                "type": "number",
+                "minimum": 0
+              },
+              "optimistic": {
+                "type": "number",
+                "minimum": 0
+              },
+              "assumptions": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Key assumptions for this projection"
+              }
+            },
+            "required": ["period", "conservative", "realistic", "optimistic"]
+          }
+        }
+      },
+      "required": ["timeframe", "projections"]
+    },
+    "customerMetrics": {
+      "type": "object",
+      "properties": {
+        "averageRevenuePerUser": {
+          "type": "number",
+          "minimum": 0,
+          "description": "ARPU in USD"
+        },
+        "customerLifetimeValue": {
+          "type": "number",
+          "minimum": 0,
+          "description": "CLV in USD"
+        },
+        "churnRate": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Monthly churn rate as decimal"
+        },
+        "conversionRate": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Free to paid conversion rate"
+        },
+        "paybackPeriod": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Customer acquisition payback in months"
+        }
+      }
+    },
+    "competitiveAnalysis": {
+      "type": "object",
+      "properties": {
+        "competitors": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "pricingModel": {
+                "type": "string"
+              },
+              "pricePoint": {
+                "type": "number",
+                "minimum": 0
+              },
+              "strengths": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "weaknesses": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "required": ["name", "pricingModel"]
+          }
+        },
+        "positioning": {
+          "type": "string",
+          "enum": ["premium", "competitive", "value", "disruptive"]
+        },
+        "differentiators": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Key pricing differentiators vs competitors"
+        }
+      }
+    },
+    "riskFactors": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "riskId": {
+            "type": "string",
+            "pattern": "^RF-[0-9]{3}$"
+          },
+          "description": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "market_risk",
+              "competitive_risk",
+              "technology_risk",
+              "regulatory_risk",
+              "operational_risk"
+            ]
+          },
+          "probability": {
+            "type": "string",
+            "enum": ["low", "medium", "high"]
+          },
+          "impact": {
+            "type": "string",
+            "enum": ["low", "medium", "high", "critical"]
+          },
+          "mitigation": {
+            "type": "string",
+            "description": "Risk mitigation strategy"
+          }
+        },
+        "required": ["riskId", "description", "category", "probability", "impact"]
+      }
+    },
+    "scalabilityFactors": {
+      "type": "object",
+      "properties": {
+        "marginalCost": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Marginal cost per additional user"
+        },
+        "networkEffects": {
+          "type": "boolean",
+          "description": "Whether revenue benefits from network effects"
+        },
+        "economiesOfScale": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Areas where scale reduces costs"
+        },
+        "bottlenecks": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Potential scaling bottlenecks"
+        }
+      }
+    },
+    "complianceRequirements": {
+      "type": "object",
+      "properties": {
+        "taxCompliance": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["VAT", "GST", "sales_tax", "digital_services_tax"]
+          }
+        },
+        "financialReporting": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["GAAP", "IFRS", "SOX", "local_standards"]
+          }
+        },
+        "privacyRegulations": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["GDPR", "CCPA", "PIPEDA", "LGPD"]
+          }
+        }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "version": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+        },
+        "approvedBy": {
+          "type": "string",
+          "description": "Who approved this revenue model"
+        },
+        "reviewDate": {
+          "type": "string",
+          "format": "date",
+          "description": "Next review date"
+        }
+      },
+      "required": ["createdAt", "version"]
+    }
+  },
+  "required": [
+    "revenueStreamId",
+    "streamName",
+    "streamType",
+    "pricingModel",
+    "tiers",
+    "metadata"
+  ],
+  "additionalProperties": false
+}

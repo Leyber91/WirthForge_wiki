@@ -1,0 +1,730 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://wirthforge.org/schemas/wf-biz-001/cost-structures.json",
+  "title": "WIRTHFORGE Cost Structures Schema",
+  "description": "Defines cost structure for local-first AI platform business model",
+  "type": "object",
+  "properties": {
+    "costCategoryId": {
+      "type": "string",
+      "pattern": "^CC-[0-9]{3}$",
+      "description": "Unique cost category identifier"
+    },
+    "categoryName": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 50,
+      "description": "Human-readable cost category name"
+    },
+    "costType": {
+      "type": "string",
+      "enum": [
+        "development_costs",
+        "infrastructure_costs",
+        "operational_costs",
+        "marketing_costs",
+        "support_costs",
+        "compliance_costs",
+        "energy_costs"
+      ],
+      "description": "Primary cost category type"
+    },
+    "costBehavior": {
+      "type": "string",
+      "enum": ["fixed", "variable", "semi_variable", "step_fixed"],
+      "description": "How cost changes with volume/usage"
+    },
+    "developmentCosts": {
+      "type": "object",
+      "properties": {
+        "personnel": {
+          "type": "object",
+          "properties": {
+            "engineers": {
+              "type": "object",
+              "properties": {
+                "count": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "averageSalary": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "benefits": {
+                  "type": "number",
+                  "minimum": 0,
+                  "description": "Benefits as percentage of salary"
+                },
+                "specializations": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "enum": [
+                      "ai_ml_engineering",
+                      "local_first_architecture",
+                      "privacy_engineering",
+                      "energy_optimization",
+                      "ui_ux_development",
+                      "systems_programming",
+                      "security_engineering"
+                    ]
+                  }
+                }
+              },
+              "required": ["count", "averageSalary", "benefits"]
+            },
+            "designers": {
+              "type": "object",
+              "properties": {
+                "count": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "averageSalary": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "benefits": {
+                  "type": "number",
+                  "minimum": 0
+                }
+              },
+              "required": ["count", "averageSalary", "benefits"]
+            },
+            "productManagers": {
+              "type": "object",
+              "properties": {
+                "count": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "averageSalary": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "benefits": {
+                  "type": "number",
+                  "minimum": 0
+                }
+              },
+              "required": ["count", "averageSalary", "benefits"]
+            }
+          }
+        },
+        "tools": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "toolName": {
+                "type": "string"
+              },
+              "category": {
+                "type": "string",
+                "enum": [
+                  "development_environment",
+                  "ai_ml_tools",
+                  "design_tools",
+                  "project_management",
+                  "testing_tools",
+                  "security_tools"
+                ]
+              },
+              "monthlyCost": {
+                "type": "number",
+                "minimum": 0
+              },
+              "licenses": {
+                "type": "integer",
+                "minimum": 1
+              }
+            },
+            "required": ["toolName", "category", "monthlyCost", "licenses"]
+          }
+        },
+        "research": {
+          "type": "object",
+          "properties": {
+            "monthlyBudget": {
+              "type": "number",
+              "minimum": 0
+            },
+            "categories": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "ai_model_research",
+                  "privacy_technologies",
+                  "energy_optimization",
+                  "user_experience",
+                  "market_research"
+                ]
+              }
+            }
+          },
+          "required": ["monthlyBudget"]
+        }
+      }
+    },
+    "infrastructureCosts": {
+      "type": "object",
+      "properties": {
+        "hosting": {
+          "type": "object",
+          "properties": {
+            "webServices": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Monthly cost for web hosting (minimal for local-first)"
+            },
+            "cdn": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Content delivery network costs"
+            },
+            "domains": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Domain registration and management"
+            }
+          }
+        },
+        "development": {
+          "type": "object",
+          "properties": {
+            "cicd": {
+              "type": "number",
+              "minimum": 0,
+              "description": "CI/CD pipeline costs"
+            },
+            "repositories": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Code repository hosting"
+            },
+            "testing": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Testing infrastructure"
+            }
+          }
+        },
+        "monitoring": {
+          "type": "object",
+          "properties": {
+            "analytics": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Privacy-preserving analytics"
+            },
+            "errorTracking": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Error monitoring and tracking"
+            },
+            "performance": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Performance monitoring"
+            }
+          }
+        }
+      }
+    },
+    "operationalCosts": {
+      "type": "object",
+      "properties": {
+        "support": {
+          "type": "object",
+          "properties": {
+            "personnel": {
+              "type": "object",
+              "properties": {
+                "count": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "averageSalary": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "benefits": {
+                  "type": "number",
+                  "minimum": 0
+                }
+              },
+              "required": ["count", "averageSalary", "benefits"]
+            },
+            "tools": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Support tools and platforms"
+            }
+          }
+        },
+        "community": {
+          "type": "object",
+          "properties": {
+            "management": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Community management costs"
+            },
+            "events": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Community events and meetups"
+            },
+            "platforms": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Community platform costs"
+            }
+          }
+        },
+        "legal": {
+          "type": "object",
+          "properties": {
+            "counsel": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Legal counsel costs"
+            },
+            "compliance": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Compliance and regulatory costs"
+            },
+            "intellectual_property": {
+              "type": "number",
+              "minimum": 0,
+              "description": "IP protection and patents"
+            }
+          }
+        }
+      }
+    },
+    "marketingCosts": {
+      "type": "object",
+      "properties": {
+        "content": {
+          "type": "object",
+          "properties": {
+            "creation": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Content creation costs"
+            },
+            "tools": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Content creation tools"
+            },
+            "distribution": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Content distribution costs"
+            }
+          }
+        },
+        "community_outreach": {
+          "type": "object",
+          "properties": {
+            "conferences": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Conference participation and sponsorship"
+            },
+            "partnerships": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Partnership development costs"
+            },
+            "advocacy": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Developer advocacy programs"
+            }
+          }
+        },
+        "digital": {
+          "type": "object",
+          "properties": {
+            "website": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Website maintenance and optimization"
+            },
+            "seo": {
+              "type": "number",
+              "minimum": 0,
+              "description": "SEO tools and optimization"
+            },
+            "social_media": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Social media management"
+            }
+          }
+        }
+      }
+    },
+    "energyCosts": {
+      "type": "object",
+      "properties": {
+        "development": {
+          "type": "object",
+          "properties": {
+            "workstations": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Energy cost for development workstations"
+            },
+            "testing": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Energy cost for testing infrastructure"
+            },
+            "ai_training": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Energy cost for AI model training"
+            }
+          }
+        },
+        "operations": {
+          "type": "object",
+          "properties": {
+            "servers": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Server energy costs (minimal for local-first)"
+            },
+            "office": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Office energy costs"
+            }
+          }
+        },
+        "measurement": {
+          "type": "object",
+          "properties": {
+            "monitoring_tools": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Energy monitoring and measurement tools"
+            },
+            "certification": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Energy efficiency certification costs"
+            }
+          }
+        }
+      }
+    },
+    "costDrivers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "driverId": {
+            "type": "string",
+            "pattern": "^CD-[0-9]{3}$"
+          },
+          "description": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "user_growth",
+              "feature_complexity",
+              "compliance_requirements",
+              "energy_usage",
+              "support_volume",
+              "market_expansion"
+            ]
+          },
+          "impact": {
+            "type": "string",
+            "enum": ["low", "medium", "high", "critical"]
+          },
+          "variability": {
+            "type": "string",
+            "enum": ["fixed", "linear", "exponential", "step_function"]
+          }
+        },
+        "required": ["driverId", "description", "category", "impact", "variability"]
+      }
+    },
+    "costOptimization": {
+      "type": "object",
+      "properties": {
+        "strategies": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "strategyId": {
+                "type": "string",
+                "pattern": "^CO-[0-9]{3}$"
+              },
+              "description": {
+                "type": "string"
+              },
+              "category": {
+                "type": "string",
+                "enum": [
+                  "automation",
+                  "energy_efficiency",
+                  "process_improvement",
+                  "technology_optimization",
+                  "vendor_negotiation",
+                  "resource_sharing"
+                ]
+              },
+              "potentialSavings": {
+                "type": "number",
+                "minimum": 0,
+                "description": "Estimated monthly savings in USD"
+              },
+              "implementationCost": {
+                "type": "number",
+                "minimum": 0,
+                "description": "One-time implementation cost"
+              },
+              "paybackPeriod": {
+                "type": "number",
+                "minimum": 0,
+                "description": "Payback period in months"
+              }
+            },
+            "required": ["strategyId", "description", "category", "potentialSavings"]
+          }
+        },
+        "targets": {
+          "type": "object",
+          "properties": {
+            "costReductionPercent": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100,
+              "description": "Target cost reduction percentage"
+            },
+            "timeframe": {
+              "type": "string",
+              "enum": ["quarterly", "annual", "multi_year"]
+            },
+            "priorities": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "energy_efficiency",
+                  "development_productivity",
+                  "operational_automation",
+                  "support_efficiency",
+                  "infrastructure_optimization"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "scalingFactors": {
+      "type": "object",
+      "properties": {
+        "userScaling": {
+          "type": "object",
+          "properties": {
+            "marginalCost": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Additional cost per new user"
+            },
+            "breakpoints": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "userCount": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "costChange": {
+                    "type": "string",
+                    "description": "How costs change at this breakpoint"
+                  }
+                },
+                "required": ["userCount", "costChange"]
+              }
+            }
+          }
+        },
+        "featureScaling": {
+          "type": "object",
+          "properties": {
+            "developmentComplexity": {
+              "type": "string",
+              "enum": ["linear", "exponential", "logarithmic"]
+            },
+            "maintenanceOverhead": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Maintenance cost as percentage of development cost"
+            }
+          }
+        }
+      }
+    },
+    "budgetAllocation": {
+      "type": "object",
+      "properties": {
+        "percentages": {
+          "type": "object",
+          "properties": {
+            "development": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "operations": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "marketing": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "support": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "infrastructure": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            }
+          }
+        },
+        "totalBudget": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Total monthly budget in USD"
+        },
+        "contingency": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 50,
+          "description": "Contingency percentage of total budget"
+        }
+      },
+      "required": ["percentages", "totalBudget"]
+    },
+    "complianceCosts": {
+      "type": "object",
+      "properties": {
+        "privacy": {
+          "type": "object",
+          "properties": {
+            "gdpr_compliance": {
+              "type": "number",
+              "minimum": 0
+            },
+            "ccpa_compliance": {
+              "type": "number",
+              "minimum": 0
+            },
+            "privacy_audits": {
+              "type": "number",
+              "minimum": 0
+            }
+          }
+        },
+        "security": {
+          "type": "object",
+          "properties": {
+            "security_audits": {
+              "type": "number",
+              "minimum": 0
+            },
+            "penetration_testing": {
+              "type": "number",
+              "minimum": 0
+            },
+            "certifications": {
+              "type": "number",
+              "minimum": 0
+            }
+          }
+        },
+        "financial": {
+          "type": "object",
+          "properties": {
+            "accounting": {
+              "type": "number",
+              "minimum": 0
+            },
+            "tax_preparation": {
+              "type": "number",
+              "minimum": 0
+            },
+            "financial_audits": {
+              "type": "number",
+              "minimum": 0
+            }
+          }
+        }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "version": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+        },
+        "approvedBy": {
+          "type": "string",
+          "description": "Who approved this cost structure"
+        },
+        "reviewDate": {
+          "type": "string",
+          "format": "date",
+          "description": "Next review date"
+        },
+        "currency": {
+          "type": "string",
+          "pattern": "^[A-Z]{3}$",
+          "default": "USD"
+        }
+      },
+      "required": ["createdAt", "version", "currency"]
+    }
+  },
+  "required": [
+    "costCategoryId",
+    "categoryName",
+    "costType",
+    "costBehavior",
+    "budgetAllocation",
+    "metadata"
+  ],
+  "additionalProperties": false
+}
